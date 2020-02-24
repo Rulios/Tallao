@@ -1,0 +1,41 @@
+.karla_font{
+    font-family: 'Karla' ;
+}
+.montserrat_font{
+    font-family: 'Montserrat';
+}
+.noTxtDecoration{
+    text-decoration: none!important;
+}
+a{
+    text-decoration: none!important;
+}
+.blackTxt{
+    color:black;
+}
+.seeBorder{
+
+border:1px solid;
+}
+.roundBorderButton{
+    text-decoration: none!important;
+    border-radius:6px;
+    border: 2px solid black;
+    padding:10px;
+    color:black;
+    transition-duration:0.4s;
+}
+.roundBorderButton:hover{
+    background-color: black;
+    color:white;
+}
+#logIn{
+    padding:10px;
+    border-radius:6px;
+    transition-duration:0.4s;
+    color:#801EE8;
+}
+#logIn:hover{
+    background-color: #801EE8;
+    color:white;
+}
