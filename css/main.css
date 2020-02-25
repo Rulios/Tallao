@@ -13,9 +13,30 @@ a{
 .blackTxt{
     color:black;
 }
+.titleTxt{
+    font-size: 30px;
+}
+.subTxt{
+    font-size: 20px;
+}
 .seeBorder{
 
 border:1px solid;
+}
+.fullWidth{
+    width: 100%;
+}
+.reduce2Icon{
+    max-width: 25%;
+    max-height: auto;
+    height:122px;
+    
+}
+.showWhenSM{
+    display:none;
+}
+.my-image{
+    object-fit: contain;
 }
 .roundBorderButton{
     text-decoration: none!important;
@@ -38,4 +59,25 @@ border:1px solid;
 #logIn:hover{
     background-color: #801EE8;
     color:white;
+}
+.backGEffect1{
+    transition-duration:0.4s;
+}
+.backGEffect1:hover {
+    background-color: #C3B3FF;
+   
+}
+.backGEffect2{
+    transition-duration:0.4s;
+}
+.backGEffect2:hover {
+    background-color: yellow;
+    
+}
+.backGEffect3{
+    transition-duration:0.4s;
+}
+.backGEffect3:hover {
+    background-color: #A6C2FF;
+    
 }
