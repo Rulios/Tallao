@@ -13,6 +13,9 @@ a{
 .blackTxt{
     color:black;
 }
+.superTitleTxt{
+    font-size: 4em;
+}
 .titleTxt{
     font-size: 30px;
 }
@@ -26,11 +29,21 @@ border:1px solid;
 .fullWidth{
     width: 100%;
 }
+.paddText{
+    padding-left: 2em;
+    padding-right:2em;
+}
 .reduce2Icon{
     max-width: 25%;
     max-height: auto;
     height:122px;
     
+}
+.sectionSeparation{
+    margin-top: 9em;
+}
+.supTxt-TitleTxt-Separation{
+    margin-top: 4em;
 }
 .showWhenSM{
     display:none;
@@ -80,4 +93,14 @@ border:1px solid;
 .backGEffect3:hover {
     background-color: #A6C2FF;
     
+}
+footer{
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+   
+    background-color: #807373;
 }
