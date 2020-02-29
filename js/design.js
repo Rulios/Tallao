@@ -9,7 +9,7 @@ function resize2FitTheBig(){
     let maxHeight = 0;
     var arrObj = $("div[name='pContainer']");
     let objLength = Object.keys(arrObj).length;
-    console.log(arrObj);
+ 
     
     
     //objLength - 2 because the last two Keys are 
@@ -23,7 +23,7 @@ function resize2FitTheBig(){
             }
         } 
     }
-    console.log(maxHeight);
+
     $("div[name='pContainer']").css("height",  maxHeight + "px");
   
     
