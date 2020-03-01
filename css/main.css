@@ -4,6 +4,9 @@
 .montserrat_font{
     font-family: 'Montserrat';
 }
+.hideOnNormal{
+    display:none;
+}
 .noTxtDecoration{
     text-decoration: none!important;
 }
@@ -45,6 +48,9 @@ border:1px solid;
 .sectionSeparation{
     margin-top: 9em;
 }
+.leftSeparation{
+    margin-left:10px;
+}
 .supTxt-TitleTxt-Separation{
     margin-top: 4em;
 }
@@ -64,7 +70,7 @@ border:1px solid;
 }
 .roundBorderButton:hover{
     background-color: black;
-    color:white;
+    color:white !important;
 }
 #logIn{
     padding:10px;
@@ -117,4 +123,28 @@ footer{
 }
 .glyphiconSize{
     font-size: 20px;
+}
+@media only screen and (max-width: 768px){
+
+    .hideOnXs{
+        display:none;
+    }
+
+    .hideOnNormal{
+        display:block;
+    }
+
+    .centerOnXs{
+        margin-left:auto;
+        margin-right: auto;
+        display:block;
+    }
+
+    .stopPadding{
+        padding:0 !important;
+        
+    }
+
+    
+
 }
