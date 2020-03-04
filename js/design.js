@@ -1,6 +1,11 @@
 $(document).ready(function () {
     var locationPathName = window.location.pathname;
-   resize2FitTheBig();
+
+    if(locationPathName == "/Tallao/" || locationPathName == "index.html"){
+        resize2FitTheBig();
+        console.log(locationPathName);
+    }
+    
 
 });
 

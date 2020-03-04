@@ -19,6 +19,12 @@ a{
 .superTitleTxt{
     font-size: 4em;
 }
+.registrationFormTitleTxt{
+    font-size:3em;
+}
+.registrationFormSubTitleTxt{
+    font-size:25px;
+}
 .titleTxt{
     font-size: 30px;
 }
@@ -46,7 +52,7 @@ border:1px solid;
     
 }
 .sectionSeparation{
-    margin-top: 9em;
+    margin-top: 6em;
 }
 .leftSeparation{
     margin-left:10px;
@@ -54,12 +60,28 @@ border:1px solid;
 .supTxt-TitleTxt-Separation{
     margin-top: 4em;
 }
+.startTopSeparation{
+    margin-top: 2em;
+}
+.formRowSeparation{
+    margin-top:2em;
+}
 .showWhenSM{
     display:none;
 }
 .my-image{
     object-fit: contain;
 }
+.paddingForm{
+    max-width:50%;
+    height:auto;
+    margin:auto;    
+}
+.maxInputMargin{
+    max-width: 50%;
+}
+
+
 .roundBorderButton{
     text-decoration: none!important;
     border-radius:6px;
@@ -124,6 +146,22 @@ footer{
 .glyphiconSize{
     font-size: 20px;
 }
+.form-control:focus {
+    border-color: #47EBCE !important;
+    
+}
+.submitButton{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #AC6CEB;
+    transition: 0.4s;
+} 
+.submitButton:hover{
+    background-color: #954FEB;
+}
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
@@ -155,6 +193,10 @@ footer{
     }
     .separationOnXs{
         margin-bottom: 1em;
+    }
+
+    .paddingForm{
+        max-width: 80%;
     }
 
 }
