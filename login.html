@@ -13,7 +13,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="js/design.js"></script>
-    <script src="js/userProcessing.js"></script>
 
 
     <link rel="stylesheet" href="css/main.css">
@@ -26,7 +25,7 @@
 
 </head>
 
-<title id="titleRegister">Talla'o | Regístrate para seguir tus órdenes</title>
+<title id="titleLogin">Talla'o | Inicio de sesión</title>
 
 <body>
     
@@ -40,79 +39,41 @@
         </div>
     </div>
 
-
-
     <div class="container startTopSeparation  montserrat_font" >
         <div class="text-center karla_font">
-            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Regístrate para seguir tus órdenes</h1>
-            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Todas tus órdenes, a la palma de tu mano</h3>
+            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Inicia sesión</h1>
+            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Tu horario, tu tiempo</h3>
         </div>
         
         
 
-        <form method ="POST" action="php/register.php"class="paddingForm" id="frmUserRegister">
-        
+        <form action="" class="paddingForm" id="frmUserLogin">
             
-            <div class="form-row ">
-
-                <div class="col-lg-6 col-xs-6">
-                    <label for="inputName" id="lbl4Name">Nombre (Obligatorio)</label>
-                    <input type="text" class="form-control" name="inputName" id="inputName" placeholder="Nombre">
-                </div>
-
-                <div class="col-lg-6 col-xs-6 ">
-                    <label for="inputLastname" id="lbl4Lastname">Apellido (Obligatorio)</label>
-                    <input type="text" class="form-control" name="inputLastname" id="inputLastname" placeholder="Apellido">
-                </div>
-
-            </div>
+            
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputEmail" id="lbl4Email">Ingresa tu correo Electrónico (Obligatorio)</label>
-                    <input type="text" class="form-control" name="inputEmail" id="inputEmail" placeholder="Correo Electrónico">
+                    <label for="inputEmail" id="lbl4Email">Correo Electrónico </label>
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Correo Electrónico">
                 </div>
             </div>
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputPassword" id="lbl4Password">Ingresa una contraseña (Obligatorio)</label>
-                    <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Contraseña">
+                    <label for="inputPassword" id="lbl4Password"> Contraseña</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña">
                 </div>
             </div>
 
-            <div class="form-row formRowSeparation">
-                <div class="col-lg-12">
-                    <label for="inputRePassword" id="lbl4RePassword">Reingresa la contraseña (Obligatorio)</label>
-                    <input type="password" class="form-control" name="inputRePassword" id="inputRePassword" placeholder="">
-                </div>
-            </div>
+            <div class="form-row formRowSeparation" id="registerLink"><a href="register.html">¿No tienes una cuenta? Regístrate </a></div>
 
-            <div class="form-row formRowSeparation">
-                <div class="col-lg-12">
-                    <label for="inputTargetMarket" id="lbl4TargetMarket">¿Cómo nos conociste?</label>
-                    <select name="inputTargetMarket" class="custom-select" name="inputTargetMarket" id="inputTargetMarket">
-                        <option selected>Escoge una opción</option>
-                        <option value="social-media" id="selectOption-social-media">Por las redes sociales</option>
-                        <option value="internet-advertisement" id="selectOption-internet-advertisement">Por un anuncio web</option>
-                        <option value="real-advertisement" id="selectOption-real-advertisement">Por un anuncio visto en la calle</option>
-                        <option value="people-recommendation" id="selectOption-people-recommendation">Por recomendación de alguien</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row formRowSeparation" id="hasAccountLink"><a href="login.html">¿Ya tienes una cuenta? Inicia Sesión </a></div>
-
-            <button type="submit" class="submitButtonRegister formRowSeparation" id="submitRegister">Regístrate</button>
+            <button type="submit" class="submitButtonLogin formRowSeparation" id="submitLogin">Iniciar sesión</button>
         
         </form>
 
         
 
     </div>
-
-    
-    
 
 </body>
 

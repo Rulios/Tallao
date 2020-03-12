@@ -7,14 +7,24 @@
 .hideOnNormal{
     display:none;
 }
+.hide{
+    display:none;
+}
 .noTxtDecoration{
     text-decoration: none!important;
 }
 a{
     text-decoration: none!important;
 }
+html {
+    scroll-behavior: smooth !important;
+    
+}
 .blackTxt{
     color:black;
+}
+.redTxt{
+    color:red;
 }
 .superTitleTxt{
     font-size: 4em;
@@ -150,17 +160,29 @@ footer{
     border-color: #47EBCE !important;
     
 }
-.submitButton{
+.submitButtonRegister{
     width: 100%;
     font-size: 20px;
     padding:15px;
     font-family: 'Montserrat';
     border:0px;
-    background-color: #AC6CEB;
+    background-color: #FF94E7;
     transition: 0.4s;
 } 
-.submitButton:hover{
-    background-color: #954FEB;
+.submitButtonRegister:hover{
+    background-color: #BB5ECC;
+}
+.submitButtonLogin{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #95CCBB;
+    transition: 0.4s;
+} 
+.submitButtonLogin:hover{
+    background-color: #42997E;
 }
 @media only screen and (max-width: 768px){
 
