@@ -26,6 +26,15 @@ html {
 .redTxt{
     color:red;
 }
+.yellowTxt{
+    color:#FFBC47;
+}
+.yellowGreenTxt{
+    color:yellowgreen;
+}
+.greenTxt{
+    color: green;
+}
 .superTitleTxt{
     font-size: 4em;
 }
@@ -169,6 +178,14 @@ footer{
     background-color: #FF94E7;
     transition: 0.4s;
 } 
+.disableButton{
+        cursor: not-allowed;
+        pointer-events: none;
+
+        /*Button disabled - CSS color class*/
+        color: #547A80;
+        background-color: #F3E5EC;
+}
 .submitButtonRegister:hover{
     background-color: #BB5ECC;
 }

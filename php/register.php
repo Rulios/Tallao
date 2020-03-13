@@ -22,7 +22,7 @@ if(isset($id, $inputName,$inputLastname, $inputEmail, $inputPassword, $inputTarg
     $inputPassword = $_POST['inputPassword'];
     $inputTargetMarket = $_POST['inputTargetMarket'];
 }else{
-    echo "no hay ni pinga";
+    echo "no hay ni na'";
 }
 
 
