@@ -10,60 +10,68 @@ var verification = {
 $(document).ready(function () {
 
   
+  formVerification("load", false);
 
   $("#frmUserRegister").submit(function(e){
 
     
+
+    formVerification("submit", false);
     e.preventDefault();
-    
 
-    let id = makeid(5);
-    let inputName = $("#inputName").val();
-    let inputLastname = $("#inputLastname").val();
-    let inputEmail = $("#inputEmail").val();
-    let inputPassword = $("#inputPassword").val();
-    let inputTargetMarket = $("#inputTargetMarket").val();
+    //Securities issue solver
+    if($("#submitRegister").hasClass("disableButton") == false){
 
 
+      let id = makeid(5);
+      let inputName = $("#inputName").val();
+      let inputLastname = $("#inputLastname").val();
+      let inputEmail = $("#inputEmail").val();
+      let inputPassword = $("#inputPassword").val();
+      let inputTargetMarket = $("#inputTargetMarket").val();
 
-    var obj = {
-      id : id,
-      inputName: inputName,
-      inputLastname:inputLastname,
-      inputEmail: inputEmail,
-      inputPassword: inputPassword,
-      inputTargetMarket : inputTargetMarket,
-    };
-    
-    $.ajax({
-      type: "POST",
-      url: "./php/register.php",
-      data: 
-      {
-      id : id,
-      inputName: inputName,
-      inputLastname: inputLastname,
-      inputEmail: inputEmail,
-      inputPassword: inputPassword,
-      inputTargetMarket : inputTargetMarket
-      }
-      ,
-  
-      success: function (response) {
-        console.log("enviado");
-        console.log(obj);
-        
-      },
 
-      error: function(jqXHR, status, error){
 
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-
-      }
+      var obj = {
+        id : id,
+        inputName: inputName,
+        inputLastname:inputLastname,
+        inputEmail: inputEmail,
+        inputPassword: inputPassword,
+        inputTargetMarket : inputTargetMarket,
+      };
       
-    });
+      $.ajax({
+        type: "POST",
+        url: "./php/register.php",
+        data: 
+        {
+        id : id,
+        inputName: inputName,
+        inputLastname: inputLastname,
+        inputEmail: inputEmail,
+        inputPassword: inputPassword,
+        inputTargetMarket : inputTargetMarket
+        }
+        ,
+    
+        success: function (response) {
+          console.log("enviado");
+          console.log(obj);
+          
+        },
+
+        error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+
+        }
+        
+      });
+
+    }
 
   });
 
@@ -77,9 +85,10 @@ $(document).ready(function () {
     deleteAppendError(id);
     if((name == "") || (name.length < 3)){
       formAppendError(id, msg, "red");
-      toggleSubmitButton(true);
+      formVerification(id, false);
     }else{
       deleteAppendError(id);
+      formVerification(id, true);
     }
 
   });
@@ -94,8 +103,10 @@ $(document).ready(function () {
     deleteAppendError(id);
     if((lastName == "") || (lastName.length < 3)){
       formAppendError(id, msg, "red");
+      formVerification(id, false);
     }else{
       deleteAppendError(id);
+      formVerification(id, true);
     }
 
   });
@@ -109,6 +120,7 @@ $(document).ready(function () {
     if(validateEmail(email) == false){
       deleteAppendError(id);
       formAppendError(id, "¡Escribe un correo válido!" ,"red");
+      formVerification(id, false);
     }else{
 
       checkRepEmail(email, function(dataCallback){
@@ -125,8 +137,10 @@ $(document).ready(function () {
         if(verSame == true){
           deleteAppendError(id);
           formAppendError(id, "¡El correo existe!", "red");
+          formVerification(id, false);
         }else{
           deleteAppendError(id);
+          formVerification(id, true);
         }
        
       });
@@ -141,7 +155,7 @@ $(document).ready(function () {
     let strongLength = 14;
     let actualLength = $("#inputPassword").val().length;
     let msg = {
-      msg1: "Contraseña muy débil",
+      msg1: "Contraseña muy débil, inserta una contraseña más fuerte",
       msg2: "Contraseña moderada",
       msg3: "Contraseña moderadamente fuerte",
       msg4: "Contraseña fuerte"
@@ -150,20 +164,25 @@ $(document).ready(function () {
     deleteAppendError(id);
 
     switch (true) {
+
       case (actualLength < weakLength):
           formAppendError(id, msg.msg1, "red");
+          formVerification(id, false);
       break;
     
       case ((actualLength >= weakLength) && (actualLength <= mediumLength)):
           formAppendError(id, msg.msg2, "yellow");
+          formVerification(id, true);
       break;
 
       case ((actualLength > mediumLength) && (actualLength <= strongLength)):
           formAppendError(id, msg.msg3, "yellowGreen");
+          formVerification(id, true);
       break;
 
       case (actualLength > strongLength):
           formAppendError(id, msg.msg4, "green");
+          formVerification(id, true);
       break;
     }
 
@@ -183,12 +202,35 @@ $(document).ready(function () {
     deleteAppendError(id);
     if(inputRepassword != inputPassword){
       formAppendError(id, msg.msg1, "red");
+      formVerification(id, false);
     }else{
       formAppendError(id, msg.msg2, "green");
+      formVerification(id, true);
     }
   });
 
+
+  $("#inputTargetMarket").change(function(e){
+
+    let id = "inputTargetMarket";
+    let inputTargetMarket = $("#inputTargetMarket").val();
+    let msg = "Escoge una opción";
+
+    
+
+    if(inputTargetMarket == "none"){
+      deleteAppendError(id);
+      formAppendError(id, msg, "red");
+      formVerification(id, false);
+    }else{
+      deleteAppendError(id);
+      formVerification(id,true);
+    }
+
+  });
+
 });
+
 
 
 
@@ -269,15 +311,36 @@ function toggleSubmitButton(status){
   //status = true | disables the button
 
   if(status == true){
-
     if($('button[type="submit"]').hasClass("disableButton") == false){
-      
       $('button[type="submit"]').addClass("disableButton");
-
     }
-
   } else{
     $('button[type="submit"]').removeClass("disableButton");
   }
+
+}
+
+function formVerification(field, status){
+
+  let objectValues = [];
+ 
+  if(field != "load" || field != "submit"){
+    
+    if(status == false){
+      verification[field] = false;
+    }else{
+      verification[field] = true;
+    }
+  }  
+  
+  objectValues = Object.values(verification);
+
+  if(objectValues.includes(false) == true){
+    
+    toggleSubmitButton(true);
+  }else{
+    toggleSubmitButton(false);
+  }
+
 
 }
