@@ -43,12 +43,17 @@
 
 
     <div class="container startTopSeparation  montserrat_font" >
+
         <div class="text-center karla_font">
             <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Regístrate para seguir tus órdenes</h1>
             <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Todas tus órdenes, a la palma de tu mano</h3>
         </div>
         
-        
+        <div class="text-center montserrat_font supTxt-TitleTxt-Separation hide" id="congrSection">    
+            <div class="msgCongrats congrTxt"><b>¡REGISTRADO!</b></div>
+            <div class="msgStartEnjoying titleTxt"> Ahora puedes iniciar sesión y disfrutar lo que Talla'o te ofrece</div>
+            <div class="startTopSeparation"><a href="login.html" id="hasAccountLink"> Iniciar Sesión </a></div>
+        </div>
 
         <form method ="POST" action="php/register.php"class="paddingForm" id="frmUserRegister">
         
@@ -102,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="form-row formRowSeparation" id="hasAccountLink"><a href="login.html">¿Ya tienes una cuenta? Inicia Sesión </a></div>
+            <div class="form-row formRowSeparation" ><a href="login.html" id="hasAccountLink">¿Ya tienes una cuenta? Inicia Sesión </a></div>
 
             <button type="submit" class="submitButtonRegister  formRowSeparation" id="submitRegister">Regístrate</button>
         

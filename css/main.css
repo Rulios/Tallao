@@ -50,6 +50,9 @@ html {
 .subTxt{
     font-size: 20px;
 }
+.congrTxt{
+    font-size: 3em;
+}
 .float-right-footer{
     float:right;
 }

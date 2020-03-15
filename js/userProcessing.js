@@ -24,8 +24,8 @@ $(document).ready(function () {
 
 
       let id = makeid(5);
-      let inputName = $("#inputName").val();
-      let inputLastname = $("#inputLastname").val();
+      let inputName = capitalizeFirstLetter($("#inputName").val());
+      let inputLastname = capitalizeFirstLetter($("#inputLastname").val());
       let inputEmail = $("#inputEmail").val();
       let inputPassword = $("#inputPassword").val();
       let inputTargetMarket = $("#inputTargetMarket").val();
@@ -58,6 +58,8 @@ $(document).ready(function () {
         success: function (response) {
           console.log("enviado");
           console.log(obj);
+          $("#frmUserRegister").toggleClass("hide");
+          $("#congrSection").toggleClass("hide");
           
         },
 
@@ -235,13 +237,26 @@ $(document).ready(function () {
 
 
 function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
 
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  let charLoopLength = 3;
+  let numLoopLength = 2;
+  let result = '';
+  let char = "";
+  let numSelected = "";
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let num = '0123456789'
+  let charactersLength = characters.length;
+  let numLength = num.length;
+
+    for ( var i = 0; i < charLoopLength; i++ ) {
+      char += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+
+    for ( var i = 0; i < numLoopLength; i++ ) {
+      numSelected += num.charAt(Math.floor(Math.random() * numLength));
+    }
+
+    result = char + numSelected;
 
   return result.toUpperCase();
 }
@@ -324,8 +339,13 @@ function formVerification(field, status){
 
   let objectValues = [];
  
-  if(field != "load" || field != "submit"){
+  if((field == "load") || (field == "submit")){
     
+    verification["load"] = true;
+    verification["submit"] = true;
+
+  }else{  
+
     if(status == false){
       verification[field] = false;
     }else{
@@ -344,3 +364,9 @@ function formVerification(field, status){
 
 
 }
+function capitalizeFirstLetter(string) { 
+  //set all string to lowCase
+  string = string.toLowerCase();
+  let result = string[0].toUpperCase() + string.slice(1); 
+  return result;
+} 
