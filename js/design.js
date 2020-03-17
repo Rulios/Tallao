@@ -1,11 +1,13 @@
 $(document).ready(function () {
     var locationPathName = window.location.pathname;
 
-    if(locationPathName == "/Tallao/" || locationPathName == "index.html"){
+    if(locationPathName == "/Tallao/" || locationPathName == "index.html" || locationPathName == "/Tallao/index.html"){
         resize2FitTheBig();
         console.log(locationPathName);
     }
     
+
+    $('[data-toggle="tooltip"]').tooltip(); 
 
 });
 

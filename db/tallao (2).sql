@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-03-2020 a las 03:54:27
+-- Tiempo de generación: 17-03-2020 a las 05:43:49
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -49,7 +49,19 @@ INSERT INTO `targetmarket` (`id`, `reason`) VALUES
 (9, 'none'),
 (10, 'none'),
 (11, 'none'),
-(12, 'none');
+(12, 'none'),
+(13, 'social-media'),
+(14, 'internet-advertisement'),
+(15, 'real-advertisement'),
+(16, 'internet-advertisement'),
+(17, 'internet-advertisement'),
+(18, ''),
+(19, ''),
+(20, ''),
+(21, ''),
+(22, ''),
+(23, 'social-media'),
+(24, 'internet-advertisement');
 
 -- --------------------------------------------------------
 
@@ -59,6 +71,7 @@ INSERT INTO `targetmarket` (`id`, `reason`) VALUES
 
 CREATE TABLE `users` (
   `id` text NOT NULL,
+  `hashcode` text NOT NULL,
   `name` text NOT NULL,
   `lastname` text NOT NULL,
   `email` text NOT NULL,
@@ -70,19 +83,8 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `lastname`, `email`, `password`, `orders`) VALUES
-('0', 'Robert', 'Lu Zheng', 'robert_lu20@hotmail.com', 'ada', 0),
-('0', 'Robert', 'Lu Zheng', 'robert_lu20@hotmail.com', 'ada', 0),
-('2', 'Robert', 'Lu Zheng', 'robert_lu20@hotmail.com', 'ada', 0),
-('LFCCW', 'Robert', 'Lu Zheng', 'robert_lu20@hotmail.com', 'ada', 0),
-('EU69S', 'Robert', 'Lu Zheng', 'robert_lu20@hotmail.com', 'ada', 0),
-('YO1A6', '', '', 'robert_lu20@hotmail.com', '', 0),
-('R9K7I', '', '', 'wardinpro123@gmail.com', '', 0),
-('JH0SS', '', '', '', '', 0),
-('YMJ0G', '', '', '', '', 0),
-('NSVA7', '', '', '', '', 0),
-('QKUFF', '', '', '', '', 0),
-('', '', '', '', '', 0);
+INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`) VALUES
+('OEO44', 'cTiBJT3JEWMVzL8c0NvX', 'Robert', 'Lu zheng', 'robert_lu20@hotmail.com', '$2y$12$nDuRZaYR59RDWtpa2WmI6OHw3JcJKKexjeE.xUVnYCPTEiODFIf3C', 0);
 
 --
 -- Índices para tablas volcadas
@@ -102,7 +104,7 @@ ALTER TABLE `targetmarket`
 -- AUTO_INCREMENT de la tabla `targetmarket`
 --
 ALTER TABLE `targetmarket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
