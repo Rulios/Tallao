@@ -17,6 +17,7 @@ $(document).ready(function () {
     
 
     formVerification("submit", false);
+    console.log(verification);
     e.preventDefault();
 
     //Securities issue solver
@@ -231,6 +232,11 @@ $(document).ready(function () {
 
   });
 
+
+  
+
+
+
 });
 
 
@@ -361,8 +367,6 @@ function formVerification(field, status){
   }else{
     toggleSubmitButton(false);
   }
-
-
 }
 function capitalizeFirstLetter(string) { 
   //set all string to lowCase

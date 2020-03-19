@@ -260,6 +260,18 @@ footer{
 .submitButtonLogin:hover{
     background-color: #42997E;
 }
+.submitButtonLoginSuperUser{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #85EAFF;
+    transition: 0.4s;
+} 
+.submitButtonLoginSuperUser:hover{
+    background-color: #399DB3;
+}
 .tooltip {
     position: relative;
     display: inline-block;
