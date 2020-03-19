@@ -4,7 +4,7 @@
 
     <head>
 
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
     <meta name="description" content="Free Web tutorials">
     <meta name="keywords" content="Lavandería, Planchado, Ropa, Lavado">
     <meta name="author" content="Talla'o">
@@ -26,8 +26,7 @@
 
     </head>
 
-    <title id="pageTitle"></title>
-
+    <title id="myAccountPageTitle"></title>
 
     <body>
         
@@ -40,7 +39,7 @@
                 </a>
                 
     
-                <a href="#" id="myOrders" class="bottomLineLinkAnimation">
+                <a href="panel.html" id="myOrders" class="bottomLineLinkAnimation">
                     <i class="fa fa-th-list" aria-hidden="true"></i>
                     <b>Mis órdenes</b>
                 
@@ -64,105 +63,66 @@
             </div>    
           </nav>
 
-
           <div style="margin:5em;"></div>
 
-          <div class="container">
+          <div class="container montserrat_font paddingForm">
 
+            <div class="row">
 
-            <div class="  montserrat_font showIDTxt">
-
-                <div class="row">
-
-                    <div id="showID" class="text-center col-lg-12 bottomBorder">
-                        
-                        Aquí se muestra tu ID
-
-                        <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
-                    </div>
-
+                <div class="col-lg-12 karla_font text-center titleTxt">
+                    Todo lo que debes saber de tu cuenta. Aqui. 
                 </div>
 
-          </div>
+            </div>  
 
+            <div class="row supTxt-TitleTxt-Separation">
 
-          <div class="container  montserrat_font smallSeparation">
+                <div class="col-lg-6">
+                    Nombre:
 
-                    <div class="row "  style="max-height:100%;">
-
-                        <div class="col-lg-8 text-center  ">
-
-                            <div class="titleTxt">Órdenes pendientes</div>
-
-                            <div class="container-fluid  dotIndicators smallText smallSeparation justifyOnXs" >
-
-                                <div class="row">
-                                
-                                <div class="col-lg-4">
-                                <span class="yellowDot "></span>
-                                <span class="topVerticalAlign">Recibido</span>
-                                </div>
-                                <div class="col-lg-4">
-                                <span class="blueDot "></span>
-                                <span class="topVerticalAlign">Procesando</span>
-                                </div>
-
-                                <div class="col-lg-4">
-                                <span class="greenDot "></span>
-                                <span class="topVerticalAlign">Listo para recoger</span>
-                                </div>
-
-                                </div>
-                            </div>
-
-
-                            <!-- <div class="container-fluid dotIndicators smallText smallSeparation ">
-
-                                <div class="row">
-                                
-                                <div class=></div>
-                                <span class="yellowDot "></span>
-                                <span class="topVerticalAlign">Recibido</span>
-
-                                <span class="blueDot "></span>
-                                <span class="topVerticalAlign">Procesando</span>
-
-                                <span class="greenDot "></span>
-                                <span class="topVerticalAlign">Listo para recoger</span>
-
-                                </div>
-                            </div> -->
-
-                            <div class="small-mediumSeparation"></div>
-
-
-                            <div id="divOrdersAppendable" class="eightyPercentMaxHeight rightBorder scrollY">
-                                
-                            </div>
-
-                        </div>
-                        
-
-                        <div class="col-lg-4 text-center ">
-
-                            <div class="titleTxt">Notificaciones</div>
-
-                            <div class="small-mediumSeparation"></div>
-
-                            <div id="divNotificationsAppendable" class="eightyPercentMaxHeight  scrollY">
-                                
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
+                    <span id="nameDiv"></span>
                 </div>
 
-          </div>
+                <div class="col-lg-6">
+                    Apellido:
 
+                    <span id="lastNameDiv"></span>
+                </div>
+
+            </div>
+
+            <div class="row formRowSeparation">
+
+                <div class="col-lg-12 ">
+                    Correo electrónico:
+
+                    <span id="emailDiv"></span>
+                </div>
+
+            </div>
+
+            <div class="row formRowSeparation">
+
+                <div class="col-lg-12 ">
+                    Contraseña:
+
+                    <span id="passwordDiv" ></span>
+                </div>
+
+            </div>
+
+            <div class="row formRowSeparation">
+
+                <div class="col-lg-12 ">
+                    
+                    <a href="" class>Cambiar contraseña</a>
+
+                    <span id="changeEmailDiv"></span>
+                </div>
+
+            </div>
+
+          </div>
 
     </body>
 
@@ -244,5 +204,6 @@
         </div>
     
     </div>
+
 
 </html>
