@@ -14,7 +14,7 @@ $hashPassword = "";
 $verification = [];
 
 //Cookie config
-$cookieName = "user";
+$cookieName = "superuser";
 $cookieValues = "";
 
 if(isset($inputEmail, $inputPassword)){
@@ -35,7 +35,7 @@ if ($conn->connect_error) {
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
-$sql = "SELECT hashcode, password FROM users WHERE email='$inputEmail'" ;
+$sql = "SELECT hashcode, password FROM superusers WHERE email='$inputEmail'" ;
 
 if(mysqli_query($conn,$sql)){
 

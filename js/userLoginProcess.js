@@ -19,6 +19,69 @@ $(document).ready(function(){
         e.preventDefault();
 
         if(($("#submitRegister").hasClass("disableButton") == false) || ($("#submitLoginSuperUser").hasClass("disableButton") == false)){
+          
+          let inputEmail = $("#inputEmail").val();
+          let inputPassword = $("#inputPassword").val();
+          
+
+          if(clickStatus.user == true){
+
+            
+            $.ajax({
+              type: "POST",
+              url: "./php/userLoginProcess.php",
+              data: {
+                inputEmail: inputEmail,
+                inputPassword: inputPassword
+              },
+              dataType: "json ",
+
+              success: function (data) {
+                let status = convertStringToBoolean(data.status);
+                
+                pageRedirection(status, "user");
+              },
+              error: function(jqXHR, status, error){
+
+                console.log('Status: ' + status);
+                console.log('Error ' + error);
+                alert("Error " + status + error);
+
+                deleteAppendError(id);
+                formAppendError(id, "Error en realizar la operación", "red");
+          
+              }
+            });
+
+          }else if(clickStatus.superUser == true){
+          
+            $.ajax({
+              type: "POST",
+              url: "./php/superUserLoginProcess.php",
+              data: {
+                inputEmail: inputEmail,
+                inputPassword: inputPassword
+              },
+              dataType: "json ",
+
+              success: function (data) {
+                let status = convertStringToBoolean(data.status);
+                
+                pageRedirection(status, "superuser");
+              },
+              error: function(jqXHR, status, error){
+
+                console.log('Status: ' + status);
+                console.log('Error ' + error);
+                alert("Error " + status + error);
+
+                deleteAppendError(id);
+                formAppendError(id, "Error en realizar la operación", "red");
+          
+              }
+            });
+
+          }
 
         }
     
@@ -141,6 +204,30 @@ function formAppendError(id, message, color){
   }
 
 
+function pageRedirection(data, type){
+  //type: user, superuser
+
+  let id = "inputPassword";
+ 
+  if(data === true){
+
+    console.log(data);
+    deleteAppendError(id);
+    if(type == "user"){
+
+      window.location.replace("./panel.html");
+
+    }else if (type == "superuser"){
+      window.location.href = "./masterpanel.html";
+    }
+
+  }else{
+    deleteAppendError(id);
+    formAppendError(id, "El usuario o la contraseña no coinciden", "red");
+  }
+
+}
+
 function deleteAppendError(id){
     $("#msg4"+ id).remove();
 }  
@@ -157,4 +244,15 @@ function toggleSubmitButton(status){
       $('button[type="submit"]').removeClass("disableButton");
     }
   
+}
+function convertStringToBoolean(string){
+  let boolean = false;
+
+  if(string == "true"){
+    boolean = true;
+  }else if(string == "false"){
+    boolean = false;
   }
+
+  return boolean;
+}
