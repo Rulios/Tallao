@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="js/design.js"></script>
+    <script src="js/panelInt.js"></script>
 
 
     <link rel="stylesheet" href="css/main.css">
@@ -75,18 +76,28 @@
 
             </div>  
 
+
+            <div class="row formRowSeparation">
+
+                <div class="col-lg-12 karla_font text-center showIDTxt" id="showID">
+                    
+                    <i class="fa fa-question-circle " data-toggle="tooltip" data-placement="left" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
+                </div>
+
+            </div>  
+
             <div class="row supTxt-TitleTxt-Separation">
 
                 <div class="col-lg-6">
-                    Nombre:
+                    <b>Nombre:</b>
 
-                    <span id="nameDiv"></span>
+                    <span id="showName"></span>
                 </div>
 
                 <div class="col-lg-6">
-                    Apellido:
+                    <b>Apellido:</b>
 
-                    <span id="lastNameDiv"></span>
+                    <span id="showLastname"></span>
                 </div>
 
             </div>
@@ -94,9 +105,9 @@
             <div class="row formRowSeparation">
 
                 <div class="col-lg-12 ">
-                    Correo electrónico:
+                    <b>Correo electrónico:</b>
 
-                    <span id="emailDiv"></span>
+                    <span id="showEmail"></span>
                 </div>
 
             </div>
@@ -104,21 +115,34 @@
             <div class="row formRowSeparation">
 
                 <div class="col-lg-12 ">
-                    Contraseña:
-
-                    <span id="passwordDiv" ></span>
+                    <a href="" id="changePassword"><b>Cambiar contraseña</b></a>
                 </div>
-
             </div>
 
-            <div class="row formRowSeparation">
+            <div class="hide" id="divChangePassword">
 
-                <div class="col-lg-12 ">
-                    
-                    <a href="" class>Cambiar contraseña</a>
-
-                    <span id="changeEmailDiv"></span>
+                <div class="form-row formRowSeparation">
+                    <div class="col-lg-12">
+                        <label for="inputActualPassword" id="lbl4Password">Ingresa tu contraseña actual (Obligatorio)</label>
+                        <input type="password" class="form-control disableInput" name="inputActualPassword" id="inputActualPassword" placeholder="Contraseña actual">
+                    </div>
                 </div>
+
+                <div class="form-row formRowSeparation">
+                    <div class="col-lg-12">
+                        <label for="inputPassword" id="lbl4Password">Ingresa una nueva contraseña (Obligatorio)</label>
+                        <input type="password" class="form-control disableInput" name="inputPassword" id="inputPassword" placeholder="Contraseña">
+                    </div>
+                </div>
+
+                <div class="form-row formRowSeparation">
+                    <div class="col-lg-12">
+                        <label for="inputRePassword" id="lbl4RePassword">Reingresa la contraseña (Obligatorio)</label>
+                        <input type="password" class="form-control disableInput" name="inputRePassword" id="inputRePassword" placeholder="">
+                    </div>
+                </div>
+
+                <button type="submit" class="submitButtonLogin formRowSeparation" id="submitChange">Cambiar contraseña</button>
 
             </div>
 

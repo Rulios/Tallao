@@ -233,13 +233,7 @@ $(document).ready(function () {
   });
 
 
-  
-
-
-
 });
-
-
 
 
 function makeid(length) {
@@ -320,8 +314,6 @@ function checkRepEmail(email, callbackResult){
     }
   }).done(function(data){
 
-    
-    
   }, callbackResult);
 
 }

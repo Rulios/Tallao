@@ -218,7 +218,7 @@ function pageRedirection(data, type){
       window.location.replace("./panel.html");
 
     }else if (type == "superuser"){
-      window.location.href = "./masterpanel.html";
+      window.location.replace("./masterpanel.html");
     }
 
   }else{

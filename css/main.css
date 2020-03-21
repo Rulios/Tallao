@@ -245,6 +245,13 @@ footer{
         color: #547A80;
         background-color: #F3E5EC;
 }
+.disableInput{
+    background-color: #E6E2DC !important;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    
+}
 .submitButtonRegister:hover{
     background-color: #BB5ECC;
 }
