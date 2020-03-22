@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="Lavandería, Planchado, Ropa, Lavado">
+    <meta name="author" content="Talla'o">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="js/design.js"></script>
+    <script src="js/userRegisterProcess.js"></script>
+
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Karla&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+</head>
+
+<title id="titleRegister">Talla'o | Regístrarse como lavandería</title>
+
+<body>
+    
+    <div class="container startTopSeparation">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <a href="index.html">
+                    <img  style="width: 30%; " src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container startTopSeparation  montserrat_font" >
+
+        <div class="text-center karla_font">
+            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Regístrate ahora</h1>
+            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Administra todas tus órdenes afiliadas con Talla'o</h3>
+        </div>
+        
+        <div class="text-center montserrat_font supTxt-TitleTxt-Separation hide" id="congrSection">    
+            <div class="msgCongrats congrTxt"><b>¡REGISTRADO!</b></div>
+            <div class="msgStartEnjoying titleTxt">Ahora espera a un correo electrónico de habilitación de la cuenta para poder iniciar sesión</div>
+            <div class="startTopSeparation"><a href="login.html" id="hasAccountLink"> Iniciar Sesión </a></div>
+        </div>
+
+        <form method ="POST" action="php/masterRegister.php"class="paddingForm" id="frmMasterUserRegister">
+            
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputLaundyName" id="lbl4LaundryName">Nombre de la lavandería (Obligatorio)</label>
+                    <input type="text" class="form-control" name="inputLaundryName" id="inputLaundryName" placeholder="...">
+                </div>
+            </div>
+
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputInitials" id="lbl4inputInitials">Iniciales</label>
+                    <input type="text" class="form-control" name="inputInitials" id="inputInitials" maxlength="6" placeholder="Abreviatura que representa a la lavandería">
+                </div>
+            </div>
+
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputLocation" id="lbl4Location">Ubicación (Obligatorio)</label>
+                    <input type="text" class="form-control" name="inputLocation" id="inputLocation" placeholder="Provincia, Distrito, Corregimiento, Detalles...">
+                </div>
+            </div>
+            
+            <div class="form-row formRowSeparation">
+
+                <div class="col-lg-6 col-xs-6">
+                    <label for="inputName" id="lbl4Name">Nombre (Obligatorio)</label>
+                    <input type="text" class="form-control" name="inputName" id="inputName" placeholder="Nombre">
+                </div>
+
+                <div class="col-lg-6 col-xs-6 ">
+                    <label for="inputLastname" id="lbl4Lastname">Apellido (Obligatorio)</label>
+                    <input type="text" class="form-control" name="inputLastname" id="inputLastname" placeholder="Apellido">
+                </div>
+
+            </div>
+
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputEmail" id="lbl4Email">Ingresa tu correo Electrónico (Obligatorio)</label>
+                    <input type="text" class="form-control" name="inputEmail" id="inputEmail" placeholder="Correo Electrónico">
+                </div>
+            </div>
+
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputPassword" id="lbl4Password">Ingresa una contraseña (Obligatorio)</label>
+                    <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Contraseña">
+                </div>
+            </div>
+
+            <div class="form-row formRowSeparation">
+                <div class="col-lg-12">
+                    <label for="inputRePassword" id="lbl4RePassword">Reingresa la contraseña (Obligatorio)</label>
+                    <input type="password" class="form-control" name="inputRePassword" id="inputRePassword" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-row formRowSeparation" ><a href="login.html" id="hasAccountLink">¿Ya tienes una cuenta? Inicia Sesión </a></div>
+
+            <button type="submit" class="submitButtonRegister  formRowSeparation" id="submitRegister">Regístrarse como lavandería</button>
+        
+        </form>
+
+    </div>
+
+    
+    
+
+</body>
+
+<div class="container-fluid sectionSeparation" style="margin-bottom: 2em;">
+
+    <div class="row"> 
+
+        <div class="col-lg-12">
+
+            <footer id="footer" >
+
+                    <div class="container centerOnXs" style="padding: 2em; ">
+                        <div class="row">
+
+                            <div class=" col-lg-6 col-xs-12 separationOnXs">
+                                <a href="index.html">
+                                <img  style="width: 40%; " src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+                                </a>
+                            </div>
+
+                            <div class="col-lg-6 col-xs-12 " >
+
+                                <div  class="montserrat_font float-right-footer">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                    <span>Contacto:<a href="rluzheng@gmail.com">rluzheng@gmail.com </a> </span>
+
+                                    <br>
+
+                                    <i class="fa fa-globe" aria-hidden="true"></i>
+                                    <span>Español</span>
+
+                                    <br>
+
+                                    <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                    <span ><a href=""><b>Retroalimentación</b></a></span>
+                                </div>
+
+
+                            </div>
+
+                           
+
+                        </div>
+
+                        
+
+                        <div class="row supTxt-TitleTxt-Separation">
+
+                            <div class="col-lg-4">
+
+                                
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <span class="montserrat_font">Panamá</span>
+                                
+                            </div>
+
+                            <div class="col-lg-4">
+
+                                <span class="montserrat_font">©2020 Talla'o Todos los derechos reservados</span>
+
+                            </div>
+
+                            <div class="col-lg-4 ">
+                                <a href="" class="float-right">
+
+                                <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+                                
+                                </a>    
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>
+
+</html>

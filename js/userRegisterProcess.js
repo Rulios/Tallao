@@ -1,15 +1,38 @@
-var verification = {
-  inputName: false,
-  inputLastname : false,
-  inputEmail: false,
-  inputPassword: false,
-  inputRePassword: false,
-  inputTargetMarket: false
-};
-
+var verification = {};
+var status = "";
 $(document).ready(function () {
 
+  console.log(window.location.pathname);
   
+  if((window.location.pathname == "/Tallao/masterRegister.html") || (window.location.pathname == "masterRegister.html")){
+      
+      status = "superuser";
+
+      verification = {
+        inputLaundryName: false,
+        inputLocation: false,
+        inputName: false,
+        inputLastname : false,
+        inputEmail: false,
+        inputPassword: false,
+        inputRePassword: false
+      };
+
+  }else if((window.location.pathname == "/Tallao/register.html") || (window.location.pathname == "register.html")){
+      status = "user";
+
+      verification = {
+        inputName: false,
+        inputLastname : false,
+        inputEmail: false,
+        inputPassword: false,
+        inputRePassword: false,
+        inputTargetMarket: false
+      };
+  }
+
+  
+
   formVerification("load", false);
 
   $("#frmUserRegister").submit(function(e){
@@ -78,6 +101,75 @@ $(document).ready(function () {
 
   });
 
+  $("#frmMasterUserRegister").submit(function(e){
+
+    
+
+    formVerification("submit", false);
+    console.log(verification);
+    e.preventDefault();
+
+    //Securities issue solver
+    if($("#submitRegister").hasClass("disableButton") == false){
+
+
+      let initials = $("#inputInitials").val();
+      let inputLaundryName = $("#inputLaundryName").val();
+      let inputLocation = $("#inputLocation").val();
+      let inputName = capitalizeFirstLetter($("#inputName").val());
+      let inputLastname = capitalizeFirstLetter($("#inputLastname").val());
+      let inputEmail = $("#inputEmail").val();
+      let inputPassword = $("#inputPassword").val();
+
+        var obj = {
+        inputInitials : initials,
+        inputLaundryName: inputLaundryName,
+        inputLocation: inputLocation,
+        inputName: inputName,
+        inputLastname: inputLastname,
+        inputEmail: inputEmail,
+        inputPassword: inputPassword
+        };
+        
+      $.ajax({
+        type: "POST",
+        url: "./php/masterRegister.php",
+        data: 
+        {
+        inputInitials : initials,
+        inputLaundryName: inputLaundryName,
+        inputLocation: inputLocation,
+        inputName: inputName,
+        inputLastname: inputLastname,
+        inputEmail: inputEmail,
+        inputPassword: inputPassword
+        }
+        ,
+    
+        success: function (response) {
+          console.log("enviado");
+          console.log(obj);
+          $("#frmUserRegister").toggleClass("hide");
+          $("#congrSection").toggleClass("hide");
+          
+        },
+
+        error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+
+        }
+        
+      });
+
+    }
+
+  });
+
+
+
   $('#inputName').change(function(e){
 
     let id = "inputName";
@@ -104,7 +196,7 @@ $(document).ready(function () {
 
 
     deleteAppendError(id);
-    if((lastName == "") || (lastName.length < 3)){
+    if((lastName == "") || (lastName.length < 2)){
       formAppendError(id, msg, "red");
       formVerification(id, false);
     }else{
@@ -232,6 +324,95 @@ $(document).ready(function () {
 
   });
 
+  $("#inputLaundryName").focus(function(){
+    
+    let id = "inputLaundryName";
+    let startString = "Lavandería" + " ";
+    let startStringLength = startString.length;
+    
+    let minLength = startStringLength + 2;
+
+    if($("#inputLaundryName").val().search(startString) == -1){
+      $("#inputLaundryName").val("");
+      $("#inputLaundryName").val(startString);
+    }
+  });
+
+  $("#inputLaundryName").change(function(){ 
+    let id = "inputLaundryName";
+    let startString = "Lavandería" + " ";
+    let startStringLength = startString.length;
+    let minLength = startStringLength + 2;
+    let msg = "Escribe el nombre de la lavandería";
+
+    if($("#inputLaundryName").val().search(startString) == -1){
+      $("#inputLaundryName").val(startString + $("#inputLaundryName").val());
+    }
+
+    if($("#inputLaundryName").val().length < minLength){
+      
+      formAppendError(id, msg, "red");
+      formVerification(id, false);
+    }else{
+      deleteAppendError(id);
+      formVerification(id, true);
+    }
+
+  });
+
+  $("#inputLocation").change(function(){
+    let id= "inputLocation";
+    let msg = "Escribe una ubicación válida";
+
+    if($("#inputLocation").val().length < 50){
+      formAppendError(id, msg, "red");
+      formVerification(id, false);
+    }else{
+      deleteAppendError(id);
+      formVerification(id, true);
+    }
+  });
+
+  $("#inputInitials").on("input", function(){
+
+    $("#inputInitials").val($("#inputInitials").val().toUpperCase());
+
+  });
+
+  $("#inputInitials").change( function(){
+
+    let id = "inputInitials";
+    let msg = {
+      msg1: "¡Abreviatura existente! Escribe otra",
+      msg2: "¡Abreviatura válida!"
+    };
+    let verSame = false;
+
+    let initials = $("#inputInitials").val();
+
+    checkRepInitials(initials, function(dataCallback){
+
+      if(dataCallback["length"] == 1){
+        verSame = true;
+        //formAppendError(id, "¡El correo existe!");
+      }else{
+        verSame = false;
+        //deleteAppendError(id);
+      }
+
+      
+      if(verSame == true){
+        deleteAppendError(id);
+        formAppendError(id, msg.msg1 , "red");
+        formVerification(id, false);
+      }else{
+        deleteAppendError(id);
+        formAppendError(id, msg.msg2 , "green");
+        formVerification(id, true);
+      }
+    });
+  });
+
 
 });
 
@@ -300,10 +481,55 @@ function deleteAppendError(id){
 function checkRepEmail(email, callbackResult){
   let verifySame = false;
 
+  if(status == "user"){
+
+    $.ajax({
+      type: "POST",
+      url: "./php/checkRepEmail.php",
+      data: {inputEmail: email},
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+  
+    }, callbackResult);
+
+  }else if(status == "superuser"){
+    
+    $.ajax({
+      type: "POST",
+      url: "./php/checkRepSuperUserEmail.php",
+      data: {inputEmail: email},
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+  
+    }, callbackResult);
+
+  }
+
+  
+
+}
+
+function checkRepInitials(initials, callbackResult){
+  let verifySame = false;
+
   $.ajax({
     type: "POST",
-    url: "./php/checkRepEmail.php",
-    data: {inputEmail: email},
+    url: "./php/checkRepInitials.php",
+    data: {inputInitials: initials},
     dataType: 'json',
     error: function(jqXHR, status, error){
 
@@ -362,7 +588,21 @@ function formVerification(field, status){
 }
 function capitalizeFirstLetter(string) { 
   //set all string to lowCase
+  let arr = [];
+  let result = "";
   string = string.toLowerCase();
-  let result = string[0].toUpperCase() + string.slice(1); 
+  string = string.trim();
+
+  arr = string.split(" ");
+
+  
+  for(let i = 0; i < arr.length; i++){
+
+    result += arr[i][0].toUpperCase() + arr[i].slice(1) + " "; 
+    
+  }
+
+  
+   
   return result;
 } 

@@ -126,7 +126,9 @@ $(document).ready(function () {
           break;
         }
 
-        if(verification.inputPassword == true){
+        if((verification.inputPassword == true) && ($("#inputRePassword").hasClass("disableInput") == true)){
+            $("#inputRePassword").toggleClass("disableInput");
+        }else if(($("#inputRePassword").hasClass("disableInput") == false) && (verification.inputPassword == false)){
             $("#inputRePassword").toggleClass("disableInput");
         }
     
@@ -157,7 +159,9 @@ $(document).ready(function () {
         
         formVerification("submit", false);
 
-        $.ajax({
+        if($("#submitChange").hasClass("disableButton") == false){
+
+          $.ajax({
             type: "POST",
             url: "./php/newPassword.php",
             data: {
@@ -166,6 +170,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#divChangePassword").toggleClass("hide");
+                $("#changePassword").toggleClass("hide");
+                $("#changePasswordSuccess").toggleClass("hide");
                 $("#inputActualPassword").toggleClass("disableInput");
                 $("#inputPassword").toggleClass("disableInput");
                 $("#inputRePassword").toggleClass("disableInput");
@@ -181,7 +187,9 @@ $(document).ready(function () {
                 alert("Error " + status + error);
       
             }
-        });
+          });
+
+        }
 
       });
 
