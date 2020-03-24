@@ -8,7 +8,14 @@ var clickStatus = {
     superUser: false
 }
 
+var cookie = getCookieData(document.cookie);
 $(document).ready(function(){
+
+    if((cookie.userhash != "") && (cookie.usertype == "user")){
+      window.location.replace("./panel.html");
+    }else if((cookie.userhash != "") && (cookie.usertype == "superuser")){
+      window.location.replace("./masterpanel.html");
+    }
 
     formVerification("load", false);
 
@@ -255,4 +262,24 @@ function convertStringToBoolean(string){
   }
 
   return boolean;
+}
+
+function getCookieData(string){
+  let hash = "";
+  let userCode = "";
+  let obj = {};
+  let arr = [];
+  hash = string.trim();
+
+  hash = hash.split(";");
+  
+
+  for (let i = 0; i < hash.length; i++){
+
+    arr = hash[i].trim().split("=");
+    obj[arr[0]] = arr[1];
+
+  }
+
+  return obj;
 }

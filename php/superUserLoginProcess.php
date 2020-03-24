@@ -14,8 +14,11 @@ $hashPassword = "";
 $verification = [];
 
 //Cookie config
-$cookieName = "superuser";
-$cookieValues = "";
+$cookieName = "userhash";
+$cookieValue = "";
+
+$cookieName2 = "usertype";
+$cookieValue2 = "superuser";
 
 if(isset($inputEmail, $inputPassword)){
     $inputEmail = $_POST['inputEmail'];
@@ -55,10 +58,10 @@ if (mysqli_num_rows($result) == 1){
     if (password_verify($inputPassword, $hashPassword)){
         //true
         $verification["status"] = "true";
-        $cookieValues = $hashUserCode;
+        $cookieValue = $hashUserCode;
         
-        setcookie($cookieName, $cookieValues, time()+(1800), "/" );
-
+        setcookie($cookieName, $cookieValue, time()+(57600), "/" );
+        setcookie($cookieName2, $cookieValue2, time()+(57600), "/" );
     } else {
        
         $verification["status"] = "false";

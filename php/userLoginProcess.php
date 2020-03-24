@@ -14,8 +14,12 @@ $hashPassword = "";
 $verification = [];
 
 //Cookie config
-$cookieName = "user";
+$cookieName = "userhash";
 $cookieValues = "";
+
+$cookieName2 = "usertype";
+$cookieValue2 = "user";
+
 
 if(isset($inputEmail, $inputPassword)){
     $inputEmail = $_POST['inputEmail'];
@@ -58,7 +62,7 @@ if (mysqli_num_rows($result) == 1){
         $cookieValues = $hashUserCode;
         
         setcookie($cookieName, $cookieValues, time()+(1800), "/" );
-
+        setcookie($cookieName2, $cookieValue2, time()+(1800), "/" );
     } else {
        
         $verification["status"] = "false";

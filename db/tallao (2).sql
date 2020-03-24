@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-03-2020 a las 05:43:49
+-- Tiempo de generación: 24-03-2020 a las 04:24:06
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -21,6 +21,33 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tallao`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `superusers`
+--
+
+CREATE TABLE `superusers` (
+  `initials` text NOT NULL,
+  `hashcode` text NOT NULL,
+  `laundryname` text NOT NULL,
+  `location` text NOT NULL,
+  `serviceoffer` text NOT NULL,
+  `legalreprName` text NOT NULL,
+  `legalreprLastname` text NOT NULL,
+  `email` text NOT NULL,
+  `password` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `superusers`
+--
+
+INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`) VALUES
+('VICNT', 'v9GopsZk5g83aDxJLOTy', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$VIrp1mNZyJdClm5W1.Hu5eM0qk7H7LPcv.dvjZSgUXRpVNfZ1RN7q'),
+('VCN2', 'uKvlLBkofg8mDXdTE0LZ', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Dogo ', 'Goa ', 'robert_lu20@hotmail.com', '$2y$12$YRSPvksgzPmKIfIGmrBMTesbVNy2OXf.bBVHP5gvJB.ZdlfuoXDru'),
+('VICN3', '6qJQcODaSeQZPYtiDTeb', 'Lavandería Vicente #3', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Robert ', 'Lu Zheng ', 'pero@wachu.com', '$2y$12$N8lgkzoCpSlGwGSWl3b/EON8yI1TwQGmG8Hiz5BjsgtNcpGjIhdSm');
 
 -- --------------------------------------------------------
 
@@ -61,7 +88,20 @@ INSERT INTO `targetmarket` (`id`, `reason`) VALUES
 (21, ''),
 (22, ''),
 (23, 'social-media'),
-(24, 'internet-advertisement');
+(24, 'internet-advertisement'),
+(25, 'people-recommendation'),
+(26, ''),
+(27, ''),
+(28, ''),
+(29, ''),
+(30, ''),
+(31, ''),
+(32, ''),
+(33, ''),
+(34, ''),
+(35, ''),
+(36, 'social-media'),
+(37, 'internet-advertisement');
 
 -- --------------------------------------------------------
 
@@ -84,7 +124,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`) VALUES
-('OEO44', 'cTiBJT3JEWMVzL8c0NvX', 'Robert', 'Lu zheng', 'robert_lu20@hotmail.com', '$2y$12$nDuRZaYR59RDWtpa2WmI6OHw3JcJKKexjeE.xUVnYCPTEiODFIf3C', 0);
+('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 0);
 
 --
 -- Índices para tablas volcadas
@@ -104,7 +144,7 @@ ALTER TABLE `targetmarket`
 -- AUTO_INCREMENT de la tabla `targetmarket`
 --
 ALTER TABLE `targetmarket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

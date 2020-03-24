@@ -50,6 +50,11 @@
                     <i class="fa fa-user-circle" aria-hidden="true"></i>
                     <b>Mi cuenta</b>
                 </a>
+
+                <a href=""class="bottomLineLinkAnimation redTxt" id="signout">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    <b>Cerrar Sesión</b>
+                </a>
     
                 <div class="leftSeparation  centerOnXs">
                     <b>Idioma:</b> 
@@ -71,43 +76,103 @@
             <div class="row">
 
                 <div class="col-lg-12 karla_font text-center titleTxt">
-                    Todo lo que debes saber de tu cuenta. Aqui. 
+                    Todo lo que debes saber de tu cuenta. Aquí. 
                 </div>
 
             </div>  
 
+            <div id="userForm" class="hide">
 
-            <div class="row formRowSeparation">
+                <div class="row formRowSeparation">
 
-                <div class="col-lg-12 karla_font text-center showIDTxt" id="showID">
-                    
-                    <i class="fa fa-question-circle " data-toggle="tooltip" data-placement="left" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
+                    <div class="col-lg-12 karla_font text-center showIDTxt" id="showID">
+                        
+                        <i class="fa fa-question-circle " data-toggle="tooltip" data-placement="left" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
+                    </div>
+
+                </div>  
+
+                <div class="row supTxt-TitleTxt-Separation">
+
+                    <div class="col-lg-6">
+                        <b>Nombre:</b>
+
+                        <span id="showName"></span>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <b>Apellido:</b>
+
+                        <span id="showLastname"></span>
+                    </div>
+
                 </div>
 
-            </div>  
+                <div class="row formRowSeparation">
 
-            <div class="row supTxt-TitleTxt-Separation">
+                    <div class="col-lg-12 ">
+                        <b>Correo electrónico:</b>
 
-                <div class="col-lg-6">
-                    <b>Nombre:</b>
+                        <span id="showEmail"></span>
+                    </div>
 
-                    <span id="showName"></span>
-                </div>
-
-                <div class="col-lg-6">
-                    <b>Apellido:</b>
-
-                    <span id="showLastname"></span>
                 </div>
 
             </div>
 
-            <div class="row formRowSeparation">
+            <div id="superuserForm" class="hide">
 
-                <div class="col-lg-12 ">
-                    <b>Correo electrónico:</b>
+                <div class="row formRowSeparation">
 
-                    <span id="showEmail"></span>
+                    <div class="col-lg-12 karla_font text-center showIDTxt" id="showID">
+                        
+                        
+                    </div>
+
+                </div>  
+
+                <div class="row supTxt-TitleTxt-Separation">
+
+                    <div class="col-lg-12 ">
+                        <b>Abreviatura:</b>
+
+                        <span id="showInitials"></span>
+                    </div>
+                </div>
+
+                <div class="row formRowSeparation">
+
+                    <div class="col-lg-12 ">
+                        <b>Ubicación:</b>
+
+                        <span id="showLocation"></span>
+                    </div>
+                </div>
+
+                <div class="row formRowSeparation">
+
+                    <div class="col-lg-6">
+                        <b>Nombre del Representante Legal:</b>
+
+                        <span id="showLegalReprName"></span>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <b>Apellido del Representante Legal:</b>
+
+                        <span id="showLegalReprLastname"></span>
+                    </div>
+
+                </div>
+
+                <div class="row formRowSeparation">
+
+                    <div class="col-lg-12 ">
+                        <b>Correo electrónico:</b>
+
+                        <span id="showSuperUserEmail"></span>
+                    </div>
+
                 </div>
 
             </div>
@@ -151,6 +216,97 @@
             </div>
 
           </div>
+
+        <div class="container sectionSeparation ">
+
+            <div class="row bottomBorder"></div>
+
+            <div class="row small-mediumSeparation">
+                <div class="col-lg-12 karla_font text-center titleTxt">
+                    Configuración de los precios
+                </div>
+            </div>  
+
+            <div class="row small-mediumSeparation">
+                <div class="col-lg-12 karla_font text-center subTxt">
+                    Oferta de servicios
+                </div>
+            </div>  
+
+
+            <div class="row supTxt-TitleTxt-Separation text-center montserrat_font">
+
+                <div class="col-lg-3 col-sm-12">
+                    <input type="checkbox" value="iron" id="checkBoxIron">
+                    <span class="middleVerticalAlign" id="spn4CheckBoxIron">Planchado</span> 
+                </div>
+
+                <div class="col-lg-3 col-sm-12">
+                    <input type="checkbox" value="wash-iron" id="checkBoxWash-Iron">
+                    <span class="middleVerticalAlign" id="spn4CheckBoxWash-Iron">Lavado y Planchado</span>
+                </div>
+
+
+                <div class="col-lg-3 col-sm-12">
+                    <input type="checkbox" value="wash" id="checkBoxWash">
+                    <span class="middleVerticalAlign" id="spn4CheckBoxWash">Lavado</span>
+                </div>
+
+                <div class="col-lg-3 col-sm-12">
+                    <input type="checkbox" value="dryclean" id="checkBoxDryClean">
+                    <span class="middleVerticalAlign" id="spn4CheckBoxDryClean">Lavado en Seco (Dry Clean)</span>
+                </div>
+
+            </div>
+
+            <div class="row small-mediumSeparation">
+
+                <div class="col-lg-12 formRowSeparation">
+                    
+                    <button class="submitButtonLogin" id="submitChangeOffer">Actualizar oferta de servicios</button>
+                </div>
+
+            </div>
+
+
+            <div class="row supTxt-TitleTxt-Separation">
+                <div class="col-lg-12 karla_font text-center subTxt">
+                    Precios de los elementos
+                </div>
+            </div>  
+
+            <div class="row supTxt-TitleTxt-Separation karla_font">
+
+                <div class="col-lg-4 subTxt styleElementBox">
+
+                    <span id="spn4Shirt" class="styleElementName">Camisa</span>
+                    
+                    <span id="spn4ServiceType" class="smallSeparation">
+
+                        <select name="selectServiceType" id="selectServiceType" class="styleSelectServiceType">
+                            <option value="iron">Planchado</option>
+                        </select>
+                    </span>
+
+                    <div class="input-group mb-2 small-mediumSeparation">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">$</div>
+                        </div>
+                        <input type="text" value="0.65" class="styleElementPrice" id="inputElementPrice">
+                    </div>
+
+                </div>
+
+                
+
+                
+
+                
+
+
+            </div>
+
+        </div>
 
     </body>
 

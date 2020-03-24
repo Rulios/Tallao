@@ -4,11 +4,16 @@ var verification = {
     inputRePassword: false
 }
 
+
+var cookie = getCookieData(document.cookie);
+
+
 $(document).ready(function () {
     
-    var cookieValue = getUserHashCode(document.cookie);
+    
     
     console.log(window.location.pathname);
+    console.log(cookie);
 
     if((typeof document.cookie == undefined) || (document.cookie == "")){
 
@@ -23,7 +28,11 @@ $(document).ready(function () {
 
             formVerification("load", false);
 
-            fetchMyAccountData(cookieValue, function(dataCallback){
+            if(cookie.usertype == "user"){
+
+              $("#userForm").toggleClass("hide");
+
+              fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
                 let id = dataCallback.id;
                 let name = dataCallback.name;
                 let lastname = dataCallback.lastname;
@@ -34,11 +43,36 @@ $(document).ready(function () {
                 tagShowLastname(lastname);
                 tagShowEmail(email);
                 console.log(dataCallback);
-            });
+              });
+
+            }else if(cookie.usertype == "superuser"){
+
+              $("#superuserForm").toggleClass("hide");  
+
+              fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
+                let initials = dataCallback.initials;
+                let laundryname = dataCallback.laundryname;
+                let location = dataCallback.location;
+                let name = dataCallback.legalreprName;
+                let lastname = dataCallback.legalreprLastname;
+                let email = dataCallback.email;
+
+                tagShowID(laundryname);
+                tagShowInitials(initials);
+                tagShowLocation(location);
+                tagShowLegalReprName(name);
+                tagShowLegalReprLastname(lastname);
+                tagShowSuperUserEmail(email);
+                console.log(dataCallback);
+              });
+
+            }
+
+            
 
         }else if((window.location.pathname == "/Tallao/panel.html") || (window.location.pathname == "panel.html")){
 
-            fetchPanelData(cookieValue, function(dataCallback){
+            fetchPanelData(cookie.userhash, function(dataCallback){
                 let id = dataCallback.id;
                 let orders = dataCallback.orders;
                 console.log(dataCallback);
@@ -47,7 +81,7 @@ $(document).ready(function () {
 
         }
 
-        console.log(cookieValue);
+        
 
     }   
     
@@ -65,21 +99,22 @@ $(document).ready(function () {
     });
 
     $("#inputActualPassword").change(function(e){
-
+        alert($("#inputPassword").hasClass("disableInput"));
         let id = "inputActualPassword";
         let password = $("#inputActualPassword").val();
         let msg = "La contraseña no coincide";
 
-        checkSamePassword(cookieValue, password, function(data){
+        checkSamePassword(cookie.userhash, cookie.usertype, password, function(data){
             
-            if(data == true){
+            if((data == true) && ($("#inputPassword").hasClass("disableInput") == true)){
                 deleteAppendError(id);
                 formVerification(id, true);
                 $("#inputPassword").toggleClass("disableInput");
-            }else{
+            }else if((data == false) && ($("#inputPassword").hasClass("disableInput") == false)){
                 deleteAppendError(id);
                 formVerification(id, false);
                 formAppendError(id, msg, "red");
+                $("#inputPassword").toggleClass("disableInput");
             }
 
         });
@@ -161,35 +196,88 @@ $(document).ready(function () {
 
         if($("#submitChange").hasClass("disableButton") == false){
 
-          $.ajax({
-            type: "POST",
-            url: "./php/newPassword.php",
-            data: {
-                inputUserHash: cookieValue,
-                inputPassword: inputPassword
-            },
-            success: function (response) {
-                $("#divChangePassword").toggleClass("hide");
-                $("#changePassword").toggleClass("hide");
-                $("#changePasswordSuccess").toggleClass("hide");
-                $("#inputActualPassword").toggleClass("disableInput");
-                $("#inputPassword").toggleClass("disableInput");
-                $("#inputRePassword").toggleClass("disableInput");
+          if(cookie.usertype == "user"){
 
-                $("#inputActualPassword").val("");
-                $("#inputPassword").val("");
-                $("#inputRePassword").val("");
-            },
-            error: function(jqXHR, status, error){
+            $.ajax({
+              type: "POST",
+              url: "./php/userNewPassword.php",
+              data: {
+                  inputUserHash: cookie.userhash,
+                  inputPassword: inputPassword
+              },
+              success: function (response) {
+                  $("#divChangePassword").toggleClass("hide");
+                  $("#changePassword").toggleClass("hide");
+                  $("#changePasswordSuccess").toggleClass("hide");
+                  $("#inputActualPassword").toggleClass("disableInput");
+                  $("#inputPassword").toggleClass("disableInput");
+                  $("#inputRePassword").toggleClass("disableInput");
+  
+                  $("#inputActualPassword").val("");
+                  $("#inputPassword").val("");
+                  $("#inputRePassword").val("");
+              },
+              error: function(jqXHR, status, error){
+  
+                  console.log('Status: ' + status);
+                  console.log('Error ' + error);
+                  alert("Error " + status + error);
+        
+              }
+            });
 
-                console.log('Status: ' + status);
-                console.log('Error ' + error);
-                alert("Error " + status + error);
-      
-            }
-          });
+          }else if(cookie.usertype == "superuser"){
+
+            $.ajax({
+              type: "POST",
+              url: "./php/superUserNewPassword.php",
+              data: {
+                  inputUserHash: cookie.userhash,
+                  inputPassword: inputPassword
+              },
+              success: function (response) {
+                  $("#divChangePassword").toggleClass("hide");
+                  $("#changePassword").toggleClass("hide");
+                  $("#changePasswordSuccess").toggleClass("hide");
+                  $("#inputActualPassword").toggleClass("disableInput");
+                  $("#inputPassword").toggleClass("disableInput");
+                  $("#inputRePassword").toggleClass("disableInput");
+  
+                  $("#inputActualPassword").val("");
+                  $("#inputPassword").val("");
+                  $("#inputRePassword").val("");
+              },
+              error: function(jqXHR, status, error){
+  
+                  console.log('Status: ' + status);
+                  console.log('Error ' + error);
+                  alert("Error " + status + error);
+        
+              }
+            });
+
+          }
+          
 
         }
+
+      });
+
+      $("#signout").click(function(e){
+
+        e.preventDefault();
+
+        //delete cookie
+
+        let cookieName = Object.keys(cookie);
+
+        for(let i = 0; i < cookieName.length; i++){
+
+          document.cookie = cookieName[i] +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+        }
+
+        window.location.replace("./index.html")
 
       });
 
@@ -289,6 +377,16 @@ function tagShowName(name){
     $("#showName").text(name);
 
 }
+function tagShowInitials(initials){
+
+    $("#showInitials").text(initials);
+
+}
+function tagShowLocation(location){
+
+    $("#showLocation").text(location);
+
+}
 function tagShowLastname(lastname){
 
     $("#showLastname").text(lastname);
@@ -299,73 +397,146 @@ function tagShowEmail(email){
     $("#showEmail").text(email);
 
 }
+function tagShowSuperUserEmail(email){
+    $("#showSuperUserEmail").text(email);
+}
+function tagShowLegalReprName(legalReprName){
+    $("#showLegalReprName").text(legalReprName);
+}
+function tagShowLegalReprLastname(legalReprLastname){
+    $("#showLegalReprLastname").text(legalReprLastname);
 
-function getUserHashCode(string){
+}
+function getCookieData(string){
     let hash = "";
     let userCode = "";
+    let obj = {};
+    let arr = [];
     hash = string.trim();
 
-    hash = hash.split("=");
+    hash = hash.split(";");
+    
 
-    userCode = hash[1];
+    for (let i = 0; i < hash.length; i++){
 
-    return userCode;
+      arr = hash[i].trim().split("=");
+      obj[arr[0]] = arr[1];
+
+    }
+
+    return obj;
 }
 
-function fetchPanelData(userHash, callbackResult){
+function fetchPanelData(userHash, userType, callbackResult){
+
+  if(userType == "user"){
 
     $.ajax({
-        type: "POST",
-        url: "./php/fetchUserPanelData.php",
-        data: {inputUserHash: userHash},
-        dataType: 'json',
-        error: function(jqXHR, status, error){
+      type: "POST",
+      url: "./php/fetchUserPanelData.php",
+      data: {inputUserHash: userHash},
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  }else if(userType == "superuser"){
+
+  }
+
     
-          console.log('Status: ' + status);
-          console.log('Error ' + error);
-          alert("Error " + status + error);
-    
-        }
-      }).done(function(data){
-      }, callbackResult);
 }
 
-function fetchMyAccountData(userHash, callbackResult){
+function fetchMyAccountData(userHash, userType, callbackResult){
+
+  if(userType == "user"){
 
     $.ajax({
-        type: "POST",
-        url: "./php/fetchMyAccountData.php",
-        data: {inputUserHash: userHash},
-        dataType: 'json',
-        error: function(jqXHR, status, error){
+      type: "POST",
+      url: "./php/fetchMyAccountDataUser.php",
+      data: {inputUserHash: userHash},
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error); 
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  }else if(userType == "superuser"){
+
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchMyAccountDataSuperUser.php",
+      data: {inputUserHash: userHash},
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+  }
+
+
     
-          console.log('Status: ' + status);
-          console.log('Error ' + error);
-          alert("Error " + status + error);
-    
-        }
-      }).done(function(data){
-      }, callbackResult);
 
 }
-function checkSamePassword(userHash,password, callbackResult){
+function checkSamePassword(userHash, userType, password, callbackResult){
+
+  if(userType == "user"){
 
     $.ajax({
-        type: "POST",
-        url: "./php/checkSamePassword.php",
-        data: {
-            inputUserHash: userHash,
-            inputPassword: password
-        },
-        dataType: 'json',
-        error: function(jqXHR, status, error){
+      type: "POST",
+      url: "./php/userCheckSamePassword.php",
+      data: {
+          inputUserHash: userHash,
+          inputPassword: password
+      },
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  }else if(userType == "superuser"){
+
+    $.ajax({
+      type: "POST",
+      url: "./php/superUserCheckSamePassword.php",
+      data: {
+          inputUserHash: userHash,
+          inputPassword: password
+      },
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+  }
+
     
-          console.log('Status: ' + status);
-          console.log('Error ' + error);
-          alert("Error " + status + error);
-    
-        }
-      }).done(function(data){
-      }, callbackResult);
 };
 

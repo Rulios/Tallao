@@ -149,7 +149,7 @@ $(document).ready(function () {
         success: function (response) {
           console.log("enviado");
           console.log(obj);
-          $("#frmUserRegister").toggleClass("hide");
+          $("#frmMasterUserRegister").toggleClass("hide");
           $("#congrSection").toggleClass("hide");
           
         },
