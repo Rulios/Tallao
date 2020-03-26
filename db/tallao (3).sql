@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-03-2020 a las 04:24:06
+-- Tiempo de generación: 25-03-2020 a las 02:15:32
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -21,6 +21,19 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tallao`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pricechart`
+--
+
+CREATE TABLE `pricechart` (
+  `initials` text NOT NULL,
+  `iron` text NOT NULL,
+  `wash-iron` text NOT NULL,
+  `dryclean` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table to store the data of the prices';
 
 -- --------------------------------------------------------
 

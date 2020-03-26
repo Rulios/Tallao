@@ -271,6 +271,20 @@ footer{
 .submitButtonLogin:hover{
     background-color: #42997E;
 }
+
+.submitButtonActualize{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #9CD7FF;
+    transition: 0.4s;
+} 
+.submitButtonActualize:hover{
+    background-color: #686FCC;
+}
+   
 .submitButtonLoginSuperUser{
     width: 100%;
     font-size: 20px;
@@ -354,7 +368,7 @@ input[type='checkbox']{
     float:left;
 }
 .styleElementPrice{
-    width: 80% ;
+    width: 70% ;
 }
 .styleSelectServiceType{
     width: 50%;
