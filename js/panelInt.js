@@ -5,6 +5,12 @@ var verification = {
 }
 var cookie = getCookieData(document.cookie);
 var serviceOffer = [];
+var serviceOfferString = {
+  iron: "Planchado",
+  washiron: "Lavado y planchado",
+  wash: "Lavado",
+  dryclean: "Lavado en seco"
+};
 
 //key = string to id
 //value = string to show
@@ -99,12 +105,36 @@ $(document).ready(function () {
 
                   $("input[type='checkbox'][value='"+serviceOffer[i]+"']").prop("checked", true);
 
+                  let option = document.createElement("OPTION");
+                  option.setAttribute("value", serviceOffer[i]);
+                  option.textContent = serviceOfferString[serviceOffer[i]];
+                  $("#selectServiceType").append(option);
                 }
 
               });
 
-              
+              let elementObjectKeys = Object.keys(elementsString);
+              let elementObjectLength = elementObjectKeys.length;
 
+              let counter = 0;
+              let rowDiv = "";
+              
+              for(let i = 0; i < elementObjectLength; i++){
+                
+                if(counter == 0){
+                  rowDiv = "";
+                  rowDiv = generateRowClass4ElementBox();
+                  
+                }
+              
+                rowDiv.append(generatePriceAssignationBox(elementsString[elementObjectKeys[i]], elementObjectKeys[i]));
+                $("#divAppendElementBox").append(rowDiv);
+                counter += 1;
+
+                if(counter == 3){
+                  counter = 0;
+                }
+              }
             }
 
         }else if((window.location.pathname == "/Tallao/panel.html") || (window.location.pathname == "panel.html")){
@@ -330,6 +360,46 @@ $(document).ready(function () {
         }
 
         window.location.replace("./index.html")
+
+      });
+
+      $("#submitChangeOffer").click(function(e){
+
+        let allCheckBox = $("input[type=checkbox]");
+        
+        let objectKeys = Object.keys(allCheckBox);
+        let objectLength = objectKeys.length - 2; //-2 because last two are length and prevObject
+        let arr = [];
+        let string = "";
+
+        for(let i = 0; i < objectLength; i++){
+          if(allCheckBox[objectKeys[i]].checked == true){
+            arr.push(allCheckBox[objectKeys[i]].value);
+          }
+        }
+        
+        string = arr.join(",");
+        
+        $.ajax({
+          type: "POST",
+          url: "./php/upgradeServiceOffer.php",
+          data: {
+              inputUserHash: cookie.userhash,
+              serviceoffer: string
+          },
+          success: function (response) {
+              $("#submitChangeOffer").toggleClass("disableButton");
+              $("#submitChangeOffer").text("¡ACTUALIZADO!");
+              
+          },
+          error: function(jqXHR, status, error){
+
+              console.log('Status: ' + status);
+              console.log('Error ' + error);
+              alert("Error " + status + error);
+    
+          }
+        });
 
       });
 
@@ -594,35 +664,16 @@ function checkSamePassword(userHash, userType, password, callbackResult){
 
 function generatePriceAssignationBox(elementName, elementNameID){
 
+ 
+
   let elementBox = document.createElement("DIV");
   elementBox.setAttribute("class", "col-lg-4 subTxt styleElementBox");
   elementBox.setAttribute("id", "divElementBox" + elementNameID);
 
   let spnElementName = document.createElement("SPAN");
   spnElementName.setAttribute("id", "spn4" + elementNameID);
-  spnElementName.text(elementName);
-
- 
-
-  let spnServiceType = document.createElement("SPAN");
-  spnServiceType.setAttribute("id", "spnServiceType" + elementNameID);
-  spnServiceType.setAttribute("class", "smallSeparation");
-
-  let selectServiceType = document.createElement("SELECT");
-  selectServiceType.setAttribute("id", "selectServiceType" + elementNameID);
-  selectServiceType.setAttribute("class", "styleSelectServiceType");
-
-  for(let i = 0; i < serviceOffer.length; i++){
-
-    let optionServiceType = document.createElement("OPTION");
-    optionServiceTypeType.setAttribute("value", serviceOffer[i]);
-    selectServiceType.append(selectServiceType);
-  }
-
-  spnServiceType.append(selectServiceType);
-
-
-
+  spnElementName.setAttribute("class", "styleElementName");
+  spnElementName.textContent = elementName;
 
 
   let dollarSignDiv = document.createElement("DIV");
@@ -632,8 +683,8 @@ function generatePriceAssignationBox(elementName, elementNameID){
   dollarSignSubDiv.setAttribute("class", "input-group-preprend");
 
   let dollarSignTextDiv = document.createElement("DIV");
-  dollarSignTextDiv.setAttribute("input-group-text");
-  dollarSignTextDiv.text("$");
+  dollarSignTextDiv.setAttribute("class", "input-group-text");
+  dollarSignTextDiv.textContent = "$";
 
   let inputElementPrice = document.createElement("INPUT");
   inputElementPrice.setAttribute("id", "inputPrice4" + elementName);
@@ -646,8 +697,17 @@ function generatePriceAssignationBox(elementName, elementNameID){
   dollarSignDiv.append(inputElementPrice);
 
   elementBox.append(spnElementName);
-  elementBox.append(spnServiceType);
   elementBox.append(dollarSignDiv);
+
+  return elementBox;
+
+}
+function generateRowClass4ElementBox(){
+
+  let rowDiv = document.createElement("DIV");
+  rowDiv.setAttribute("class", "row supTxt-TitleTxt-Separation karla_font");
+
+  return rowDiv;
 
 }
 

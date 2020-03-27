@@ -371,8 +371,10 @@ input[type='checkbox']{
     width: 70% ;
 }
 .styleSelectServiceType{
-    width: 50%;
-    float:right;
+    width: auto;
+   
+    margin-left: auto;
+    margin-right: auto;
 }
 @media only screen and (max-width: 768px){
 
