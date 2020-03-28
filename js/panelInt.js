@@ -71,10 +71,12 @@ $(document).ready(function () {
               
 
             }else if(cookie.usertype == "superuser"){
+              
 
               $("#superuserForm").toggleClass("hide");  
 
               fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
+                
                 let initials = dataCallback.initials;
                 let laundryname = dataCallback.laundryname;
                 let location = dataCallback.location;
@@ -94,10 +96,6 @@ $(document).ready(function () {
 
               fetchServiceOffer(function(dataCallback){
                 
-                let checkBoxIron = $("input[type='checkbox'][value='iron']");
-                let checkBoxWash_Iron =  $("input[type='checkbox'][value='wash-iron']");
-                let checkBoxWash = $("input[type='checkbox'][value='wash']");
-                let checkBoxDryClean = $("input[type='checkbox'][value='dry-clean']");
 
                 serviceOffer = dataCallback.serviceoffer.trim().split(",");
                 
@@ -109,7 +107,13 @@ $(document).ready(function () {
                   option.setAttribute("value", serviceOffer[i]);
                   option.textContent = serviceOfferString[serviceOffer[i]];
                   $("#selectServiceType").append(option);
+                  
                 }
+
+                if(serviceOffer[0] != "null"){
+                  fetchElementPrice();
+                }
+                
 
               });
 
@@ -135,6 +139,7 @@ $(document).ready(function () {
                   counter = 0;
                 }
               }
+              
             }
 
         }else if((window.location.pathname == "/Tallao/panel.html") || (window.location.pathname == "panel.html")){
@@ -390,6 +395,88 @@ $(document).ready(function () {
           success: function (response) {
               $("#submitChangeOffer").toggleClass("disableButton");
               $("#submitChangeOffer").text("¡ACTUALIZADO!");
+              
+          },
+          error: function(jqXHR, status, error){
+
+              console.log('Status: ' + status);
+              console.log('Error ' + error);
+              alert("Error " + status + error);
+    
+          }
+        });
+
+
+        fetchServiceOffer(function(dataCallback){
+                
+
+          serviceOffer = dataCallback.serviceoffer.trim().split(",");
+          
+          for(let i = 0; i < serviceOffer.length; i++){
+
+            $("input[type='checkbox'][value='"+serviceOffer[i]+"']").prop("checked", true);
+
+            let option = document.createElement("OPTION");
+            option.setAttribute("value", serviceOffer[i]);
+            option.textContent = serviceOfferString[serviceOffer[i]];
+            $("#selectServiceType").append(option);
+            
+          }
+
+          if(serviceOffer[0] != "null"){
+            fetchElementPrice();
+          }
+          
+
+        });
+
+      });
+
+      $("#selectServiceType").change(function(e){
+        
+        $("#submitChangePrice").toggleClass("disableButton");
+
+        fetchElementPrice();
+
+      });
+
+
+      $("#submitChangePrice").click(function(e){
+
+        let serviceSelected = $("#selectServiceType :selected").val();
+        let elementKeys = Object.keys(elementsString);
+        let string = "";
+        let arr = [];
+
+        for(let i = 0; i < elementKeys.length; i++){
+
+          if($("#inputPrice4" + elementKeys[i]).val() != ""){
+            let x = "";
+
+            x = elementKeys[i] + "=" + $("#inputPrice4" + elementKeys[i]).val();
+
+            arr.push(x);
+          }
+
+        }
+
+        string = arr.join();
+
+        console.log(cookie.userhash);
+        console.log(serviceSelected);
+        console.log(string);
+
+        $.ajax({
+          type: "POST",
+          url: "./php/upgradePriceConfig.php",
+          data: {
+              inputUserHash: cookie.userhash,
+              serviceoffer: serviceSelected,
+              priceConfig: string
+          },
+          success: function (response) {
+              $("#submitChangePrice").toggleClass("disableButton");
+              $("#submitChangePrice").text("¡ACTUALIZADO!");
               
           },
           error: function(jqXHR, status, error){
@@ -687,7 +774,7 @@ function generatePriceAssignationBox(elementName, elementNameID){
   dollarSignTextDiv.textContent = "$";
 
   let inputElementPrice = document.createElement("INPUT");
-  inputElementPrice.setAttribute("id", "inputPrice4" + elementName);
+  inputElementPrice.setAttribute("id", "inputPrice4" + elementNameID);
   inputElementPrice.setAttribute("type", "number");
   inputElementPrice.setAttribute("class", "styleElementPrice");
 
@@ -714,7 +801,7 @@ function generateRowClass4ElementBox(){
 function fetchServiceOffer(callbackResult){
 
   let userHash = cookie.userhash;
-  console.log(userHash);
+  
   $.ajax({
     type: "POST",
     url: "./php/fetchServiceOffer.php",
@@ -731,5 +818,56 @@ function fetchServiceOffer(callbackResult){
     }
   }).done(function(data){
   }, callbackResult);
+
+}
+
+function fetchElementPrice(){
+
+  let serviceSelected = $("#selectServiceType :selected").val();
+
+  let userHash = cookie.userhash;
+  
+  $.ajax({
+    type: "POST",
+    url: "./php/fetchElementPriceString.php",
+    data: {
+        inputUserHash: userHash,
+        serviceOffer: serviceSelected
+    },
+    dataType: 'json',
+
+    success: function(data){
+
+      console.log(data);
+      let array = [];
+      
+      if(data.serviceSelected != "null"){
+
+        array = data[serviceSelected].split(",");
+
+        for(let i = 0; i < array.length; i++){
+          
+          let elementSplit = array[i].split("=");
+          let id = elementSplit[0];
+          let price = elementSplit[1];
+          
+          $("#inputPrice4" + id).val(price);
+
+        }
+
+      }
+
+    },
+    error: function(jqXHR, status, error){
+
+      console.log('Status: ' + status);
+      console.log('Error ' + error);
+      alert("Error " + status + error);
+
+    }
+  });
+
+  
+  
 
 }

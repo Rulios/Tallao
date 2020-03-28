@@ -84,6 +84,15 @@ if(mysqli_query($conn,$sql)){
     echo mysqli_error($conn);
 }
 
+//3rd query
+
+$sql = "INSERT INTO pricechart (hashcode) VALUES ('$hashCode')";
+
+if(mysqli_query($conn,$sql)){
+
+}else{
+    echo mysqli_error($conn);
+}
 
 mysqli_close($conn);
 

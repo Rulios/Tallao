@@ -14,7 +14,7 @@ if (isset($_POST['inputUserHash'])){
 
 }
 
-$inputUserHash = "v9GopsZk5g83aDxJLOTy";
+//$inputUserHash = "8XMqSGzajxRRQiyLZj8m";
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 
