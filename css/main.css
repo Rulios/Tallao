@@ -372,9 +372,16 @@ input[type='checkbox']{
 }
 .styleSelectServiceType{
     width: auto;
-   
     margin-left: auto;
     margin-right: auto;
+}
+.elementSelectStyle{
+    padding-bottom: 1em;
+    margin-top: 1em;
+}
+.assetStayStatic{
+    width: auto;
+    height:80px;
 }
 @media only screen and (max-width: 768px){
 

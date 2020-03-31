@@ -24,7 +24,7 @@ var elementsString = {
  overall: "Overol",
  jumper: "Jumper",
  blouse: "Blusa",
- largeSuit: "Traje",
+ largeSuit: "Vestido",
  quilt: "Colcha",
 
 };
@@ -406,35 +406,18 @@ $(document).ready(function () {
           }
         });
 
+        location.reload();
 
-        fetchServiceOffer(function(dataCallback){
-                
-
-          serviceOffer = dataCallback.serviceoffer.trim().split(",");
-          
-          for(let i = 0; i < serviceOffer.length; i++){
-
-            $("input[type='checkbox'][value='"+serviceOffer[i]+"']").prop("checked", true);
-
-            let option = document.createElement("OPTION");
-            option.setAttribute("value", serviceOffer[i]);
-            option.textContent = serviceOfferString[serviceOffer[i]];
-            $("#selectServiceType").append(option);
-            
-          }
-
-          if(serviceOffer[0] != "null"){
-            fetchElementPrice();
-          }
-          
-
-        });
 
       });
 
       $("#selectServiceType").change(function(e){
         
-        $("#submitChangePrice").toggleClass("disableButton");
+
+        if($("#submitChangePrice").hasClass("disableButton") == true){
+          $("#submitChangePrice").toggleClass("disableButton");
+          $("#submitChangePrice").text("Actualizar precios"); 
+        }
 
         fetchElementPrice();
 
@@ -838,10 +821,11 @@ function fetchElementPrice(){
 
     success: function(data){
 
-      console.log(data);
+      
       let array = [];
       
-      if(data.serviceSelected != "null"){
+      
+      if(data[serviceSelected] != "null"){
 
         array = data[serviceSelected].split(",");
 
@@ -854,6 +838,16 @@ function fetchElementPrice(){
           $("#inputPrice4" + id).val(price);
 
         }
+
+      }else{
+
+        let objKeys = Object.keys(elementsString);
+        for(let i = 0; i < objKeys.length; i++){
+
+          $("#inputPrice4" + objKeys[i]).val("");
+
+        }
+
 
       }
 
