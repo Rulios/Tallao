@@ -34,9 +34,6 @@ $(document).ready(function () {
     
     
     console.log(window.location.pathname);
-    
-
-    
 
     if((typeof document.cookie == undefined) || (document.cookie == "")){
 
@@ -114,7 +111,6 @@ $(document).ready(function () {
                   fetchElementPrice();
                 }
                 
-
               });
 
               let elementObjectKeys = Object.keys(elementsString);
@@ -151,6 +147,26 @@ $(document).ready(function () {
                 tagShowID(id);
             });
 
+        }else if(window.location.pathname == "/Tallao/masterpanel.html"){
+
+          fetchServiceOffer(function(dataCallback){
+              
+            serviceOffer = dataCallback.serviceoffer.trim().split(",");
+            
+            for(let i = 0; i < serviceOffer.length; i++){
+
+              let option = document.createElement("OPTION");
+              option.setAttribute("value", serviceOffer[i]);
+              option.textContent = serviceOfferString[serviceOffer[i]];
+              $("#selectServiceType").append(option);
+              
+            }
+
+            if(serviceOffer[0] != "null"){
+              fetchElementPrice();
+            }
+            
+          });
         }
 
         
@@ -471,6 +487,10 @@ $(document).ready(function () {
           }
         });
 
+      });
+
+      $("button[name=elementButton]").click(function(e){
+        console.log(this.value);
       });
 
 
@@ -807,7 +827,7 @@ function fetchServiceOffer(callbackResult){
 function fetchElementPrice(){
 
   let serviceSelected = $("#selectServiceType :selected").val();
-
+  
   let userHash = cookie.userhash;
   
   $.ajax({
@@ -820,7 +840,7 @@ function fetchElementPrice(){
     dataType: 'json',
 
     success: function(data){
-
+      
       
       let array = [];
       
@@ -834,18 +854,76 @@ function fetchElementPrice(){
           let elementSplit = array[i].split("=");
           let id = elementSplit[0];
           let price = elementSplit[1];
+         
+          if(window.location.pathname == "/Tallao/masterpanel.html"){
+
+            /* let container = document.createElement("DIV");
+            container.setAttribute("class", "container");
+
+            let row = document.createElement("DIV");
+            row.setAttribute("class", "row bottomBorder elementSelectStyle");
+
+            let col4 = document.createElement("DIV");
+            col4.setAttribute("class", "col-lg-4");
+
+            let imgAsset = document.createElement("IMG");
+            imgAsset.setAttribute("src", "./imgs/assets/"+id +"/"+id+".svg");
+            imgAsset.setAttribute("class", "assetStayStatic");
+
+            let col8 = document.createElement("DIV");
+            col8.setAttribute("class", "col-lg-8");
+
+            let spnNameTag = document.createElement("SPAN");
+            spnNameTag.setAttribute("id", "nameTag4" + id);
+            spnNameTag.setAttribute("class", "subTxt");
+
+            let boldText = document.createElement("B");
+            boldText.textContent = elementsString[id];
+
+            let breakLine = document.createElement("BR");
+
+            let spnPriceTag = document.createElement("SPAN");
+            spnPriceTag.setAttribute("id", "priceTag4" + id);
+            spnPriceTag.textContent = price;
+
+            col4.append(imgAsset);
+            spnNameTag.append(boldText);
+            col8.append(spnNameTag);
+            col8.append(breakLine);
+            col8.append(spnPriceTag);
+            row.append(col4);
+            row.append(col8);
+            container.append(row); */
+            
+            $("#priceTag4" + id).text("$" + price);
+          }else if(window.location.pathname == "/Tallao/myaccount.html"){
+            $("#inputPrice4" + id).val(price);
+          }
           
-          $("#inputPrice4" + id).val(price);
 
         }
 
       }else{
 
         let objKeys = Object.keys(elementsString);
+
+        if(window.location.pathname == "/Tallao/masterpanel.html"){
+          
+          for(let i = 0; i < objKeys.length; i++){
+            
+            $("#priceTag4").textContent = objKeys[i];
+          }
+
+        }else if(window.location.pathname == "/Tallao/myaccount.html"){
+          
+          for(let i = 0; i < objKeys.length; i++){
+            $("#inputPrice4" + objKeys[i]).val("");
+          }
+
+        }
+
         for(let i = 0; i < objKeys.length; i++){
-
           $("#inputPrice4" + objKeys[i]).val("");
-
         }
 
 

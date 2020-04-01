@@ -383,6 +383,17 @@ input[type='checkbox']{
     width: auto;
     height:80px;
 }
+.buttonElementStyle{
+    background-color: transparent;
+    border:0 none;
+    width: 100%;
+    height:auto;
+    transition-duration:0.3s;
+}
+.buttonElementStyle:hover{
+    background-color: #E1E8DF;
+}
+
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
