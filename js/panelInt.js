@@ -29,6 +29,8 @@ var elementsString = {
 
 };
 
+
+var sessionPrice = {};
 $(document).ready(function () {
     
     
@@ -895,12 +897,14 @@ function fetchElementPrice(){
             row.append(col8);
             container.append(row); */
             
+            sessionPrice[id] = price;
+
             $("#priceTag4" + id).text("$" + price);
           }else if(window.location.pathname == "/Tallao/myaccount.html"){
             $("#inputPrice4" + id).val(price);
           }
           
-
+          
         }
 
       }else{
@@ -939,7 +943,94 @@ function fetchElementPrice(){
     }
   });
 
-  
-  
 
+}
+
+function generateCustomElementReceiptBox(id, service){
+
+  let mainContainer = document.createElement("DIV");
+  mainContainer.setAttribute("class", "container");
+  mainContainer.setAttribute("id", "elementReceipt4" + id);
+
+  let row1 = document.createElement("DIV");
+  row1.setAttribute("class", "row bottomBorder customElementReceiptStyle");
+
+  let colImgAsset = document.createElement("DIV");
+  colImgAsset.setAttribute("class", "col-lg-1 hideOnXs");
+
+  let imgAsset = document.createElement("img");
+  imgAsset.setAttribute("src", "./imgs/assets/"+id+ "/" + id + ".svg");
+  imgAsset.setAttribute("class", "assetStayStatic");
+
+  colImgAsset.append(imgAsset);
+
+  let colElementInformation = document.createElement("DIV");
+  colElementInformation.setAttribute("class", "col-lg-11");
+
+  let spn4Element = document.createElement("SPAN");
+  spn4Element.setAttribute("class", "bold subTxt");
+  spn4Element.setAttribute("id", "spn4" + id);
+  spn4Element.textContent = elementsString[id] + " (" + serviceOfferString[service] + ")";
+
+  let closeElementButton = document.createElement("BUTTON");
+  closeElementButton.setAttribute("class", "closeElementButtonStyle");
+  closeElementButton.textContent = "x";
+
+  let elementInfoContainer = document.createElement("DIV");
+  elementInfoContainer.setAttribute("class", "container small-mediumSeparation");
+
+  let rowInfo = document.createElement("DIV");
+  rowInfo.setAttribute("class", "row");
+
+  let colQuantity = document.createElement("DIV");
+  colQuantity.setAttribute("class", "col-lg-4");
+
+  let spnTagQuantity = document.createElement("SPAN");
+  spnTagQuantity.textContent = "Cantidad:";
+
+  let breakLine = document.createElement("BREAK");
+
+  let inputQuantity = document.createElement("INPUT");
+  inputQuantity.setAttribute("type", "number");
+  inputQuantity.setAttribute("class", "inputNumberReceiptStyle");
+  inputQuantity.setAttribute("id", "inputQuantity4" + id);
+  inputQuantity.textContent = "1";
+
+  colQuantity.append(spnTagQuantity);
+  colQuantity.append(breakLine);
+  colQuantity.append(inputQuantity);
+
+  let colPrice = document.createElement("DIV");
+  colPrice.setAttribute("class", "col-lg-4");
+
+  let spnTagPrice = document.createElement("SPAN");
+  spnTagPrice.textContent = "Precio por unidad:";
+
+  let spnDollarSign = document.createElement("SPAN");
+  spnDollarSign.textContent = "$";
+
+  let inputPrice = document.createElement("INPUT");
+  inputPrice.setAttribute("type", "number");
+  inputPrice.setAttribute("class", "inputNumberReceiptStyle");
+  inputPrice.setAttribute("id", "inputPrice4" + id);
+  inputPrice.textContent = sessionPrice[id];
+
+  colPrice.append(spnTagPrice);
+  colPrice.append(breakLine);
+  colPrice.append(spnDollarSign);
+  colPrice.append(inputPrice);
+
+  let colTotal = document.createElement("DIV");
+  colPrice.setAttribute("class", "col-lg-4");
+
+  let spnTagTotal = document.createElement("SPAN");
+  spnTagPrice.textContent = "Total:";
+
+  let spnResultTotal = document.createElement("SPAN");
+  spnResultTotal.setAttribute("id", "spnResultElementTotal4" + id);
+  spnResultTotal.textContent = "$" + (inputQuantity.val() * inputPrice);
+
+  colTotal.append(spnTagTotal);
+  colTotal.append(breakLine);
+  colTotal.append(spnResultTotal);
 }

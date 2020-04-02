@@ -20,6 +20,9 @@ html {
     scroll-behavior: smooth !important;
     
 }
+.bold{
+    font-weight: bold;
+}
 .topVerticalAlign{
     vertical-align: super;
 }
@@ -393,7 +396,28 @@ input[type='checkbox']{
 .buttonElementStyle:hover{
     background-color: #E1E8DF;
 }
+.customElementReceiptStyle{
+    padding-bottom: 1em;
+}
+.inputNumberReceiptStyle{
+    width: 50% !important;
+}
 
+.closeElementButtonStyle{
+    font-size: 1em;
+    right:0; 
+    top:0; 
+    margin-top: 0.5em; 
+    margin-right: 0.5em; 
+    position:absolute;
+    border-radius: 5px;
+    border: solid 1px black;
+    background-color: transparent;
+    transition-duration: 0.3s;
+}
+.closeElementButtonStyle:hover{
+    background-color: #E84DA5;
+}
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
