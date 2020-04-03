@@ -353,13 +353,14 @@ $(document).ready(function () {
 
       });
 
-      $("input[type=number]").keydown(function(event){
+      $("input[type=number]").keydown(function(e){
         
-        if (event.which === 69) {
-          event.preventDefault();
+        if (e.which === 69) {
+          e.preventDefault();
         }
-
+        
       });
+
 
       $("input[type=number]").bind("paste", function(e){
         
@@ -491,9 +492,19 @@ $(document).ready(function () {
 
       });
 
+
+
       $("button[name=elementButton]").click(function(e){
-        console.log(this.value);
+
+        let id = this.value;
+        let service = $("#selectServiceType :selected").val();
+
+        console.log(id);
+        console.log(service);
+
+        generateCustomElementReceiptBox(id, service);
       });
+
 
 
 });
@@ -856,6 +867,8 @@ function fetchElementPrice(){
           let elementSplit = array[i].split("=");
           let id = elementSplit[0];
           let price = elementSplit[1];
+
+          
          
           if(window.location.pathname == "/Tallao/masterpanel.html"){
 
@@ -897,9 +910,13 @@ function fetchElementPrice(){
             row.append(col8);
             container.append(row); */
             
-            sessionPrice[id] = price;
+            
 
+            sessionPrice[id] = price;
+           
             $("#priceTag4" + id).text("$" + price);
+            $("#priceTag4" + id).val(price);
+            
           }else if(window.location.pathname == "/Tallao/myaccount.html"){
             $("#inputPrice4" + id).val(price);
           }
@@ -915,7 +932,9 @@ function fetchElementPrice(){
           
           for(let i = 0; i < objKeys.length; i++){
             
-            $("#priceTag4").textContent = objKeys[i];
+            $("#priceTag4" + objKeys[i]).text("Precio no asignado");
+            $("#priceTag4" + objKeys[i]).val("nonAssigned");
+           
           }
 
         }else if(window.location.pathname == "/Tallao/myaccount.html"){
@@ -949,7 +968,7 @@ function fetchElementPrice(){
 function generateCustomElementReceiptBox(id, service){
 
   let mainContainer = document.createElement("DIV");
-  mainContainer.setAttribute("class", "container");
+  mainContainer.setAttribute("class", "container small-mediumSeparation");
   mainContainer.setAttribute("id", "elementReceipt4" + id);
 
   let row1 = document.createElement("DIV");
@@ -988,17 +1007,27 @@ function generateCustomElementReceiptBox(id, service){
   let spnTagQuantity = document.createElement("SPAN");
   spnTagQuantity.textContent = "Cantidad:";
 
-  let breakLine = document.createElement("BREAK");
+  let breakLine1 = document.createElement("BR");
 
   let inputQuantity = document.createElement("INPUT");
   inputQuantity.setAttribute("type", "number");
   inputQuantity.setAttribute("class", "inputNumberReceiptStyle");
   inputQuantity.setAttribute("id", "inputQuantity4" + id);
-  inputQuantity.textContent = "1";
+  inputQuantity.setAttribute("name", "inputQuantity");
+  inputQuantity.value = "1";
 
+  inputQuantity.addEventListener("keypress", function(e){
+    onlyIntegers(e);
+  });
+
+  inputQuantity.addEventListener("paste", function(e){
+    e.preventDefault();
+  });
+  
   colQuantity.append(spnTagQuantity);
-  colQuantity.append(breakLine);
+  colQuantity.append(createBreakline());
   colQuantity.append(inputQuantity);
+ 
 
   let colPrice = document.createElement("DIV");
   colPrice.setAttribute("class", "col-lg-4");
@@ -1013,24 +1042,66 @@ function generateCustomElementReceiptBox(id, service){
   inputPrice.setAttribute("type", "number");
   inputPrice.setAttribute("class", "inputNumberReceiptStyle");
   inputPrice.setAttribute("id", "inputPrice4" + id);
-  inputPrice.textContent = sessionPrice[id];
+  inputPrice.value = sessionPrice[id];
+  
+  inputPrice.addEventListener("keypress", function(e){
+    onlyNumbers(e);
+  });
+
+  inputPrice.addEventListener("paste", function(e){
+    e.preventDefault();
+  });
 
   colPrice.append(spnTagPrice);
-  colPrice.append(breakLine);
+  colPrice.append(createBreakline());
   colPrice.append(spnDollarSign);
   colPrice.append(inputPrice);
 
   let colTotal = document.createElement("DIV");
-  colPrice.setAttribute("class", "col-lg-4");
+  colTotal.setAttribute("class", "col-lg-4");
 
   let spnTagTotal = document.createElement("SPAN");
-  spnTagPrice.textContent = "Total:";
+  spnTagTotal.textContent = "Total:";
 
   let spnResultTotal = document.createElement("SPAN");
   spnResultTotal.setAttribute("id", "spnResultElementTotal4" + id);
-  spnResultTotal.textContent = "$" + (inputQuantity.val() * inputPrice);
+  spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value);
 
+  
   colTotal.append(spnTagTotal);
-  colTotal.append(breakLine);
-  colTotal.append(spnResultTotal);
+  colTotal.append(createBreakline());
+  colTotal.append(spnResultTotal); 
+
+  rowInfo.append(colQuantity);
+  rowInfo.append(colPrice);
+  rowInfo.append(colTotal);
+
+  elementInfoContainer.append(rowInfo);
+
+  colElementInformation.append(spn4Element);
+  colElementInformation.append(closeElementButton);
+  colElementInformation.append(elementInfoContainer);
+
+  row1.append(colImgAsset);
+  row1.append(colElementInformation);
+
+  mainContainer.append(row1);
+  
+  $("#divOrdersAppendable").append(mainContainer);
+}
+
+function createBreakline(){
+  return document.createElement("BR");
+}
+function onlyIntegers(e){
+  if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+    e.preventDefault();
+  }
+}
+function onlyNumbers(e){
+  //Includes integers and decimals
+  if (e.which === 69) {
+    e.preventDefault();
+  }
+
 }
