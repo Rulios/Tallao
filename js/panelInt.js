@@ -965,7 +965,25 @@ function fetchElementPrice(){
 
 }
 
+
+var customActive = []; //global variable
 function generateCustomElementReceiptBox(id, service){
+  let defaultID = id; //used to fetch static id contents from the request
+
+  if(id == "custom"){
+    let index;
+    if(customActive.length == 0){
+      customActive.push(1);
+      index = 1;
+    }else{
+      index  = customActive[customActive.length - 1] + 1;
+      customActive.sort(function(a, b){return a-b});
+      customActive.push(index);
+    }
+
+    id += index;
+    
+  }
 
   let mainContainer = document.createElement("DIV");
   mainContainer.setAttribute("class", "container small-mediumSeparation");
@@ -978,7 +996,7 @@ function generateCustomElementReceiptBox(id, service){
   colImgAsset.setAttribute("class", "col-lg-1 hideOnXs");
 
   let imgAsset = document.createElement("img");
-  imgAsset.setAttribute("src", "./imgs/assets/"+id+ "/" + id + ".svg");
+  imgAsset.setAttribute("src", "./imgs/assets/"+defaultID+ "/" + defaultID + ".svg");
   imgAsset.setAttribute("class", "assetStayStatic");
 
   colImgAsset.append(imgAsset);
@@ -986,14 +1004,52 @@ function generateCustomElementReceiptBox(id, service){
   let colElementInformation = document.createElement("DIV");
   colElementInformation.setAttribute("class", "col-lg-11");
 
-  let spn4Element = document.createElement("SPAN");
-  spn4Element.setAttribute("class", "bold subTxt");
-  spn4Element.setAttribute("id", "spn4" + id);
-  spn4Element.textContent = elementsString[id] + " (" + serviceOfferString[service] + ")";
+
+  let elementNameHTML;
+  if(id.search("custom") != -1){
+    
+    elementNameHTML = document.createElement("INPUT");
+    elementNameHTML.setAttribute("type", "text");
+    elementNameHTML.setAttribute("placeholder", "Nombre del elemento");
+    elementNameHTML.setAttribute("id", "spn4" + id);
+  }else{
+    elementNameHTML = document.createElement("SPAN");
+    elementNameHTML.setAttribute("class", "bold subTxt");
+    elementNameHTML.setAttribute("id", "spn4" + id);
+    elementNameHTML.textContent = elementsString[id] + " (" + serviceOfferString[service] + ")";
+  }
+
+  
 
   let closeElementButton = document.createElement("BUTTON");
   closeElementButton.setAttribute("class", "closeElementButtonStyle");
+  closeElementButton.setAttribute("id", "closeElementButton4" + id);
   closeElementButton.textContent = "x";
+
+  closeElementButton.addEventListener("click", function(e){
+
+    let xID;
+    let a = this.id.split("closeElementButton4");
+
+    xID = a[1];
+
+
+    $("#elementReceipt4" + xID).remove();
+    
+
+    if(xID.search("custom") != -1){
+      let arr = id.split("custom");
+      let indexToDel = customActive.findIndex(function(x){
+        return x == arr[1];
+      });
+      //delete the index from customActive
+      console.log(indexToDel);
+      customActive.splice(indexToDel, 1);
+      console.log(customActive);
+    }
+
+    
+  });
 
   let elementInfoContainer = document.createElement("DIV");
   elementInfoContainer.setAttribute("class", "container small-mediumSeparation");
@@ -1018,6 +1074,15 @@ function generateCustomElementReceiptBox(id, service){
 
   inputQuantity.addEventListener("keypress", function(e){
     onlyIntegers(e);
+    
+  });
+
+  inputQuantity.addEventListener("input", function(e){
+    if((this.value == 0) || (this.value == "")){
+      e.preventDefault();
+    }else{
+      spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
+    }
   });
 
   inputQuantity.addEventListener("paste", function(e){
@@ -1052,6 +1117,14 @@ function generateCustomElementReceiptBox(id, service){
     e.preventDefault();
   });
 
+  inputPrice.addEventListener("input", function(e){
+    if((this.value == 0) || (this.value == "")){
+      e.preventDefault();
+    }else{
+      spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
+    }
+  });
+
   colPrice.append(spnTagPrice);
   colPrice.append(createBreakline());
   colPrice.append(spnDollarSign);
@@ -1065,7 +1138,7 @@ function generateCustomElementReceiptBox(id, service){
 
   let spnResultTotal = document.createElement("SPAN");
   spnResultTotal.setAttribute("id", "spnResultElementTotal4" + id);
-  spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value);
+  spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
 
   
   colTotal.append(spnTagTotal);
@@ -1078,7 +1151,8 @@ function generateCustomElementReceiptBox(id, service){
 
   elementInfoContainer.append(rowInfo);
 
-  colElementInformation.append(spn4Element);
+ 
+  colElementInformation.append(elementNameHTML);
   colElementInformation.append(closeElementButton);
   colElementInformation.append(elementInfoContainer);
 
