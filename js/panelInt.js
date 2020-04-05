@@ -33,7 +33,7 @@ var elementsString = {
 var sessionPrice = {};
 $(document).ready(function () {
     
-    
+   
     
     console.log(window.location.pathname);
 
@@ -503,6 +503,53 @@ $(document).ready(function () {
         console.log(service);
 
         generateCustomElementReceiptBox(id, service);
+      });
+
+
+      $("#inputClientID").on("input", function(e){
+
+        this.value = this.value.toUpperCase();
+
+      });
+      
+      $("#inputClientID").change(function(e){
+
+        $.ajax({
+          type: "POST",
+          url: "./php/searchUserID.php",
+          data: {inputUserID: this.value},
+          
+          success: function (data) {
+            
+            data = JSON.parse(data);
+            
+            if(data == null){
+              
+              if($("#spnClientFullName").hasClass("redTxt") == false){
+                $("#spnClientFullName").toggleClass("redTxt");
+              }
+
+              $("#spnClientFullName").text("No se encuentra el cliente");
+            }else{
+
+              if($("#spnClientFullName").hasClass("redTxt") == true){
+                $("#spnClientFullName").toggleClass("redTxt");
+              }
+
+              $("#spnClientFullName").text(data.name + " " + data.lastname);
+
+            }
+          },
+
+          error: function(jqXHR, status, error){
+  
+            console.log('Status: ' + status);
+            console.log('Error ' + error);
+            alert("Error " + status + error); 
+      
+          }
+        });
+
       });
 
 
@@ -1033,8 +1080,9 @@ function generateCustomElementReceiptBox(id, service){
 
     xID = a[1];
 
-
+    updateReceiptTotalPrice(0 , spnResultTotal.value);
     $("#elementReceipt4" + xID).remove();
+    
     
 
     if(xID.search("custom") != -1){
@@ -1081,7 +1129,9 @@ function generateCustomElementReceiptBox(id, service){
     if((this.value == 0) || (this.value == "")){
       e.preventDefault();
     }else{
+      spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
+      updateReceiptTotalPrice(spnResultTotal.val(), this.value);
     }
   });
 
@@ -1111,6 +1161,7 @@ function generateCustomElementReceiptBox(id, service){
   
   inputPrice.addEventListener("keypress", function(e){
     onlyNumbers(e);
+    
   });
 
   inputPrice.addEventListener("paste", function(e){
@@ -1121,7 +1172,9 @@ function generateCustomElementReceiptBox(id, service){
     if((this.value == 0) || (this.value == "")){
       e.preventDefault();
     }else{
+      spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
+      updateReceiptTotalPrice(spnResultTotal.value, this.value);
     }
   });
 
@@ -1139,6 +1192,7 @@ function generateCustomElementReceiptBox(id, service){
   let spnResultTotal = document.createElement("SPAN");
   spnResultTotal.setAttribute("id", "spnResultElementTotal4" + id);
   spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
+  spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
 
   
   colTotal.append(spnTagTotal);
@@ -1160,6 +1214,7 @@ function generateCustomElementReceiptBox(id, service){
   row1.append(colElementInformation);
 
   mainContainer.append(row1);
+  updateReceiptTotalPrice(spnResultTotal.value);
   
   $("#divOrdersAppendable").append(mainContainer);
 }
@@ -1177,5 +1232,48 @@ function onlyNumbers(e){
   if (e.which === 69) {
     e.preventDefault();
   }
+
+}
+
+function updateReceiptTotalPrice(actualPrice, changedPrice){
+
+  let spnValue = $("#totalPriceSpan").val();
+  let price;
+
+
+  
+  if(( typeof changedPrice == undefined) ||  (typeof changedPrice == "undefined")){
+    changedPrice = 0;
+  }
+
+  if(( typeof spnValue == undefined) ||  (typeof spnValue == "undefined") || (spnValue == "")){
+    spnValue = 0;
+  }
+
+  spnValue = parseFloat(spnValue);
+  actualPrice = parseFloat(actualPrice);
+  changedPrice = parseFloat(changedPrice);
+
+  price = spnValue + actualPrice - changedPrice;
+  console.log(spnValue);
+  console.log(actualPrice);
+  console.log(changedPrice);
+  console.log(price);
+
+  /* if(mode == "quit-element"){    
+
+    price = spnValue - actualPrice;
+
+  }else if(mode == "add-element"){
+
+    price = spnValue + actualPrice;
+
+  }else if(mode == "update"){
+
+    price = (spnValue - actualPrice) + changedPrice;
+  } */
+
+  $("#totalPriceSpan").val(price.toFixed(2));
+  $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
 
 }

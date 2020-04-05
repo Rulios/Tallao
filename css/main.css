@@ -402,7 +402,9 @@ input[type='checkbox']{
 .inputNumberReceiptStyle{
     width: 50% !important;
 }
-
+#inputClientID{
+    width: 40%;
+}
 .closeElementButtonStyle{
     font-size: 1em;
     right:0; 
@@ -417,6 +419,10 @@ input[type='checkbox']{
 }
 .closeElementButtonStyle:hover{
     background-color: #E84DA5;
+}
+#totalPriceSpan{
+    float:right;
+    font-weight: bold;
 }
 @media only screen and (max-width: 768px){
 

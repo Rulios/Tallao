@@ -97,17 +97,32 @@
 
                             <div class="titleTxt">Detalles de la factura:</div>
 
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <span id="spnTagIDClient"><b>ID del Cliente</b></span>
+                                        <input type="text" maxlength="5" id="inputClientID">
+                                    </div>
 
+                                    <div class="col-lg-6">
+                                        <span id="spnTagClientFullName"><b>Cliente:</b></span>
+                                        <span id="spnClientFullName"></span>
+                                    </div>
+                                </div>
+                            </div>
                             
 
                             <div class="small-mediumSeparation"></div>
 
 
-                            <div id="divOrdersAppendable" class="eightyPercentMaxHeight rightBorder scrollY">
+                            <div id="divOrdersAppendable" class="eightyPercentMaxHeight bottomBorder rightBorder scrollY">
                                 
                     
 
                             </div>
+
+                            <span id="totalPriceSpan">Precio Total: $</span>
+                           
 
                         </div>
                         
@@ -187,7 +202,7 @@
                                                 <span id="priceTag4pants"></span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>  
                                 </button>
 
                                 <button value="skirt" name="elementButton" class="buttonElementStyle">
