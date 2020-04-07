@@ -31,6 +31,35 @@ var elementsString = {
 
 
 var sessionPrice = {};
+var quantity = {
+
+  total: 0,
+
+  updateQuantity: function(id, cQuantity){
+
+    let totalUpdate = 0;
+
+    if((typeof this[id] == undefined) || (typeof this[id] == "undefined") || (this[id] == "") || (this[id] == 0)){
+      this[id] = cQuantity;
+    }else{
+
+      totalUpdate = cQuantity - this[id];
+      this[id] = cQuantity;
+
+      this.total = this.total + totalUpdate;
+      $("#inputHookQuantity").val(this.total);
+
+    }
+  },
+
+  closeQuantity: function(id, cQuantity){
+    this[id] = 0;
+    this.total = this.total - cQuantity;
+    $("#inputHookQuantity").val(this.total);
+
+  }
+
+}; //used to check the quantity hook equals the quantity 
 $(document).ready(function () {
     
    
@@ -499,10 +528,13 @@ $(document).ready(function () {
         let id = this.value;
         let service = $("#selectServiceType :selected").val();
 
-        console.log(id);
-        console.log(service);
+        console.log($("#elementReceipt4" + id + "-" + service).length);
 
-        generateCustomElementReceiptBox(id, service);
+        if($("#elementReceipt4" + id + "-" + service).length == false){
+          generateCustomElementReceiptBox(id, service);
+        }
+
+        
       });
 
 
@@ -552,6 +584,22 @@ $(document).ready(function () {
 
       });
 
+      $("#checkBoxHook").change(function(e){
+        
+          if(this.checked == true){
+
+            if($("#inputHookQuantity").hasClass("disableInput") == false){
+              $("#inputHookQuantity").toggleClass("disableInput");
+            }
+
+          }else{
+
+            if($("#inputHookQuantity").hasClass("disableInput") == true){
+              $("#inputHookQuantity").toggleClass("disableInput");
+            }
+
+          }
+      });
 
 
 });
@@ -1015,7 +1063,11 @@ function fetchElementPrice(){
 
 var customActive = []; //global variable
 function generateCustomElementReceiptBox(id, service){
-  let defaultID = id; //used to fetch static id contents from the request
+
+  
+  let idAsset = id; //used to fetch static id contents from the request
+  let idElement = id + "-" + service;
+  
 
   if(id == "custom"){
     let index;
@@ -1034,7 +1086,7 @@ function generateCustomElementReceiptBox(id, service){
 
   let mainContainer = document.createElement("DIV");
   mainContainer.setAttribute("class", "container small-mediumSeparation");
-  mainContainer.setAttribute("id", "elementReceipt4" + id);
+  mainContainer.setAttribute("id", "elementReceipt4" + idElement);
 
   let row1 = document.createElement("DIV");
   row1.setAttribute("class", "row bottomBorder customElementReceiptStyle");
@@ -1043,7 +1095,7 @@ function generateCustomElementReceiptBox(id, service){
   colImgAsset.setAttribute("class", "col-lg-1 hideOnXs");
 
   let imgAsset = document.createElement("img");
-  imgAsset.setAttribute("src", "./imgs/assets/"+defaultID+ "/" + defaultID + ".svg");
+  imgAsset.setAttribute("src", "./imgs/assets/"+idAsset+ "/" + idAsset + ".svg");
   imgAsset.setAttribute("class", "assetStayStatic");
 
   colImgAsset.append(imgAsset);
@@ -1058,11 +1110,11 @@ function generateCustomElementReceiptBox(id, service){
     elementNameHTML = document.createElement("INPUT");
     elementNameHTML.setAttribute("type", "text");
     elementNameHTML.setAttribute("placeholder", "Nombre del elemento");
-    elementNameHTML.setAttribute("id", "spn4" + id);
+    elementNameHTML.setAttribute("id", "spn4" + idElement);
   }else{
     elementNameHTML = document.createElement("SPAN");
     elementNameHTML.setAttribute("class", "bold subTxt");
-    elementNameHTML.setAttribute("id", "spn4" + id);
+    elementNameHTML.setAttribute("id", "spn4" + idElement);
     elementNameHTML.textContent = elementsString[id] + " (" + serviceOfferString[service] + ")";
   }
 
@@ -1070,7 +1122,7 @@ function generateCustomElementReceiptBox(id, service){
 
   let closeElementButton = document.createElement("BUTTON");
   closeElementButton.setAttribute("class", "closeElementButtonStyle");
-  closeElementButton.setAttribute("id", "closeElementButton4" + id);
+  closeElementButton.setAttribute("id", "closeElementButton4" + idElement);
   closeElementButton.textContent = "x";
 
   closeElementButton.addEventListener("click", function(e){
@@ -1080,9 +1132,9 @@ function generateCustomElementReceiptBox(id, service){
 
     xID = a[1];
 
-    updateReceiptTotalPrice(0 , spnResultTotal.value);
+    updateReceiptTotalPrice(spnResultTotal.value, 0);
     $("#elementReceipt4" + xID).remove();
-    
+    quantity.closeQuantity(idElement, inputQuantity.value);
     
 
     if(xID.search("custom") != -1){
@@ -1116,9 +1168,11 @@ function generateCustomElementReceiptBox(id, service){
   let inputQuantity = document.createElement("INPUT");
   inputQuantity.setAttribute("type", "number");
   inputQuantity.setAttribute("class", "inputNumberReceiptStyle");
-  inputQuantity.setAttribute("id", "inputQuantity4" + id);
+  inputQuantity.setAttribute("id", "inputQuantity4" + idElement);
   inputQuantity.setAttribute("name", "inputQuantity");
   inputQuantity.value = "1";
+
+  
 
   inputQuantity.addEventListener("keypress", function(e){
     onlyIntegers(e);
@@ -1129,9 +1183,13 @@ function generateCustomElementReceiptBox(id, service){
     if((this.value == 0) || (this.value == "")){
       e.preventDefault();
     }else{
+      let changedPrice = (inputQuantity.value * inputPrice.value);
+      updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
       spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
-      updateReceiptTotalPrice(spnResultTotal.val(), this.value);
+
+      quantity.updateQuantity(idElement, inputQuantity.value);
+      
     }
   });
 
@@ -1156,7 +1214,7 @@ function generateCustomElementReceiptBox(id, service){
   let inputPrice = document.createElement("INPUT");
   inputPrice.setAttribute("type", "number");
   inputPrice.setAttribute("class", "inputNumberReceiptStyle");
-  inputPrice.setAttribute("id", "inputPrice4" + id);
+  inputPrice.setAttribute("id", "inputPrice4" + idElement);
   inputPrice.value = sessionPrice[id];
   
   inputPrice.addEventListener("keypress", function(e){
@@ -1172,10 +1230,17 @@ function generateCustomElementReceiptBox(id, service){
     if((this.value == 0) || (this.value == "")){
       e.preventDefault();
     }else{
-      spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
+      
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
-      updateReceiptTotalPrice(spnResultTotal.value, this.value);
+      
     }
+  });
+
+  inputPrice.addEventListener("change", function(e){
+    let changedPrice = (inputQuantity.value * inputPrice.value);
+    updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
+    spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
+      
   });
 
   colPrice.append(spnTagPrice);
@@ -1190,7 +1255,7 @@ function generateCustomElementReceiptBox(id, service){
   spnTagTotal.textContent = "Total:";
 
   let spnResultTotal = document.createElement("SPAN");
-  spnResultTotal.setAttribute("id", "spnResultElementTotal4" + id);
+  spnResultTotal.setAttribute("id", "spnResultElementTotal4" + idElement);
   spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
   spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
 
@@ -1214,7 +1279,8 @@ function generateCustomElementReceiptBox(id, service){
   row1.append(colElementInformation);
 
   mainContainer.append(row1);
-  updateReceiptTotalPrice(spnResultTotal.value);
+  updateReceiptTotalPrice(0, spnResultTotal.value);
+  quantity.updateQuantity(idElement, inputQuantity.value);
   
   $("#divOrdersAppendable").append(mainContainer);
 }
@@ -1240,8 +1306,6 @@ function updateReceiptTotalPrice(actualPrice, changedPrice){
   let spnValue = $("#totalPriceSpan").val();
   let price;
 
-
-  
   if(( typeof changedPrice == undefined) ||  (typeof changedPrice == "undefined")){
     changedPrice = 0;
   }
@@ -1254,11 +1318,10 @@ function updateReceiptTotalPrice(actualPrice, changedPrice){
   actualPrice = parseFloat(actualPrice);
   changedPrice = parseFloat(changedPrice);
 
-  price = spnValue + actualPrice - changedPrice;
-  console.log(spnValue);
-  console.log(actualPrice);
-  console.log(changedPrice);
-  console.log(price);
+  price = changedPrice - actualPrice + spnValue;
+
+  console.log(spnValue + " + " + changedPrice + " - " + actualPrice);
+  console.log(price.toFixed(2));
 
   /* if(mode == "quit-element"){    
 

@@ -424,6 +424,13 @@ input[type='checkbox']{
     float:right;
     font-weight: bold;
 }
+#hookSpan{
+    float: left;
+    font-weight: bold;
+}
+.inputNumberHook{
+    width: 30% !important;
+}
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
