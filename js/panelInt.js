@@ -31,32 +31,57 @@ var elementsString = {
 
 
 var sessionPrice = {};
-var quantity = {
+var hookQuantity = {
 
+  //this is the array to store the data
+  elements: [],
   total: 0,
 
   updateQuantity: function(id, cQuantity){
 
     let totalUpdate = 0;
-
+    
     if((typeof this[id] == undefined) || (typeof this[id] == "undefined") || (this[id] == "") || (this[id] == 0)){
+      this.elements.push(id);
       this[id] = cQuantity;
+      totalUpdate += +this[id];
+      
     }else{
-
-      totalUpdate = cQuantity - this[id];
+      totalUpdate = cQuantity - this[id]; 
       this[id] = cQuantity;
-
-      this.total = this.total + totalUpdate;
-      $("#inputHookQuantity").val(this.total);
-
     }
+    
+    this.total = this.total + totalUpdate;  
+    $("#inputHookQuantity").val(this.total);
+    
   },
 
   closeQuantity: function(id, cQuantity){
     this[id] = 0;
+
+    let indexToDel = this.elements.findIndex(function(x){
+      return x == id;
+    });
+    //delete the index from customActive
+    this.elements.splice(indexToDel, 1);
+
     this.total = this.total - cQuantity;
     $("#inputHookQuantity").val(this.total);
+  },
 
+  updateQuantityFromHookInput: function(actualQuantity, changedQuantity){
+    this.total = changedQuantity - actualQuantity;
+  },
+
+  fullHookQuantity: function(){
+    let allSum = 0;
+
+    for(let i = 0; i < this.elements.length; i++){
+      allSum += +this[this.elements[i]];
+    }
+
+    this.total = allSum;
+    $("#inputHookQuantity").val(this.total);
   }
 
 }; //used to check the quantity hook equals the quantity 
@@ -585,9 +610,9 @@ $(document).ready(function () {
       });
 
       $("#checkBoxHook").change(function(e){
-        
+          
           if(this.checked == true){
-
+            hookQuantity.fullHookQuantity();
             if($("#inputHookQuantity").hasClass("disableInput") == false){
               $("#inputHookQuantity").toggleClass("disableInput");
             }
@@ -599,6 +624,15 @@ $(document).ready(function () {
             }
 
           }
+      });
+
+      let actualVal = 0;
+      $("#inputHookQuantity").keypress(function(e){
+        actualVal = this.value;
+      });
+
+      $("#inputHookQuantity").change(function(e){
+        hookQuantity.updateQuantityFromHookInput(actualVal, this.value);
       });
 
 
@@ -1134,7 +1168,7 @@ function generateCustomElementReceiptBox(id, service){
 
     updateReceiptTotalPrice(spnResultTotal.value, 0);
     $("#elementReceipt4" + xID).remove();
-    quantity.closeQuantity(idElement, inputQuantity.value);
+    hookQuantity.closeQuantity(idElement, inputQuantity.value);
     
 
     if(xID.search("custom") != -1){
@@ -1188,7 +1222,7 @@ function generateCustomElementReceiptBox(id, service){
       spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
 
-      quantity.updateQuantity(idElement, inputQuantity.value);
+      hookQuantity.updateQuantity(idElement, inputQuantity.value);
       
     }
   });
@@ -1280,7 +1314,8 @@ function generateCustomElementReceiptBox(id, service){
 
   mainContainer.append(row1);
   updateReceiptTotalPrice(0, spnResultTotal.value);
-  quantity.updateQuantity(idElement, inputQuantity.value);
+  console.log(inputQuantity.value);
+  hookQuantity.updateQuantity(idElement, inputQuantity.value);
   
   $("#divOrdersAppendable").append(mainContainer);
 }
