@@ -300,6 +300,18 @@ footer{
 .submitButtonLoginSuperUser:hover{
     background-color: #399DB3;
 }
+.submitButtonOrder{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #399DB3;
+    transition: 0.4s;
+} 
+.submitButtonOrder:hover{
+    background-color: #FF96CC;
+}
 .tooltip {
     position: relative;
     display: inline-block;
@@ -474,6 +486,9 @@ input[type='checkbox']{
     }
     .justifyOnXs{
         text-align: justify;
+    }
+    #totalPriceSpan{
+        float:none;
     }
     
 }

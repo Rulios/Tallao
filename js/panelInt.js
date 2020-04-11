@@ -50,7 +50,7 @@ var hookQuantity = {
       totalUpdate = cQuantity - this[id]; 
       this[id] = cQuantity;
     }
-    
+    console.log(this);
     this.total = this.total + totalUpdate;  
     $("#inputHookQuantity").val(this.total);
     
@@ -73,7 +73,7 @@ var hookQuantity = {
     this.total = changedQuantity - actualQuantity;
   },
 
-  fullHookQuantity: function(){
+  fullHookQuantity: function(){//used to check the quantity hook equals the quantity 
     let allSum = 0;
 
     for(let i = 0; i < this.elements.length; i++){
@@ -84,10 +84,39 @@ var hookQuantity = {
     $("#inputHookQuantity").val(this.total);
   }
 
-}; //used to check the quantity hook equals the quantity 
+}; 
+
+var finalPrice = {
+
+  elements: [],
+  total: 0,
+  getFinalPrice:  function(){
+    this.total = 0;
+    
+    for(let i = 0; i < hookQuantity.elements.length; i++){
+
+      if(this.elements.indexOf(hookQuantity.elements[i]) == -1){
+        this.elements.push(hookQuantity.elements[i]);
+      }
+    
+      //deletes the $ sign
+      let price = parseFloat($("#spnResultElementTotal4" + hookQuantity.elements[i]).text().substring(1));
+      finalPrice[hookQuantity.elements[i]] = price;
+      
+      this.total += price;
+      
+    }
+
+    this.total = parseFloat(this.total.toFixed(2));
+
+    console.log(this);
+    
+  }
+
+};
 $(document).ready(function () {
     
-   
+  
     
     console.log(window.location.pathname);
 
@@ -553,11 +582,19 @@ $(document).ready(function () {
         let id = this.value;
         let service = $("#selectServiceType :selected").val();
 
-        console.log($("#elementReceipt4" + id + "-" + service).length);
+        if(id.search("custom") != -1){
 
-        if($("#elementReceipt4" + id + "-" + service).length == false){
           generateCustomElementReceiptBox(id, service);
+
+        }else{
+
+          if($("#elementReceipt4" + id + "-" + service).length == false){
+            generateCustomElementReceiptBox(id, service);
+          }
+
         }
+
+        
 
         
       });
@@ -628,11 +665,24 @@ $(document).ready(function () {
 
       let actualVal = 0;
       $("#inputHookQuantity").keypress(function(e){
+        
         actualVal = this.value;
       });
 
       $("#inputHookQuantity").change(function(e){
-        hookQuantity.updateQuantityFromHookInput(actualVal, this.value);
+        if(this.value > hookQuantity.total){
+          this.value = hookQuantity.total;
+        }else{
+          hookQuantity.updateQuantityFromHookInput(actualVal, this.value);
+        }
+      });
+
+      
+
+      $("#submitOrder").click(function(e){
+
+        finalPrice.getFinalPrice();
+
       });
 
 
@@ -1114,7 +1164,7 @@ function generateCustomElementReceiptBox(id, service){
       customActive.push(index);
     }
 
-    id += index;
+    idElement = id + index + "-" + service; //custom1-iron
     
   }
 
@@ -1145,6 +1195,39 @@ function generateCustomElementReceiptBox(id, service){
     elementNameHTML.setAttribute("type", "text");
     elementNameHTML.setAttribute("placeholder", "Nombre del elemento");
     elementNameHTML.setAttribute("id", "spn4" + idElement);
+
+    elementNameHTML.addEventListener("change", function(e){
+
+      let customElementName = this.value;
+      let arr = this.id.split("spn4");
+      let actualID = arr[1];
+      let holdValue = hookQuantity[actualID];
+
+      let newID = actualID + "*" + customElementName;
+      let newIDHTML = "spn4" + actualID + "*" + customElementName;
+      
+      //make the old id be zero
+      hookQuantity[actualID] = 0;
+
+      //this replaces the element id from the element array
+      //with the new one. Adding the custom element name that the user previously input
+
+      //update
+      hookQuantity.elements.splice(hookQuantity.elements.indexOf(actualID), 1);
+      hookQuantity.elements.push(newID);
+      this.id = newIDHTML;
+      //update dynamically create object variable
+      idElement = newID;
+      hookQuantity[newID] = holdValue;
+    });
+
+    elementNameHTML.addEventListener("keypress", function(e){
+     
+      if((e.which === 45) || (e.which === 42)){
+        e.preventDefault();
+      }
+
+    });
   }else{
     elementNameHTML = document.createElement("SPAN");
     elementNameHTML.setAttribute("class", "bold subTxt");
@@ -1209,13 +1292,24 @@ function generateCustomElementReceiptBox(id, service){
   
 
   inputQuantity.addEventListener("keypress", function(e){
+    
     onlyIntegers(e);
     
   });
 
+  inputQuantity.addEventListener("change", function(e){
+    
+    let val = parseInt(this.value);
+    
+    if(val <= 0){
+      this.value = 1;
+    }
+
+  });
+
   inputQuantity.addEventListener("input", function(e){
-    if((this.value == 0) || (this.value == "")){
-      e.preventDefault();
+    if((this.value <= 0) || (this.value == "")){
+      e.stopImmediatePropagation();
     }else{
       let changedPrice = (inputQuantity.value * inputPrice.value);
       updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
@@ -1330,10 +1424,14 @@ function onlyIntegers(e){
 }
 function onlyNumbers(e){
   //Includes integers and decimals
+  
   if (e.which === 69) {
     e.preventDefault();
   }
 
+}
+function dynObjPreventDefault(e){
+  e.preventDefault();
 }
 
 function updateReceiptTotalPrice(actualPrice, changedPrice){
