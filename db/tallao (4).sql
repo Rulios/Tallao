@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-03-2020 a las 02:15:32
+-- Tiempo de generación: 16-04-2020 a las 05:01:56
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -25,15 +25,39 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `orders`
+--
+
+CREATE TABLE `orders` (
+  `laundryInitials` text NOT NULL,
+  `id` text NOT NULL,
+  `elementsQuantity` text NOT NULL,
+  `elementsPrice` text NOT NULL,
+  `hookQuantity` int(11) NOT NULL,
+  `dateReceived` datetime NOT NULL,
+  `dateAssigned` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the orders data';
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `pricechart`
 --
 
 CREATE TABLE `pricechart` (
-  `initials` text NOT NULL,
+  `hashcode` text NOT NULL,
   `iron` text NOT NULL,
-  `wash-iron` text NOT NULL,
+  `wash` text NOT NULL,
+  `washiron` text NOT NULL,
   `dryclean` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table to store the data of the prices';
+
+--
+-- Volcado de datos para la tabla `pricechart`
+--
+
+INSERT INTO `pricechart` (`hashcode`, `iron`, `wash`, `washiron`, `dryclean`) VALUES
+('8XMqSGzajxRRQiyLZj8m', 'shirt=0.65,pants=0.65,skirt=0.65,coat=1.50,sweater=0.65,pleatedSkirt=1.50,overall=1.3,jumper=1.5,blouse=1,largeSuit=1.5,quilt=7', '', 'shirt=1.50,pants=1.50,skirt=1.50,coat=3.5,sweater=1.5,pleatedSkirt=4,overall=2.5,jumper=3,blouse=2,largeSuit=5,quilt=8', '');
 
 -- --------------------------------------------------------
 
@@ -46,6 +70,7 @@ CREATE TABLE `superusers` (
   `hashcode` text NOT NULL,
   `laundryname` text NOT NULL,
   `location` text NOT NULL,
+  `schedule` text NOT NULL,
   `serviceoffer` text NOT NULL,
   `legalreprName` text NOT NULL,
   `legalreprLastname` text NOT NULL,
@@ -57,10 +82,8 @@ CREATE TABLE `superusers` (
 -- Volcado de datos para la tabla `superusers`
 --
 
-INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`) VALUES
-('VICNT', 'v9GopsZk5g83aDxJLOTy', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$VIrp1mNZyJdClm5W1.Hu5eM0qk7H7LPcv.dvjZSgUXRpVNfZ1RN7q'),
-('VCN2', 'uKvlLBkofg8mDXdTE0LZ', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Dogo ', 'Goa ', 'robert_lu20@hotmail.com', '$2y$12$YRSPvksgzPmKIfIGmrBMTesbVNy2OXf.bBVHP5gvJB.ZdlfuoXDru'),
-('VICN3', '6qJQcODaSeQZPYtiDTeb', 'Lavandería Vicente #3', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', 'Robert ', 'Lu Zheng ', 'pero@wachu.com', '$2y$12$N8lgkzoCpSlGwGSWl3b/EON8yI1TwQGmG8Hiz5BjsgtNcpGjIhdSm');
+INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`) VALUES
+('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:00*PM,tuesday/8:00*AM-8:00*PM,wednesday/8:00*AM-8:00*PM,thursday/8:00*AM-8:00*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:00*PM,sunday/8:00*AM-8:00*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G');
 
 -- --------------------------------------------------------
 

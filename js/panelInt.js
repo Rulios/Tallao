@@ -28,7 +28,15 @@ var elementsString = {
  quilt: "Colcha",
 
 };
-
+var scheduleString = {
+  monday: "Lunes",
+  tuesday: "Martes",
+  wednesday: "Miércoles",
+  thursday: "Jueves",
+  friday: "Viernes",
+  saturday: "Sábado",
+  sunday: "Domingo"
+};
 
 var sessionPrice = {};
 var hookQuantity = {
@@ -114,10 +122,217 @@ var finalPrice = {
   }
 
 };
+
+var schedule = {
+
+  fetchSchedule: function(initials,callbackResult){
+    
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchSchedule.php",
+      data: {
+          inputInitials: initials
+      },
+      dataType: 'json',
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  },
+
+  generateScheduleBox: function(initials){
+
+    //initials = "ADSB";
+    this.fetchSchedule(initials, function(data){
+
+      console.log(data);
+
+      if((typeof data.schedule != "null") || (typeof data.schedule != null)){
+        var arrDaySeparation = data.schedule.split(",");
+      }
+      
+
+      let daysID = Object.keys(scheduleString);
+
+      for(let i = 0; i < daysID.length; i++){
+
+        let s;
+        let day;
+        let sh;
+        
+        let startDayHour;
+        let a;
+        let startDayValueHour;
+        let startDayValueCycle;
+        
+
+        let endDayHour;
+        let b;
+        let endDayValueHour;
+        let endDayValueCycle;
+
+        
+
+        let timeCycles = { AM: "AM", PM:"PM"};
+        
+        if(( data.schedule == "null") || (typeof data.schedule == null)){
+         
+          day = daysID[i];
+
+          startDayValueHour = "";
+          startDayValueCycle = "AM";
+
+          endDayValueHour = "";
+          endDayValueCycle = "PM";
+
+        }else{
+
+          s = arrDaySeparation[i].split("/");
+          day = s[0];
+          sh = s[1].split("-");
+          
+          startDayHour = sh[0];
+          a = sh[0].split("*");
+          startDayValueHour = a[0];
+          startDayValueCycle = a[1];
+          
+
+          endDayHour = sh[1];
+          b = sh[1].split("*");
+          endDayValueHour = b[0];
+          endDayValueCycle = b[1];
+
+        }
+        
+        let dayName = scheduleString[day];
+
+        let elementBox = document.createElement("DIV");
+        elementBox.setAttribute("class", "col-lg-3  styleElementBox");
+        elementBox.setAttribute("id", "divScheduleBox4" + daysID[i]);
+
+        let spnElementName = document.createElement("SPAN");
+        spnElementName.setAttribute("id", "spn4" + daysID[i]);
+        spnElementName.setAttribute("class", "styleElementName");
+        spnElementName.textContent = dayName;
+
+
+        let iconStartDayDiv = document.createElement("DIV");
+        iconStartDayDiv.setAttribute("class", "input-group mb-2 ");
+
+        let iconStartDaySubDiv = document.createElement("DIV");
+        iconStartDaySubDiv.setAttribute("class", "input-group-preprend");
+
+        let iconStartDayTextDiv = document.createElement("DIV");
+        iconStartDayTextDiv.setAttribute("class", "input-group-text");
+        
+        let startDayHourglassIcon = document.createElement("I");
+        startDayHourglassIcon.setAttribute("class", "fa fa-hourglass-start");
+        startDayHourglassIcon.setAttribute("aria-hidden", "true");
+
+        iconStartDayTextDiv.append(schedule.createClockIcon());
+        iconStartDayTextDiv.append(startDayHourglassIcon);
+
+        iconStartDaySubDiv.append(iconStartDayTextDiv);
+
+        let inputScheduleStartHour = document.createElement("INPUT");
+        inputScheduleStartHour.setAttribute("id", "inputScheduleBegin4" + day);
+        inputScheduleStartHour.setAttribute("type", "text");
+        inputScheduleStartHour.setAttribute("class", "styleTimeInput");
+        inputScheduleStartHour.setAttribute("placeholder", "00:00");
+        inputScheduleStartHour.value = startDayValueHour;
+
+        iconStartDayDiv.append(iconStartDaySubDiv);
+        iconStartDayDiv.append(inputScheduleStartHour);
+        iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i], timeCycles, startDayValueCycle));
+
+        
+
+        let iconEndDayDiv = document.createElement("DIV");
+        iconEndDayDiv.setAttribute("class", "input-group mb-2 ");
+
+        let  iconEndDaySubDiv = document.createElement("DIV");
+        iconEndDaySubDiv.setAttribute("class", "input-group-preprend");
+
+        let  iconEndDayTextDiv = document.createElement("DIV");
+        iconEndDayTextDiv.setAttribute("class", "input-group-text");
+        
+        let endDayHourglassIcon = document.createElement("I");
+        endDayHourglassIcon.setAttribute("class", "fa fa-hourglass-end");
+        endDayHourglassIcon.setAttribute("aria-hidden", "true");
+
+        iconEndDayTextDiv.append(schedule.createClockIcon());
+        iconEndDayTextDiv.append(endDayHourglassIcon);
+
+        iconEndDaySubDiv.append(iconEndDayTextDiv);
+
+        let inputScheduleEndHour = document.createElement("INPUT");
+        inputScheduleEndHour.setAttribute("id", "inputScheduleEnd4" + day);
+        inputScheduleEndHour.setAttribute("type", "text");
+        inputScheduleEndHour.setAttribute("class", "styleTimeInput");
+        inputScheduleEndHour.setAttribute("placeholder", "00:00");
+        inputScheduleEndHour.value = endDayValueHour;
+
+        iconEndDayDiv.append(iconEndDaySubDiv);
+        iconEndDayDiv.append(inputScheduleEndHour);
+        iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i], timeCycles, endDayValueCycle));
+
+        elementBox.append(spnElementName);
+        elementBox.append(iconStartDayDiv);
+        elementBox.append(iconEndDayDiv);
+
+        $("#divScheduleAppend").append(elementBox);
+      }
+
+    });
+
+  },
+
+  createClockIcon: function(){
+    
+    let clockIcon = document.createElement("I");
+    clockIcon.setAttribute("class", "fa fa-clock-o");
+    clockIcon.setAttribute("aria-hidden", "true");
+
+    return clockIcon;
+
+  },
+
+  createSelectList: function(id, optionProp, optionSelected){
+
+    let select = document.createElement("SELECT");
+    select.setAttribute("id", id);
+    
+    let x = Object.keys(optionProp);
+
+    for(let i = 0; i < x.length; i++){
+
+      let option = document.createElement("OPTION");
+      option.setAttribute("value", optionProp[x[i]]);
+      option.textContent = x[i];
+
+      if(optionSelected == optionProp[x[i]]){
+        option.setAttribute("selected", "");
+      }
+
+      select.append(option);
+
+    }
+
+    return select;
+
+  }
+
+};
+
 $(document).ready(function () {
     
   
-    
     console.log(window.location.pathname);
 
     if((typeof document.cookie == undefined) || (document.cookie == "")){
@@ -156,6 +371,7 @@ $(document).ready(function () {
               
 
               $("#superuserForm").toggleClass("hide");  
+              $("#masterUserValueConfiguration").toggleClass("hide");
 
               fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
                 
@@ -173,6 +389,9 @@ $(document).ready(function () {
                 tagShowLegalReprLastname(lastname);
                 tagShowSuperUserEmail(email);
                 console.log(dataCallback);
+
+                //this need to be rewritten
+                schedule.generateScheduleBox(initials);
               });
 
 
@@ -444,6 +663,16 @@ $(document).ready(function () {
         
       });
 
+      $("input[type=text][name=inputHour]").keypress(function(e){
+        console.log(e.which);
+        let charCode = (e.which) ? e.which : event.keyCode;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 58)){
+          e.preventDefault();
+        }
+        
+      });
+
 
       $("input[type=number]").bind("paste", function(e){
         
@@ -682,6 +911,24 @@ $(document).ready(function () {
       $("#submitOrder").click(function(e){
 
         finalPrice.getFinalPrice();
+
+      });
+
+      $("#submitChangeSchedule").click(function(e){
+        let x = Object.keys(scheduleString);
+
+        for(let i = 0; i < x.length; i++){
+
+          let valueScheduleBegin = $("#inputScheduleBegin4" + x[i]).val();
+          let valueCycleBegin = $("#selectBeginTimeCycle4" + x[i] + " :selected").val();
+          let valueScheduleEnd = $("#inputScheduleEnd4" + x[i]).val();
+          let valueCycleEnd = $("#selectEndTimeCycle4" + x[i] + " :selected").val();
+
+
+          let string = x[i] + "/" + valueScheduleBegin + valueCycleBegin + "-" + valueScheduleEnd + valueCycleEnd;
+          console.log(string);
+
+        }
 
       });
 

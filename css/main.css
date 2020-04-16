@@ -287,7 +287,20 @@ footer{
 .submitButtonActualize:hover{
     background-color: #686FCC;
 }
-   
+
+.submitButtonActualize1{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #FFB76C;
+    transition: 0.4s;
+} 
+.submitButtonActualize1:hover{
+    background-color: #FF825E;
+}
+
 .submitButtonLoginSuperUser{
     width: 100%;
     font-size: 20px;
@@ -371,6 +384,11 @@ input[type='checkbox']{
     width: 20px;
     height: 20px;
 }
+/* Master User Schedule */
+.styleTimeInput{
+    width: 30%;
+}
+
 /* Price configuration design style */
 .styleElementBox{
     border-radius: 12px;
