@@ -124,6 +124,7 @@ var finalPrice = {
 };
 
 var schedule = {
+  superuserInitials: "",
 
   fetchSchedule: function(initials,callbackResult){
     
@@ -148,7 +149,7 @@ var schedule = {
 
   generateScheduleBox: function(initials){
 
-    //initials = "ADSB";
+    
     this.fetchSchedule(initials, function(data){
 
       console.log(data);
@@ -179,7 +180,7 @@ var schedule = {
 
         
 
-        let timeCycles = { AM: "AM", PM:"PM"};
+        let timeCycles = { AM: "AM", PM:"PM", closed: "CERRADO"};
         
         if(( data.schedule == "null") || (typeof data.schedule == null)){
          
@@ -207,6 +208,8 @@ var schedule = {
           b = sh[1].split("*");
           endDayValueHour = b[0];
           endDayValueCycle = b[1];
+
+          
 
         }
         
@@ -247,9 +250,22 @@ var schedule = {
         inputScheduleStartHour.setAttribute("placeholder", "00:00");
         inputScheduleStartHour.value = startDayValueHour;
 
+        inputScheduleStartHour.addEventListener("keypress", function(e){
+          let charCode = (e.which) ? e.which : event.keyCode;
+
+          if (charCode > 31 && (charCode < 48 || charCode > 58)){
+          e.preventDefault();
+          }
+
+        });
+
+        inputScheduleStartHour.addEventListener("paste", function(e){
+          e.preventDefault();
+        });
+
         iconStartDayDiv.append(iconStartDaySubDiv);
         iconStartDayDiv.append(inputScheduleStartHour);
-        iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i], timeCycles, startDayValueCycle));
+        iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i],daysID[i], timeCycles, startDayValueCycle));
 
         
 
@@ -278,9 +294,22 @@ var schedule = {
         inputScheduleEndHour.setAttribute("placeholder", "00:00");
         inputScheduleEndHour.value = endDayValueHour;
 
+        inputScheduleEndHour.addEventListener("keypress", function(e){
+          let charCode = (e.which) ? e.which : event.keyCode;
+
+          if (charCode > 31 && (charCode < 48 || charCode > 58)){
+          e.preventDefault();
+          }
+
+        });
+
+        inputScheduleEndHour.addEventListener("paste", function(e){
+          e.preventDefault();
+        });
+
         iconEndDayDiv.append(iconEndDaySubDiv);
         iconEndDayDiv.append(inputScheduleEndHour);
-        iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i], timeCycles, endDayValueCycle));
+        iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i],daysID[i], timeCycles, endDayValueCycle));
 
         elementBox.append(spnElementName);
         elementBox.append(iconStartDayDiv);
@@ -303,26 +332,111 @@ var schedule = {
 
   },
 
-  createSelectList: function(id, optionProp, optionSelected){
+  createSelectList: function(id,day, optionProp, optionSelected){
 
     let select = document.createElement("SELECT");
     select.setAttribute("id", id);
     
     let x = Object.keys(optionProp);
-
+    
     for(let i = 0; i < x.length; i++){
 
       let option = document.createElement("OPTION");
-      option.setAttribute("value", optionProp[x[i]]);
-      option.textContent = x[i];
+      option.setAttribute("value", x[i]);
+      option.textContent = optionProp[x[i]];
+      
+      
 
-      if(optionSelected == optionProp[x[i]]){
+      if(optionSelected == x[i]){
         option.setAttribute("selected", "");
+        
       }
 
       select.append(option);
 
     }
+
+    //if it select closed, it means that the business is closed
+    //so it disables both inputs and changes the Selected option from
+    //the begin day and end day to CLOSED
+
+    //the variable closedState acts as an point of reference to do
+    //some action after it's change from Closed to another value
+    let closedState = false;
+    select.addEventListener("change", function(e){
+      let previousValue = $(this).data('val');
+      let currentValue = $(this).val();
+      
+      
+
+      if(currentValue == "closed"){
+        closedState = true;
+        $("#selectBeginTimeCycle4" + day).val("closed");
+        $("#selectEndTimeCycle4" + day).val("closed");
+
+        $("#inputScheduleBegin4"+ day).val("");
+        $("#inputScheduleEnd4"+ day).val("");
+
+        if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == false)){
+          $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
+        }
+
+        if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == false)){
+          $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
+        }
+
+      }else{
+
+        if(closedState == true){
+          closedState = false;
+
+          if($("#selectBeginTimeCycle4" + day).val() == "AM"){
+            $("#selectEndTimeCycle4" + day).val("PM");
+          }else if($("#selectBeginTimeCycle4" + day).val() == "PM"){
+            $("#selectEndTimeCycle4" + day).val("AM");
+          }
+
+          if($("#selectEndTimeCycle4" + day).val() == "AM"){
+            $("#selectBeginTimeCycle4" + day).val("PM");
+          }else if($("#selectEndTimeCycle4" + day).val() == "PM"){
+            $("#selectBeginTimeCycle4" + day).val("AM");
+          }
+
+          if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == true)){
+            $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
+          }
+  
+          if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == true)){
+            $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
+          }
+
+        }
+
+      }
+
+    });
+
+    select.addEventListener("focusin", function(e){
+      //save data before the change
+      $(this).data('val', $(this).val());
+    });
+
+    select.onload = function(e){
+      console.log("OADW");
+      /* if(optionSelected == "closed"){
+        //enable the class for disabling input
+        
+        if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == false)){
+          console.log($("#inputScheduleBegin4"+ day).hasClass("disableInput"));
+          $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
+        }
+
+        if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == false)){
+          $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
+        }
+      } */
+
+    };
 
     return select;
 
@@ -391,6 +505,7 @@ $(document).ready(function () {
                 console.log(dataCallback);
 
                 //this need to be rewritten
+                schedule.superuserInitials = initials;
                 schedule.generateScheduleBox(initials);
               });
 
@@ -718,7 +833,7 @@ $(document).ready(function () {
         
         $.ajax({
           type: "POST",
-          url: "./php/upgradeServiceOffer.php",
+          url: "./php/updateServiceOffer.php",
           data: {
               inputUserHash: cookie.userhash,
               serviceoffer: string
@@ -822,9 +937,6 @@ $(document).ready(function () {
           }
 
         }
-
-        
-
         
       });
 
@@ -916,6 +1028,8 @@ $(document).ready(function () {
 
       $("#submitChangeSchedule").click(function(e){
         let x = Object.keys(scheduleString);
+        let arr = [];
+        let strToSend = "";
 
         for(let i = 0; i < x.length; i++){
 
@@ -925,11 +1039,34 @@ $(document).ready(function () {
           let valueCycleEnd = $("#selectEndTimeCycle4" + x[i] + " :selected").val();
 
 
-          let string = x[i] + "/" + valueScheduleBegin + valueCycleBegin + "-" + valueScheduleEnd + valueCycleEnd;
-          console.log(string);
-
+          let string = x[i] + "/" + valueScheduleBegin+ "*" + valueCycleBegin + "-" + valueScheduleEnd + "*" +valueCycleEnd;
+          arr.push(string);
         }
+        
+        strToSend = arr.join();
+        console.log(schedule.superuserInitials);
+        console.log(strToSend);
+        $.ajax({
+          type: "POST",
+          url: "./php/updateSuperuserSchedule.php",
+          data: {
+              initials: schedule.superuserInitials,
+              schedule: strToSend
+          },
+          success: function (response) {
+              $("#submitChangeSchedule").toggleClass("disableButton");
+              $("#submitChangeSchedule").text("¡ACTUALIZADO!");
+              
+          },
+          error: function(jqXHR, status, error){
 
+              console.log('Status: ' + status);
+              console.log('Error ' + error);
+              alert("Error " + status + error);
+    
+          }
+        });
+        
       });
 
 
