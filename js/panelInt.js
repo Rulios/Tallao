@@ -151,9 +151,6 @@ var schedule = {
 
     
     this.fetchSchedule(initials, function(data){
-
-      console.log(data);
-
       if((typeof data.schedule != "null") || (typeof data.schedule != null)){
         var arrDaySeparation = data.schedule.split(",");
       }
@@ -246,7 +243,14 @@ var schedule = {
         let inputScheduleStartHour = document.createElement("INPUT");
         inputScheduleStartHour.setAttribute("id", "inputScheduleBegin4" + day);
         inputScheduleStartHour.setAttribute("type", "text");
-        inputScheduleStartHour.setAttribute("class", "styleTimeInput");
+        //since this thing executes only one time
+        //set to disable input
+        if(startDayValueCycle == "closed"){
+          inputScheduleStartHour.setAttribute("class", "styleTimeInput disableInput");
+        }else{
+          inputScheduleStartHour.setAttribute("class", "styleTimeInput");
+        }
+        
         inputScheduleStartHour.setAttribute("placeholder", "00:00");
         inputScheduleStartHour.value = startDayValueHour;
 
@@ -290,7 +294,12 @@ var schedule = {
         let inputScheduleEndHour = document.createElement("INPUT");
         inputScheduleEndHour.setAttribute("id", "inputScheduleEnd4" + day);
         inputScheduleEndHour.setAttribute("type", "text");
-        inputScheduleEndHour.setAttribute("class", "styleTimeInput");
+        if(endDayValueCycle == "closed"){
+          inputScheduleEndHour.setAttribute("class", "styleTimeInput disableInput");
+        }else{
+          inputScheduleEndHour.setAttribute("class", "styleTimeInput");
+        }
+        
         inputScheduleEndHour.setAttribute("placeholder", "00:00");
         inputScheduleEndHour.value = endDayValueHour;
 
@@ -367,9 +376,30 @@ var schedule = {
       let previousValue = $(this).data('val');
       let currentValue = $(this).val();
       
-      
 
-      if(currentValue == "closed"){
+      if((previousValue == "closed") && (currentValue != "closed")){
+
+        if($("#selectBeginTimeCycle4" + day).val() == "AM"){
+          $("#selectEndTimeCycle4" + day).val("PM");
+        }else if($("#selectBeginTimeCycle4" + day).val() == "PM"){
+          $("#selectEndTimeCycle4" + day).val("AM");
+        }
+
+        if($("#selectEndTimeCycle4" + day).val() == "AM"){
+          $("#selectBeginTimeCycle4" + day).val("PM");
+        }else if($("#selectEndTimeCycle4" + day).val() == "PM"){
+          $("#selectBeginTimeCycle4" + day).val("AM");
+        }
+
+        if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == true)){
+          $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
+        }
+
+        if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == true)){
+          $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
+        }
+      }else if(currentValue == "closed"){
+
         closedState = true;
         $("#selectBeginTimeCycle4" + day).val("closed");
         $("#selectEndTimeCycle4" + day).val("closed");
@@ -385,63 +415,73 @@ var schedule = {
           $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
         }
 
-      }else{
-
-        if(closedState == true){
-          closedState = false;
-
-          if($("#selectBeginTimeCycle4" + day).val() == "AM"){
-            $("#selectEndTimeCycle4" + day).val("PM");
-          }else if($("#selectBeginTimeCycle4" + day).val() == "PM"){
-            $("#selectEndTimeCycle4" + day).val("AM");
-          }
-
-          if($("#selectEndTimeCycle4" + day).val() == "AM"){
-            $("#selectBeginTimeCycle4" + day).val("PM");
-          }else if($("#selectEndTimeCycle4" + day).val() == "PM"){
-            $("#selectBeginTimeCycle4" + day).val("AM");
-          }
-
-          if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == true)){
-            $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
-          }
-  
-          if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == true)){
-            $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
-          }
-
-        }
-
       }
+
+      //Fixes the issue of the user changing it without focusout
+      //Since the change of value in $(this).data only is made
+      //when trigger the event focusin
+      $(this).data('val', currentValue);
 
     });
 
     select.addEventListener("focusin", function(e){
       //save data before the change
       $(this).data('val', $(this).val());
+      
     });
 
-    select.onload = function(e){
-      console.log("OADW");
-      /* if(optionSelected == "closed"){
-        //enable the class for disabling input
-        
-        if(($("#inputScheduleBegin4"+ day).hasClass("disableInput") == false)){
-          console.log($("#inputScheduleBegin4"+ day).hasClass("disableInput"));
-          $("#inputScheduleBegin4"+ day).toggleClass("disableInput");
-        }
-
-        if(($("#inputScheduleEnd4"+ day).hasClass("disableInput") == false)){
-          $("#inputScheduleEnd4"+ day).toggleClass("disableInput");
-        }
-      } */
-
-    };
+    
 
     return select;
 
   }
 
+};
+
+
+var time = {
+  date: "",
+  hour: "",
+  timeCycle: "",
+  fetchDateTimeServer: function(callbackResult){
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchDateTimeServer.php",
+      
+      success: function (data) {
+
+        let result = JSON.parse(data);
+        this.date = result.date;
+        this.hour = result.hour;
+        this.timeCycle = result.cycle;
+
+      },
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  },
+
+  printDateTime: function(){
+
+    this.fetchDateTimeServer(function(data){
+
+      let result = JSON.parse(data);
+      this.date = result.date;
+      this.hour = result.hour;
+      this.timeCycle = result.cycle;
+      
+
+      $("#dateTimeInfo").text("Fecha de hoy: " + this.date + " | Hora: " + this.hour + this.timeCycle);
+    });
+
+    
+  }
 };
 
 $(document).ready(function () {
@@ -586,6 +626,11 @@ $(document).ready(function () {
             }
             
           });
+
+          //start fetching date,time and cycle from server
+          //time to refresh 10 minutes = 600000ms
+          time.printDateTime();
+          setInterval(function(){time.printDateTime()}, 3000);
         }
 
         
