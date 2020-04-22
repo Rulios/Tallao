@@ -441,8 +441,11 @@ var schedule = {
 
 var time = {
   date: "",
-  hour: "",
+  hour12: "",
   timeCycle: "",
+  day:0,
+  month:0,
+  year: 0,
   fetchDateTimeServer: function(callbackResult){
     $.ajax({
       type: "POST",
@@ -470,17 +473,45 @@ var time = {
   printDateTime: function(){
 
     this.fetchDateTimeServer(function(data){
-
-      let result = JSON.parse(data);
-      this.date = result.date;
-      this.hour = result.hour;
-      this.timeCycle = result.cycle;
       
+      let result = JSON.parse(data);
+      time.date = result.date;
+      time.hour12 = result.hour12;
+      time.timeCycle = result.cycle;
+      
+      $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
 
-      $("#dateTimeInfo").text("Fecha de hoy: " + this.date + " | Hora: " + this.hour + this.timeCycle);
+      //process the date, divide its components
+      //the format in which it comes fetched is
+      //day-month-year
+      let arr = this.date.split("/");
+      time.day = parseInt(arr[0]);
+      time.month = parseInt(arr[1]);
+      time.year = parseInt(arr[2]);
+
+      //limit the inputs
+      time.limitMinMaxInputs();
     });
+  },
 
+  limitMinMaxInputs: function(){
+
+    //limit the inputs of type date and time
+    //to the business schedules
+    let year = time.year.toString();
+    let month = time.month.toString();
+    let day = time.day.toString();
+
+    if(month.length == 1){
+      month = "0" + month;
+    }
     
+    if(day.length == 1){
+      day = "0" + day;
+    }
+    
+    $("input[type=date]").attr("min", year + "-" + month + "-" + day);
+
   }
 };
 
@@ -608,6 +639,13 @@ $(document).ready(function () {
 
         }else if(window.location.pathname == "/Tallao/masterpanel.html"){
 
+          fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
+
+            let initials = dataCallback.initials;
+            schedule.superuserInitials = initials;
+
+          });  
+
           fetchServiceOffer(function(dataCallback){
               
             serviceOffer = dataCallback.serviceoffer.trim().split(",");
@@ -631,6 +669,10 @@ $(document).ready(function () {
           //time to refresh 10 minutes = 600000ms
           time.printDateTime();
           setInterval(function(){time.printDateTime()}, 3000);
+
+          
+
+          
         }
 
         
@@ -1112,6 +1154,111 @@ $(document).ready(function () {
           }
         });
         
+      });
+
+      $("#inputDate4Order").change(function(e){
+        //enables the selection of the hour when the day is selected
+        //this is made to put the limits of min and max into the 
+        //input type hour
+
+        //format when getting the value 
+        //year-month-day
+        let arr = this.value.split("-");
+        let year = parseInt(arr[0]);
+        let month = parseInt(arr[1]);
+        let day = parseInt(arr[2]);
+
+        //the Date format starts in January as the index 0
+        //so correct it, we decrement by 1 unit
+        month -= 1;
+
+        
+        let date = new Date(year,month,day);
+        let dayPos = date.getDay();
+        
+        let weekday = new Array(7);
+        weekday[0] = "sunday";
+        weekday[1] = "monday";
+        weekday[2] = "tuesday";
+        weekday[3] = "wednesday";
+        weekday[4] = "thursday";
+        weekday[5] = "friday";
+        weekday[6] = "saturday";  
+
+        schedule.fetchSchedule(schedule.superuserInitials, function(data){
+
+          let arr = data.schedule.split(",");
+          let obj = {};
+          let scheduleSelected = "";
+          let y = [];
+          let startDayHour = "";
+          let startDayCycle = "";
+          let endDayHour = "";
+          let endDayCycle = "";
+
+          //final results
+          let min = "";
+          let max = "";
+
+          //function to convert the 12h format to 24h
+          const convertTime12to24 = (time12h) => {
+            const [time, modifier] = time12h.split(' ');
+          
+            let [hours, minutes] = time.split(':');
+          
+            if (hours === '12') {
+              hours = '00';
+            }
+          
+            if (modifier === 'PM') {
+              hours = parseInt(hours, 10) + 12;
+            }
+          
+            return `${hours}:${minutes}`;
+          }
+
+          for(let i = 0; i < arr.length; i++){
+            let x = arr[i].split("/");
+            obj[x[0]] = x[1];
+          }
+
+          scheduleSelected = obj[weekday[dayPos]];
+          
+          y = scheduleSelected.split("-");
+
+          //start day split
+          z = y[0].split("*");
+          startDayHour = z[0];
+          startDayCycle = z[1];
+
+          //start day split
+          z = y[1].split("*");
+          endDayHour = z[0];
+          endDayCycle = z[1];
+
+          //correct the lack of 0
+          if(startDayHour.length == 4){
+            startDayHour = "0" + startDayHour;
+          }
+
+          if(endDayHour.length == 4){
+            endDayHour = "0" + endDayHour;
+          }
+
+          min = convertTime12to24(startDayHour + " " + startDayCycle);
+          max = convertTime12to24(endDayHour + " " + endDayCycle);
+
+          
+          //set limit
+          $("input[type=time]").attr("min", min);
+          $("input[type=time]").attr("max", max);
+
+          if($("input[type=time]").hasClass("disableInput") == true){
+            $("input[type=time]").toggleClass("disableInput");
+          }
+
+        });
+
       });
 
 

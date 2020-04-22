@@ -14,8 +14,8 @@ $date = date('d/m/Y');
 $data["date"] = $date;
 
 //12 hours format
-$hour = date('h');
-
+$hour12 = date('h');
+$hour24 = date('H');
 //check cycle
 if(date('H') > 12){
     $timeCycle = "PM";
@@ -23,7 +23,8 @@ if(date('H') > 12){
     $timeCycle = "AM";
 }
 
-$data["hour"] = $hour;
+$data["hour12"] = $hour12;
+//$data["hour24"] = $hour24;
 $data["cycle"] = $timeCycle;
 
 
