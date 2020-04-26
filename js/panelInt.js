@@ -38,13 +38,16 @@ var scheduleString = {
   sunday: "Domingo"
 };
 
+var verification = {};
+
 var sessionPrice = {};
 var hookQuantity = {
 
   //this is the array to store the data
   elements: [],
-  total: 0,
-
+  totalHookQuantity: 0,
+  totalElementQuantity: 0,
+  hookPrice: 0,
   updateQuantity: function(id, cQuantity){
 
     let totalUpdate = 0;
@@ -58,9 +61,14 @@ var hookQuantity = {
       totalUpdate = cQuantity - this[id]; 
       this[id] = cQuantity;
     }
-    console.log(this);
-    this.total = this.total + totalUpdate;  
-    $("#inputHookQuantity").val(this.total);
+    console.log(totalUpdate);
+
+    this.totalElementQuantity = this.totalElementQuantity + totalUpdate;
+    this.totalHookQuantity = this.totalHookQuantity + totalUpdate;  
+
+    //also store it in the data property
+    $("#inputHookQuantity").data("prev", this.totalHookQuantity);
+    $("#inputHookQuantity").val(this.totalHookQuantity);
     
   },
 
@@ -73,12 +81,43 @@ var hookQuantity = {
     //delete the index from customActive
     this.elements.splice(indexToDel, 1);
 
-    this.total = this.total - cQuantity;
-    $("#inputHookQuantity").val(this.total);
+    this.totalElementQuantity = this.totalElementQuantity - cQuantity;
+    this.totalHookQuantity = this.totalHookQuantity - cQuantity;
+
+    //trigger the full hook quantity checkbox automatically
+    
+    this.fullHookQuantity();
+    console.log(this);
+    
   },
 
-  updateQuantityFromHookInput: function(actualQuantity, changedQuantity){
-    this.total = changedQuantity - actualQuantity;
+  updateQuantityFromHookInput: function(prevQuantity, changedQuantity){
+    
+    this.totalHookQuantity = changedQuantity;
+    
+    //set the difference between the Elements contained with the 
+    //Hooks brought. That difference is multiplied with the hookPrice to the HTML price tag
+    //Which will show the price 
+
+    //UPDATE WITH HOOK PRICE
+    //APPLIES EVERY TIME THE USER CHANGES THE HOOK QUANTITY
+    
+
+    //deletes the $ sign
+    let price = $("#totalPriceSpan").val();
+    let difference = 0;
+    let priceToUpdate = 0;
+
+    difference = prevQuantity - changedQuantity;
+
+    priceToUpdate = difference * hookQuantity.hookPrice;
+
+    price = + price + priceToUpdate;
+    //console.log(price);
+    $("#totalPriceSpan").val(price.toFixed(2));
+    $("#totalPriceSpan").text("Precio Total: " + price.toFixed(2));
+    
+
   },
 
   fullHookQuantity: function(){//used to check the quantity hook equals the quantity 
@@ -88,8 +127,15 @@ var hookQuantity = {
       allSum += +this[this.elements[i]];
     }
 
-    this.total = allSum;
-    $("#inputHookQuantity").val(this.total);
+    this.totalHookQuantity = allSum;
+
+    //update the total receipt price tag
+
+    this.updateQuantityFromHookInput($("#inputHookQuantity").data("prev"), this.totalHookQuantity);
+
+     //also store it in the data property
+    $("#inputHookQuantity").data("prev", this.totalHookQuantity);
+    $("#inputHookQuantity").val(this.totalHookQuantity);
   }
 
 }; 
@@ -97,9 +143,9 @@ var hookQuantity = {
 var finalPrice = {
 
   elements: [],
-  total: 0,
+  totalPrice: 0,
   getFinalPrice:  function(){
-    this.total = 0;
+    this.totalPrice = 0;
     
     for(let i = 0; i < hookQuantity.elements.length; i++){
 
@@ -111,13 +157,14 @@ var finalPrice = {
       let price = parseFloat($("#spnResultElementTotal4" + hookQuantity.elements[i]).text().substring(1));
       finalPrice[hookQuantity.elements[i]] = price;
       
-      this.total += price;
+      this.totalPrice += price;
       
     }
 
-    this.total = parseFloat(this.total.toFixed(2));
+    this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
 
-    console.log(this);
+    console.log(hookQuantity);
+    console.log(finalPrice);
     
   }
 
@@ -639,6 +686,11 @@ $(document).ready(function () {
 
         }else if(window.location.pathname == "/Tallao/masterpanel.html"){
 
+          verification = {
+            inputElements: false,
+            inputDateAssigned: false
+          };
+
           fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
 
             let initials = dataCallback.initials;
@@ -857,9 +909,9 @@ $(document).ready(function () {
 
       });
 
-      $("input[type=number]").keydown(function(e){
+      $("input[type=number]").keypress(function(e){
         
-        if (e.which === 69) {
+        if ((e.which === 69) || (e.which === 45) || (e.which === 101)) {
           e.preventDefault();
         }
         
@@ -963,7 +1015,10 @@ $(document).ready(function () {
         let elementKeys = Object.keys(elementsString);
         let string = "";
         let arr = [];
-
+        
+        //get the price of the hook
+        let hookPrice = $("#inputPrice4hook").val();
+        
         for(let i = 0; i < elementKeys.length; i++){
 
           if($("#inputPrice4" + elementKeys[i]).val() != ""){
@@ -978,21 +1033,25 @@ $(document).ready(function () {
 
         string = arr.join();
 
+        
         console.log(cookie.userhash);
         console.log(serviceSelected);
         console.log(string);
-
+        
         $.ajax({
           type: "POST",
-          url: "./php/upgradePriceConfig.php",
+          url: "./php/updatePriceConfig.php",
           data: {
               inputUserHash: cookie.userhash,
               serviceoffer: serviceSelected,
-              priceConfig: string
+              priceConfig: string,
+              priceHook: hookPrice
+
           },
           success: function (response) {
               $("#submitChangePrice").toggleClass("disableButton");
               $("#submitChangePrice").text("¡ACTUALIZADO!");
+              
               
           },
           error: function(jqXHR, status, error){
@@ -1091,18 +1150,41 @@ $(document).ready(function () {
           }
       });
 
-      let actualVal = 0;
+      let previousVal = 0;
       $("#inputHookQuantity").keypress(function(e){
+
         
-        actualVal = this.value;
+
+        if(this.value < 0){
+          this.value = 1;
+        }
+        
+        //also store it in the data property
+        $("#inputHookQuantity").data("prev",this.value);
+        
+
+        previousVal = this.value;
+        console.log(previousVal);
       });
 
       $("#inputHookQuantity").change(function(e){
-        if(this.value > hookQuantity.total){
-          this.value = hookQuantity.total;
-        }else{
-          hookQuantity.updateQuantityFromHookInput(actualVal, this.value);
+        
+        //prevent the user from writing values below 0
+        if(this.value < 0){
+          this.value = 1;
         }
+        
+        previousVal = $("#inputHookQuantity").data("prev");
+        
+        //limit the user input to the maximum 
+        if(this.value > hookQuantity.totalElementQuantity){
+          this.value = hookQuantity.totalElementQuantity;
+        }else{
+          hookQuantity.updateQuantityFromHookInput(previousVal, this.value);
+        }
+
+        //hold the changed value as the previous value
+        $("#inputHookQuantity").data("prev", this.value);
       });
 
       
@@ -1110,6 +1192,8 @@ $(document).ready(function () {
       $("#submitOrder").click(function(e){
 
         finalPrice.getFinalPrice();
+
+
 
       });
 
@@ -1608,14 +1692,15 @@ function fetchElementPrice(){
     dataType: 'json',
 
     success: function(data){
-      
+      console.log(data);
       
       let array = [];
-      
+      let hookPrice = data.hook;
       
       if(data[serviceSelected] != "null"){
 
         array = data[serviceSelected].split(",");
+        hookQuantity.hookPrice = hookPrice;
 
         for(let i = 0; i < array.length; i++){
           
@@ -1671,14 +1756,18 @@ function fetchElementPrice(){
            
             $("#priceTag4" + id).text("$" + price);
             $("#priceTag4" + id).val(price);
+
             
           }else if(window.location.pathname == "/Tallao/myaccount.html"){
             $("#inputPrice4" + id).val(price);
+            $("#inputPrice4hook").val(hookPrice);
           }
           
           
         }
 
+      
+        
       }else{
 
         let objKeys = Object.keys(elementsString);
@@ -1984,7 +2073,7 @@ function generateCustomElementReceiptBox(id, service){
 
   mainContainer.append(row1);
   updateReceiptTotalPrice(0, spnResultTotal.value);
-  console.log(inputQuantity.value);
+  // console.log(inputQuantity.value);
   hookQuantity.updateQuantity(idElement, inputQuantity.value);
   
   $("#divOrdersAppendable").append(mainContainer);
@@ -2001,7 +2090,7 @@ function onlyIntegers(e){
 function onlyNumbers(e){
   //Includes integers and decimals
   
-  if (e.which === 69) {
+  if ((e.which === 69) || (e.which === 45) || (e.which === 101)) {
     e.preventDefault();
   }
 
@@ -2029,8 +2118,8 @@ function updateReceiptTotalPrice(actualPrice, changedPrice){
 
   price = changedPrice - actualPrice + spnValue;
 
-  console.log(spnValue + " + " + changedPrice + " - " + actualPrice);
-  console.log(price.toFixed(2));
+ /*  console.log(spnValue + " + " + changedPrice + " - " + actualPrice);
+  console.log(price.toFixed(2)); */
 
   /* if(mode == "quit-element"){    
 
@@ -2048,4 +2137,31 @@ function updateReceiptTotalPrice(actualPrice, changedPrice){
   $("#totalPriceSpan").val(price.toFixed(2));
   $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
 
+}
+function formVerification(field, status){
+
+  let objectValues = [];
+ 
+  if((field == "load") || (field == "submit")){
+    
+    verification["load"] = true;
+    verification["submit"] = true;
+
+  }else{  
+
+    if(status == false){
+      verification[field] = false;
+    }else{
+      verification[field] = true;
+    }
+  }  
+  
+  objectValues = Object.values(verification);
+
+  if(objectValues.includes(false) == true){
+    
+    toggleSubmitButton(true);
+  }else{
+    toggleSubmitButton(false);
+  }
 }

@@ -35,7 +35,7 @@ if ($conn->connect_error) {
 } */
 
 
-$sql = "SELECT " . $serviceSelected . " FROM pricechart WHERE hashcode='$inputUserHash'";
+$sql = "SELECT " . $serviceSelected . ", hook FROM pricechart WHERE hashcode='$inputUserHash'";
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 $result = mysqli_query($conn, $sql);
