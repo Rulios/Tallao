@@ -41,39 +41,53 @@ var scheduleString = {
 var verification = {};
 
 var sessionPrice = {};
-var hookQuantity = {
+var receiptDetails = {
 
   //this is the array to store the data
   elements: [],
   totalHookQuantity: 0,
   totalElementQuantity: 0,
   hookPrice: 0,
-  updateQuantity: function(id, cQuantity){
+  updateElementProp: function(id, cQuantity, unitPrice){
 
     let totalUpdate = 0;
     
     if((typeof this[id] == undefined) || (typeof this[id] == "undefined") || (this[id] == "") || (this[id] == 0)){
       this.elements.push(id);
-      this[id] = cQuantity;
-      totalUpdate += +this[id];
+
+      //define the obj property as a object
+
+      this[id] = {};
+      this[id]["quantity"] = parseInt(cQuantity);
+      this[id]["unitPrice"] = parseFloat(unitPrice);
+
+      totalUpdate += +this[id]["quantity"];
       
     }else{
-      totalUpdate = cQuantity - this[id]; 
-      this[id] = cQuantity;
-    }
-    console.log(totalUpdate);
 
-    this.totalElementQuantity = this.totalElementQuantity + totalUpdate;
+      totalUpdate = cQuantity - this[id]["quantity"]; 
+      this[id]["quantity"] = parseInt(cQuantity);
+      this[id]["unitPrice"] = parseFloat(unitPrice);
+      
+    }
+    
+
+    this.totalElementQuantity = parseInt(this.totalElementQuantity + totalUpdate);
     this.totalHookQuantity = this.totalHookQuantity + totalUpdate;  
 
     //also store it in the data property
     $("#inputHookQuantity").data("prev", this.totalHookQuantity);
     $("#inputHookQuantity").val(this.totalHookQuantity);
+
+    this.updateTotalPrice();
+
+    console.log(this);
     
   },
 
-  closeQuantity: function(id, cQuantity){
-    this[id] = 0;
+  closeElement: function(id){
+
+    let eQuantity = this[id]["quantity"];
 
     let indexToDel = this.elements.findIndex(function(x){
       return x == id;
@@ -81,42 +95,28 @@ var hookQuantity = {
     //delete the index from customActive
     this.elements.splice(indexToDel, 1);
 
-    this.totalElementQuantity = this.totalElementQuantity - cQuantity;
-    this.totalHookQuantity = this.totalHookQuantity - cQuantity;
+
+    this.totalElementQuantity = this.totalElementQuantity - eQuantity;
+    this.totalHookQuantity = this.totalHookQuantity - eQuantity;
 
     //trigger the full hook quantity checkbox automatically
+    console.log(this.totalHookQuantity);
     
+    
+    //set the element prop to 0
+    this[id]["quantity"] = 0;
+    this[id]["unitPrice"] = 0;
+
     this.fullHookQuantity();
-    console.log(this);
+    this.updateTotalPrice();
     
   },
 
   updateQuantityFromHookInput: function(prevQuantity, changedQuantity){
     
-    this.totalHookQuantity = changedQuantity;
+    this.totalHookQuantity = parseInt(changedQuantity);
     
-    //set the difference between the Elements contained with the 
-    //Hooks brought. That difference is multiplied with the hookPrice to the HTML price tag
-    //Which will show the price 
-
-    //UPDATE WITH HOOK PRICE
-    //APPLIES EVERY TIME THE USER CHANGES THE HOOK QUANTITY
-    
-
-    //deletes the $ sign
-    let price = $("#totalPriceSpan").val();
-    let difference = 0;
-    let priceToUpdate = 0;
-
-    difference = prevQuantity - changedQuantity;
-
-    priceToUpdate = difference * hookQuantity.hookPrice;
-
-    price = + price + priceToUpdate;
-    //console.log(price);
-    $("#totalPriceSpan").val(price.toFixed(2));
-    $("#totalPriceSpan").text("Precio Total: " + price.toFixed(2));
-    
+    this.updateTotalPrice();
 
   },
 
@@ -124,7 +124,7 @@ var hookQuantity = {
     let allSum = 0;
 
     for(let i = 0; i < this.elements.length; i++){
-      allSum += +this[this.elements[i]];
+      allSum += +this[this.elements[i]]["quantity"];
     }
 
     this.totalHookQuantity = allSum;
@@ -136,6 +136,54 @@ var hookQuantity = {
      //also store it in the data property
     $("#inputHookQuantity").data("prev", this.totalHookQuantity);
     $("#inputHookQuantity").val(this.totalHookQuantity);
+    this.updateTotalPrice();
+  },
+
+  updateTotalPrice : function(){
+
+    let totalPrice = 0;
+    let hookPrice = (this.totalElementQuantity - this.totalHookQuantity) * parseFloat(receiptDetails.hookPrice);
+
+    for(let i = 0; i < this.elements.length; i++){
+      totalPrice += (this[this.elements[i]]["quantity"] * this[this.elements[i]]["unitPrice"]);
+      console.log(this[this.elements[i]]["quantity"] +"*" + this[this.elements[i]]["unitPrice"])
+    }
+    
+    //add the price of the hooks
+    totalPrice += hookPrice;
+    //update the object prop
+    this.totalPrice = parseFloat(totalPrice.toFixed(2));
+
+    
+    //show it on HTML
+    $("#totalPriceSpan").val(totalPrice.toFixed(2));
+    $("#totalPriceSpan").text("Precio Total: $" + totalPrice.toFixed(2));
+
+  },
+
+  updateReceiptTotalPrice : function(actualPrice, changedPrice){
+    let spnValue = $("#totalPriceSpan").val();
+    let price;
+
+    if(( typeof changedPrice == undefined) ||  (typeof changedPrice == "undefined")){
+      changedPrice = 0;
+    }
+
+    if(( typeof spnValue == undefined) ||  (typeof spnValue == "undefined") || (spnValue == "")){
+      spnValue = 0;
+    }
+
+    spnValue = parseFloat(spnValue);
+    actualPrice = parseFloat(actualPrice);
+    changedPrice = parseFloat(changedPrice);
+
+    price = changedPrice - actualPrice + spnValue;
+
+    //update the price on the finalPrice obj
+    this.totalPrice = price;
+
+    $("#totalPriceSpan").val(price.toFixed(2));
+    $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
   }
 
 }; 
@@ -145,25 +193,25 @@ var finalPrice = {
   elements: [],
   totalPrice: 0,
   getFinalPrice:  function(){
-    this.totalPrice = 0;
     
-    for(let i = 0; i < hookQuantity.elements.length; i++){
+    
+    for(let i = 0; i < receiptDetails.elements.length; i++){
 
-      if(this.elements.indexOf(hookQuantity.elements[i]) == -1){
-        this.elements.push(hookQuantity.elements[i]);
+      if(this.elements.indexOf(receiptDetails.elements[i]) == -1){
+        this.elements.push(receiptDetails.elements[i]);
       }
     
       //deletes the $ sign
-      let price = parseFloat($("#spnResultElementTotal4" + hookQuantity.elements[i]).text().substring(1));
-      finalPrice[hookQuantity.elements[i]] = price;
-      
-      this.totalPrice += price;
+      let price = parseFloat($("#spnResultElementTotal4" + receiptDetails.elements[i]).text().substring(1));
+      finalPrice[receiptDetails.elements[i]] = price;
       
     }
+    
 
-    this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
+    console.log(this.totalPrice);
+    //this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
 
-    console.log(hookQuantity);
+    console.log(receiptDetails);
     console.log(finalPrice);
     
   }
@@ -1136,7 +1184,7 @@ $(document).ready(function () {
       $("#checkBoxHook").change(function(e){
           
           if(this.checked == true){
-            hookQuantity.fullHookQuantity();
+            receiptDetails.fullHookQuantity();
             if($("#inputHookQuantity").hasClass("disableInput") == false){
               $("#inputHookQuantity").toggleClass("disableInput");
             }
@@ -1177,10 +1225,10 @@ $(document).ready(function () {
         previousVal = $("#inputHookQuantity").data("prev");
         
         //limit the user input to the maximum 
-        if(this.value > hookQuantity.totalElementQuantity){
-          this.value = hookQuantity.totalElementQuantity;
+        if(this.value > receiptDetails.totalElementQuantity){
+          this.value = receiptDetails.totalElementQuantity;
         }else{
-          hookQuantity.updateQuantityFromHookInput(previousVal, this.value);
+          receiptDetails.updateQuantityFromHookInput(previousVal, this.value);
         }
 
         //hold the changed value as the previous value
@@ -1700,7 +1748,7 @@ function fetchElementPrice(){
       if(data[serviceSelected] != "null"){
 
         array = data[serviceSelected].split(",");
-        hookQuantity.hookPrice = hookPrice;
+        receiptDetails.hookPrice = hookPrice;
 
         for(let i = 0; i < array.length; i++){
           
@@ -1866,24 +1914,24 @@ function generateCustomElementReceiptBox(id, service){
       let customElementName = this.value;
       let arr = this.id.split("spn4");
       let actualID = arr[1];
-      let holdValue = hookQuantity[actualID];
+      let holdValue = receiptDetails[actualID];
 
       let newID = actualID + "*" + customElementName;
       let newIDHTML = "spn4" + actualID + "*" + customElementName;
       
       //make the old id be zero
-      hookQuantity[actualID] = 0;
+      receiptDetails[actualID] = 0;
 
       //this replaces the element id from the element array
       //with the new one. Adding the custom element name that the user previously input
 
       //update
-      hookQuantity.elements.splice(hookQuantity.elements.indexOf(actualID), 1);
-      hookQuantity.elements.push(newID);
+      receiptDetails.elements.splice(receiptDetails.elements.indexOf(actualID), 1);
+      receiptDetails.elements.push(newID);
       this.id = newIDHTML;
       //update dynamically create object variable
       idElement = newID;
-      hookQuantity[newID] = holdValue;
+      receiptDetails[newID] = holdValue;
     });
 
     elementNameHTML.addEventListener("keypress", function(e){
@@ -1914,9 +1962,9 @@ function generateCustomElementReceiptBox(id, service){
 
     xID = a[1];
 
-    updateReceiptTotalPrice(spnResultTotal.value, 0);
+    //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, 0);
     $("#elementReceipt4" + xID).remove();
-    hookQuantity.closeQuantity(idElement, inputQuantity.value);
+    receiptDetails.closeElement(idElement);
     
 
     if(xID.search("custom") != -1){
@@ -1977,11 +2025,11 @@ function generateCustomElementReceiptBox(id, service){
       e.stopImmediatePropagation();
     }else{
       let changedPrice = (inputQuantity.value * inputPrice.value);
-      updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
+      //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
       spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
 
-      hookQuantity.updateQuantity(idElement, inputQuantity.value);
+      receiptDetails.updateElementProp(idElement, inputQuantity.value, inputPrice.value);
       
     }
   });
@@ -2031,9 +2079,9 @@ function generateCustomElementReceiptBox(id, service){
 
   inputPrice.addEventListener("change", function(e){
     let changedPrice = (inputQuantity.value * inputPrice.value);
-    updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
+    //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
     spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
-      
+    receiptDetails.updateElementProp(idElement, inputQuantity.value, inputPrice.value);  
   });
 
   colPrice.append(spnTagPrice);
@@ -2072,9 +2120,9 @@ function generateCustomElementReceiptBox(id, service){
   row1.append(colElementInformation);
 
   mainContainer.append(row1);
-  updateReceiptTotalPrice(0, spnResultTotal.value);
+  //receiptDetails.updateReceiptTotalPrice(0, spnResultTotal.value);
   // console.log(inputQuantity.value);
-  hookQuantity.updateQuantity(idElement, inputQuantity.value);
+  receiptDetails.updateElementProp(idElement, inputQuantity.value, inputPrice.value);
   
   $("#divOrdersAppendable").append(mainContainer);
 }
@@ -2097,46 +2145,6 @@ function onlyNumbers(e){
 }
 function dynObjPreventDefault(e){
   e.preventDefault();
-}
-
-function updateReceiptTotalPrice(actualPrice, changedPrice){
-
-  let spnValue = $("#totalPriceSpan").val();
-  let price;
-
-  if(( typeof changedPrice == undefined) ||  (typeof changedPrice == "undefined")){
-    changedPrice = 0;
-  }
-
-  if(( typeof spnValue == undefined) ||  (typeof spnValue == "undefined") || (spnValue == "")){
-    spnValue = 0;
-  }
-
-  spnValue = parseFloat(spnValue);
-  actualPrice = parseFloat(actualPrice);
-  changedPrice = parseFloat(changedPrice);
-
-  price = changedPrice - actualPrice + spnValue;
-
- /*  console.log(spnValue + " + " + changedPrice + " - " + actualPrice);
-  console.log(price.toFixed(2)); */
-
-  /* if(mode == "quit-element"){    
-
-    price = spnValue - actualPrice;
-
-  }else if(mode == "add-element"){
-
-    price = spnValue + actualPrice;
-
-  }else if(mode == "update"){
-
-    price = (spnValue - actualPrice) + changedPrice;
-  } */
-
-  $("#totalPriceSpan").val(price.toFixed(2));
-  $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
-
 }
 function formVerification(field, status){
 
