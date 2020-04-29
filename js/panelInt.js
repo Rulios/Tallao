@@ -37,7 +37,9 @@ var scheduleString = {
   saturday: "Sábado",
   sunday: "Domingo"
 };
-
+var superuser = {
+  initials: ""
+};
 var verification = {};
 
 var sessionPrice = {};
@@ -65,6 +67,11 @@ var receiptDetails = {
       
     }else{
 
+      //check if the element is in the array 
+      if(this.elements.indexOf(id) == -1){
+        this.elements.push(id);
+      }
+
       totalUpdate = cQuantity - this[id]["quantity"]; 
       this[id]["quantity"] = parseInt(cQuantity);
       this[id]["unitPrice"] = parseFloat(unitPrice);
@@ -81,7 +88,7 @@ var receiptDetails = {
 
     this.updateTotalPrice();
 
-    console.log(this);
+    
     
   },
 
@@ -100,7 +107,7 @@ var receiptDetails = {
     this.totalHookQuantity = this.totalHookQuantity - eQuantity;
 
     //trigger the full hook quantity checkbox automatically
-    console.log(this.totalHookQuantity);
+    //console.log(this.totalHookQuantity);
     
     
     //set the element prop to 0
@@ -146,7 +153,7 @@ var receiptDetails = {
 
     for(let i = 0; i < this.elements.length; i++){
       totalPrice += (this[this.elements[i]]["quantity"] * this[this.elements[i]]["unitPrice"]);
-      console.log(this[this.elements[i]]["quantity"] +"*" + this[this.elements[i]]["unitPrice"])
+      //console.log(this[this.elements[i]]["quantity"] +"*" + this[this.elements[i]]["unitPrice"])
     }
     
     //add the price of the hooks
@@ -179,48 +186,80 @@ var receiptDetails = {
 
     price = changedPrice - actualPrice + spnValue;
 
-    //update the price on the finalPrice obj
+    //update the price on the finalPrice prop
     this.totalPrice = price;
 
     $("#totalPriceSpan").val(price.toFixed(2));
     $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
+  },
+
+  submitReceipt: function(initials){
+    
+    let arrElementQuantity = [];
+    let arrElementPrice = [];
+    let objKeys = Object.keys(this);
+
+    let strElementQuantity = "";
+    let strElementPrice = "";
+
+    let hookQ = this.totalHookQuantity;
+    let dateReceived = time.year + "-" + time.month + "-" + time.day + " " + time.hour24;
+    let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
+
+    let totalPrice = this.totalPrice;
+
+    for(let i = 0; i < this.elements.length; i++){
+      let string = "";
+
+      arrElementQuantity.push(this.elements[i] + "=" + this[this.elements[i]]["quantity"]);
+      arrElementPrice.push(this.elements[i] + "=" + this[this.elements[i]]["unitPrice"]);
+
+    }
+    
+    strElementQuantity = arrElementQuantity.join(",");
+    strElementPrice = arrElementPrice.join(",");
+
+    console.log(strElementQuantity);
+    console.log(strElementPrice);
+    console.log(hookQ);
+    console.log(dateReceived);
+    console.log(dateAssigned);
+    console.log(totalPrice);
+
+    /* $.ajax({
+      type: "POST",
+      url: "./php/submitReceipt.php",
+      data: {
+          initials: initials,
+          eQuantity: strElementQuantity,
+          ePrice: strElementPrice,
+          hookQuantity: hookQ,
+          dateReceived: dateReceived,
+          dateAssigned: dateAssigned,
+          totalPrice: totalPrice
+
+      },
+      success: function (response) {
+          $("#submitChangePrice").toggleClass("disableButton");
+          $("#submitChangePrice").text("¡ACTUALIZADO!");
+          
+          
+      },
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+
+      }
+    }); */
+
+
   }
 
 }; 
 
-var finalPrice = {
-
-  elements: [],
-  totalPrice: 0,
-  getFinalPrice:  function(){
-    
-    
-    for(let i = 0; i < receiptDetails.elements.length; i++){
-
-      if(this.elements.indexOf(receiptDetails.elements[i]) == -1){
-        this.elements.push(receiptDetails.elements[i]);
-      }
-    
-      //deletes the $ sign
-      let price = parseFloat($("#spnResultElementTotal4" + receiptDetails.elements[i]).text().substring(1));
-      finalPrice[receiptDetails.elements[i]] = price;
-      
-    }
-    
-
-    console.log(this.totalPrice);
-    //this.totalPrice = parseFloat(this.totalPrice.toFixed(2));
-
-    console.log(receiptDetails);
-    console.log(finalPrice);
-    
-  }
-
-};
-
 var schedule = {
-  superuserInitials: "",
-
   fetchSchedule: function(initials,callbackResult){
     
     $.ajax({
@@ -537,10 +576,12 @@ var schedule = {
 var time = {
   date: "",
   hour12: "",
+  hour24: "",
   timeCycle: "",
-  day:0,
-  month:0,
+  day:"",
+  month:"",
   year: 0,
+
   fetchDateTimeServer: function(callbackResult){
     $.ajax({
       type: "POST",
@@ -548,10 +589,10 @@ var time = {
       
       success: function (data) {
 
-        let result = JSON.parse(data);
+        /* let result = JSON.parse(data);
         this.date = result.date;
-        this.hour = result.hour;
-        this.timeCycle = result.cycle;
+        this.hour12 = result.hour;
+        this.timeCycle = result.cycle; */
 
       },
       error: function(jqXHR, status, error){
@@ -573,20 +614,24 @@ var time = {
       time.date = result.date;
       time.hour12 = result.hour12;
       time.timeCycle = result.cycle;
+      time.hour24 = time.convertTime12to24(time.hour12 + " " + time.timeCycle);
       
       $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
 
       //process the date, divide its components
       //the format in which it comes fetched is
       //day-month-year
-      let arr = this.date.split("/");
-      time.day = parseInt(arr[0]);
-      time.month = parseInt(arr[1]);
+      let arr = time.date.split("/");
+      
+      
+      time.day = arr[0];
+      time.month = arr[1];
       time.year = parseInt(arr[2]);
-
+      
       //limit the inputs
       time.limitMinMaxInputs();
     });
+  
   },
 
   limitMinMaxInputs: function(){
@@ -607,7 +652,28 @@ var time = {
     
     $("input[type=date]").attr("min", year + "-" + month + "-" + day);
 
+  },
+
+  convertTime12to24 : function(time12h){
+    const [time, modifier] = time12h.split(' ');
+  
+    let [hours, minutes] = time.split(':');
+
+    if((typeof minutes === undefined)||(typeof minutes === "undefined")){
+      minutes = "00";
+    }
+
+    if (hours === '12') {
+      hours = '00';
+    }
+    
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+  
+    return `${hours}:${minutes}`;
   }
+
 };
 
 $(document).ready(function () {
@@ -671,7 +737,8 @@ $(document).ready(function () {
                 console.log(dataCallback);
 
                 //this need to be rewritten
-                schedule.superuserInitials = initials;
+                superuser.initials = initials;
+               
                 schedule.generateScheduleBox(initials);
               });
 
@@ -742,7 +809,8 @@ $(document).ready(function () {
           fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
 
             let initials = dataCallback.initials;
-            schedule.superuserInitials = initials;
+            superuser.initials = initials;
+            
 
           });  
 
@@ -1239,8 +1307,8 @@ $(document).ready(function () {
 
       $("#submitOrder").click(function(e){
 
-        finalPrice.getFinalPrice();
-
+        //$("#receiptConfigPanel").css("visibility", "hidden");
+        receiptDetails.submitReceipt(superuser.initials);
 
 
       });
@@ -1263,13 +1331,13 @@ $(document).ready(function () {
         }
         
         strToSend = arr.join();
-        console.log(schedule.superuserInitials);
+        
         console.log(strToSend);
         $.ajax({
           type: "POST",
           url: "./php/updateSuperuserSchedule.php",
           data: {
-              initials: schedule.superuserInitials,
+              initials: superuser.initials,
               schedule: strToSend
           },
           success: function (response) {
@@ -1317,7 +1385,7 @@ $(document).ready(function () {
         weekday[5] = "friday";
         weekday[6] = "saturday";  
 
-        schedule.fetchSchedule(schedule.superuserInitials, function(data){
+        schedule.fetchSchedule(superuser.initials, function(data){
 
           let arr = data.schedule.split(",");
           let obj = {};

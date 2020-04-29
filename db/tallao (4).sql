@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-04-2020 a las 05:01:56
+-- Tiempo de generación: 29-04-2020 a las 05:33:51
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -34,8 +34,9 @@ CREATE TABLE `orders` (
   `elementsQuantity` text NOT NULL,
   `elementsPrice` text NOT NULL,
   `hookQuantity` int(11) NOT NULL,
-  `dateReceived` datetime NOT NULL,
-  `dateAssigned` datetime NOT NULL
+  `dateReceived` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
+  `dateAssigned` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
+  `totalprice` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the orders data';
 
 -- --------------------------------------------------------
@@ -49,15 +50,16 @@ CREATE TABLE `pricechart` (
   `iron` text NOT NULL,
   `wash` text NOT NULL,
   `washiron` text NOT NULL,
-  `dryclean` text NOT NULL
+  `dryclean` text NOT NULL,
+  `hook` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table to store the data of the prices';
 
 --
 -- Volcado de datos para la tabla `pricechart`
 --
 
-INSERT INTO `pricechart` (`hashcode`, `iron`, `wash`, `washiron`, `dryclean`) VALUES
-('8XMqSGzajxRRQiyLZj8m', 'shirt=0.65,pants=0.65,skirt=0.65,coat=1.50,sweater=0.65,pleatedSkirt=1.50,overall=1.3,jumper=1.5,blouse=1,largeSuit=1.5,quilt=7', '', 'shirt=1.50,pants=1.50,skirt=1.50,coat=3.5,sweater=1.5,pleatedSkirt=4,overall=2.5,jumper=3,blouse=2,largeSuit=5,quilt=8', '');
+INSERT INTO `pricechart` (`hashcode`, `iron`, `wash`, `washiron`, `dryclean`, `hook`) VALUES
+('8XMqSGzajxRRQiyLZj8m', 'shirt=0.65,pants=0.65,skirt=0.65,coat=1.30,sweater=0.65,pleatedSkirt=1.30,overall=1.30,jumper=1.50,blouse=1.00,largeSuit=1.75,quilt=8.00', '', 'shirt=1.50,pants=1.50,skirt=1.50,coat=3.5,sweater=1.5,pleatedSkirt=4,overall=2.5,jumper=3,blouse=2,largeSuit=5,quilt=8', '', '0.10');
 
 -- --------------------------------------------------------
 
@@ -83,7 +85,7 @@ CREATE TABLE `superusers` (
 --
 
 INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`) VALUES
-('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:00*PM,tuesday/8:00*AM-8:00*PM,wednesday/8:00*AM-8:00*PM,thursday/8:00*AM-8:00*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:00*PM,sunday/8:00*AM-8:00*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G');
+('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G');
 
 -- --------------------------------------------------------
 

@@ -181,11 +181,15 @@ border:1px solid;
 .bottomLineLinkAnimation:hover::after {
     width: 100%;
 }
-#myOrders{
+/* #myOrders{
     padding:10px;   
     color:black;
 }
 #myAccount{
+    color:black;
+    padding:10px;
+} */
+.navBarText{
     color:black;
     padding:10px;
 }
