@@ -1,14 +1,16 @@
-$(document).ready(function () {
+//uses the load event since it uses elements after 
+//the render is made by the browser
+
+$(window).on("load", function(e){
+
     var locationPathName = window.location.pathname;
 
     if(locationPathName == "/Tallao/" || locationPathName == "index.html" || locationPathName == "/Tallao/index.html"){
         resize2FitTheBig();
         console.log(locationPathName);
     }
-    
 
     $('[data-toggle="tooltip"]').tooltip(); 
-
 });
 
 function resize2FitTheBig(){
@@ -29,8 +31,10 @@ function resize2FitTheBig(){
                 maxHeight = arrObj[i].offsetHeight;
             }
         } 
+        //console.log(maxHeight);
     }
-
+    
+    
     $("div[name='pContainer']").css("height",  maxHeight + "px");
   
     

@@ -54,6 +54,13 @@ var receiptDetails = {
 
     let totalUpdate = 0;
     
+    
+    if(cQuantity == 0){
+      formVerification("inputElements", false);
+    }else{
+      formVerification("inputElements", true);
+    }
+
     if((typeof this[id] == undefined) || (typeof this[id] == "undefined") || (this[id] == "") || (this[id] == 0)){
       this.elements.push(id);
 
@@ -219,14 +226,14 @@ var receiptDetails = {
     strElementQuantity = arrElementQuantity.join(",");
     strElementPrice = arrElementPrice.join(",");
 
-    console.log(strElementQuantity);
+    /* console.log(strElementQuantity);
     console.log(strElementPrice);
     console.log(hookQ);
     console.log(dateReceived);
     console.log(dateAssigned);
-    console.log(totalPrice);
+    console.log(totalPrice); */
 
-    /* $.ajax({
+    $.ajax({
       type: "POST",
       url: "./php/submitReceipt.php",
       data: {
@@ -240,9 +247,28 @@ var receiptDetails = {
 
       },
       success: function (response) {
-          $("#submitChangePrice").toggleClass("disableButton");
-          $("#submitChangePrice").text("¡ACTUALIZADO!");
           
+        formVerification("inputElements", false);
+        formVerification("inputDateAssigned", false);
+
+        //Animmation
+        if($("#receiptConfigPanel").hasClass("opacityAndDisable") == false){
+          $("#receiptConfigPanel").toggleClass("opacityAndDisable");
+
+          if($("#successAnimation").hasClass("hide") == true){
+            setTimeout(function(){
+              
+              //show it
+              $("#successAnimation").toggleClass("hide");
+              
+              setTimeout(function(){
+                //hide it
+                $("#successAnimation").toggleClass("hide");
+                $("#receiptConfigPanel").toggleClass("opacityAndDisable");
+              },2500)
+            }, 40);
+          }
+        }
           
       },
       error: function(jqXHR, status, error){
@@ -252,7 +278,7 @@ var receiptDetails = {
           alert("Error " + status + error);
 
       }
-    }); */
+    });
 
 
   }
@@ -803,8 +829,11 @@ $(document).ready(function () {
 
           verification = {
             inputElements: false,
-            inputDateAssigned: false
+            inputDateAssigned: false,
           };
+          formVerification("load", false);
+          formVerification("inputElements", false);
+          formVerification("inputDateAssigned", false);
 
           fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
 
@@ -836,8 +865,8 @@ $(document).ready(function () {
           //start fetching date,time and cycle from server
           //time to refresh 10 minutes = 600000ms
           time.printDateTime();
-          setInterval(function(){time.printDateTime()}, 3000);
-
+          setInterval(function(){time.printDateTime()}, 600000);
+          
           
 
           
@@ -1308,9 +1337,12 @@ $(document).ready(function () {
       $("#submitOrder").click(function(e){
 
         //$("#receiptConfigPanel").css("visibility", "hidden");
-        receiptDetails.submitReceipt(superuser.initials);
+        formVerification("submit", false);
+        if($("#submitOrder").hasClass("disableButton") == false){
+          receiptDetails.submitReceipt(superuser.initials);
 
-
+        }
+        
       });
 
       $("#submitChangeSchedule").click(function(e){
@@ -1458,6 +1490,18 @@ $(document).ready(function () {
           }
 
         });
+
+      });
+
+      $("#inputTime4Order").change(function(){
+
+        //check the other date input
+        if(($("#inputDate4Order").val() == "") || ($(this).val() == "")){
+          //set disabled button
+          formVerification("inputDateAssigned", false);
+        }else{
+          formVerification("inputDateAssigned", true);
+        }
 
       });
 
@@ -1808,7 +1852,7 @@ function fetchElementPrice(){
     dataType: 'json',
 
     success: function(data){
-      console.log(data);
+     
       
       let array = [];
       let hookPrice = data.hook;
@@ -2214,30 +2258,4 @@ function onlyNumbers(e){
 function dynObjPreventDefault(e){
   e.preventDefault();
 }
-function formVerification(field, status){
 
-  let objectValues = [];
- 
-  if((field == "load") || (field == "submit")){
-    
-    verification["load"] = true;
-    verification["submit"] = true;
-
-  }else{  
-
-    if(status == false){
-      verification[field] = false;
-    }else{
-      verification[field] = true;
-    }
-  }  
-  
-  objectValues = Object.values(verification);
-
-  if(objectValues.includes(false) == true){
-    
-    toggleSubmitButton(true);
-  }else{
-    toggleSubmitButton(false);
-  }
-}

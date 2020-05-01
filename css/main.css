@@ -465,6 +465,57 @@ input[type='checkbox']{
 .inputNumberHook{
     width: 30% !important;
 }
+.opacityAndDisable{
+    opacity: 0.1;
+    cursor: not-allowed;
+    pointer-events: none;
+    transition:0.2s;
+}
+
+.successAnimStyleDiv{
+    position:fixed;
+    left: 50%;
+    top: 50% ;
+    transition: 0.4s ;
+}
+.checkAnim {
+    border: solid 30px #D074E8;
+    width: 200px;
+    height: 100px;
+    margin: -50px 0 0 -100px;
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+    transform-origin: top left;
+    box-shadow: -5px 5px 0 0 rgba(0,0,0,.5);
+}
+  
+.checkAnim{
+    animation: start 1s ease  both;
+    /* Override default play state paused of codepen iframe */
+    animation-play-state: running!important;
+}
+.successMessageAnim{
+    margin: -10px 0 0 -100px;
+    transition: 0.2s;
+}  
+@keyframes start {
+    0% {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    50% {
+      opacity: 1;
+      width: 0;
+      height: 100px;
+    }
+    100% {
+      width: 200px;
+    }
+}
+
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
