@@ -103,9 +103,12 @@ var receiptDetails = {
 
     let eQuantity = this[id]["quantity"];
 
-    let indexToDel = this.elements.findIndex(function(x){
+    /* let indexToDel = this.elements.findIndex(function(x){
       return x == id;
-    });
+    }); */
+
+    let indexToDel = this.elements.indexOf(id);
+    
     //delete the index from customActive
     this.elements.splice(indexToDel, 1);
 
@@ -175,31 +178,6 @@ var receiptDetails = {
 
   },
 
-  updateReceiptTotalPrice : function(actualPrice, changedPrice){
-    let spnValue = $("#totalPriceSpan").val();
-    let price;
-
-    if(( typeof changedPrice == undefined) ||  (typeof changedPrice == "undefined")){
-      changedPrice = 0;
-    }
-
-    if(( typeof spnValue == undefined) ||  (typeof spnValue == "undefined") || (spnValue == "")){
-      spnValue = 0;
-    }
-
-    spnValue = parseFloat(spnValue);
-    actualPrice = parseFloat(actualPrice);
-    changedPrice = parseFloat(changedPrice);
-
-    price = changedPrice - actualPrice + spnValue;
-
-    //update the price on the finalPrice prop
-    this.totalPrice = price;
-
-    $("#totalPriceSpan").val(price.toFixed(2));
-    $("#totalPriceSpan").text("Precio Total: $" + price.toFixed(2));
-  },
-
   submitReceipt: function(initials){
     
     let arrElementQuantity = [];
@@ -212,6 +190,9 @@ var receiptDetails = {
     let hookQ = this.totalHookQuantity;
     let dateReceived = time.year + "-" + time.month + "-" + time.day + " " + time.hour24;
     let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
+
+    let clientID = $("#inputClientID").val();
+
 
     let totalPrice = this.totalPrice;
 
@@ -226,7 +207,14 @@ var receiptDetails = {
     strElementQuantity = arrElementQuantity.join(",");
     strElementPrice = arrElementPrice.join(",");
 
-    /* console.log(strElementQuantity);
+    //Client ID acts as affiliation system to the receipt
+    if(clientID == ""){
+      clientID = "none";
+    }
+
+    
+    /* console.log(clientID);
+    console.log(strElementQuantity);
     console.log(strElementPrice);
     console.log(hookQ);
     console.log(dateReceived);
@@ -238,6 +226,7 @@ var receiptDetails = {
       url: "./php/submitReceipt.php",
       data: {
           initials: initials,
+          clientID: clientID,
           eQuantity: strElementQuantity,
           ePrice: strElementPrice,
           hookQuantity: hookQ,
@@ -247,11 +236,18 @@ var receiptDetails = {
 
       },
       success: function (response) {
-          
+        
         formVerification("inputElements", false);
         formVerification("inputDateAssigned", false);
 
-        //Animmation
+        //reset HTML and JS receipt object
+        $("#inputClientID").val("");
+        $("#inputDate4Order").val("");
+        $("#inputTime4Order").toggleClass("disableInput");
+        $("#inputTime4Order").val("");
+        receiptDetails.resetObject();
+
+        //Animation
         if($("#receiptConfigPanel").hasClass("opacityAndDisable") == false){
           $("#receiptConfigPanel").toggleClass("opacityAndDisable");
 
@@ -281,6 +277,28 @@ var receiptDetails = {
     });
 
 
+  },
+
+  resetObject: function(){
+    
+    let elementsDup = [];
+    //create a duplicate of the elements obj
+    //so at the for loop it won't affect the original obj
+    //as a point of reference
+    for(let i = 0; i< this.elements.length; i++){
+      elementsDup.push(this.elements[i]);
+    }
+   
+    //remove HTML receipt element list
+    //remove element at the array
+    for(let i = 0; i < elementsDup.length; i++){
+      
+      $("#elementReceipt4" + elementsDup[i]).remove();
+      receiptDetails.closeElement(elementsDup[i]);
+      
+    }
+    
+    receiptDetails.updateTotalPrice();
   }
 
 }; 
@@ -2074,7 +2092,7 @@ function generateCustomElementReceiptBox(id, service){
 
     xID = a[1];
 
-    //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, 0);
+    
     $("#elementReceipt4" + xID).remove();
     receiptDetails.closeElement(idElement);
     
@@ -2137,7 +2155,7 @@ function generateCustomElementReceiptBox(id, service){
       e.stopImmediatePropagation();
     }else{
       let changedPrice = (inputQuantity.value * inputPrice.value);
-      //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
+      
       spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
       spnResultTotal.textContent = "$" + (inputQuantity.value * inputPrice.value).toFixed(2);
 
@@ -2191,7 +2209,7 @@ function generateCustomElementReceiptBox(id, service){
 
   inputPrice.addEventListener("change", function(e){
     let changedPrice = (inputQuantity.value * inputPrice.value);
-    //receiptDetails.updateReceiptTotalPrice(spnResultTotal.value, changedPrice.toFixed(2));
+    
     spnResultTotal.value = (inputQuantity.value * inputPrice.value).toFixed(2);
     receiptDetails.updateElementProp(idElement, inputQuantity.value, inputPrice.value);  
   });
@@ -2232,7 +2250,7 @@ function generateCustomElementReceiptBox(id, service){
   row1.append(colElementInformation);
 
   mainContainer.append(row1);
-  //receiptDetails.updateReceiptTotalPrice(0, spnResultTotal.value);
+  
   // console.log(inputQuantity.value);
   receiptDetails.updateElementProp(idElement, inputQuantity.value, inputPrice.value);
   

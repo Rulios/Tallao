@@ -515,6 +515,15 @@ input[type='checkbox']{
       width: 200px;
     }
 }
+.customTagStyle{
+    width: 75%;
+    height: auto;
+}
+.customTextAreaStyle{
+    font-size: 14px;
+    width: 100%;
+    height: auto;
+}
 
 @media only screen and (max-width: 768px){
 

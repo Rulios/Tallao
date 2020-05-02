@@ -9,11 +9,12 @@ $db = "tallao";
 //Data
 
 //set the constant of the limit
-const limit = 7;
+const limit = 10000;
 
-if(isset($_POST['initials'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceived'], $_POST['dateAssigned'], $_POST['totalPrice'])){
+if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceived'], $_POST['dateAssigned'], $_POST['totalPrice'])){
     
     $initials = $_POST['initials'];
+    $clientID = $_POST['clientID'];
     $elementQuantityString = $_POST['eQuantity'];
     $elementPriceString = $_POST['ePrice'];
     $hookQuantity = $_POST['hookQuantity'];
@@ -25,13 +26,14 @@ if(isset($_POST['initials'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQ
 }
 
 /* $initials = "VICNT";
+$clientID = "GUQ13";
 $elementQuantityString = "shirt-iron=1,pants-iron=1";
 $elementPriceString = "shirt-iron=1,pants-iron=0.65";
 $hookQuantity = "2";
 $dateReceived = "2020-04-30 23:00";
 $dateAssigned = "2020-05-01 23:32";
-$totalPrice = "1.65";
- */
+$totalPrice = "1.65"; */
+
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 
 // Check connection
@@ -87,6 +89,45 @@ if(mysqli_query($conn,$sql)){
         
 
         if(mysqli_query($conn,$sql)){
+
+            //affiliate the receipt ID to the client side(user table)
+            if($clientID != "none"){
+
+                $sql = "SELECT orders FROM users WHERE id='$clientID'";
+
+                if(mysqli_query($conn,$sql)){
+
+                    $result = mysqli_query($conn, $sql);
+                    $clientDBorders = [];
+                    $clientDBorders = mysqli_fetch_array($result);
+                    $str1 = trim($clientDBorders["orders"]);
+
+                    if($str1 != ""){//this fixes the bug of having a , at new data
+                        $clientOrders = explode(",", $str1);
+
+                        //add the element to the existing string at the db
+                        array_push($clientOrders, $lastRID);
+                        $newStrOrders = implode(",", $clientOrders);
+                    }else{
+
+                        $newStrOrders = $lastRID;
+                    }
+                    
+                    
+                    $sql = "UPDATE users SET orders='$newStrOrders' WHERE id='$clientID'";
+                    if(mysqli_query($conn,$sql)){
+                    }else{
+                        echo mysqli_error($conn);
+                    }  
+
+                }else{
+
+                echo mysqli_error($conn);
+
+                }
+            
+            }
+            
             echo "HECHO";
         }else{
             echo mysqli_error($conn);
