@@ -616,6 +616,151 @@ var schedule = {
 
 };
 
+var customMessages = {
+
+  messages: [],
+
+  createNewMessageBox: function(){
+
+    let mainColumnDiv = document.createElement("DIV");
+    mainColumnDiv.setAttribute("class", "col-lg-4 subTxt styleMessageBox");
+
+
+    let innerContainer = document.createElement("DIV");
+    innerContainer.setAttribute("class", "container-fluid");
+
+    let closeMessageButton = document.createElement("BUTTON");
+    closeMessageButton.setAttribute("class", "closeMessageButtonStyle");
+    closeMessageButton.textContent = "x";
+
+
+
+    let tagRowDiv = document.createElement("DIV");
+    tagRowDiv.setAttribute("class", "row");
+
+    let tagColumnLabel = document.createElement("DIV");
+    tagColumnLabel.setAttribute("class", "col-lg-3");
+
+    let tagLabel = document.createElement("LABEL");
+    tagLabel.setAttribute("for", "inputMessageTag");
+    tagLabel.textContent = "Etiqueta:";
+
+    tagColumnLabel.append(tagLabel);
+
+    
+    let tagColumnInput = document.createElement("DIV");
+    tagColumnInput.setAttribute("class", "col-lg-9");
+
+    let tagInput = document.createElement("INPUT");
+    tagInput.setAttribute("type", "text");
+    tagInput.setAttribute("name", "messageTag");
+    tagInput.setAttribute("class", "inputMessageTagStyle");
+    tagInput.setAttribute("id", "inputMessageTag");
+
+    tagColumnInput.append(tagInput);
+    tagRowDiv.append(tagColumnLabel);
+    tagRowDiv.append(tagColumnInput);
+
+
+    
+    let colorRowDiv = document.createElement("DIV");
+    colorRowDiv.setAttribute("class", "row smallSeparation");
+
+    let colorColumnLabel = document.createElement("DIV");
+    colorColumnLabel.setAttribute("class", "col-lg-4");
+
+    let colorLabel = document.createElement("LABEL");
+    colorLabel.setAttribute("for", "selectMessageColor");
+    colorLabel.textContent = "Color:";
+
+    colorColumnLabel.append(colorLabel);
+
+
+    let colorColumnSelect = document.createElement("DIV");
+    colorColumnSelect.setAttribute("class", "col-lg-8");
+
+    let colorSelect = document.createElement("SELECT");
+    colorSelect.setAttribute("class", "customColorTagStyle");
+    colorSelect.setAttribute("id", "selectMessageColor");
+
+    colorSelect.append(this.createColorOptionList("none"));
+    colorSelect.append(this.createColorOptionList("skyblue"));
+    colorSelect.append(this.createColorOptionList("green"));
+    colorSelect.append(this.createColorOptionList("violet"));
+    colorSelect.append(this.createColorOptionList("orange"));
+    
+    colorColumnSelect.append(colorSelect);
+    colorRowDiv.append(colorColumnLabel);
+    colorRowDiv.append(colorColumnSelect);
+
+    let messageRowDiv = document.createElement("DIV");
+    messageRowDiv.setAttribute("class", "row smallSeparation");
+
+    let messageColumnLabel = document.createElement("DIV");
+    messageColumnLabel.setAttribute("class", "col-lg-2");
+
+    let messageLabel = document.createElement("LABEL");
+    messageLabel.setAttribute("for", "messageTextArea");
+    messageLabel.textContent = "Texto:";
+
+    messageColumnLabel.append(messageLabel);
+
+    let messageColumnTextArea = document.createElement("DIV");
+    messageColumnTextArea.setAttribute("class", "col-lg-10");
+
+    let messageTextArea = document.createElement("TEXTAREA");
+    messageTextArea.setAttribute("type", "text");
+    messageTextArea.setAttribute("placeholder", "texto...");
+    messageTextArea.setAttribute("class", "customTextAreaStyle");
+    messageTextArea.setAttribute("id", "");
+
+    messageColumnTextArea.append(messageTextArea);
+    messageRowDiv.append(messageColumnLabel);
+    messageRowDiv.append(messageColumnTextArea);
+
+    //unite all the rows
+    innerContainer.append(closeMessageButton);
+    innerContainer.append(tagRowDiv);
+    innerContainer.append(colorRowDiv);
+    innerContainer.append(messageRowDiv);
+
+    mainColumnDiv.append(innerContainer);
+
+    $("#divAppendCustomMessages").append(mainColumnDiv);
+
+
+  },
+
+
+  createColorOptionList: function(value){
+
+    let color = {
+      none: "",
+      skyblue: "#7FE5FF",
+      green: "#87E8C1",
+      violet: "#DCA2E8",
+      orange: "#EBAB28"
+
+    }
+
+    let colorString = {
+      none: "",
+      skyblue: "Celeste",
+      green: "Verde",
+      violet: "Violeta",
+      orange: "Naranja"
+    }
+
+    let option = document.createElement("OPTION");
+    option.setAttribute("value", value);
+    option.setAttribute("data", color[value]);
+    option.textContent = colorString[value];
+
+    return option;
+  }
+
+};
+
 
 var time = {
   date: "",
@@ -885,12 +1030,7 @@ $(document).ready(function () {
           time.printDateTime();
           setInterval(function(){time.printDateTime()}, 600000);
           
-          
-
-          
         }
-
-        
 
     }   
     
@@ -1520,6 +1660,13 @@ $(document).ready(function () {
         }else{
           formVerification("inputDateAssigned", true);
         }
+
+      });
+
+
+      $("#buttonAddCustomMessage").click(function(e){
+
+        customMessages.createNewMessageBox();
 
       });
 

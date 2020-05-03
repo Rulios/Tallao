@@ -304,7 +304,18 @@ footer{
 .submitButtonActualize1:hover{
     background-color: #FF825E;
 }
-
+.buttonAddCustomMessage{
+    width: 100%;
+    font-size: 14px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #C4FFD9;
+    transition: 0.4s;
+}
+.buttonAddCustomMessage:hover{
+    background-color: #EB4D70;
+}
 .submitButtonLoginSuperUser{
     width: 100%;
     font-size: 20px;
@@ -454,6 +465,23 @@ input[type='checkbox']{
 .closeElementButtonStyle:hover{
     background-color: #E84DA5;
 }
+.closeMessageButtonStyle{
+    font-size: 0.5em;
+    right:0; 
+    top:0; 
+    margin-top: 0.5em; 
+    margin-right: 0.5em;
+    padding-top:auto;
+    padding-bottom: auto;
+    position:absolute;
+    border-radius: 5px;
+    border: solid 1px black;
+    background-color: transparent;
+    transition-duration: 0.3s;
+}
+.closeMessageButtonStyle:hover{
+    background-color: #FF0409;
+}
 #totalPriceSpan{
     float:right;
     font-weight: bold;
@@ -515,8 +543,17 @@ input[type='checkbox']{
       width: 200px;
     }
 }
-.customTagStyle{
-    width: 75%;
+.styleMessageBox{
+    border-radius: 12px;
+    border: 0.5px solid #DFDDD7;
+    padding: 20px;
+}
+.inputMessageTagStyle{
+    width: 100%;
+    height: auto;
+}
+.customColorTagStyle{
+    width: 100%;
     height: auto;
 }
 .customTextAreaStyle{
