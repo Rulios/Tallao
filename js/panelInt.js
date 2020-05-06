@@ -618,13 +618,82 @@ var schedule = {
 
 var customMessages = {
 
+  //stores the id of the messages
   messages: [],
 
-  createNewMessageBox: function(){
+  fetchCustomMessages: function(laundryInitials, callbackResult){
+
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchCustomMessages.php",
+      data: {inputInitials: laundryInitials},
+      success: function (data) {
+
+        /* let result = JSON.parse(data);
+        this.date = result.date;
+        this.hour12 = result.hour;
+        this.timeCycle = result.cycle; */
+
+      },
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+      }
+    }).done(function(data){
+    }, callbackResult);
+
+  },
+
+  createNewMessageBox: function(laundryInitials, idMessage, colorTag, tagTxt, msgTxt){
+
+    let idElement = "";
+    
+    if(idMessage == undefined){ //if the method is called from a click event
+
+      if(this.messages.length == 0){
+        idElement = laundryInitials + "1";
+      }else{
+        //get the numeration number of the last element in the array
+        //of messages
+        let str = this.messages[this.messages.length - 1];
+        let arr = str.split(laundryInitials);//[0] = initials, [1] = numeration
+        
+        idElement = laundryInitials + (parseInt(arr[1]) + 1); //increment by one unit
+     }
+ 
+      //set the object prop 
+      this.messages.push(idElement);
+      customMessages[idElement] = {};
+      customMessages[idElement]["msgTagName"] = "";
+      customMessages[idElement]["msgColor"] = "";
+      customMessages[idElement]["msgText"] = "";
+      console.log(customMessages);
+    
+
+    }else{ //acts when the method is called from a AJAX process
+
+      idElement = idMessage;
+
+      //set the object prop 
+      this.messages.push(idElement);
+      customMessages[idElement] = {};
+      customMessages[idElement]["msgTagName"] = tagTxt;
+      customMessages[idElement]["msgColor"] = colorTag;
+      customMessages[idElement]["msgText"] = msgTxt;
+
+    }
+
+    console.log(idMessage == undefined);
+
+    
+
+    
 
     let mainColumnDiv = document.createElement("DIV");
     mainColumnDiv.setAttribute("class", "col-lg-4 subTxt styleMessageBox");
-
+    mainColumnDiv.setAttribute("style", "background-color: " + customMessages[idElement]["msgColor"]);
 
     let innerContainer = document.createElement("DIV");
     innerContainer.setAttribute("class", "container-fluid");
@@ -632,7 +701,22 @@ var customMessages = {
     let closeMessageButton = document.createElement("BUTTON");
     closeMessageButton.setAttribute("class", "closeMessageButtonStyle");
     closeMessageButton.textContent = "x";
+    closeMessageButton.addEventListener("click", function(e){
+      
+      let indexToDel = customMessages.messages.indexOf(idElement);
 
+      //it needs to delete the record at the Database first
+      //to then delete it at the local array
+
+      customMessages.deleteDBmessage(idElement, function(data){
+
+      //delete the index
+      customMessages.messages.splice(indexToDel, 1);
+      mainColumnDiv.remove();
+      
+      });
+
+    });
 
 
     let tagRowDiv = document.createElement("DIV");
@@ -642,7 +726,7 @@ var customMessages = {
     tagColumnLabel.setAttribute("class", "col-lg-3");
 
     let tagLabel = document.createElement("LABEL");
-    tagLabel.setAttribute("for", "inputMessageTag");
+    tagLabel.setAttribute("for", "inputMessageTag" + idElement);
     tagLabel.textContent = "Etiqueta:";
 
     tagColumnLabel.append(tagLabel);
@@ -655,7 +739,17 @@ var customMessages = {
     tagInput.setAttribute("type", "text");
     tagInput.setAttribute("name", "messageTag");
     tagInput.setAttribute("class", "inputMessageTagStyle");
-    tagInput.setAttribute("id", "inputMessageTag");
+    tagInput.setAttribute("placeholder", "algo rápido...")
+    tagInput.setAttribute("id", "inputMessageTag" + idElement);
+    tagInput.value = customMessages[idElement]["msgTagName"];
+
+    tagInput.addEventListener("change", function(e){
+
+      //actively change the object
+      customMessages[idElement]["msgTagName"] = this.value;
+
+    });
+
 
     tagColumnInput.append(tagInput);
     tagRowDiv.append(tagColumnLabel);
@@ -670,7 +764,7 @@ var customMessages = {
     colorColumnLabel.setAttribute("class", "col-lg-4");
 
     let colorLabel = document.createElement("LABEL");
-    colorLabel.setAttribute("for", "selectMessageColor");
+    colorLabel.setAttribute("for", "selectMessageColor" + idElement);
     colorLabel.textContent = "Color:";
 
     colorColumnLabel.append(colorLabel);
@@ -681,7 +775,22 @@ var customMessages = {
 
     let colorSelect = document.createElement("SELECT");
     colorSelect.setAttribute("class", "customColorTagStyle");
-    colorSelect.setAttribute("id", "selectMessageColor");
+    colorSelect.setAttribute("id", "selectMessageColor" + idElement);
+
+    colorSelect.addEventListener("change", function(e){
+
+      //get the custom data attribute
+      let colorHex = $("option[value=" + this.value + "][name=customizedColorOption]")["0"]["dataset"]["color"]; 
+      
+      //console.log(this.getAttribute("data-color"));
+      //actively change the object
+      customMessages[idElement]["msgColor"] = colorHex;
+
+      //change the back color of the main div
+      //mainColumnDiv.css("background-color", customMessages[idElement]["msgColor"]);
+      mainColumnDiv.setAttribute("style", "background-color:" + customMessages[idElement]["msgColor"]);
+     
+    });
 
     colorSelect.append(this.createColorOptionList("none"));
     colorSelect.append(this.createColorOptionList("skyblue"));
@@ -700,7 +809,7 @@ var customMessages = {
     messageColumnLabel.setAttribute("class", "col-lg-2");
 
     let messageLabel = document.createElement("LABEL");
-    messageLabel.setAttribute("for", "messageTextArea");
+    messageLabel.setAttribute("for", "messageTextArea" + idElement);
     messageLabel.textContent = "Texto:";
 
     messageColumnLabel.append(messageLabel);
@@ -712,7 +821,22 @@ var customMessages = {
     messageTextArea.setAttribute("type", "text");
     messageTextArea.setAttribute("placeholder", "texto...");
     messageTextArea.setAttribute("class", "customTextAreaStyle");
-    messageTextArea.setAttribute("id", "");
+    messageTextArea.setAttribute("id", "messageTextArea" + idElement);
+    messageTextArea.value = customMessages[idElement]["msgText"];
+
+
+    messageTextArea.addEventListener("change", function(e){
+      
+      //Deny if there's no value
+      if(this.value == ""){
+        //prevent from empty it
+        this.value = customMessages[idElement]["msgText"];
+      }else{
+        //actively change the object
+        customMessages[idElement]["msgText"] = this.value;
+      }
+
+    });
 
     messageColumnTextArea.append(messageTextArea);
     messageRowDiv.append(messageColumnLabel);
@@ -753,10 +877,30 @@ var customMessages = {
 
     let option = document.createElement("OPTION");
     option.setAttribute("value", value);
-    option.setAttribute("data", color[value]);
+    option.setAttribute("name", "customizedColorOption");
+    option.setAttribute("data-color", color[value]); //set custom data attribute
+    
     option.textContent = colorString[value];
 
     return option;
+  },
+
+  deleteDBmessage: function(idMessage, callbackResult){
+
+    $.ajax({
+      type: "POST",
+      url: "./php/deleteMessageSuperuser.php",
+      data: {idMessage: idMessage} 
+    ,
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+      }
+    }).done(function(data){
+    }, callbackResult);
+
   }
 
 };
@@ -929,6 +1073,26 @@ $(document).ready(function () {
                 superuser.initials = initials;
                
                 schedule.generateScheduleBox(initials);
+
+                customMessages.fetchCustomMessages(superuser.initials, function(data){
+                
+                  let dataObj = JSON.parse(data);
+                  let keys = Object.keys(dataObj);
+                  
+                  for(let i = 0; i < keys.length; i++){
+                    console.log(dataObj[keys[i]]);
+                    let idMessage = dataObj[keys[i]]["id"];
+                    let colorTag = dataObj[keys[i]]["colortag"];
+                    let tagTxt = dataObj[keys[i]]["tag"];
+                    let msgTxt = dataObj[keys[i]]["message"];
+
+                    customMessages.createNewMessageBox(superuser.initials, idMessage, colorTag, tagTxt, msgTxt );
+
+                  }
+
+  
+                });
+
               });
 
 
@@ -953,6 +1117,9 @@ $(document).ready(function () {
                 }
                 
               });
+
+             
+              
 
               let elementObjectKeys = Object.keys(elementsString);
               let elementObjectLength = elementObjectKeys.length;
@@ -1666,7 +1833,7 @@ $(document).ready(function () {
 
       $("#buttonAddCustomMessage").click(function(e){
 
-        customMessages.createNewMessageBox();
+        customMessages.createNewMessageBox(superuser.initials);
 
       });
 

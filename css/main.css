@@ -551,6 +551,7 @@ input[type='checkbox']{
 .inputMessageTagStyle{
     width: 100%;
     height: auto;
+   font-size: 18px;
 }
 .customColorTagStyle{
     width: 100%;
