@@ -37,7 +37,6 @@ $data = mysqli_fetch_array($result);
 
 if($data["schedule"] == ""){
     $data["schedule"] = "null";
-    
 }
 
 echo json_encode($data);

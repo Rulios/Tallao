@@ -316,6 +316,18 @@ footer{
 .buttonAddCustomMessage:hover{
     background-color: #EB4D70;
 }
+.submitButtonUpdateMessages{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #7EE838;
+    transition: 0.4s;
+} 
+.submitButtonUpdateMessages:hover{
+    background-color: #3DFFB1;
+}
 .submitButtonLoginSuperUser{
     width: 100%;
     font-size: 20px;

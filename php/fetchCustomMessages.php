@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 }
 
 $sql = "SELECT id, colortag, tag, message FROM custommessages WHERE laundryinitials= '$inputInitials'";
-
+//echo $sql;
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 $result = mysqli_query($conn, $sql);
 

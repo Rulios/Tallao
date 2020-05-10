@@ -621,6 +621,23 @@ var customMessages = {
   //stores the id of the messages
   messages: [],
 
+  color : {
+    none: "",
+    skyblue: "#7FE5FF",
+    green: "#87E8C1",
+    violet: "#DCA2E8",
+    orange: "#EBAB28"
+
+  },
+
+  colorString : {
+    none: "",
+    skyblue: "Celeste",
+    green: "Verde",
+    violet: "Violeta",
+    orange: "Naranja"
+  },
+
   fetchCustomMessages: function(laundryInitials, callbackResult){
 
     $.ajax({
@@ -633,6 +650,7 @@ var customMessages = {
         this.date = result.date;
         this.hour12 = result.hour;
         this.timeCycle = result.cycle; */
+        
 
       },
       error: function(jqXHR, status, error){
@@ -686,10 +704,6 @@ var customMessages = {
     }
 
     console.log(idMessage == undefined);
-
-    
-
-    
 
     let mainColumnDiv = document.createElement("DIV");
     mainColumnDiv.setAttribute("class", "col-lg-4 subTxt styleMessageBox");
@@ -776,6 +790,7 @@ var customMessages = {
     let colorSelect = document.createElement("SELECT");
     colorSelect.setAttribute("class", "customColorTagStyle");
     colorSelect.setAttribute("id", "selectMessageColor" + idElement);
+    
 
     colorSelect.addEventListener("change", function(e){
 
@@ -791,12 +806,16 @@ var customMessages = {
       mainColumnDiv.setAttribute("style", "background-color:" + customMessages[idElement]["msgColor"]);
      
     });
+    
 
-    colorSelect.append(this.createColorOptionList("none"));
-    colorSelect.append(this.createColorOptionList("skyblue"));
-    colorSelect.append(this.createColorOptionList("green"));
-    colorSelect.append(this.createColorOptionList("violet"));
-    colorSelect.append(this.createColorOptionList("orange"));
+    colorSelect.append(this.createColorOptionList("none", idElement));
+    colorSelect.append(this.createColorOptionList("skyblue", idElement));
+    colorSelect.append(this.createColorOptionList("green", idElement));
+    colorSelect.append(this.createColorOptionList("violet", idElement));
+    colorSelect.append(this.createColorOptionList("orange", idElement));
+
+    //
+    
     
     colorColumnSelect.append(colorSelect);
     colorRowDiv.append(colorColumnLabel);
@@ -856,31 +875,21 @@ var customMessages = {
   },
 
 
-  createColorOptionList: function(value){
+  createColorOptionList: function(value, idElement){
 
-    let color = {
-      none: "",
-      skyblue: "#7FE5FF",
-      green: "#87E8C1",
-      violet: "#DCA2E8",
-      orange: "#EBAB28"
 
-    }
-
-    let colorString = {
-      none: "",
-      skyblue: "Celeste",
-      green: "Verde",
-      violet: "Violeta",
-      orange: "Naranja"
-    }
+   
 
     let option = document.createElement("OPTION");
     option.setAttribute("value", value);
     option.setAttribute("name", "customizedColorOption");
-    option.setAttribute("data-color", color[value]); //set custom data attribute
-    
-    option.textContent = colorString[value];
+    option.setAttribute("data-color", customMessages.color[value]); //set custom data attribute
+
+    if(customMessages[idElement]["msgColor"] == customMessages.color[value]){
+      option.setAttribute("selected", "");
+    }
+
+    option.textContent = customMessages.colorString[value];
 
     return option;
   },
@@ -900,6 +909,50 @@ var customMessages = {
       }
     }).done(function(data){
     }, callbackResult);
+
+  },
+
+  submitCustomMessages: function(initials){
+
+    var myarray = new Array();
+
+    var params = {};
+
+    var paramJSON = "";
+
+    for(let i = 0; i < customMessages.messages.length; i++){
+      //define as obj
+      params[customMessages.messages[i]] = {};
+      
+      params[customMessages.messages[i]]["msgTagName"] = customMessages[customMessages.messages[i]]["msgTagName"];
+      params[customMessages.messages[i]]["msgColor"] = customMessages[customMessages.messages[i]]["msgColor"];
+      params[customMessages.messages[i]]["msgText"] = customMessages[customMessages.messages[i]]["msgText"];
+
+    }
+    //send as JSON string
+    paramJSON = JSON.stringify(params);
+    //console.log(paramJSON);
+
+    $.ajax({
+      type: "POST",
+      url: "./php/submitUpdateCustomMessage.php",
+      data: {
+          initials: initials,
+          messageObj: paramJSON
+      },
+      success: function (response) {
+        $("#updateCustomMessages").toggleClass("disableButton");
+        $("#updateCustomMessages").text("¡ACTUALIZADO!");  
+
+      },
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+
+      }
+    });
 
   }
 
@@ -1072,13 +1125,16 @@ $(document).ready(function () {
                 //this need to be rewritten
                 superuser.initials = initials;
                
-                schedule.generateScheduleBox(initials);
+                schedule.generateScheduleBox(superuser.initials);
 
                 customMessages.fetchCustomMessages(superuser.initials, function(data){
-                
+                  
+                  
                   let dataObj = JSON.parse(data);
                   let keys = Object.keys(dataObj);
                   
+                  console.log(dataObj);
+
                   for(let i = 0; i < keys.length; i++){
                     console.log(dataObj[keys[i]]);
                     let idMessage = dataObj[keys[i]]["id"];
@@ -1834,6 +1890,12 @@ $(document).ready(function () {
       $("#buttonAddCustomMessage").click(function(e){
 
         customMessages.createNewMessageBox(superuser.initials);
+
+      });
+
+      $("#updateCustomMessages").click(function(e){
+
+        customMessages.submitCustomMessages(superuser.initials);
 
       });
 
