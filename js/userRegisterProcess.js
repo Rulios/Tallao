@@ -147,10 +147,48 @@ $(document).ready(function () {
         ,
     
         success: function (response) {
-          console.log("enviado");
-          console.log(obj);
-          $("#frmMasterUserRegister").toggleClass("hide");
-          $("#congrSection").toggleClass("hide");
+
+          //input a obligatory tag
+
+          let obligatoryFirstCustomMsg = {
+          }
+
+          let firstCustomMsgID = initials + "1";
+          obligatoryFirstCustomMsg[firstCustomMsgID] = {};
+
+          obligatoryFirstCustomMsg[firstCustomMsgID]["msgTagName"] = "Sin pliegue / 不折";
+          obligatoryFirstCustomMsg[firstCustomMsgID]["msgColor"] = "white";
+          obligatoryFirstCustomMsg[firstCustomMsgID]["msgText"] = "Sin pliegue";
+          obligatoryFirstCustomMsg[firstCustomMsgID]["status"] = "blocked";
+
+          let str = JSON.stringify(obligatoryFirstCustomMsg);
+          console.log(str);
+          $.ajax({
+            type: "POST",
+            url: "./php/submitUpdateCustomMessage.php",
+            data: {initials: initials, messageObj: str},
+            
+            success: function (response) {
+              
+              console.log("enviado");
+              console.log(obj);
+              $("#frmMasterUserRegister").toggleClass("hide");
+              $("#congrSection").toggleClass("hide");
+
+            },
+
+
+            error: function(jqXHR, status, error){
+
+              console.log('Status: ' + status);
+              console.log('Error ' + error);
+              alert("Error " + status + error);
+    
+            }
+
+          });
+
+          
           
         },
 

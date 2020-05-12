@@ -724,10 +724,18 @@ var customMessages = {
 
       customMessages.deleteDBmessage(idElement, function(data){
 
-      //delete the index
-      customMessages.messages.splice(indexToDel, 1);
-      mainColumnDiv.remove();
-      
+        let obj = JSON.parse(data);
+        
+
+        if(obj["status"] == "null"){
+            //delete the index
+            customMessages.messages.splice(indexToDel, 1);
+            mainColumnDiv.remove();
+        }else if(obj["status"] == "blocked"){
+            formAppendError("messageTextArea" + idElement, "Mensaje bloqueado", "red");
+            setTimeout(function(){deleteAppendError("messageTextArea" + idElement)}, 2000);
+        }
+
       });
 
     });
@@ -1114,7 +1122,8 @@ $(document).ready(function () {
                 let lastname = dataCallback.legalreprLastname;
                 let email = dataCallback.email;
 
-                tagShowID(laundryname);
+                
+                tagShowLaundryName(laundryname);
                 tagShowInitials(initials);
                 tagShowLocation(location);
                 tagShowLegalReprName(name);
@@ -1224,6 +1233,9 @@ $(document).ready(function () {
           fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
 
             let initials = dataCallback.initials;
+            let laundryName = dataCallback.laundryname;
+            console.log(laundryName);
+            tagShowLaundryName(laundryName);
             superuser.initials = initials;
             
 
@@ -1989,6 +2001,10 @@ function tagShowID(id){
 
     $('#showID').append(msg);
     
+}
+function tagShowLaundryName(name){
+
+  $("#showLaundryName").text(name);
 }
 function tagShowName(name){
 
