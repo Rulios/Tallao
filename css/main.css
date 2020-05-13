@@ -574,7 +574,15 @@ input[type='checkbox']{
     width: 100%;
     height: auto;
 }
+.instantMsgTagStyle{
 
+    width: auto;
+    border: none;
+    padding-left: 0.5em;
+    margin-right: 0.1em;
+    border-radius: 3px;
+
+}
 @media only screen and (max-width: 768px){
 
     .hideOnXs{

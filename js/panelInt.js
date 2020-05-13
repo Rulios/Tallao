@@ -192,6 +192,7 @@ var receiptDetails = {
     let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
 
     let clientID = $("#inputClientID").val();
+    let strIndications = $("#inputIndications").text();
 
 
     let totalPrice = this.totalPrice;
@@ -232,7 +233,8 @@ var receiptDetails = {
           hookQuantity: hookQ,
           dateReceived: dateReceived,
           dateAssigned: dateAssigned,
-          totalPrice: totalPrice
+          totalPrice: totalPrice,
+          indications: strIndications
 
       },
       success: function (response) {
@@ -639,7 +641,7 @@ var customMessages = {
   },
 
   fetchCustomMessages: function(laundryInitials, callbackResult){
-
+    
     $.ajax({
       type: "POST",
       url: "./php/fetchCustomMessages.php",
@@ -962,6 +964,31 @@ var customMessages = {
       }
     });
 
+  },
+
+
+  createInstantMsgTag: function(idMessage, colorTag, tagTxt, msgTxt){
+
+    
+    let button = document.createElement("BUTTON");
+    button.setAttribute("class", "instantMsgTagStyle bottomLineLinkAnimation");
+    button.setAttribute("data-color", colorTag);
+    button.setAttribute("style", "background-color:" + colorTag + ";");
+    button.setAttribute("data-msg", msgTxt);
+    button.textContent = tagTxt;
+
+    
+    button.addEventListener("click", function(e){
+      
+      let currentTxt = $("#inputIndications").text();
+      let tagMsgText = this.getAttribute("data-msg");
+     
+      $("#inputIndications").text(currentTxt + " " + tagMsgText);
+
+    });
+
+    $("#appendCustomMessages").append(button);
+
   }
 
 };
@@ -1237,6 +1264,24 @@ $(document).ready(function () {
             console.log(laundryName);
             tagShowLaundryName(laundryName);
             superuser.initials = initials;
+
+            //instant msg tags
+            customMessages.fetchCustomMessages(superuser.initials, function(data){
+               
+              let dataObj = JSON.parse(data);
+              let keys = Object.keys(dataObj);
+  
+              for(let i = 0; i < keys.length; i++){
+                //console.log(dataObj[keys[i]]);
+                let idMessage = dataObj[keys[i]]["id"];
+                let colorTag = dataObj[keys[i]]["colortag"];
+                let tagTxt = dataObj[keys[i]]["tag"];
+                let msgTxt = dataObj[keys[i]]["message"];
+  
+                customMessages.messages.push(idMessage);
+                customMessages.createInstantMsgTag(idMessage, colorTag, tagTxt, msgTxt);
+              }
+            });
             
 
           });  
@@ -1259,6 +1304,8 @@ $(document).ready(function () {
             }
             
           });
+          
+          
 
           //start fetching date,time and cycle from server
           //time to refresh 10 minutes = 600000ms

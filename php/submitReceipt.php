@@ -11,7 +11,7 @@ $db = "tallao";
 //set the constant of the limit
 const limit = 10000;
 
-if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceived'], $_POST['dateAssigned'], $_POST['totalPrice'])){
+if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceived'], $_POST['dateAssigned'], $_POST['totalPrice'], $_POST['indications'])){
     
     $initials = $_POST['initials'];
     $clientID = $_POST['clientID'];
@@ -21,6 +21,7 @@ if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePri
     $dateReceived = $_POST['dateReceived'];
     $dateAssigned = $_POST['dateAssigned'];
     $totalPrice = $_POST['totalPrice'];
+    $indications = $_POST['indications'];
 }else{
     echo "no hay ni na'";
 }
@@ -84,8 +85,8 @@ if(mysqli_query($conn,$sql)){
     
     if(mysqli_query($conn,$sql)){
         //continue to the receipt insertion at the database
-        $sql = "INSERT INTO orders (laundryinitials, id, elementsQuantity, elementsPrice, hookQuantity, dateReceived, dateAssigned, totalPrice)
-        VALUES ('$initials', '$lastRID', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceived', '$dateAssigned', '$totalPrice')";
+        $sql = "INSERT INTO orders (laundryinitials, id, elementsQuantity, elementsPrice, hookQuantity, dateReceived, dateAssigned, totalPrice, indications)
+        VALUES ('$initials', '$lastRID', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceived', '$dateAssigned', '$totalPrice', '$indications')";
         
 
         if(mysqli_query($conn,$sql)){

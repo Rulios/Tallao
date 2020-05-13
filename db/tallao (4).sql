@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2020 a las 05:33:51
+-- Tiempo de generación: 12-05-2020 a las 05:24:43
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -25,6 +25,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `custommessages`
+--
+
+CREATE TABLE `custommessages` (
+  `laundryinitials` text NOT NULL,
+  `id` text NOT NULL COMMENT 'id of the message',
+  `colortag` text NOT NULL COMMENT 'Specifies the background color of the tag',
+  `tag` text NOT NULL,
+  `message` text NOT NULL,
+  `status` text NOT NULL COMMENT 'Shows if it''s removable or not.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Will store all the custom fast messages that superuser need';
+
+--
+-- Volcado de datos para la tabla `custommessages`
+--
+
+INSERT INTO `custommessages` (`laundryinitials`, `id`, `colortag`, `tag`, `message`, `status`) VALUES
+('VICNT', 'VICNT1', '#DCA2E8', 'Buenos día123', 'Buenos díaas!', ''),
+('VICNT', 'VICNT3', '#EBAB28', 'WAO', 'FLASH', ''),
+('VICAT', 'VICAT1', 'white', 'Sin pliegue / 不折', 'Sin pliegue', 'blocked');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `orders`
 --
 
@@ -36,7 +60,8 @@ CREATE TABLE `orders` (
   `hookQuantity` int(11) NOT NULL,
   `dateReceived` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
   `dateAssigned` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
-  `totalprice` text NOT NULL
+  `totalprice` text NOT NULL,
+  `indications` text NOT NULL COMMENT 'Text in which the user specifies some specific order to be done.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the orders data';
 
 -- --------------------------------------------------------
@@ -59,7 +84,12 @@ CREATE TABLE `pricechart` (
 --
 
 INSERT INTO `pricechart` (`hashcode`, `iron`, `wash`, `washiron`, `dryclean`, `hook`) VALUES
-('8XMqSGzajxRRQiyLZj8m', 'shirt=0.65,pants=0.65,skirt=0.65,coat=1.30,sweater=0.65,pleatedSkirt=1.30,overall=1.30,jumper=1.50,blouse=1.00,largeSuit=1.75,quilt=8.00', '', 'shirt=1.50,pants=1.50,skirt=1.50,coat=3.5,sweater=1.5,pleatedSkirt=4,overall=2.5,jumper=3,blouse=2,largeSuit=5,quilt=8', '', '0.10');
+('8XMqSGzajxRRQiyLZj8m', 'shirt=0.65,pants=0.65,skirt=0.65,coat=1.30,sweater=0.65,pleatedSkirt=1.30,overall=1.30,jumper=1.50,blouse=1.00,largeSuit=1.75,quilt=8.00', '', 'shirt=1.50,pants=1.50,skirt=1.50,coat=3.5,sweater=1.5,pleatedSkirt=4,overall=2.5,jumper=3,blouse=2,largeSuit=5,quilt=8', '', '0.10'),
+('11bx2Vousqzzu4QV13ia', '', '', '', '', ''),
+('hBpNXOiqeYB9pW1sXURM', '', '', '', '', ''),
+('PZFswEZnDH6eEPJ0ZXW7', '', '', '', '', ''),
+('VwuiIEd74WMUPPNLRrgu', '', '', '', '', ''),
+('XyLc6PHXgAREDy9FZtQ7', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -77,15 +107,17 @@ CREATE TABLE `superusers` (
   `legalreprName` text NOT NULL,
   `legalreprLastname` text NOT NULL,
   `email` text NOT NULL,
-  `password` text NOT NULL
+  `password` text NOT NULL,
+  `lastreceiptid` text NOT NULL COMMENT 'Shows the last receipt id in which will be the point reference to the next receipt id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `superusers`
 --
 
-INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`) VALUES
-('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G');
+INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`, `lastreceiptid`) VALUES
+('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G', 'B-35'),
+('VICAT', 'XyLc6PHXgAREDy9FZtQ7', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', '', 'Robert ', 'Lu Zheng ', 'robert_lu20@hotmail.com', '$2y$12$duBXbwmPwP87cWTQpjAXDeA3ioqmjSS9vshKoIlJYN4ghwNuhHx.i', '');
 
 -- --------------------------------------------------------
 
@@ -154,15 +186,16 @@ CREATE TABLE `users` (
   `lastname` text NOT NULL,
   `email` text NOT NULL,
   `password` text NOT NULL,
-  `orders` int(11) NOT NULL
+  `orders` text NOT NULL COMMENT 'These are the receipts id that the user is affiliated to',
+  `accountverified` text NOT NULL COMMENT 'Check that the user has verified the email.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='MAIN';
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`) VALUES
-('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 0);
+INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`, `accountverified`) VALUES
+('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 'B-12,B-13,B-14,B-15,B-16,B-17', '');
 
 --
 -- Índices para tablas volcadas
