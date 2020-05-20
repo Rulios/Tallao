@@ -4,7 +4,7 @@ var verification = {
     inputRePassword: false
 }
 var cookie = getCookieData(document.cookie);
-var serviceOffer = [];
+
 var serviceOfferString = {
   iron: "Planchado",
   washiron: "Lavado y planchado",
@@ -39,6 +39,121 @@ var scheduleString = {
 };
 var superuser = {
   initials: ""
+};
+var serviceOffer = {
+
+  services: [],
+
+  fillServiceBasicElementsHTML: function(data){
+   
+    serviceOffer.services = data.trim().split(",");
+                      
+    for(let i = 0; i < serviceOffer.services.length; i++){
+
+      $("input[type='checkbox'][value='"+serviceOffer.services[i]+"']").prop("checked", true);
+
+      let option = document.createElement("OPTION");
+      option.setAttribute("value", serviceOffer.services[i]);
+      option.textContent = serviceOfferString[serviceOffer.services[i]];
+      $("#selectServiceType").append(option);
+      
+    }
+
+    if(serviceOffer.services[0] != "null"){
+      serviceOffer.fetchProcessElementPrice();
+    }    
+
+  },
+
+  fetchProcessElementPrice: function(){
+
+    let serviceSelected = $("#selectServiceType :selected").val();
+  
+    let userHash = cookie.userhash;
+    
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchElementPriceString.php",
+      data: {
+          inputUserHash: userHash,
+          serviceOffer: serviceSelected
+      },
+      dataType: 'json',
+  
+      success: function(data){
+       
+        
+        let array = [];
+        let hookPrice = data.hook;
+        
+        if(data[serviceSelected] != "null"){
+  
+          array = data[serviceSelected].split(",");
+          receiptDetails.hookPrice = hookPrice;
+  
+          for(let i = 0; i < array.length; i++){
+            
+            let elementSplit = array[i].split("=");
+            let id = elementSplit[0];
+            let price = elementSplit[1];
+  
+            
+           
+            if(window.location.pathname == "/Tallao/masterpanel.html"){            
+  
+              sessionPrice[id] = price;
+             
+              $("#priceTag4" + id).text("$" + price);
+              $("#priceTag4" + id).val(price);
+  
+              
+            }else if(window.location.pathname == "/Tallao/myaccount.html"){
+              $("#inputPrice4" + id).val(price);
+              $("#inputPrice4hook").val(hookPrice);
+            }
+          
+          }
+  
+        
+        }else{
+  
+          let objKeys = Object.keys(elementsString);
+  
+          if(window.location.pathname == "/Tallao/masterpanel.html"){
+            
+            for(let i = 0; i < objKeys.length; i++){
+              
+              $("#priceTag4" + objKeys[i]).text("Precio no asignado");
+              $("#priceTag4" + objKeys[i]).val("nonAssigned");
+             
+            }
+  
+          }else if(window.location.pathname == "/Tallao/myaccount.html"){
+            
+            for(let i = 0; i < objKeys.length; i++){
+              $("#inputPrice4" + objKeys[i]).val("");
+            }
+  
+          }
+  
+          for(let i = 0; i < objKeys.length; i++){
+            $("#inputPrice4" + objKeys[i]).val("");
+          }
+  
+        }
+  
+      },
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+      }
+    });
+
+  }
+
 };
 var verification = {};
 
@@ -306,208 +421,193 @@ var receiptDetails = {
 }; 
 
 var schedule = {
-  fetchSchedule: function(initials,callbackResult){
+  fetchSchedule: function(initials){
     
-    $.ajax({
+    return $.ajax({
       type: "POST",
       url: "./php/fetchSchedule.php",
       data: {
           inputInitials: initials
       },
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-    }, callbackResult);
+      dataType: 'json'
+    });
 
   },
 
-  generateScheduleBox: function(initials){
-
+  generateScheduleBox: function(data){
+   
+    if((typeof data != "null") || (typeof data != null)){
+      var arrDaySeparation = data.split(",");
+    }
     
-    this.fetchSchedule(initials, function(data){
-      if((typeof data.schedule != "null") || (typeof data.schedule != null)){
-        var arrDaySeparation = data.schedule.split(",");
-      }
+
+    let daysID = Object.keys(scheduleString);
+
+    for(let i = 0; i < daysID.length; i++){
+
+      let s;
+      let day;
+      let sh;
+      
+      let startDayHour;
+      let a;
+      let startDayValueHour;
+      let startDayValueCycle;
       
 
-      let daysID = Object.keys(scheduleString);
+      let endDayHour;
+      let b;
+      let endDayValueHour;
+      let endDayValueCycle;
 
-      for(let i = 0; i < daysID.length; i++){
-
-        let s;
-        let day;
-        let sh;
+      let timeCycles = { AM: "AM", PM:"PM", closed: "CERRADO"};
+      
+      if(( data.schedule == "null") || (typeof data.schedule == null)){
         
-        let startDayHour;
-        let a;
-        let startDayValueHour;
-        let startDayValueCycle;
+        day = daysID[i];
+
+        startDayValueHour = "";
+        startDayValueCycle = "AM";
+
+        endDayValueHour = "";
+        endDayValueCycle = "PM";
+
+      }else{
+
+        s = arrDaySeparation[i].split("/");
+        day = s[0];
+        sh = s[1].split("-");
         
-
-        let endDayHour;
-        let b;
-        let endDayValueHour;
-        let endDayValueCycle;
-
-        
-
-        let timeCycles = { AM: "AM", PM:"PM", closed: "CERRADO"};
-        
-        if(( data.schedule == "null") || (typeof data.schedule == null)){
-         
-          day = daysID[i];
-
-          startDayValueHour = "";
-          startDayValueCycle = "AM";
-
-          endDayValueHour = "";
-          endDayValueCycle = "PM";
-
-        }else{
-
-          s = arrDaySeparation[i].split("/");
-          day = s[0];
-          sh = s[1].split("-");
-          
-          startDayHour = sh[0];
-          a = sh[0].split("*");
-          startDayValueHour = a[0];
-          startDayValueCycle = a[1];
-          
-
-          endDayHour = sh[1];
-          b = sh[1].split("*");
-          endDayValueHour = b[0];
-          endDayValueCycle = b[1];
-
-          
-
-        }
-        
-        let dayName = scheduleString[day];
-
-        let elementBox = document.createElement("DIV");
-        elementBox.setAttribute("class", "col-lg-3  styleElementBox");
-        elementBox.setAttribute("id", "divScheduleBox4" + daysID[i]);
-
-        let spnElementName = document.createElement("SPAN");
-        spnElementName.setAttribute("id", "spn4" + daysID[i]);
-        spnElementName.setAttribute("class", "styleElementName");
-        spnElementName.textContent = dayName;
-
-
-        let iconStartDayDiv = document.createElement("DIV");
-        iconStartDayDiv.setAttribute("class", "input-group mb-2 ");
-
-        let iconStartDaySubDiv = document.createElement("DIV");
-        iconStartDaySubDiv.setAttribute("class", "input-group-preprend");
-
-        let iconStartDayTextDiv = document.createElement("DIV");
-        iconStartDayTextDiv.setAttribute("class", "input-group-text");
-        
-        let startDayHourglassIcon = document.createElement("I");
-        startDayHourglassIcon.setAttribute("class", "fa fa-hourglass-start");
-        startDayHourglassIcon.setAttribute("aria-hidden", "true");
-
-        iconStartDayTextDiv.append(schedule.createClockIcon());
-        iconStartDayTextDiv.append(startDayHourglassIcon);
-
-        iconStartDaySubDiv.append(iconStartDayTextDiv);
-
-        let inputScheduleStartHour = document.createElement("INPUT");
-        inputScheduleStartHour.setAttribute("id", "inputScheduleBegin4" + day);
-        inputScheduleStartHour.setAttribute("type", "text");
-        //since this thing executes only one time
-        //set to disable input
-        if(startDayValueCycle == "closed"){
-          inputScheduleStartHour.setAttribute("class", "styleTimeInput disableInput");
-        }else{
-          inputScheduleStartHour.setAttribute("class", "styleTimeInput");
-        }
-        
-        inputScheduleStartHour.setAttribute("placeholder", "00:00");
-        inputScheduleStartHour.value = startDayValueHour;
-
-        inputScheduleStartHour.addEventListener("keypress", function(e){
-          let charCode = (e.which) ? e.which : event.keyCode;
-
-          if (charCode > 31 && (charCode < 48 || charCode > 58)){
-          e.preventDefault();
-          }
-
-        });
-
-        inputScheduleStartHour.addEventListener("paste", function(e){
-          e.preventDefault();
-        });
-
-        iconStartDayDiv.append(iconStartDaySubDiv);
-        iconStartDayDiv.append(inputScheduleStartHour);
-        iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i],daysID[i], timeCycles, startDayValueCycle));
-
+        startDayHour = sh[0];
+        a = sh[0].split("*");
+        startDayValueHour = a[0];
+        startDayValueCycle = a[1];
         
 
-        let iconEndDayDiv = document.createElement("DIV");
-        iconEndDayDiv.setAttribute("class", "input-group mb-2 ");
+        endDayHour = sh[1];
+        b = sh[1].split("*");
+        endDayValueHour = b[0];
+        endDayValueCycle = b[1];
 
-        let  iconEndDaySubDiv = document.createElement("DIV");
-        iconEndDaySubDiv.setAttribute("class", "input-group-preprend");
-
-        let  iconEndDayTextDiv = document.createElement("DIV");
-        iconEndDayTextDiv.setAttribute("class", "input-group-text");
-        
-        let endDayHourglassIcon = document.createElement("I");
-        endDayHourglassIcon.setAttribute("class", "fa fa-hourglass-end");
-        endDayHourglassIcon.setAttribute("aria-hidden", "true");
-
-        iconEndDayTextDiv.append(schedule.createClockIcon());
-        iconEndDayTextDiv.append(endDayHourglassIcon);
-
-        iconEndDaySubDiv.append(iconEndDayTextDiv);
-
-        let inputScheduleEndHour = document.createElement("INPUT");
-        inputScheduleEndHour.setAttribute("id", "inputScheduleEnd4" + day);
-        inputScheduleEndHour.setAttribute("type", "text");
-        if(endDayValueCycle == "closed"){
-          inputScheduleEndHour.setAttribute("class", "styleTimeInput disableInput");
-        }else{
-          inputScheduleEndHour.setAttribute("class", "styleTimeInput");
-        }
-        
-        inputScheduleEndHour.setAttribute("placeholder", "00:00");
-        inputScheduleEndHour.value = endDayValueHour;
-
-        inputScheduleEndHour.addEventListener("keypress", function(e){
-          let charCode = (e.which) ? e.which : event.keyCode;
-
-          if (charCode > 31 && (charCode < 48 || charCode > 58)){
-          e.preventDefault();
-          }
-
-        });
-
-        inputScheduleEndHour.addEventListener("paste", function(e){
-          e.preventDefault();
-        });
-
-        iconEndDayDiv.append(iconEndDaySubDiv);
-        iconEndDayDiv.append(inputScheduleEndHour);
-        iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i],daysID[i], timeCycles, endDayValueCycle));
-
-        elementBox.append(spnElementName);
-        elementBox.append(iconStartDayDiv);
-        elementBox.append(iconEndDayDiv);
-
-        $("#divScheduleAppend").append(elementBox);
       }
+      
+      let dayName = scheduleString[day];
 
-    });
+      let elementBox = document.createElement("DIV");
+      elementBox.setAttribute("class", "col-lg-3  styleElementBox");
+      elementBox.setAttribute("id", "divScheduleBox4" + daysID[i]);
+
+      let spnElementName = document.createElement("SPAN");
+      spnElementName.setAttribute("id", "spn4" + daysID[i]);
+      spnElementName.setAttribute("class", "styleElementName");
+      spnElementName.textContent = dayName;
+
+
+      let iconStartDayDiv = document.createElement("DIV");
+      iconStartDayDiv.setAttribute("class", "input-group mb-2 ");
+
+      let iconStartDaySubDiv = document.createElement("DIV");
+      iconStartDaySubDiv.setAttribute("class", "input-group-preprend");
+
+      let iconStartDayTextDiv = document.createElement("DIV");
+      iconStartDayTextDiv.setAttribute("class", "input-group-text");
+      
+      let startDayHourglassIcon = document.createElement("I");
+      startDayHourglassIcon.setAttribute("class", "fa fa-hourglass-start");
+      startDayHourglassIcon.setAttribute("aria-hidden", "true");
+
+      iconStartDayTextDiv.append(schedule.createClockIcon());
+      iconStartDayTextDiv.append(startDayHourglassIcon);
+
+      iconStartDaySubDiv.append(iconStartDayTextDiv);
+
+      let inputScheduleStartHour = document.createElement("INPUT");
+      inputScheduleStartHour.setAttribute("id", "inputScheduleBegin4" + day);
+      inputScheduleStartHour.setAttribute("type", "text");
+      //since this thing executes only one time
+      //set to disable input
+      if(startDayValueCycle == "closed"){
+        inputScheduleStartHour.setAttribute("class", "styleTimeInput disableInput");
+      }else{
+        inputScheduleStartHour.setAttribute("class", "styleTimeInput");
+      }
+      
+      inputScheduleStartHour.setAttribute("placeholder", "00:00");
+      inputScheduleStartHour.value = startDayValueHour;
+
+      inputScheduleStartHour.addEventListener("keypress", function(e){
+        let charCode = (e.which) ? e.which : event.keyCode;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 58)){
+        e.preventDefault();
+        }
+
+      });
+
+      inputScheduleStartHour.addEventListener("paste", function(e){
+        e.preventDefault();
+      });
+
+      iconStartDayDiv.append(iconStartDaySubDiv);
+      iconStartDayDiv.append(inputScheduleStartHour);
+      iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i],daysID[i], timeCycles, startDayValueCycle));
+
+      
+
+      let iconEndDayDiv = document.createElement("DIV");
+      iconEndDayDiv.setAttribute("class", "input-group mb-2 ");
+
+      let  iconEndDaySubDiv = document.createElement("DIV");
+      iconEndDaySubDiv.setAttribute("class", "input-group-preprend");
+
+      let  iconEndDayTextDiv = document.createElement("DIV");
+      iconEndDayTextDiv.setAttribute("class", "input-group-text");
+      
+      let endDayHourglassIcon = document.createElement("I");
+      endDayHourglassIcon.setAttribute("class", "fa fa-hourglass-end");
+      endDayHourglassIcon.setAttribute("aria-hidden", "true");
+
+      iconEndDayTextDiv.append(schedule.createClockIcon());
+      iconEndDayTextDiv.append(endDayHourglassIcon);
+
+      iconEndDaySubDiv.append(iconEndDayTextDiv);
+
+      let inputScheduleEndHour = document.createElement("INPUT");
+      inputScheduleEndHour.setAttribute("id", "inputScheduleEnd4" + day);
+      inputScheduleEndHour.setAttribute("type", "text");
+      if(endDayValueCycle == "closed"){
+        inputScheduleEndHour.setAttribute("class", "styleTimeInput disableInput");
+      }else{
+        inputScheduleEndHour.setAttribute("class", "styleTimeInput");
+      }
+      
+      inputScheduleEndHour.setAttribute("placeholder", "00:00");
+      inputScheduleEndHour.value = endDayValueHour;
+
+      inputScheduleEndHour.addEventListener("keypress", function(e){
+        let charCode = (e.which) ? e.which : event.keyCode;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 58)){
+        e.preventDefault();
+        }
+
+      });
+
+      inputScheduleEndHour.addEventListener("paste", function(e){
+        e.preventDefault();
+      });
+
+      iconEndDayDiv.append(iconEndDaySubDiv);
+      iconEndDayDiv.append(inputScheduleEndHour);
+      iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i],daysID[i], timeCycles, endDayValueCycle));
+
+      elementBox.append(spnElementName);
+      elementBox.append(iconStartDayDiv);
+      elementBox.append(iconEndDayDiv);
+
+      $("#divScheduleAppend").append(elementBox);
+    }
+
 
   },
 
@@ -640,29 +740,55 @@ var customMessages = {
     orange: "Naranja"
   },
 
-  fetchCustomMessages: function(laundryInitials, callbackResult){
+  fetchCustomMessages: function(laundryInitials){
     
-    $.ajax({
+    return $.ajax({
       type: "POST",
       url: "./php/fetchCustomMessages.php",
       data: {inputInitials: laundryInitials},
-      success: function (data) {
+      datatype: 'json'
+      
+    });
 
-        /* let result = JSON.parse(data);
-        this.date = result.date;
-        this.hour12 = result.hour;
-        this.timeCycle = result.cycle; */
-        
+  },
 
-      },
-      error: function(jqXHR, status, error){
+  storeCustomMessages: function(data, mode){
 
-          console.log('Status: ' + status);
-          console.log('Error ' + error);
-          alert("Error " + status + error);
+    /* there will be two modes
+    1) editMode = means that the message can be edited, so it creates a
+      messageBox to be editable
+    2) useMode = means that it will only appear just to click and use */
+
+    let dataObj = JSON.parse(data);
+      let keys = Object.keys(dataObj);
+
+    if(mode == "edit"){
+
+      for(let i = 0; i < keys.length; i++){
+        // console.log(dataObj[keys[i]]);
+        let idMessage = dataObj[keys[i]]["id"];
+        let colorTag = dataObj[keys[i]]["colortag"];
+        let tagTxt = dataObj[keys[i]]["tag"];
+        let msgTxt = dataObj[keys[i]]["message"];
+
+        customMessages.createNewMessageBox(superuser.initials, idMessage, colorTag, tagTxt, msgTxt );
+
+      }    
+
+    }else if(mode == "use"){
+
+      for(let i = 0; i < keys.length; i++){
+        //console.log(dataObj[keys[i]]);
+        let idMessage = dataObj[keys[i]]["id"];
+        let colorTag = dataObj[keys[i]]["colortag"];
+        let tagTxt = dataObj[keys[i]]["tag"];
+        let msgTxt = dataObj[keys[i]]["message"];
+
+        customMessages.messages.push(idMessage);
+        customMessages.createInstantMsgTag(idMessage, colorTag, tagTxt, msgTxt);
       }
-    }).done(function(data){
-    }, callbackResult);
+
+    }
 
   },
 
@@ -705,7 +831,7 @@ var customMessages = {
 
     }
 
-    console.log(idMessage == undefined);
+    //console.log(idMessage == undefined);
 
     let mainColumnDiv = document.createElement("DIV");
     mainColumnDiv.setAttribute("class", "col-lg-4 subTxt styleMessageBox");
@@ -973,7 +1099,14 @@ var customMessages = {
     let button = document.createElement("BUTTON");
     button.setAttribute("class", "instantMsgTagStyle bottomLineLinkAnimation");
     button.setAttribute("data-color", colorTag);
-    button.setAttribute("style", "background-color:" + colorTag + ";");
+
+    if(colorTag == "white"){
+      button.setAttribute("style", "background-color:" + colorTag + "; border: solid 1px black;");
+    }else{
+      button.setAttribute("style", "background-color:" + colorTag + ";");
+    }
+    
+    
     button.setAttribute("data-msg", msgTxt);
     button.textContent = tagTxt;
 
@@ -1111,211 +1244,153 @@ $(document).ready(function () {
     }else{
         //start to fetch values
 
-        if((window.location.pathname == "/Tallao/myaccount.html")||(window.location.pathname == "myaccount.html")){
+        if((typeof document.cookie == undefined) || (document.cookie == "")){
 
-            formVerification("load", false);
+          alert("Vuelve a iniciar sesión");
+      
+          window.location.replace("./login.html");
+          
+      }else{
+      
+      
+          switch(window.location.pathname){
+      
+              case "/Tallao/myaccount.html":
+              case "myaccount.html":
+      
+                  formVerification("load", false);
+      
+                  if(cookie.usertype == "user"){
+      
+                    $("#userForm").toggleClass("hide");
+                    
+                    let accountData = fetchMyAccountData(cookie.userhash, cookie.usertype);
+                    accountData.then(data => {
 
-            if(cookie.usertype == "user"){
+                      tagShowID(data.id);
+                      tagShowName(data.name);
+                      tagShowLastname(data.lastname);
+                      tagShowEmail(data.email);
+                    })          
+                    
+      
+                  }else if(cookie.usertype == "superuser"){
+                    
+                    
+                    $("#superuserForm").toggleClass("hide");  
+                    $("#masterUserValueConfiguration").toggleClass("hide");
+                    
+                    let accountData = fetchMyAccountData(cookie.userhash, cookie.usertype);
+                    accountData.then(data => {
 
-              $("#userForm").toggleClass("hide");
+                      superuser.initials = data.initials;
+                      console.log(data);
+                      tagShowLaundryName(data.laundryname);
+                      tagShowInitials(data.initials);
+                      tagShowLocation(data.location);
+                      tagShowLegalReprName(data.legalreprName);
+                      tagShowLegalReprLastname(data.legalreprLastname);
+                      tagShowSuperUserEmail(data.email);
+                      
+                      schedule.generateScheduleBox(data.schedule);
+                      serviceOffer.fillServiceBasicElementsHTML(data.serviceoffer);
+                    })
+                    .then(() => {
+                      
+                      return customMessages.fetchCustomMessages(superuser.initials);
+                    })
+                    .then(data => customMessages.storeCustomMessages(data, "edit"))
+                    .catch((err) => console.error(err));
 
-              fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
-                let id = dataCallback.id;
-                let name = dataCallback.name;
-                let lastname = dataCallback.lastname;
-                let email = dataCallback.email;
-
-                tagShowID(id);
-                tagShowName(name);
-                tagShowLastname(lastname);
-                tagShowEmail(email);
-                console.log(dataCallback);
-              });
-              
-              
-
-            }else if(cookie.usertype == "superuser"){
-              
-
-              $("#superuserForm").toggleClass("hide");  
-              $("#masterUserValueConfiguration").toggleClass("hide");
-
-              fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
-                
-                let initials = dataCallback.initials;
-                let laundryname = dataCallback.laundryname;
-                let location = dataCallback.location;
-                let name = dataCallback.legalreprName;
-                let lastname = dataCallback.legalreprLastname;
-                let email = dataCallback.email;
-
-                
-                tagShowLaundryName(laundryname);
-                tagShowInitials(initials);
-                tagShowLocation(location);
-                tagShowLegalReprName(name);
-                tagShowLegalReprLastname(lastname);
-                tagShowSuperUserEmail(email);
-                console.log(dataCallback);
-
-                //this need to be rewritten
-                superuser.initials = initials;
-               
-                schedule.generateScheduleBox(superuser.initials);
-
-                customMessages.fetchCustomMessages(superuser.initials, function(data){
-                  
-                  
-                  let dataObj = JSON.parse(data);
-                  let keys = Object.keys(dataObj);
-                  
-                  console.log(dataObj);
-
-                  for(let i = 0; i < keys.length; i++){
-                    console.log(dataObj[keys[i]]);
-                    let idMessage = dataObj[keys[i]]["id"];
-                    let colorTag = dataObj[keys[i]]["colortag"];
-                    let tagTxt = dataObj[keys[i]]["tag"];
-                    let msgTxt = dataObj[keys[i]]["message"];
-
-                    customMessages.createNewMessageBox(superuser.initials, idMessage, colorTag, tagTxt, msgTxt );
-
+      
+                    let elementObjectKeys = Object.keys(elementsString);
+                    let elementObjectLength = elementObjectKeys.length;
+      
+                    let counter = 0;
+                    let rowDiv = "";
+                    
+                    for(let i = 0; i < elementObjectLength; i++){
+                      
+                      if(counter == 0){
+                        rowDiv = "";
+                        rowDiv = generateRowClass4ElementBox();
+                        
+                      }
+                    
+                      rowDiv.append(generatePriceAssignationBox(elementsString[elementObjectKeys[i]], elementObjectKeys[i]));
+                      $("#divAppendElementBox").append(rowDiv);
+                      counter += 1;
+      
+                      if(counter == 3){
+                        counter = 0;
+                      }
+                    }
                   }
+      
+              break;
+      
+              //////////////////////////////////////////////    
+              case "/Tallao/panel.html":
+              case "panel.html":
+      
+                  fetchPanelData(cookie.userhash, function(dataCallback){
+                      let id = dataCallback.id;
+                      let orders = dataCallback.orders;
+                      console.log(dataCallback);
+                      tagShowID(id);
+                  });
+      
+      
+              break;
+      
+              ////////////////////////////////////////////////
+              case "/Tallao/masterpanel.html":
+              case "masterpanel.html":
+      
+                  verification = {
+                      inputElements: false,
+                      inputDateAssigned: false,
+                    };
+                    formVerification("load", false);
+                    formVerification("inputElements", false);
+                    formVerification("inputDateAssigned", false);
 
-  
-                });
+                    let accountData = fetchMyAccountData(cookie.userhash, cookie.usertype);
+                    accountData.then(data => {
 
-              });
-
-
-              fetchServiceOffer(function(dataCallback){
-                
-
-                serviceOffer = dataCallback.serviceoffer.trim().split(",");
-                
-                for(let i = 0; i < serviceOffer.length; i++){
-
-                  $("input[type='checkbox'][value='"+serviceOffer[i]+"']").prop("checked", true);
-
-                  let option = document.createElement("OPTION");
-                  option.setAttribute("value", serviceOffer[i]);
-                  option.textContent = serviceOfferString[serviceOffer[i]];
-                  $("#selectServiceType").append(option);
-                  
-                }
-
-                if(serviceOffer[0] != "null"){
-                  fetchElementPrice();
-                }
-                
-              });
-
-             
-              
-
-              let elementObjectKeys = Object.keys(elementsString);
-              let elementObjectLength = elementObjectKeys.length;
-
-              let counter = 0;
-              let rowDiv = "";
-              
-              for(let i = 0; i < elementObjectLength; i++){
-                
-                if(counter == 0){
-                  rowDiv = "";
-                  rowDiv = generateRowClass4ElementBox();
-                  
-                }
-              
-                rowDiv.append(generatePriceAssignationBox(elementsString[elementObjectKeys[i]], elementObjectKeys[i]));
-                $("#divAppendElementBox").append(rowDiv);
-                counter += 1;
-
-                if(counter == 3){
-                  counter = 0;
-                }
-              }
-              
-            }
-
-        }else if((window.location.pathname == "/Tallao/panel.html") || (window.location.pathname == "panel.html")){
-
-            fetchPanelData(cookie.userhash, function(dataCallback){
-                let id = dataCallback.id;
-                let orders = dataCallback.orders;
-                console.log(dataCallback);
-                tagShowID(id);
-            });
-
-        }else if(window.location.pathname == "/Tallao/masterpanel.html"){
-
-          verification = {
-            inputElements: false,
-            inputDateAssigned: false,
-          };
-          formVerification("load", false);
-          formVerification("inputElements", false);
-          formVerification("inputDateAssigned", false);
-
-          fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
-
-            let initials = dataCallback.initials;
-            let laundryName = dataCallback.laundryname;
-            console.log(laundryName);
-            tagShowLaundryName(laundryName);
-            superuser.initials = initials;
-
-            //instant msg tags
-            customMessages.fetchCustomMessages(superuser.initials, function(data){
-               
-              let dataObj = JSON.parse(data);
-              let keys = Object.keys(dataObj);
-  
-              for(let i = 0; i < keys.length; i++){
-                //console.log(dataObj[keys[i]]);
-                let idMessage = dataObj[keys[i]]["id"];
-                let colorTag = dataObj[keys[i]]["colortag"];
-                let tagTxt = dataObj[keys[i]]["tag"];
-                let msgTxt = dataObj[keys[i]]["message"];
-  
-                customMessages.messages.push(idMessage);
-                customMessages.createInstantMsgTag(idMessage, colorTag, tagTxt, msgTxt);
-              }
-            });
-            
-
-          });  
-
-          fetchServiceOffer(function(dataCallback){
-              
-            serviceOffer = dataCallback.serviceoffer.trim().split(",");
-            
-            for(let i = 0; i < serviceOffer.length; i++){
-
-              let option = document.createElement("OPTION");
-              option.setAttribute("value", serviceOffer[i]);
-              option.textContent = serviceOfferString[serviceOffer[i]];
-              $("#selectServiceType").append(option);
-              
-            }
-
-            if(serviceOffer[0] != "null"){
-              fetchElementPrice();
-            }
-            
-          });
+                      superuser.initials = data.initials;
+                      console.log(data);
+                      tagShowLaundryName(data.laundryname);  
+                      schedule.generateScheduleBox(data.schedule);
+                      serviceOffer.fillServiceBasicElementsHTML(data.serviceoffer);
+                    })
+                    .then(() => {
+                      
+                      return customMessages.fetchCustomMessages(superuser.initials);
+                    })
+                    .then(data => customMessages.storeCustomMessages(data, "use"))
+                    .catch((err) => console.error(err));
           
           
+                    //start fetching date,time and cycle from server
+                    //time to refresh 10 minutes = 600000ms
+                    time.printDateTime();
+                    setInterval(function(){time.printDateTime()}, 600000);
+      
+              break;
 
-          //start fetching date,time and cycle from server
-          //time to refresh 10 minutes = 600000ms
-          time.printDateTime();
-          setInterval(function(){time.printDateTime()}, 600000);
-          
-        }
+              ////////////////////////////////////////////////
 
-    }   
-    
+
+              case "/Tallao/myorders.html":
+              case "myorders.html":
+
+                    
+
+              break;
+          }   
+      }
+  }
 
     $("#changePassword").click(function(e){
 
@@ -1589,8 +1664,7 @@ $(document).ready(function () {
           $("#submitChangePrice").text("Actualizar precios"); 
         }
 
-        fetchElementPrice();
-
+        serviceOffer.fetchProcessElementPrice();
       });
 
 
@@ -2134,7 +2208,7 @@ function fetchPanelData(userHash, userType, callbackResult){
     
 }
 
-function fetchMyAccountData(userHash, userType, callbackResult){
+/* function fetchMyAccountData(userHash, userType, callbackResult){
 
   if(userType == "user"){
 
@@ -2170,6 +2244,19 @@ function fetchMyAccountData(userHash, userType, callbackResult){
     }).done(function(data){
     }, callbackResult);
   }
+} */
+ function fetchMyAccountData(userHash, userType){
+
+    return $.ajax({
+      type: "POST",
+      url: "./php/fetchMyAccountDataUser.php",
+      data: {
+        inputUserHash: userHash,
+        userType: userType
+      },
+      dataType: 'json'
+    });
+
 }
 
 function isNumberKey(evt){
@@ -2269,164 +2356,6 @@ function generateRowClass4ElementBox(){
   return rowDiv;
 
 }
-
-function fetchServiceOffer(callbackResult){
-
-  let userHash = cookie.userhash;
-  
-  $.ajax({
-    type: "POST",
-    url: "./php/fetchServiceOffer.php",
-    data: {
-        inputUserHash: userHash
-    },
-    dataType: 'json',
-    error: function(jqXHR, status, error){
-
-      console.log('Status: ' + status);
-      console.log('Error ' + error);
-      alert("Error " + status + error);
-
-    }
-  }).done(function(data){
-  }, callbackResult);
-
-}
-
-function fetchElementPrice(){
-
-  let serviceSelected = $("#selectServiceType :selected").val();
-  
-  let userHash = cookie.userhash;
-  
-  $.ajax({
-    type: "POST",
-    url: "./php/fetchElementPriceString.php",
-    data: {
-        inputUserHash: userHash,
-        serviceOffer: serviceSelected
-    },
-    dataType: 'json',
-
-    success: function(data){
-     
-      
-      let array = [];
-      let hookPrice = data.hook;
-      
-      if(data[serviceSelected] != "null"){
-
-        array = data[serviceSelected].split(",");
-        receiptDetails.hookPrice = hookPrice;
-
-        for(let i = 0; i < array.length; i++){
-          
-          let elementSplit = array[i].split("=");
-          let id = elementSplit[0];
-          let price = elementSplit[1];
-
-          
-         
-          if(window.location.pathname == "/Tallao/masterpanel.html"){
-
-            /* let container = document.createElement("DIV");
-            container.setAttribute("class", "container");
-
-            let row = document.createElement("DIV");
-            row.setAttribute("class", "row bottomBorder elementSelectStyle");
-
-            let col4 = document.createElement("DIV");
-            col4.setAttribute("class", "col-lg-4");
-
-            let imgAsset = document.createElement("IMG");
-            imgAsset.setAttribute("src", "./imgs/assets/"+id +"/"+id+".svg");
-            imgAsset.setAttribute("class", "assetStayStatic");
-
-            let col8 = document.createElement("DIV");
-            col8.setAttribute("class", "col-lg-8");
-
-            let spnNameTag = document.createElement("SPAN");
-            spnNameTag.setAttribute("id", "nameTag4" + id);
-            spnNameTag.setAttribute("class", "subTxt");
-
-            let boldText = document.createElement("B");
-            boldText.textContent = elementsString[id];
-
-            let breakLine = document.createElement("BR");
-
-            let spnPriceTag = document.createElement("SPAN");
-            spnPriceTag.setAttribute("id", "priceTag4" + id);
-            spnPriceTag.textContent = price;
-
-            col4.append(imgAsset);
-            spnNameTag.append(boldText);
-            col8.append(spnNameTag);
-            col8.append(breakLine);
-            col8.append(spnPriceTag);
-            row.append(col4);
-            row.append(col8);
-            container.append(row); */
-            
-            
-
-            sessionPrice[id] = price;
-           
-            $("#priceTag4" + id).text("$" + price);
-            $("#priceTag4" + id).val(price);
-
-            
-          }else if(window.location.pathname == "/Tallao/myaccount.html"){
-            $("#inputPrice4" + id).val(price);
-            $("#inputPrice4hook").val(hookPrice);
-          }
-          
-          
-        }
-
-      
-        
-      }else{
-
-        let objKeys = Object.keys(elementsString);
-
-        if(window.location.pathname == "/Tallao/masterpanel.html"){
-          
-          for(let i = 0; i < objKeys.length; i++){
-            
-            $("#priceTag4" + objKeys[i]).text("Precio no asignado");
-            $("#priceTag4" + objKeys[i]).val("nonAssigned");
-           
-          }
-
-        }else if(window.location.pathname == "/Tallao/myaccount.html"){
-          
-          for(let i = 0; i < objKeys.length; i++){
-            $("#inputPrice4" + objKeys[i]).val("");
-          }
-
-        }
-
-        for(let i = 0; i < objKeys.length; i++){
-          $("#inputPrice4" + objKeys[i]).val("");
-        }
-
-
-      }
-
-    },
-    error: function(jqXHR, status, error){
-
-      console.log('Status: ' + status);
-      console.log('Error ' + error);
-      alert("Error " + status + error);
-
-    }
-  });
-
-
-}
-
-
 var customActive = []; //global variable
 function generateCustomElementReceiptBox(id, service){
 

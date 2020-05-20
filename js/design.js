@@ -4,12 +4,20 @@
 $(window).on("load", function(e){
 
     var locationPathName = window.location.pathname;
-
+    
     if(locationPathName == "/Tallao/" || locationPathName == "index.html" || locationPathName == "/Tallao/index.html"){
         resize2FitTheBig();
         console.log(locationPathName);
+    }else if(locationPathName == "/Tallao/php/"){ 
+        //bounce back the user from accessing here
+        
+        history.go(-1);
+    }else if(locationPathName == "/Tallao/js/"){
+        //bounce back the user from accessing here
+        
+        history.go(-1);
     }
-
+    
     $('[data-toggle="tooltip"]').tooltip(); 
 });
 

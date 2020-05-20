@@ -8,9 +8,10 @@ $db = "tallao";
 
 
 
-if (isset($_POST['inputUserHash'])){
+if (isset($_POST['inputUserHash'], $_POST['userType'])){
 
     $inputUserHash = $_POST["inputUserHash"];
+    $userType = $_POST['userType'];
 
 }
 
@@ -21,7 +22,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
+if($userType == "user"){
+    $sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
+
+}else if ($userType == "superuser"){
+    $sql = "SELECT initials,laundryname, location,schedule, serviceoffer, legalreprName, legalreprLastname, email FROM superusers WHERE hashcode= '$inputUserHash'";
+    
+}
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 $result = mysqli_query($conn, $sql);
