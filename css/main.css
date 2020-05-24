@@ -583,6 +583,16 @@ input[type='checkbox']{
     border-radius: 3px;
 
 }
+.paramBoxStyle{
+    width: 100%;
+}
+.legendTxt{
+    font-size: 11px;
+}
+.inputTxtParamSearch{
+    width:20%;
+}
+
 @media only screen and (max-width: 768px){
 
     .hideOnXs{

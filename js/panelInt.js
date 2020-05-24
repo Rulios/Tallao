@@ -43,6 +43,7 @@ var superuser = {
 var serviceOffer = {
 
   services: [],
+  sessionPrice: {},
 
   fillServiceBasicElementsHTML: function(data){
    
@@ -97,16 +98,13 @@ var serviceOffer = {
             let id = elementSplit[0];
             let price = elementSplit[1];
   
-            
-           
             if(window.location.pathname == "/Tallao/masterpanel.html"){            
   
-              sessionPrice[id] = price;
+              serviceOffer.sessionPrice[id] = price;
              
               $("#priceTag4" + id).text("$" + price);
               $("#priceTag4" + id).val(price);
   
-              
             }else if(window.location.pathname == "/Tallao/myaccount.html"){
               $("#inputPrice4" + id).val(price);
               $("#inputPrice4hook").val(hookPrice);
@@ -155,9 +153,7 @@ var serviceOffer = {
   }
 
 };
-var verification = {};
 
-var sessionPrice = {};
 var receiptDetails = {
 
   //this is the array to store the data
@@ -362,6 +358,7 @@ var receiptDetails = {
         $("#inputDate4Order").val("");
         $("#inputTime4Order").toggleClass("disableInput");
         $("#inputTime4Order").val("");
+        $("#inputIndications").val("");
         receiptDetails.resetObject();
 
         //Animation
@@ -634,8 +631,6 @@ var schedule = {
       option.setAttribute("value", x[i]);
       option.textContent = optionProp[x[i]];
       
-      
-
       if(optionSelected == x[i]){
         option.setAttribute("selected", "");
         
@@ -1013,9 +1008,6 @@ var customMessages = {
 
   createColorOptionList: function(value, idElement){
 
-
-   
-
     let option = document.createElement("OPTION");
     option.setAttribute("value", value);
     option.setAttribute("name", "customizedColorOption");
@@ -1136,34 +1128,45 @@ var time = {
   month:"",
   year: 0,
 
-  fetchDateTimeServer: function(callbackResult){
-    $.ajax({
+  fetchDateTimeServer: function(){
+    return $.ajax({
       type: "POST",
       url: "./php/fetchDateTimeServer.php",
       
-      success: function (data) {
+    });
+  },
 
-        /* let result = JSON.parse(data);
-        this.date = result.date;
-        this.hour12 = result.hour;
-        this.timeCycle = result.cycle; */
+  setDateInputCurrentDate: function(){
 
-      },
-      error: function(jqXHR, status, error){
+    let fetchDateTime = this.fetchDateTimeServer();
+    fetchDateTime.then((data) =>{
 
-          console.log('Status: ' + status);
-          console.log('Error ' + error);
-          alert("Error " + status + error);
-      }
-    }).done(function(data){
-    }, callbackResult);
+      let result = JSON.parse(data);
+      time.date = result.date;
+      time.hour12 = result.hour12;
+      time.timeCycle = result.cycle;
+      time.hour24 = time.convertTime12to24(time.hour12 + " " + time.timeCycle);
+      
+
+      //process the date, divide its components
+      //the format in which it comes fetched is
+      //day-month-year
+      let arr = time.date.split("/");
+      time.day = arr[0];
+      time.month = arr[1];
+      time.year = parseInt(arr[2]);
+
+      $("input[type=date]").val(time.year + "-" + time.month + "-" + time.day);
+
+    });
 
   },
 
   printDateTime: function(){
 
-    this.fetchDateTimeServer(function(data){
-      
+    let fetchDateTime = this.fetchDateTimeServer();
+    fetchDateTime.then((data) =>{
+
       let result = JSON.parse(data);
       time.date = result.date;
       time.hour12 = result.hour12;
@@ -1176,15 +1179,15 @@ var time = {
       //the format in which it comes fetched is
       //day-month-year
       let arr = time.date.split("/");
-      
-      
       time.day = arr[0];
       time.month = arr[1];
       time.year = parseInt(arr[2]);
       
       //limit the inputs
       time.limitMinMaxInputs();
-    });
+      
+    })
+    .catch(err => console.error(err));
   
   },
 
@@ -1228,6 +1231,69 @@ var time = {
     return `${hours}:${minutes}`;
   }
 
+};
+
+var order = {
+
+  params: {
+    startDate: "",
+    startHour: "",
+
+    endDate: "",
+    endHour: "",
+
+    txtInput: "",
+
+  },
+
+  fetchOrders: function(filterMode){
+    let parameters = "";
+
+    //prepare the parameters to fetch in certain parameters
+    switch(filterMode){
+
+      case "date-assign":
+      case "date-receive":
+
+        parameters += order.params.startDate + " " + order.params.startHour;
+
+      break;
+
+      case "date-range":
+        parameters += order.params.startDate + " " + order.params.startHour;
+        parameters += " / " + order.params.endDate + " " + order.params.endDate;
+      break;  
+
+      case "order-id":
+      case "customer-id":
+        parameters += order.params.txtInput;
+      break;
+
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "./php/fetchOrders.php",
+      data: {
+          userType: cookie.usertype,
+          initials: initials,
+          filterMode: filterMode,
+          params: parameters
+      },
+      success: function (data) {
+        console.log(data);
+
+      },
+      error: function(jqXHR, status, error){
+
+          console.log('Status: ' + status);
+          console.log('Error ' + error);
+          alert("Error " + status + error);
+
+      }
+    });
+
+  }
 };
 
 $(document).ready(function () {
@@ -1385,7 +1451,7 @@ $(document).ready(function () {
               case "/Tallao/myorders.html":
               case "myorders.html":
 
-                    
+                  time.setDateInputCurrentDate();
 
               break;
           }   
@@ -1399,32 +1465,35 @@ $(document).ready(function () {
         $("#divChangePassword").toggleClass("hide");
         $("#inputActualPassword").toggleClass("disableInput");
         
-
-
-
     });
 
     $("#inputActualPassword").change(function(e){
-        alert($("#inputPassword").hasClass("disableInput"));
+        
         let id = "inputActualPassword";
         let password = $("#inputActualPassword").val();
         let msg = "La contraseña no coincide";
 
-        checkSamePassword(cookie.userhash, cookie.usertype, password, function(data){
-            
-            if((data == true) && ($("#inputPassword").hasClass("disableInput") == true)){
-                deleteAppendError(id);
-                formVerification(id, true);
-                $("#inputPassword").toggleClass("disableInput");
-            }else if((data == false) && ($("#inputPassword").hasClass("disableInput") == false)){
-                deleteAppendError(id);
-                formVerification(id, false);
-                formAppendError(id, msg, "red");
-                $("#inputPassword").toggleClass("disableInput");
-            }
+        let checkPass = checkSamePassword(cookie.userhash, cookie.usertype, password);
+        checkPass.then(data => {
 
-        });
+          if((data == true) && ($("#inputPassword").hasClass("disableInput") == true)){
+            deleteAppendError(id);
+            formVerification(id, true);
+            $("#inputPassword").toggleClass("disableInput");
+            
+          }else if((data == false) && ($("#inputPassword").hasClass("disableInput") == false)){
+            deleteAppendError(id);
+            formVerification(id, false);
+            formAppendError(id, msg, "red");
+            $("#inputPassword").toggleClass("disableInput");
+          }    
+
+        })
+        .catch(err => console.error(err));
+
     });
+
+   
 
     $("#inputPassword").on('input', function(){
         let id = "inputPassword";
@@ -1475,6 +1544,8 @@ $(document).ready(function () {
     
       });
 
+      
+
       $("#inputRePassword").change(function(e){
         let id = "inputRePassword";
         let inputPassword = $("#inputPassword").val();
@@ -1497,19 +1568,18 @@ $(document).ready(function () {
 
       $("#submitChange").click(function(e){
         let inputPassword = $("#inputPassword").val();
-        
+        let userType = cookie.usertype;
         formVerification("submit", false);
 
         if($("#submitChange").hasClass("disableButton") == false){
-
-          if(cookie.usertype == "user"){
 
             $.ajax({
               type: "POST",
               url: "./php/userNewPassword.php",
               data: {
                   inputUserHash: cookie.userhash,
-                  inputPassword: inputPassword
+                  inputPassword: inputPassword,
+                  userType: userType
               },
               success: function (response) {
                   $("#divChangePassword").toggleClass("hide");
@@ -1531,43 +1601,11 @@ $(document).ready(function () {
         
               }
             });
-
-          }else if(cookie.usertype == "superuser"){
-
-            $.ajax({
-              type: "POST",
-              url: "./php/superUserNewPassword.php",
-              data: {
-                  inputUserHash: cookie.userhash,
-                  inputPassword: inputPassword
-              },
-              success: function (response) {
-                  $("#divChangePassword").toggleClass("hide");
-                  $("#changePassword").toggleClass("hide");
-                  $("#changePasswordSuccess").toggleClass("hide");
-                  $("#inputActualPassword").toggleClass("disableInput");
-                  $("#inputPassword").toggleClass("disableInput");
-                  $("#inputRePassword").toggleClass("disableInput");
-  
-                  $("#inputActualPassword").val("");
-                  $("#inputPassword").val("");
-                  $("#inputRePassword").val("");
-              },
-              error: function(jqXHR, status, error){
-  
-                  console.log('Status: ' + status);
-                  console.log('Error ' + error);
-                  alert("Error " + status + error);
-        
-              }
-            });
-
           }
-          
-
-        }
 
       });
+
+      
 
       $("input[type=number]").keypress(function(e){
         
@@ -1931,7 +1969,8 @@ $(document).ready(function () {
         weekday[5] = "friday";
         weekday[6] = "saturday";  
 
-        schedule.fetchSchedule(superuser.initials, function(data){
+        let fetchSchedule = schedule.fetchSchedule(superuser.initials);
+        fetchSchedule.then((data) => {
 
           let arr = data.schedule.split(",");
           let obj = {};
@@ -2003,7 +2042,9 @@ $(document).ready(function () {
             $("input[type=time]").toggleClass("disableInput");
           }
 
-        });
+        })
+        .catch(err => console.error(err));
+        
 
       });
 
@@ -2030,6 +2071,126 @@ $(document).ready(function () {
 
         customMessages.submitCustomMessages(superuser.initials);
 
+      });
+
+      $("#selectMetricFunnel").ready(function(e){
+        //run when this select is ready
+
+        console.log($("#selectMetricFunnel :selected").val());
+        
+        //targe the full code instructions
+        $("#selectMetricFunnel").change();
+
+      });
+
+      $("#selectMetricFunnel").change(function(e){
+
+        const divName = {
+          startDateInput: "divStartDateInput",
+          endDateInput: "divEndDateInput",
+          txtInput: "divTxtInput"
+        };
+        const inputHTMLTags = {
+          startDateInput: "startDateParamInput",
+          startHourInput: "startHourParamInput",
+          endDateInput: "endDateParamInput",
+          endHourInput: "endHourParamInput",
+          txtInput: "txtParamInput"
+        };
+        let valSel = this.value;
+        let toggleCHide = (propName, status) =>{
+          //propName refers to the divName property name to be SHOW, SHOULD BE AN ARRAY
+          //Status type: show, hide
+          
+          let objKeys = Object.keys(divName);
+
+          //iteration to show
+          for(let i = 0; i < propName.length; i++){
+            
+            let id = divName[propName[i]];
+     
+            if($("#" + id).hasClass("hide") == true){
+              $("#" + id).toggleClass("hide");
+            }
+            objKeys.splice(objKeys.indexOf(propName[i]), 1);
+
+          }
+          //iteration to hide
+          for(let i = 0; i < objKeys.length; i++){
+            let id = divName[objKeys[i]];
+            if($("#" + id).hasClass("hide") == false){
+              $("#" + id).toggleClass("hide");
+            }
+          }
+
+        };
+
+        switch(valSel){
+
+          case "date-assign": 
+  
+            toggleCHide(["startDateInput"]);
+            $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha:");
+            $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
+       
+          break;
+
+          case "date-receive":
+            toggleCHide(["startDateInput"]);
+            $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha:");
+            $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
+           
+          break;
+
+          case "date-range":
+            toggleCHide(["startDateInput", "endDateInput"]);
+            $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha inicial:");
+            $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
+            $("label[for="+ inputHTMLTags.endDateInput + "]").text("Fecha final:");
+            $("label[for="+ inputHTMLTags.endHourInput + "]").text("Hora:");
+           
+          break;
+
+          case "order-id":
+            toggleCHide(["txtInput"]);
+            $("label[for="+ inputHTMLTags.txtInput + "]").text("Número de orden:");
+   
+          break;
+
+          case "customer-id":
+            toggleCHide(["txtInput"]);
+            $("label[for="+ inputHTMLTags.txtInput + "]").text("Identificación de cliente:");
+        
+          break;
+
+          default:
+            e.preventDefault();
+        };
+
+        //order.fetchOrders(valSel);
+
+      });
+
+    
+
+      $("#startDateParamInput").change(function(e){
+        order.params.startDate = this.value;
+      });
+
+      $("#startHourParamInput").change(function(e){
+        order.params.startHour = this.value;
+      });
+
+      $("#endDateParamInput").change(function(e){
+        order.params.endDate = this.value;
+      });
+
+      $("#endHourParamInput").change(function(e){
+        order.params.endHour = this.value;
+      });
+
+      $("#txtParamInput").change(function(e){
+        order.params.txtInput = this.value;
       });
 
 
@@ -2208,43 +2369,6 @@ function fetchPanelData(userHash, userType, callbackResult){
     
 }
 
-/* function fetchMyAccountData(userHash, userType, callbackResult){
-
-  if(userType == "user"){
-
-    $.ajax({
-      type: "POST",
-      url: "./php/fetchMyAccountDataUser.php",
-      data: {inputUserHash: userHash},
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error); 
-  
-      }
-    }).done(function(data){
-    }, callbackResult);
-
-  }else if(userType == "superuser"){
-
-    $.ajax({
-      type: "POST",
-      url: "./php/fetchMyAccountDataSuperUser.php",
-      data: {inputUserHash: userHash},
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-    }, callbackResult);
-  }
-} */
  function fetchMyAccountData(userHash, userType){
 
     return $.ajax({
@@ -2264,48 +2388,20 @@ function isNumberKey(evt){
   return !(charCode > 31 && (charCode < 48 || charCode > 57));
 }
 
-function checkSamePassword(userHash, userType, password, callbackResult){
+function checkSamePassword(userHash, userType, password){
 
-  if(userType == "user"){
-
-    $.ajax({
+    return $.ajax({
       type: "POST",
       url: "./php/userCheckSamePassword.php",
       data: {
           inputUserHash: userHash,
-          inputPassword: password
+          inputPassword: password,
+          userType: userType
       },
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-    }, callbackResult);
+      dataType: 'json'
+      
+    });
 
-  }else if(userType == "superuser"){
-
-    $.ajax({
-      type: "POST",
-      url: "./php/superUserCheckSamePassword.php",
-      data: {
-          inputUserHash: userHash,
-          inputPassword: password
-      },
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-    }, callbackResult);
-  }
 }
 
 function generatePriceAssignationBox(elementName, elementNameID){
@@ -2554,7 +2650,7 @@ function generateCustomElementReceiptBox(id, service){
   inputPrice.setAttribute("type", "number");
   inputPrice.setAttribute("class", "inputNumberReceiptStyle");
   inputPrice.setAttribute("id", "inputPrice4" + idElement);
-  inputPrice.value = sessionPrice[id];
+  inputPrice.value = serviceOffer.sessionPrice[id];
   
   inputPrice.addEventListener("keypress", function(e){
     onlyNumbers(e);
@@ -2644,4 +2740,9 @@ function onlyNumbers(e){
 function dynObjPreventDefault(e){
   e.preventDefault();
 }
+function preventTab(e){
+  if (e.keyCode == 9) e.preventDefault(); 
+}
+
+
 

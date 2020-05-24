@@ -11,10 +11,10 @@ $userHashCode = "";
 $inputPassword = "";
 
 
-if(isset($inputPassword, $userHashCode)){
+if(isset($_POST['inputUserHash'], $_POST['inputPassword'], $_POST['userType'])){
     $userHashCode = $_POST['inputUserHash'];
     $inputPassword = $_POST['inputPassword'];
-    
+    $userType = $_POST['userType'];
 }
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
@@ -32,7 +32,13 @@ mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 $inputPassword = hashPassword($inputPassword);
 
-$sql = "UPDATE users SET password='$inputPassword' WHERE hashcode='$userHashCode'";
+if($userType == "user"){
+    $sql = "UPDATE users SET password='$inputPassword' WHERE hashcode='$userHashCode'";
+}else if($userType == "superuser"){
+    $sql = "UPDATE superusers SET password='$inputPassword' WHERE hashcode='$userHashCode'";
+
+}
+
 
 
 if(mysqli_query($conn,$sql)){

@@ -85,7 +85,56 @@
 
             </div>  
 
-            
+            <div class="row supTxt-TitleTxt-Separation centerOnXs">
+
+                <div class="col-lg-4">
+                    <label for="selectMetricFunnel">Buscar por:</label>
+                    <select name="selectMetricFunnel" id="selectMetricFunnel">
+                        <option value="date-assign" selected>Fecha asignada</option>
+                        <option value="date-receive">Fecha recibida</option>
+                        <option value="date-range">Entre dos fechas</option>
+                        <option value="order-id">Número de Orden (ID)</option>
+                        <option value="customer-id">Identificación del cliente</option>
+                    </select>
+                </div>
+
+                <form class="col-lg-8 paramBoxStyle">
+
+                    <fieldset class="border p-2" id="paramElements">
+
+                        <legend class="w-auto legendTxt">Parámetros para la búsqueda</legend>
+                        
+                        <div id="divStartDateInput" class="hide">
+                            <label for="startDateParamInput">Fecha:</label>
+                            <input type="date" id="startDateParamInput">
+
+                            <label for="startHourParamInput">Hora:</label>
+                            <input type="time" id="startHourParamInput">
+                        </div>
+
+                        <div id="divEndDateInput" class="hide">
+                            <label for="endDateParamInput">Fecha:</label>
+                            <input type="date" id="endDateParamInput">
+
+                            <label for="endHourParamInput">Hora:</label>
+                            <input type="time" id="endHourParamInput">
+                        </div>
+
+                        <div id="divTxtInput" class="hide">
+                            <label for="txtParamInput">Número de orden:</label>
+                            <input class="inputTxtParamSearch" type="text" id="txtParamInput">
+                        </div>
+
+                    </fieldset>
+
+                </form>
+
+                
+                
+
+            </div>
+
+          </div>    
 
     </body>
 
