@@ -1,5 +1,8 @@
 <?php
 
+//constant // Can't use define since at SQL string won't know if it's a variable, just plain text
+$FIRST_STATUS = "status-wait";
+
 //Connection param
 $serverName = "localhost";
 $userConn = "root";
@@ -15,6 +18,7 @@ if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePri
     
     $initials = $_POST['initials'];
     $clientID = $_POST['clientID'];
+    $clientName = $_POST['clientName'];
     $elementQuantityString = $_POST['eQuantity'];
     $elementPriceString = $_POST['ePrice'];
     $hookQuantity = $_POST['hookQuantity'];
@@ -28,6 +32,7 @@ if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePri
 
 /* $initials = "VICNT";
 $clientID = "GUQ13";
+$clientName = "Robert Lu Zheng";
 $elementQuantityString = "shirt-iron=1,pants-iron=1";
 $elementPriceString = "shirt-iron=1,pants-iron=0.65";
 $hookQuantity = "2";
@@ -85,8 +90,8 @@ if(mysqli_query($conn,$sql)){
     
     if(mysqli_query($conn,$sql)){
         //continue to the receipt insertion at the database
-        $sql = "INSERT INTO orders (laundryinitials, id, elementsQuantity, elementsPrice, hookQuantity, dateReceived, dateAssigned, totalPrice, indications)
-        VALUES ('$initials', '$lastRID', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceived', '$dateAssigned', '$totalPrice', '$indications')";
+        $sql = "INSERT INTO orders (laundryinitials, customerid, customername, id, status, elementsQuantity, elementsPrice, hookQuantity, dateReceived, dateAssigned, totalPrice, indications)
+        VALUES ('$initials','$clientID','$clientName', '$lastRID','$FIRST_STATUS', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceived', '$dateAssigned', '$totalPrice', '$indications')";
         
 
         if(mysqli_query($conn,$sql)){

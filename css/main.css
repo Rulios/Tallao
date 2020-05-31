@@ -84,6 +84,13 @@ border:1px solid;
 .bottomBorder{
     border-bottom: 1.5px solid black;
 }
+.bottomGreyBorder{
+    border-bottom: 1px solid #BDBABD;
+}
+.hrGreyBorder{
+    border-top: 1px solid #BEBBB9;
+    width: 80%;
+}
 .rightBorder{
     border-right: 1px solid black;
 }
@@ -589,10 +596,25 @@ input[type='checkbox']{
 .legendTxt{
     font-size: 11px;
 }
-.inputTxtParamSearch{
-    width:20%;
+
+
+.orderListElementStyle{
+    padding-top: 5px;
+    width: 100%;
+    border: none;
+    border: solid 1px #D1D0CF;
+    height: auto;
+    background-color: transparent;
 }
 
+.orderListElementStyle:hover{
+    box-shadow: 0 0 20px rgba(33,33,33,.2); 
+}
+.dataOrderStyle{
+    text-align: left;
+    padding-left: 2em;
+    padding-right: 2em;
+}
 @media only screen and (max-width: 768px){
 
     .hideOnXs{

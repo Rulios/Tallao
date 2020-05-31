@@ -303,6 +303,7 @@ var receiptDetails = {
     let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
 
     let clientID = $("#inputClientID").val();
+    let clientName = $("#spnClientFullName").text();
     let strIndications = $("#inputIndications").text();
 
 
@@ -322,6 +323,7 @@ var receiptDetails = {
     //Client ID acts as affiliation system to the receipt
     if(clientID == ""){
       clientID = "none";
+      clientName = "none";
     }
 
     
@@ -339,6 +341,7 @@ var receiptDetails = {
       data: {
           initials: initials,
           clientID: clientID,
+          clientName: clientName,
           eQuantity: strElementQuantity,
           ePrice: strElementPrice,
           hookQuantity: hookQ,
@@ -1136,11 +1139,11 @@ var time = {
     });
   },
 
-  setDateInputCurrentDate: function(){
+  processFetchedDateTime: function(){
 
     let fetchDateTime = this.fetchDateTimeServer();
     fetchDateTime.then((data) =>{
-
+    
       let result = JSON.parse(data);
       time.date = result.date;
       time.hour12 = result.hour12;
@@ -1155,40 +1158,11 @@ var time = {
       time.day = arr[0];
       time.month = arr[1];
       time.year = parseInt(arr[2]);
-
-      $("input[type=date]").val(time.year + "-" + time.month + "-" + time.day);
 
     });
 
-  },
+    return fetchDateTime;
 
-  printDateTime: function(){
-
-    let fetchDateTime = this.fetchDateTimeServer();
-    fetchDateTime.then((data) =>{
-
-      let result = JSON.parse(data);
-      time.date = result.date;
-      time.hour12 = result.hour12;
-      time.timeCycle = result.cycle;
-      time.hour24 = time.convertTime12to24(time.hour12 + " " + time.timeCycle);
-      
-      $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
-
-      //process the date, divide its components
-      //the format in which it comes fetched is
-      //day-month-year
-      let arr = time.date.split("/");
-      time.day = arr[0];
-      time.month = arr[1];
-      time.year = parseInt(arr[2]);
-      
-      //limit the inputs
-      time.limitMinMaxInputs();
-      
-    })
-    .catch(err => console.error(err));
-  
   },
 
   limitMinMaxInputs: function(){
@@ -1236,6 +1210,8 @@ var time = {
 var order = {
 
   params: {
+    status: "",
+    initials: "",
     startDate: "",
     startHour: "",
 
@@ -1246,8 +1222,16 @@ var order = {
 
   },
 
+  startIndexFetch: 0, //index send to query to be the startIndex of the LIMIT query
+                      //it will define the index to start fetching
+
   fetchOrders: function(filterMode){
     let parameters = "";
+    
+    
+    if(cookie.usertype == "superuser"){
+      order.params.initials = superuser.initials;
+    }
 
     //prepare the parameters to fetch in certain parameters
     switch(filterMode){
@@ -1269,20 +1253,23 @@ var order = {
         parameters += order.params.txtInput;
       break;
 
-    };
-
+    }
+    
     $.ajax({
       type: "POST",
       url: "./php/fetchOrders.php",
       data: {
           userType: cookie.usertype,
-          initials: initials,
+          initials: order.params.initials,
           filterMode: filterMode,
-          params: parameters
+          params: parameters,
+          startIndex: order.startIndexFetch,
+          status: order.params.status
       },
       success: function (data) {
-        console.log(data);
-
+        let obj = JSON.parse(data);
+        console.log(obj);
+        
       },
       error: function(jqXHR, status, error){
 
@@ -1440,8 +1427,21 @@ $(document).ready(function () {
           
                     //start fetching date,time and cycle from server
                     //time to refresh 10 minutes = 600000ms
-                    time.printDateTime();
-                    setInterval(function(){time.printDateTime()}, 600000);
+                    time.processFetchedDateTime()
+                    .then(() => {
+                      $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
+                      time.limitMinMaxInputs();
+                    })
+                    .catch((err) => console.error(err));
+
+                    setInterval(function(){
+                      time.processFetchedDateTime()
+                      .then(() => {
+                        $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
+                        time.limitMinMaxInputs();
+                      })
+                      .catch((err) => console.error(err));
+                    }, 600000);
       
               break;
 
@@ -1451,8 +1451,15 @@ $(document).ready(function () {
               case "/Tallao/myorders.html":
               case "myorders.html":
 
-                  time.setDateInputCurrentDate();
-
+                  //since it is the first time opening the site, to prevent
+                  //twice fetching, it will only trigger the startDateParamInput (first default select field)
+                  time.processFetchedDateTime()
+                  .then(() => {
+                    $("#startDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
+                    $("#startDateParamInput").change();
+                  })
+                  .catch((err) => console.error(err));
+           
               break;
           }   
       }
@@ -2073,17 +2080,11 @@ $(document).ready(function () {
 
       });
 
-      $("#selectMetricFunnel").ready(function(e){
-        //run when this select is ready
-
-        console.log($("#selectMetricFunnel :selected").val());
-        
-        //targe the full code instructions
-        $("#selectMetricFunnel").change();
-
-      });
 
       $("#selectMetricFunnel").change(function(e){
+
+        //reset the index
+        order.startIndexFetch = 0;
 
         const divName = {
           startDateInput: "divStartDateInput",
@@ -2125,18 +2126,42 @@ $(document).ready(function () {
 
         };
 
+        let toggleStatusInput = (status) =>{
+
+          const dName = "#divStatusInput";
+
+          if(status == "hide"){
+
+            if($(dName).hasClass("hide") == false){
+              $(dName).toggleClass("hide");
+            }
+
+          }else if(status == "show"){
+
+            if($(dName).hasClass("hide") == true){
+              $(dName).toggleClass("hide");
+            }
+          }
+
+        };
+
+        //clean the text input
+        $("#txtParamInput").val("");
+
         switch(valSel){
 
           case "date-assign": 
   
             toggleCHide(["startDateInput"]);
+            toggleStatusInput("show");
             $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha:");
             $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
-       
+
           break;
 
           case "date-receive":
             toggleCHide(["startDateInput"]);
+            toggleStatusInput("show");
             $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha:");
             $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
            
@@ -2144,6 +2169,7 @@ $(document).ready(function () {
 
           case "date-range":
             toggleCHide(["startDateInput", "endDateInput"]);
+            toggleStatusInput("show");
             $("label[for="+ inputHTMLTags.startDateInput + "]").text("Fecha inicial:");
             $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
             $("label[for="+ inputHTMLTags.endDateInput + "]").text("Fecha final:");
@@ -2153,44 +2179,105 @@ $(document).ready(function () {
 
           case "order-id":
             toggleCHide(["txtInput"]);
+            toggleStatusInput("hide");
+            //set the HTML prop, to be later used to autofill feature (oninput event)
+            $("#txtParamInput").data("mode", "order-id");
             $("label[for="+ inputHTMLTags.txtInput + "]").text("Número de orden:");
-   
+          
           break;
 
           case "customer-id":
             toggleCHide(["txtInput"]);
+            toggleStatusInput("show");
+            //set the HTML prop, to be later used to autofill feature (oninput event)
+            $("#txtParamInput").data("mode", "customer-id");
             $("label[for="+ inputHTMLTags.txtInput + "]").text("Identificación de cliente:");
         
           break;
 
           default:
             e.preventDefault();
-        };
+        }
 
-        //order.fetchOrders(valSel);
+        order.fetchOrders(valSel);
 
       });
 
-    
+      $("#selectInputStatus").ready(function(e){
+
+       //assign value when start 
+       order.params.status = this.value;
+     
+
+      });
+
+      $("#selectInputStatus").change(function(e){
+        order.params.status = this.value;
+        $("#selectMetricFunnel").change();
+      });
+
+     
+
+      $("#startDateParamInput").on("input", function(e){
+
+        if(this.value == ""){
+          //take the previous value
+          this.value = $("#startDateParamInput").data("prev");
+        }
+      
+      });
 
       $("#startDateParamInput").change(function(e){
-        order.params.startDate = this.value;
+        
+        //store the value inside html, to prevent it having
+        //a undefined value or nothing in the date input
+        $("#startDateParamInput").data("prev", this.value);
+        order.params.startDate  = this.value;
+
+        $("#selectMetricFunnel").change();
+       
+      });
+
+      $("#startHourParamInput").ready(function(e){
+        //initialize the value to get the start of the day
+        if(this.value == undefined){
+          $("#startHourParamInput").val("00:00");
+          order.params.startHour = this.value;
+        }
       });
 
       $("#startHourParamInput").change(function(e){
+        
         order.params.startHour = this.value;
+        
+        $("#selectMetricFunnel").change();
       });
 
       $("#endDateParamInput").change(function(e){
         order.params.endDate = this.value;
+        
+        $("#selectMetricFunnel").change();
       });
 
       $("#endHourParamInput").change(function(e){
         order.params.endHour = this.value;
+
+        $("#selectMetricFunnel").change();
       });
 
       $("#txtParamInput").change(function(e){
         order.params.txtInput = this.value;
+
+        $("#selectMetricFunnel").change();
+      });
+
+      $("#txtParamInput").on("input",function(e){
+
+        let mode = $("#txtParamInput").data("mode");
+
+        if(mode == "order-id"){
+          this.value = this.value.toUpperCase();
+        }
       });
 
 

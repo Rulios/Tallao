@@ -75,7 +75,7 @@
 
           <div style="margin:5em;"></div>
 
-          <div class="container montserrat_font paddingForm">
+          <div class="container montserrat_font ">
 
             <div class="row">
 
@@ -92,32 +92,66 @@
                     <select name="selectMetricFunnel" id="selectMetricFunnel">
                         <option value="date-assign" selected>Fecha asignada</option>
                         <option value="date-receive">Fecha recibida</option>
-                        <option value="date-range">Entre dos fechas</option>
+                        <option value="date-range">Entre dos fechas </option>
                         <option value="order-id">Número de Orden (ID)</option>
                         <option value="customer-id">Identificación del cliente</option>
                     </select>
                 </div>
 
-                <form class="col-lg-8 paramBoxStyle">
+                <form class="col-lg-8 paramBoxStyle ">
 
-                    <fieldset class="border p-2" id="paramElements">
+                    <fieldset class="border p-2 " id="paramElements">
 
-                        <legend class="w-auto legendTxt">Parámetros para la búsqueda</legend>
+                        <legend class="w-auto legendTxt">Parámetros de la búsqueda</legend>
                         
-                        <div id="divStartDateInput" class="hide">
-                            <label for="startDateParamInput">Fecha:</label>
-                            <input type="date" id="startDateParamInput">
+                        <div id="divStatusInput" class="">
 
-                            <label for="startHourParamInput">Hora:</label>
-                            <input type="time" id="startHourParamInput">
+                            <label for="selectInputStatus" >Estado:</label>
+
+                            <select name="" id="selectInputStatus">
+                                <option value="status-all">Todos los estados</option>
+                                <option value="status-wait">En espera</option>
+                                <option value="status-ironing">Planchando</option>
+                                <option value="status-ready">Listo</option>
+                                
+                            </select>
+                            
                         </div>
 
-                        <div id="divEndDateInput" class="hide">
-                            <label for="endDateParamInput">Fecha:</label>
-                            <input type="date" id="endDateParamInput">
+                        
 
-                            <label for="endHourParamInput">Hora:</label>
-                            <input type="time" id="endHourParamInput">
+                        <div id="divStartDateInput" class="hide container">
+                            
+                                <div class="row">
+                               
+                                    <div class="col-xs-12">
+                                        <label for="startDateParamInput" >Fecha:</label>
+                                        <input type="date"  id="startDateParamInput">
+                                    </div>
+                                
+                                    <div class="col-xs-12">
+                                        <label for="startHourParamInput">Hora:</label>
+                                        <input type="time"  id="startHourParamInput">
+                                    </div>    
+
+                                </div>        
+                        </div>
+
+                        <div id="divEndDateInput" class="hide container">
+                            
+                            <div class="row">
+                           
+                                <div class="col-xs-12">
+                                    <label for="endDateParamInput">Fecha:</label>
+                                    <input type="date"  id="endDateParamInput">
+                                </div>
+                            
+                                <div class="col-xs-12">
+                                    <label for="endHourParamInput">Hora:</label>
+                                    <input type="time"  id="endHourParamInput">
+                                </div>    
+
+                            </div>        
                         </div>
 
                         <div id="divTxtInput" class="hide">
@@ -125,13 +159,50 @@
                             <input class="inputTxtParamSearch" type="text" id="txtParamInput">
                         </div>
 
+
                     </fieldset>
 
                 </form>
 
-                
-                
 
+            </div>
+
+            <div class="row supTxt-TitleTxt-Separation">
+
+                <div class="container">
+                   <div class="row">
+                        <div class="col-lg-4">
+                            <button class="orderListElementStyle ">
+
+                                <h3 class="">B-13</h3>
+                                <div>Estado: En espera</div>
+                                <hr class="hrGreyBorder">
+
+                                <div class="dataOrderStyle">
+
+                                    
+                                    <div>Cliente: Robert Lu Zheng</div>
+                                    <div>Día recibido: 10/10/2020</div>
+                                    <div>Día asignado: 10/10/2020</div>
+
+                                </div>
+
+                                
+                            </button>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <button class="orderListElementStyle">
+                            </button>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <button class="orderListElementStyle">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
 
           </div>    

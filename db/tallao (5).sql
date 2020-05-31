@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2020 a las 05:24:43
+-- Tiempo de generación: 31-05-2020 a las 08:15:04
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -43,7 +43,6 @@ CREATE TABLE `custommessages` (
 
 INSERT INTO `custommessages` (`laundryinitials`, `id`, `colortag`, `tag`, `message`, `status`) VALUES
 ('VICNT', 'VICNT1', '#DCA2E8', 'Buenos día123', 'Buenos díaas!', ''),
-('VICNT', 'VICNT3', '#EBAB28', 'WAO', 'FLASH', ''),
 ('VICAT', 'VICAT1', 'white', 'Sin pliegue / 不折', 'Sin pliegue', 'blocked');
 
 -- --------------------------------------------------------
@@ -54,7 +53,10 @@ INSERT INTO `custommessages` (`laundryinitials`, `id`, `colortag`, `tag`, `messa
 
 CREATE TABLE `orders` (
   `laundryInitials` text NOT NULL,
+  `customerid` text NOT NULL,
+  `customername` text NOT NULL,
   `id` text NOT NULL,
+  `status` text NOT NULL COMMENT 'Show the state of the order',
   `elementsQuantity` text NOT NULL,
   `elementsPrice` text NOT NULL,
   `hookQuantity` int(11) NOT NULL,
@@ -63,6 +65,30 @@ CREATE TABLE `orders` (
   `totalprice` text NOT NULL,
   `indications` text NOT NULL COMMENT 'Text in which the user specifies some specific order to be done.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the orders data';
+
+--
+-- Volcado de datos para la tabla `orders`
+--
+
+INSERT INTO `orders` (`laundryInitials`, `customerid`, `customername`, `id`, `status`, `elementsQuantity`, `elementsPrice`, `hookQuantity`, `dateReceived`, `dateAssigned`, `totalprice`, `indications`) VALUES
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-36', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-13 00:00:00', '2020-05-16 00:01:00', '1.3', ' FLASH'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-37', 'status-wait', 'shirt-iron=1,overall-iron=1', 'shirt-iron=0.65,overall-iron=1.3', 2, '2020-05-21 22:00:00', '2020-05-23 22:24:00', '1.95', ' Buenos díaas!'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-38', 'status-wait', 'pants-iron=1,custom1-iron*Colcha*Pantalón con pliegue=1', 'pants-iron=0.65,custom1-iron*Colcha*Pantalón con pliegue=1.5', 2, '2020-05-21 22:00:00', '2020-05-29 14:23:00', '2.15', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-39', 'status-wait', 'pants-iron=1,skirt-iron=1', 'pants-iron=0.65,skirt-iron=0.65', 2, '2020-05-24 21:00:00', '2020-05-29 21:45:00', '1.3', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-40', 'status-wait', 'pants-iron=1,pleatedSkirt-iron=1,blouse-iron=1', 'pants-iron=0.65,pleatedSkirt-iron=1.3,blouse-iron=1', 3, '2020-05-24 21:00:00', '2020-05-29 16:44:00', '2.95', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-41', 'status-wait', 'jumper-iron=1,quilt-iron=1', 'jumper-iron=1.5,quilt-iron=8', 2, '2020-05-24 21:00:00', '2020-06-06 15:44:00', '9.5', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-42', 'status-wait', 'jumper-iron=3', 'jumper-iron=1.5', 3, '2020-05-24 21:00:00', '2020-07-01 21:46:00', '4.5', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-43', 'status-wait', 'shirt-iron=15,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 16, '2020-05-24 21:00:00', '2020-05-28 21:50:00', '10.4', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-44', 'status-wait', 'pants-iron=1,skirt-iron=1', 'pants-iron=0.65,skirt-iron=0.65', 2, '2020-05-24 21:00:00', '2020-05-29 21:49:00', '1.3', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-45', 'status-wait', 'pants-iron=1', 'pants-iron=0.65', 1, '2020-05-24 21:00:00', '2020-05-29 21:49:00', '0.65', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-46', 'status-wait', 'coat-iron=1,sweater-iron=1', 'coat-iron=1.3,sweater-iron=0.65', 2, '2020-05-24 21:00:00', '2020-06-05 21:49:00', '1.95', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-47', 'status-wait', 'skirt-washiron=1,coat-washiron=1', 'skirt-washiron=1.5,coat-washiron=3.5', 2, '2020-05-24 21:00:00', '2020-05-30 21:48:00', '5', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-48', 'status-wait', 'skirt-washiron=1,pleatedSkirt-washiron=1', 'skirt-washiron=1.5,pleatedSkirt-washiron=4', 2, '2020-05-24 21:00:00', '2020-06-06 12:46:00', '5.5', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-49', 'status-wait', 'coat-washiron=1,overall-washiron=1', 'coat-washiron=3.5,overall-washiron=2.5', 2, '2020-05-24 21:00:00', '2020-06-06 23:47:00', '6', ''),
+('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-50', 'status-wait', 'shirt-iron=1', 'shirt-iron=0.65', 1, '2020-05-31 00:00:00', '2020-06-04 01:43:00', '0.65', ''),
+('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-51', 'status-wait', 'pants-iron=1,shirt-iron=1', 'pants-iron=0.65,shirt-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:47:00', '1.3', ' Buenos díaas!'),
+('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-52', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:49:00', '1.3', ''),
+('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-53', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:50:00', '1.3', '');
 
 -- --------------------------------------------------------
 
@@ -116,7 +142,7 @@ CREATE TABLE `superusers` (
 --
 
 INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`, `lastreceiptid`) VALUES
-('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$bS8Ww44eOP3lRTLfBP/B6.Kah50Ql5hbS.PbxtEpe0l7oNvsfZf5G', 'B-35'),
+('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$6B2W38vJ5y5hFN75BSBEsuZMyWdhaCx/9eQAcrxM//abvAR6KTUxO', 'B-53'),
 ('VICAT', 'XyLc6PHXgAREDy9FZtQ7', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', '', 'Robert ', 'Lu Zheng ', 'robert_lu20@hotmail.com', '$2y$12$duBXbwmPwP87cWTQpjAXDeA3ioqmjSS9vshKoIlJYN4ghwNuhHx.i', '');
 
 -- --------------------------------------------------------
@@ -195,7 +221,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`, `accountverified`) VALUES
-('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 'B-12,B-13,B-14,B-15,B-16,B-17', '');
+('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 'B-12,B-13,B-14,B-15,B-16,B-17,B-50,B-51,B-52,B-53', '');
 
 --
 -- Índices para tablas volcadas
