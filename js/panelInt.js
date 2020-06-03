@@ -1203,6 +1203,26 @@ var time = {
     }
   
     return `${hours}:${minutes}`;
+  },
+
+  convertTime24To12: function(time24h){
+
+    // Check correct time format and split into components
+    time24h = time24h.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time24h];
+
+    if (time24h.length > 1) { // If time format correct
+      time24h = time24h.slice (1);  // Remove full string match value
+      time24h[5] = +time24h[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+      time24h[0] = +time24h[0] % 12 || 12; // Adjust hours
+    }
+    return time24h.join (''); // return adjusted time or original string
+
+  },
+
+  convertDateSeparationHyphenToSlash: function(string){
+
+    return string.replace(/-/g, "/");
+
   }
 
 };
@@ -1268,7 +1288,41 @@ var order = {
       },
       success: function (data) {
         let obj = JSON.parse(data);
+
+        let genRow = () => {
+          let x = document.createElement("DIV"); 
+          x.setAttribute("class", "row small-mediumSeparation");
+          return x;
+        };
+
+        let c = 3;
+        let l = obj.length;
+        let row = genRow();
+        
+        for(let i = 0; i < l; i++){
+
+          let a = [];
+
+          a = obj[i].dateAssigned.split(" ");
+          //change the time 24 to time 12, it uses slice to delete the seconds representation
+          //and change date hyphens to slash
+          obj[i].dateAssigned = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+         
+          a = obj[i].dateReceived.split(" ");
+          obj[i].dateReceived = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+
+          if(c ===  3){ //add a row
+            row = genRow(); //generates a new row
+            $("#appendOrdersFromParams").append(row);
+            c = 0;
+          }
+          row.append(order.generateOrderBox(obj[i]));
+          
+          c += 1;
+          
+        }
         console.log(obj);
+        //$("#xa").text("Hola:");
         
       },
       error: function(jqXHR, status, error){
@@ -1280,7 +1334,129 @@ var order = {
       }
     });
 
+  },
+
+  generateOrderBox(obj){
+
+    ///Functions that when called it returns a element
+
+      const colorStatus = {
+
+        "status-wait" : "red",
+        "status-ironing": "yellow",
+        "status-ready": "green"
+
+      };
+
+      const strES = {};
+      strES["status-wait"]  = "Esperando";
+      strES["status-ironing"] = "Planchando";
+      strES["status-ready"] = "Listo";
+
+      const genHRborder = () =>{
+
+        let x = document.createElement("HR");
+        x.setAttribute("class", "hrGreyBorder");
+
+        return x;
+      };
+
+      const genSpan = (txt, bold) => {
+        let x = document.createElement("SPAN");
+
+        if(bold == true){
+          x.setAttribute("class", "bold");
+        }
+        
+        x.textContent = txt + " ";
+  
+        return x;
+      };
+
+    ///
+
+
+    let col4 = document.createElement("DIV");
+    col4.setAttribute("class", "col-lg-4");
+
+    let buttonBack = document.createElement("BUTTON");
+    buttonBack.setAttribute("class", "orderListElementStyle");
+
+    let h3OrderId = document.createElement("H3");
+    h3OrderId.setAttribute("name" , "orderIdTag");
+    h3OrderId.setAttribute("class", "bold");
+    h3OrderId.textContent = obj.id;
+
+    let divStatusTag = document.createElement("DIV");
+    divStatusTag.setAttribute("name", "statusTag");
+    divStatusTag.setAttribute("style", "color:" + colorStatus[obj.status] + ";");
+
+    divStatusTag.append(genSpan("Estado: ", true));
+    divStatusTag.append(genSpan(strES[obj.status], true));
+      //here goes a horizontal line
+    
+    let divOrderData = document.createElement("DIV");
+    divOrderData.setAttribute("class", "dataOrderStyle");
+
+    let divCustomerNameTag = document.createElement("DIV");
+    divCustomerNameTag.setAttribute("name", "customerNameTag");
+
+    divCustomerNameTag.append(genSpan("Cliente:", true));
+    divCustomerNameTag.append(genSpan(obj.customername, false));
+
+
+    let divDateAssign = document.createElement("DIV");
+    divDateAssign.setAttribute("name", "dateAssignTag");
+
+    divDateAssign.append(genSpan("Día Asignado:", true));
+    divDateAssign.append(genSpan(obj.dateAssigned, false));
+
+    let divDateReceiveTag = document.createElement("DIV");
+    divDateReceiveTag.setAttribute("name", "dateReceiveTag");
+    
+    divDateReceiveTag.append(genSpan("Día Recibido:", true));
+    divDateReceiveTag.append(genSpan(obj.dateReceived, false));
+
+    let divHookQuantity = document.createElement("DIV");
+    divHookQuantity.setAttribute("name", "hookQuantityTag");
+
+    divHookQuantity.append(genSpan("Cantidad de Ganchos (Perchas):", true));
+    divHookQuantity.append(genSpan(obj.hookQuantity, false));
+
+      //here goes a Horizontal Line
+
+    let divPriceTag = document.createElement("DIV");
+    divPriceTag.setAttribute("name", "priceTag");
+    divPriceTag.setAttribute("class", "text-center bold");
+    divPriceTag.textContent = "Precio: $" + parseFloat(obj.totalprice, 2);
+
+    let divTouch2MoreDetails = document.createElement("DIV");
+    divTouch2MoreDetails.setAttribute("class", "text-center detailsText");
+    divTouch2MoreDetails.textContent = "Toca para ver más detalles";
+
+
+    divOrderData.append(divCustomerNameTag);
+    divOrderData.append(divDateAssign);
+    divOrderData.append(divDateReceiveTag);
+    divOrderData.append(divHookQuantity);
+
+    divOrderData.append(genHRborder());
+
+    divOrderData.append(divPriceTag);
+    divOrderData.append(divTouch2MoreDetails);
+
+    buttonBack.append(h3OrderId);
+    buttonBack.append(divStatusTag);
+
+    buttonBack.append(genHRborder());
+
+    buttonBack.append(divOrderData);
+
+    col4.append(buttonBack);
+ 
+    return col4;
   }
+
 };
 
 $(document).ready(function () {

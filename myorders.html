@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="js/design.js"></script>
-    <script src="js/panelInt.js"></script>
+    <script defer src="js/panelInt.js"></script>
 
 
     <link rel="stylesheet" href="css/main.css">
@@ -167,26 +167,33 @@
 
             </div>
 
-            <div class="row supTxt-TitleTxt-Separation">
+            <div class="row ">
 
-                <div class="container">
-                   <div class="row">
+                <div class="container" id="appendOrdersFromParams">
+                   <!-- <div class="row small-mediumSeparation" id="AppendOrder"> 
+
                         <div class="col-lg-4">
                             <button class="orderListElementStyle ">
 
-                                <h3 class="">B-13</h3>
-                                <div>Estado: En espera</div>
+                                <h3 name="orderIdTag" class="bold"> B-13</h3>
+                                <div name="statusTag">Estado: En espera</div>
                                 <hr class="hrGreyBorder">
 
                                 <div class="dataOrderStyle">
 
-                                    
-                                    <div>Cliente: Robert Lu Zheng</div>
-                                    <div>Día recibido: 10/10/2020</div>
-                                    <div>Día asignado: 10/10/2020</div>
+                                    <label for="" class="bold">Cliente:</label>
+                                    <div name="customerNameTag" ><span class="bold"> Cliente:</span> <span>Robert Lu Zheng</span></div>
+                                    <div name="dateAssignTag">Día asignado: 10/10/2020</div>
+                                    <div name="dateReceiveTag">Día recibido: 10/10/2020</div>
+                                    <div name="hookQuantityTag">Cantidad de Ganchos: 2</div>
 
-                                </div>
+                                    <hr class="hrGreyBorder">
 
+                                    <div name="priceTag" class="text-center bold">Precio: $1.30</div>
+
+                                    <div class="text-center detailsText">Toca para ver más detalles</div>
+
+                                </div>  
                                 
                             </button>
                         </div>
@@ -201,7 +208,8 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                    
+                </div> -->
                 
             </div>
 
