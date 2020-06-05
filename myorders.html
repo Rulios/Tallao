@@ -71,7 +71,7 @@
                 
                 
             </div>    
-          </nav>
+        </nav>
 
           <div style="margin:5em;"></div>
 
@@ -211,9 +211,100 @@
                     
                 </div> -->
                 
-            </div>
+                </div>
 
-          </div>    
+            </div>    
+
+                <!-- The Modal -->
+            <div id="orderDetailsModal" class="modalCustom hide">
+
+                <!-- Modal content -->
+                <div class="modal-contentCustom ">
+                    <div class="modal-headerCustom ">
+                        <span name="spnReceiptId">Orden B-37</span>
+                        <span class="close">&times;</span>
+                    </div>
+
+                    <hr class="hrBlackBorder">
+                    
+                    <div class="modal-bodyCustom row">
+
+                        <div class="col-lg-6 rightBorderModal">
+
+                            <div name="divReceiptStatus" class="bold">Estado: Esperando</div>
+                            <div name="divReceiptClientName">
+                                <span class="bold" name="spnReceiptClientNameTag">Cliente:</span>
+                                <span name="spnReceiptClientNameData">Robert Lu Zheng</span>
+                            </div>
+                            <div name="divReceiptDateReceive">
+                                <span class="bold" name="spnReceiptDateReceiveTag">Día Recibido:</span>
+                                <span name="spnReceiptDateReceiveData">2020/05/29 9:59 AM</span>
+                            </div>    
+                            <div class="smallSeparation text-center" name="divReceiptDateAssign">
+                                <span class="bold" name="spnReceiptDateAssignTag">Día Asignado:</span>
+                                <span name="spnReceiptDateAssignData">2020/05/31 1:00 PM</span> 
+                            </div>
+                            <div class="text-center bold" name="divDateDifference">Faltan 2 días y 4 horas</div>
+                            <!-- <div name="spnReceiptClientID">GUQ13</div> -->
+                            <div name="appendReceiptOrderElements" class="smallSeparation">
+
+                                <div class="bold">Elementos:</div>
+                                <div element="shirt-iron">
+                                    <span class="bold">- &ensp; Camisa/Planchado $0.65 = </span>
+                                    <span class="floatRight">15</span>
+                                </div>
+                                
+                                <div element="shirt-iron">
+                                    <span class="bold">- &ensp; Pantalón/Planchado $0.65 = </span>
+                                    <span class="floatRight">15</span>
+                                </div>
+
+                            </div>
+
+                            <div name="divReceiptHookQuantity" class="smallSeparation">
+                                <span class="bold" name="spnReceiptHookQuantityTag">Cantidad de Ganchos/Perchas:</span>
+                                <span class="floatRight" name="spnReceiptHookQuantityData">15</span>
+                            </div>
+
+                            <div name="divReceiptPrice" class="oneEMSeparation">
+                                <span class="bold" name="spnReceiptPriceTag">Precio:</span>
+                                <span class="floatRight" name="spnReceiptPriceData">$15.00</span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <form action="">
+
+                                <fieldset class="border p-2">
+
+                                    <legend class="w-auto legendTxt">Notificaciones y Chat</legend>
+
+                                    <div name="divReceiptIndications">
+                                        <span class="bold" name="spnReceiptIndicationsTag">
+                                            Indicaciones:
+                                        </span>
+
+                                        <span name="spnReceiptIndicationsData">Sin pliegue</span>
+                                    </div>
+
+                                </fieldset>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="row oneEMSeparation">
+                        <button class="col-lg-12 modalStateButton" name="modalStateButton">
+                            PLANCHAR
+                        </button>
+                    </div>
+             
+                </div>
+            
+            </div>
 
     </body>
 

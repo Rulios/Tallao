@@ -1381,6 +1381,16 @@ var order = {
 
     let buttonBack = document.createElement("BUTTON");
     buttonBack.setAttribute("class", "orderListElementStyle");
+    
+    //set the data attributes which will store the values to 'SEE MORE DETAILS'
+    buttonBack.addEventListener("click", (e) => {
+
+      if($("div[class=modalCustom").hasClass("hide") == false){
+        $("div[class=modalCustom]").toggleClass("hide");
+      }
+      
+      
+    });
 
     let h3OrderId = document.createElement("H3");
     h3OrderId.setAttribute("name" , "orderIdTag");
@@ -2454,6 +2464,26 @@ $(document).ready(function () {
         if(mode == "order-id"){
           this.value = this.value.toUpperCase();
         }
+      });
+
+      //modal events
+
+      $("span[class=close]").click(function(e){
+        
+        if($("div[class=modalCustom").hasClass("hide") == true){
+          $("div[class=modalCustom]").toggleClass("hide");
+        }
+
+        
+
+      });
+
+      $(window).click(function(e){
+
+        if($("div[class=modalCustom").hasClass("hide") == true){
+          $("div[class=modalCustom]").toggleClass("hide");
+        }
+
       });
 
 

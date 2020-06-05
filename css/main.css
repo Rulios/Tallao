@@ -32,6 +32,9 @@ html {
 .floatLeft{
     float:left;
 }
+.floatRight{
+    float:right;
+}
 .blackTxt{
     color:black;
 }
@@ -94,6 +97,10 @@ border:1px solid;
     border-top: 1px solid #BEBBB9;
     width: 80%;
 }
+.hrBlackBorder{
+    border-top: 1px solid black;
+    width: 100%;
+}
 .rightBorder{
     border-right: 1px solid black;
 }
@@ -132,6 +139,9 @@ border:1px solid;
 }
 .smallSeparation{
     margin-top: 0.5em;
+}
+.oneEMSeparation{
+    margin-top: 1em;
 }
 .small-mediumSeparation{
     margin-top: 2em;
@@ -618,6 +628,67 @@ input[type='checkbox']{
     padding-left: 1.8em;
     padding-right: 1.8em;
 }
+
+/* The Modal (background) */
+.modalCustom {
+    /* display: none; */ /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 10em;
+  }
+  
+  /* Modal Content/Box */
+  .modal-contentCustom {
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+
+    padding: 2em;
+    border: 1px solid #888;
+    width: 60%; /* Could be more or less, depending on screen size */
+    border-radius: 3px;
+  }
+  .modal-headerCustom{
+    text-align: center;
+    font-size: 2em;
+  }
+
+  /* The Close Button */
+  .close {
+    display:absolute;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .rightBorderModal{
+    border-right: 1px solid black;
+  }
+
+  .modalStateButton{
+      text-align:center;
+      text-decoration: none;
+      border: solid 2px black;
+      padding:1em;
+  }
+  .modalStateButton:hover{
+      background-color: transparent;
+      box-shadow: 0 0 20px rgba(33,33,33,.2); 
+  }
+
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
@@ -665,7 +736,15 @@ input[type='checkbox']{
     #totalPriceSpan{
         float:none;
     }
-
+    .modal-contentCustom{
+        width: 90%;
+    }
+    .rightBorderModal{
+        border-right: 0;
+    }
+    .modalCustom{
+        padding-top: 5em;
+    }
     
     
 }
