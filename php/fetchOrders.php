@@ -10,7 +10,7 @@ $endHour = "23:59:59";
 
 //SELECT * FROM orders WHERE dateAssigned BETWEEN '2020-05-29 15:00:00' AND '2020-05-29 23:59:59' ORDER BY dateAssigned ASC LIMIT 0,10
 
-/* if (isset($_POST['userType'], $_POST['initials'], $_POST['filterMode'], $_POST['params'], $_POST['startIndex'], $_POST['status'])){
+if (isset($_POST['userType'], $_POST['initials'], $_POST['filterMode'], $_POST['params'], $_POST['startIndex'], $_POST['status'])){
 
     $userType = $_POST['userType'];
     $initials = $_POST['initials'];
@@ -19,7 +19,7 @@ $endHour = "23:59:59";
     $startIndex = $_POST['startIndex'];
     $status = $_POST['status'];
 
-} */
+}
 
 //test with date-assign mode
 /* $filterMode = "date-assign";
@@ -50,11 +50,11 @@ $userType = "superuser";
 $status = "status-wait"; */
 
 //test with customer-id mode
-$filterMode = "customer-id";
+/* $filterMode = "customer-id";
 $params = "GUQ13";
 $startIndex = 1;
 $userType = "superuser";
-$status = "status-wait";
+$status = "status-wait"; */
 
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);

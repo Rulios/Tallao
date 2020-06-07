@@ -1252,7 +1252,7 @@ var order = {
     if(cookie.usertype == "superuser"){
       order.params.initials = superuser.initials;
     }
-
+    
     //prepare the parameters to fetch in certain parameters
     switch(filterMode){
 
@@ -1265,7 +1265,7 @@ var order = {
 
       case "date-range":
         parameters += order.params.startDate + " " + order.params.startHour;
-        parameters += " / " + order.params.endDate + " " + order.params.endDate;
+        parameters += " / " + order.params.endDate + " " + order.params.endHour;
       break;  
 
       case "order-id":
@@ -1274,7 +1274,8 @@ var order = {
       break;
 
     }
-    
+    console.log({filterMode, parameters});
+
     $.ajax({
       type: "POST",
       url: "./php/fetchOrders.php",
@@ -1287,6 +1288,10 @@ var order = {
           status: order.params.status
       },
       success: function (data) {
+        
+        //clean child elements
+        $("#appendOrdersFromParams").empty();
+
         let obj = JSON.parse(data);
 
         let genRow = () => {
@@ -1298,6 +1303,10 @@ var order = {
         let c = 3;
         let l = obj.length;
         let row = genRow();
+
+        //set the index of the fetch to the fetch array length
+        //so it can be used when scrolling and fetching info
+        order.startIndexFetch = l;
         
         for(let i = 0; i < l; i++){
 
@@ -1384,11 +1393,83 @@ var order = {
     
     //set the data attributes which will store the values to 'SEE MORE DETAILS'
     buttonBack.addEventListener("click", (e) => {
+      //functions to create HTML for info display
 
-      if($("div[class=modalCustom").hasClass("hide") == false){
-        $("div[class=modalCustom]").toggleClass("hide");
-      }
+      const genElementDiv = (elementQuantityStr, elementPriceStr) => {
+       
+        let arr1 = elementQuantityStr.split("="); //get quantity
+        let arr2 = elementPriceStr.split("="); //get service
+        let arr3 = arr1[0].split("-"); //get element name and service
+
+        const ELEMENT = arr3[0];
+        const SERVICE = arr3[1];
+        const ELEMENTQUANTITY = arr1[1];
+        const ELEMENTPRICE = arr2[1];
+
+        let div = document.createElement("DIV");
+        div.setAttribute("element", ELEMENT);
+        div.setAttribute("class", "smallSeparationOnXs");
+        //div.data("element", ELEMENT);
+
+        let elementNameString = "- &nbsp; " + elementsString[ELEMENT] + "|" + serviceOfferString[SERVICE] + " $" + ELEMENTPRICE + " =";
+
+
+        div.append(genSpan(elementNameString, "bold"));
+        div.append(genSpan(ELEMENTQUANTITY, "floatRight"));
+
+        return div;
+      };
+
+      const genSpan = (text, className) => {
+        let x = document.createElement("SPAN");
+        if(className !== undefined){
+          x.setAttribute("class", className);
+        }
+        x.innerHTML = text;
+        return x;
+      };
       
+      if($("div[name='modalCustom']").hasClass("hide") == true){
+        $("div[name='modalCustom']").toggleClass("hide");
+      }
+
+      //order id
+      $("span[name=spnReceiptId]").text(obj.id); 
+
+      //order status
+      $("div[name=divReceiptStatus]").css("color", colorStatus[obj.status]);
+      $("span[name=spnStatusTag]").text("Estado:");
+      $("span[name=spnStatusData]").text(strES[obj.status]);
+
+      //client name
+      $("span[name=spnReceiptClientNameTag]").text("Cliente:");
+      $("span[name=spnReceiptClientNameData]").text(obj.customername);
+
+      //order date receive
+      $("span[name=spnReceiptDateReceiveTag]").text("Día Recibido:");
+      $("span[name=spnReceiptDateReceiveData]").text(obj.dateReceived);
+
+      //order date assign
+      $("span[name=spnReceiptDateAssignTag]").text("Día Asignado:");
+      $("span[name=spnReceiptDateAssignData]").text(obj.dateAssigned);
+
+      //order elements 
+
+      //clean the div which it appends to
+      $("div[name=appendReceiptOrderElements]").empty();
+
+      let priceArr = obj.elementsPrice.split(",");
+      obj.elementsQuantity.split(",").map((currentVal, index) =>{
+        $("div[name=appendReceiptOrderElements]").append(genElementDiv(currentVal, priceArr[index]));
+      }); 
+
+      //order hook quantity
+      $("span[name=spnReceiptHookQuantityTag]").text("Cantidad de Ganchos/Perchas");
+      $("span[name=spnReceiptHookQuantityData]").text(obj.hookQuantity);
+
+      //order price
+      $("span[name=spnReceiptPriceTag]").text("Precio:");
+      $("span[name=spnReceiptPriceData]").text("$" + obj.totalprice);
       
     });
 
@@ -1595,7 +1676,7 @@ $(document).ready(function () {
                     formVerification("inputDateAssigned", false);
 
                     let accountData = fetchMyAccountData(cookie.userhash, cookie.usertype);
-                    accountData.then(data => {
+                    accountData.then(data => {  
 
                       superuser.initials = data.initials;
                       console.log(data);
@@ -1636,15 +1717,22 @@ $(document).ready(function () {
 
               case "/Tallao/myorders.html":
               case "myorders.html":
+                  
+                fetchMyAccountData(cookie.userhash, cookie.usertype)
+                .then((data) => {
+                  superuser.initials = data.initials;
 
                   //since it is the first time opening the site, to prevent
                   //twice fetching, it will only trigger the startDateParamInput (first default select field)
-                  time.processFetchedDateTime()
-                  .then(() => {
+                  return time.processFetchedDateTime();
+                }).then(() => {
                     $("#startDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
+                    $("#endDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
                     $("#startDateParamInput").change();
-                  })
-                  .catch((err) => console.error(err));
+                })
+                .catch(err => console.error(err));
+
+               
            
               break;
           }   
@@ -2332,7 +2420,6 @@ $(document).ready(function () {
         };
 
         //clean the text input
-        $("#txtParamInput").val("");
 
         switch(valSel){
 
@@ -2360,6 +2447,10 @@ $(document).ready(function () {
             $("label[for="+ inputHTMLTags.startHourInput + "]").text("Hora:");
             $("label[for="+ inputHTMLTags.endDateInput + "]").text("Fecha final:");
             $("label[for="+ inputHTMLTags.endHourInput + "]").text("Hora:");
+
+            //since startDate and startHour will always have a value, we need to post the value of endDate to the order obj
+            order.params.endDate = $("#endDateParamInput").val();
+            order.params.endHour = $("#endHourParamInput").val();
            
           break;
 
@@ -2392,8 +2483,8 @@ $(document).ready(function () {
       $("#selectInputStatus").ready(function(e){
 
        //assign value when start 
-       order.params.status = this.value;
-     
+       order.params.status = $("#selectInputStatus").val();
+      
 
       });
 
@@ -2412,6 +2503,8 @@ $(document).ready(function () {
         }
       
       });
+      
+      //when changing the date, it also needs to change the hour value prop
 
       $("#startDateParamInput").change(function(e){
         
@@ -2419,19 +2512,21 @@ $(document).ready(function () {
         //a undefined value or nothing in the date input
         $("#startDateParamInput").data("prev", this.value);
         order.params.startDate  = this.value;
-
+        order.params.startHour = $("#startHourParamInput").val();
         $("#selectMetricFunnel").change();
        
       });
 
       $("#startHourParamInput").ready(function(e){
         //initialize the value to get the start of the day
+
         if(this.value == undefined){
           $("#startHourParamInput").val("00:00");
-          order.params.startHour = this.value;
+          order.params.startHour = $("#startHourParamInput").val();
         }
       });
 
+   
       $("#startHourParamInput").change(function(e){
         
         order.params.startHour = this.value;
@@ -2439,11 +2534,25 @@ $(document).ready(function () {
         $("#selectMetricFunnel").change();
       });
 
+      
+
       $("#endDateParamInput").change(function(e){
         order.params.endDate = this.value;
         
         $("#selectMetricFunnel").change();
       });
+
+      $("#endHourParamInput").ready(function(e){
+        //initialize the value to get the start of the day
+
+        if(this.value == undefined){
+          $("#endHourParamInput").val("00:00");
+          order.params.startHour = $("#endHourParamInput").val();
+        }
+      });
+
+
+     
 
       $("#endHourParamInput").change(function(e){
         order.params.endHour = this.value;
@@ -2459,32 +2568,34 @@ $(document).ready(function () {
 
       $("#txtParamInput").on("input",function(e){
 
-        let mode = $("#txtParamInput").data("mode");
+        /* let mode = $("#txtParamInput").data("mode");
 
         if(mode == "order-id"){
           this.value = this.value.toUpperCase();
-        }
+        } */
+        this.value = this.value.toUpperCase();
       });
 
       //modal events
 
       $("span[class=close]").click(function(e){
         
-        if($("div[class=modalCustom").hasClass("hide") == true){
-          $("div[class=modalCustom]").toggleClass("hide");
+        if($("div[name='modalCustom']").hasClass("hide") == false){
+          $("div[name='modalCustom']").toggleClass("hide");
         }
 
         
 
       });
 
-      $(window).click(function(e){
-
-        if($("div[class=modalCustom").hasClass("hide") == true){
-          $("div[class=modalCustom]").toggleClass("hide");
+      $("div[name=modalCustom]").click(function(e){ //when clicks the background
+        if($("div[name='modalCustom']").hasClass("hide") == false){
+          $("div[name='modalCustom']").toggleClass("hide");
         }
 
       });
+
+      
 
 
 });

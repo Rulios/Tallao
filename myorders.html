@@ -108,7 +108,7 @@
 
                             <label for="selectInputStatus" >Estado:</label>
 
-                            <select name="" id="selectInputStatus">
+                            <select  id="selectInputStatus">
                                 <option value="status-all">Todos los estados</option>
                                 <option value="status-wait">En espera</option>
                                 <option value="status-ironing">Planchando</option>
@@ -216,7 +216,7 @@
             </div>    
 
                 <!-- The Modal -->
-            <div id="orderDetailsModal" class="modalCustom hide">
+            <div id="orderDetailsModal" name="modalCustom" class="modalCustom hide">
 
                 <!-- Modal content -->
                 <div class="modal-contentCustom ">
@@ -231,7 +231,11 @@
 
                         <div class="col-lg-6 rightBorderModal">
 
-                            <div name="divReceiptStatus" class="bold">Estado: Esperando</div>
+                            <div name="divReceiptStatus" class="bold">
+                                <span name="spnStatusTag">Estado:</span>
+                                <span name="spnStatusData">Esperando</span>
+                            </div>
+                            
                             <div name="divReceiptClientName">
                                 <span class="bold" name="spnReceiptClientNameTag">Cliente:</span>
                                 <span name="spnReceiptClientNameData">Robert Lu Zheng</span>
@@ -248,8 +252,9 @@
                             <!-- <div name="spnReceiptClientID">GUQ13</div> -->
                             <div name="appendReceiptOrderElements" class="smallSeparation">
 
-                                <div class="bold">Elementos:</div>
-                                <div element="shirt-iron">
+                                <div class="bold" name="divElementsTag">Elementos:</div>
+
+                                <!-- <div element="shirt-iron">
                                     <span class="bold">- &ensp; Camisa/Planchado $0.65 = </span>
                                     <span class="floatRight">15</span>
                                 </div>
@@ -257,11 +262,11 @@
                                 <div element="shirt-iron">
                                     <span class="bold">- &ensp; Pantalón/Planchado $0.65 = </span>
                                     <span class="floatRight">15</span>
-                                </div>
+                                </div>  -->
 
                             </div>
 
-                            <div name="divReceiptHookQuantity" class="smallSeparation">
+                            <div name="divReceiptHookQuantity" class="smallSeparation smallSeparationOnXs">
                                 <span class="bold" name="spnReceiptHookQuantityTag">Cantidad de Ganchos/Perchas:</span>
                                 <span class="floatRight" name="spnReceiptHookQuantityData">15</span>
                             </div>

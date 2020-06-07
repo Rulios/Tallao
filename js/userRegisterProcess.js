@@ -319,8 +319,16 @@ $(document).ready(function () {
       break;
     }
 
+    
+
   });
 
+  $("#inputPassword").change(function(e){
+
+    //trigger the rePass change to recheck same password
+    $("#inputRePassword").change();
+
+  });
 
 
   $("#inputRePassword").change(function(e){

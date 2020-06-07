@@ -631,7 +631,7 @@ input[type='checkbox']{
 
 /* The Modal (background) */
 .modalCustom {
-    /* display: none; */ /* Hidden by default */
+    
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -721,7 +721,9 @@ input[type='checkbox']{
     .separationOnXs{
         margin-bottom: 1em;
     }
-
+    .smallSeparationOnXs{
+        margin-top: 0.5em;
+    }
     .paddingForm{
         max-width: 80%;
     }
