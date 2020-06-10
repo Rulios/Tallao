@@ -1126,12 +1126,13 @@ var time = {
   date: "",
   hour12: "",
   hour24: "",
+  minutes: "",
   timeCycle: "",
-  day:"",
+  day: "",
   month:"",
-  year: 0,
+  year: "",
 
-  fetchDateTimeServer: function(){
+  fetchDateTimeServerPHP: function(){
     return $.ajax({
       type: "POST",
       url: "./php/fetchDateTimeServer.php",
@@ -1139,9 +1140,9 @@ var time = {
     });
   },
 
-  processFetchedDateTime: function(){
+  processFetchedDateTimePHP: function(){
 
-    let fetchDateTime = this.fetchDateTimeServer();
+    let fetchDateTime = this.fetchDateTimeServerPHP();
     fetchDateTime.then((data) =>{
     
       let result = JSON.parse(data);
@@ -1163,6 +1164,64 @@ var time = {
 
     return fetchDateTime;
 
+  },
+
+  getLocalMachineTime: function(){
+
+    const addStringZero = (string) =>{ //To comply with the format
+
+      return (string.length === 1) ? string = "0" + string : string;
+
+    };
+
+    const isLastDayOfMonth = (dt) =>{
+
+      let test = new Date(dt.getTime());
+      test.setDate(test.getDate() + 1);
+      return test.getDate() === 1;
+
+    };
+
+
+    let x = new Date();
+    let refHour = 0;
+
+    time.year = x.getFullYear();
+
+    time.minutes = x.getMinutes().toString();
+
+
+    /* Panama never experiences DST changes, so it remains EST all year.
+    This project is initially written to the scope of Panama, so since 
+    the getHours() gets the hour with DST, it will be substracting by one.  
+    
+    Also it will correct the day and month*/
+    time.hour24 = x.getHours();
+    time.hour24 = (time.hour24 === 0) ? 24 - 1 : time.hour24 -= 1;
+    time.hour24 = time.hour24.toString();
+    time.hour24 = addStringZero(time.hour24);
+
+    time.day = x.getDate();
+    time.day = (x.getHours() === 0) ? time.day -= 1 : time.day;
+    time.day = time.day.toString();
+    time.day = addStringZero(time.day);
+
+    time.month = (x.getMonth() + 1); //sum one since it's 0-11
+    //If it's the first day of the month, and the hour (DST) is 0 (means that it's recently a new day)
+    //it will decrease by one month. Since the Panama time (without DST), haven't reached yet
+    //to the new month.
+    time.month = (x.getDate() === 1 && x.getHours() === 0) ? time.month -= 1 : time.month;
+    time.month = time.month.toString();
+    time.month = addStringZero(time.month);
+
+    time.timeCycle = (time.hour24 > 12) ? "PM" : "AM";
+
+    time.hour12 = ((parseInt(time.hour24) + 24) % 12 || 12).toString();
+    time.hour12 = addStringZero(time.hour12);
+
+    time.date = `${time.day}/${time.month}/${time.year}`;
+
+    //console.log(`${time.date} ${time.hour24}:${time.minutes}`);
   },
 
   limitMinMaxInputs: function(){
@@ -1201,7 +1260,7 @@ var time = {
     if (modifier === 'PM') {
       hours = parseInt(hours, 10) + 12;
     }
-  
+ 
     return `${hours}:${minutes}`;
   },
 
@@ -1222,6 +1281,40 @@ var time = {
   convertDateSeparationHyphenToSlash: function(string){
 
     return string.replace(/-/g, "/");
+
+  },
+
+  calcTimeDifference: function(dateFuture, dateNow){
+
+    let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
+    console.log(dateFuture);
+    console.log(dateNow);
+    console.log(diffInMilliSeconds);
+    // calculate days
+    const days = Math.floor(diffInMilliSeconds / 86400);
+    diffInMilliSeconds -= days * 86400;
+    console.log('calculated days', days);
+
+    // calculate hours
+    const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+    diffInMilliSeconds -= hours * 3600;
+    console.log('calculated hours', hours);
+
+    // calculate minutes
+    const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+    diffInMilliSeconds -= minutes * 60;
+    console.log('minutes', minutes);
+
+    let difference = '';
+    if (days > 0) {
+      difference += (days === 1) ? `${days} day, ` : `${days} days, `;
+    }
+
+    difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
+
+    difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`; 
+
+    return difference;
 
   }
 
@@ -1453,8 +1546,27 @@ var order = {
       $("span[name=spnReceiptDateAssignTag]").text("Día Asignado:");
       $("span[name=spnReceiptDateAssignData]").text(obj.dateAssigned);
 
+      //order date time difference
+      let x = [];
+      let dateFuture = {
+        date: "",
+        hour12: "",
+        hour24: "",
+        cycle:"",
+        string: ""
+      };
+      
+      x = obj.dateAssigned.split(" ");
+      dateFuture.date = x[0];
+      dateFuture.hour12 = x[1];
+      dateFuture.cycle = dateFuture.hour12.slice(-2);
+      dateFuture.hour12 = dateFuture.hour12.slice(0,-2);
+      dateFuture.hour24 = time.convertTime12to24(`${dateFuture.hour12} ${dateFuture.cycle}`);
+      dateFuture.string = `${dateFuture.date} ${dateFuture.hour24}`;
+      
+      $("div[name=divDateDifference]").text(time.calcTimeDifference(new Date(dateFuture.string), new Date(`${time.year}/${time.month}/${time.day} ${time.hour24}:${time.minutes}`)));
+      
       //order elements 
-
       //clean the div which it appends to
       $("div[name=appendReceiptOrderElements]").empty();
 
@@ -1694,22 +1806,25 @@ $(document).ready(function () {
           
                     //start fetching date,time and cycle from server
                     //time to refresh 10 minutes = 600000ms
-                    time.processFetchedDateTime()
+                    time.getLocalMachineTime();
+                    $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
+
+                    time.limitMinMaxInputs();
+
+                    setInterval(function(){
+                      time.getLocalMachineTime();
+                      $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
+
+                      time.limitMinMaxInputs();
+                    }, 600000);
+                    
+                    /* time.processFetchedDateTimePHP()
                     .then(() => {
                       $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
                       time.limitMinMaxInputs();
                     })
-                    .catch((err) => console.error(err));
+                    .catch((err) => console.error(err)); */
 
-                    setInterval(function(){
-                      time.processFetchedDateTime()
-                      .then(() => {
-                        $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
-                        time.limitMinMaxInputs();
-                      })
-                      .catch((err) => console.error(err));
-                    }, 600000);
-      
               break;
 
               ////////////////////////////////////////////////
@@ -1718,21 +1833,34 @@ $(document).ready(function () {
               case "/Tallao/myorders.html":
               case "myorders.html":
                   
-                fetchMyAccountData(cookie.userhash, cookie.usertype)
+                /* fetchMyAccountData(cookie.userhash, cookie.usertype)
                 .then((data) => {
                   superuser.initials = data.initials;
 
                   //since it is the first time opening the site, to prevent
                   //twice fetching, it will only trigger the startDateParamInput (first default select field)
-                  return time.processFetchedDateTime();
+                  return time.processFetchedDateTimePHP();
                 }).then(() => {
                     $("#startDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
                     $("#endDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
                     $("#startDateParamInput").change();
+                    time.getLocalMachineTime();
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error(err)); */
 
-               
+                fetchMyAccountData(cookie.userhash, cookie.usertype)
+                .then(data => {
+
+                  superuser.initials = data.initials;
+                  time.getLocalMachineTime();
+                  console.log(time.date);
+                  $("#startDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
+                  $("#endDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
+                  $("#startDateParamInput").change();
+
+                }).catch(err => console.error(err));
+
+                
            
               break;
           }   
