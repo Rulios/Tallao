@@ -1287,6 +1287,13 @@ var time = {
   calcTimeDifference: function(dateFuture, dateNow){
 
     let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
+    let objDiff  = {
+      days: 0,
+      hours : 0,
+      minutes: 0,
+      timeStatus : "" //Two values, past or future.
+                      //To determine if a order date assign is on the past or on the future
+    };
     console.log(dateFuture);
     console.log(dateNow);
     console.log(diffInMilliSeconds);
@@ -1305,16 +1312,23 @@ var time = {
     diffInMilliSeconds -= minutes * 60;
     console.log('minutes', minutes);
 
-    let difference = '';
+    /* let difference = '';
     if (days > 0) {
       difference += (days === 1) ? `${days} day, ` : `${days} days, `;
     }
 
     difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
 
-    difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`; 
+    difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`;  */
 
-    return difference;
+    objDiff.timeStatus = ((dateFuture - dateNow) < 0) ? "past": "future";
+
+    objDiff.days = days;
+    objDiff.hours = hours;
+    objDiff.minutes = minutes;
+    
+
+    return objDiff;
 
   }
 
@@ -1537,6 +1551,33 @@ var order = {
       //client name
       $("span[name=spnReceiptClientNameTag]").text("Cliente:");
       $("span[name=spnReceiptClientNameData]").text(obj.customername);
+      if(obj.customername === "none"){
+        console.log("DAW")
+        let x = document.createElement("A");
+        x.setAttribute("class", "modalEditUserLink");
+        x.textContent = "Afiliar a cliente";
+
+        let input = document.createElement("INPUT");
+        input.setAttribute("type", "text");
+        input.setAttribute("maxlength", "5");
+        input.setAttribute("id", "inputClientID");
+        input.setAttribute("class", "hide");
+
+        x.addEventListener("click", (e) =>{
+
+          if($("#inputClientID").hasClass("hide") === true)  {
+            $("#inputClientID").toggleClass("hide");
+            $("#inputClientID").focus();
+            $(x).toggleClass("hide");
+            
+          }
+
+
+        });
+        $("span[name=spnReceiptClientNameData]").append(x);
+        $("span[name=spnReceiptClientNameData]").append(input);
+      }
+      
 
       //order date receive
       $("span[name=spnReceiptDateReceiveTag]").text("Día Recibido:");
@@ -1555,6 +1596,7 @@ var order = {
         cycle:"",
         string: ""
       };
+      let dateNow = `${time.year}/${time.month}/${time.day} ${time.hour24}:${time.minutes}`;
       
       x = obj.dateAssigned.split(" ");
       dateFuture.date = x[0];
@@ -1564,8 +1606,25 @@ var order = {
       dateFuture.hour24 = time.convertTime12to24(`${dateFuture.hour12} ${dateFuture.cycle}`);
       dateFuture.string = `${dateFuture.date} ${dateFuture.hour24}`;
       
-      $("div[name=divDateDifference]").text(time.calcTimeDifference(new Date(dateFuture.string), new Date(`${time.year}/${time.month}/${time.day} ${time.hour24}:${time.minutes}`)));
+      //$("div[name=divDateDifference]").text(time.calcTimeDifference(new Date(dateFuture.string), new Date(`${time.year}/${time.month}/${time.day} ${time.hour24}:${time.minutes}`)));
       
+      //console.log(time.calcTimeDifference(new Date(dateFuture.string), new Date (dateNow)));
+      let objTimeDiff = time.calcTimeDifference(new Date(dateFuture.string), new Date(dateNow));
+
+      if(objTimeDiff.timeStatus === "future"){
+
+        $("div[name=divDateDifference]").text(`Faltan ${objTimeDiff.days} días, ${objTimeDiff.hours} horas y ${objTimeDiff.minutes} minutos`);
+        $("div[name=divDateDifference]").css("color", "#D18604");
+
+      }else if(objTimeDiff.timeStatus === "past"){
+
+        $("div[name=divDateDifference]").text(`Incompleto por ${objTimeDiff.days} días, ${objTimeDiff.hours} horas y ${objTimeDiff.minutes} minutos`);
+        $("div[name=divDateDifference]").css("color", "#E64444");
+
+      }
+      
+
+
       //order elements 
       //clean the div which it appends to
       $("div[name=appendReceiptOrderElements]").empty();
@@ -2717,14 +2776,15 @@ $(document).ready(function () {
       });
 
       $("div[name=modalCustom]").click(function(e){ //when clicks the background
-        if($("div[name='modalCustom']").hasClass("hide") == false){
-          $("div[name='modalCustom']").toggleClass("hide");
+        
+        if(e.target === this){
+          if($("div[name='modalCustom']").hasClass("hide") == false){
+            $("div[name='modalCustom']").toggleClass("hide");
+          }
         }
 
       });
-
-      
-
+    
 
 });
 

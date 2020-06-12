@@ -689,6 +689,12 @@ input[type='checkbox']{
       box-shadow: 0 0 20px rgba(33,33,33,.2); 
   }
 
+  .modalEditUserLink{
+    color: #4BA3EB !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+  }
+
 @media only screen and (max-width: 768px){
 
     .hideOnXs{
