@@ -303,7 +303,7 @@ var receiptDetails = {
     let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
 
     let clientID = $("#inputClientID").val();
-    let clientName = $("#spnClientFullName").text();
+    let clientName = $("span[name=spnReceiptClientNameData]").text();
     let strIndications = $("#inputIndications").text();
 
 
@@ -1410,10 +1410,13 @@ var order = {
         let c = 3;
         let l = obj.length;
         let row = genRow();
+        let appendString = document.createDocumentFragment(); //string to append outside of loop
 
         //set the index of the fetch to the fetch array length
         //so it can be used when scrolling and fetching info
         order.startIndexFetch = l;
+
+        
         
         for(let i = 0; i < l; i++){
 
@@ -1429,16 +1432,18 @@ var order = {
 
           if(c ===  3){ //add a row
             row = genRow(); //generates a new row
-            $("#appendOrdersFromParams").append(row);
+            //$("#appendOrdersFromParams").append(row);
+            appendString.append(row);
             c = 0;
           }
+          //row.append(order.generateOrderBox(obj[i]));
+          //appendString += order.generateOrderBox(obj[i]);
           row.append(order.generateOrderBox(obj[i]));
-          
           c += 1;
-          
         }
         console.log(obj);
         //$("#xa").text("Hola:");
+        $("#appendOrdersFromParams").append(appendString); //append outside loop
         
       },
       error: function(jqXHR, status, error){
@@ -1570,12 +1575,12 @@ var order = {
             $("#inputClientID").focus();
             $(x).toggleClass("hide");
             
-          }
+          } 
 
 
         });
         $("span[name=spnReceiptClientNameData]").append(x);
-        $("span[name=spnReceiptClientNameData]").append(input);
+        $("span[name=inputClientID]").append(input);
       }
       
 
@@ -2251,19 +2256,19 @@ $(document).ready(function () {
         
       });
 
-
-      $("#inputClientID").on("input", function(e){
-
-        this.value = this.value.toUpperCase();
-
+      //Delegate event to appended #inputClientID
+      $("span[name=inputClientID]").on("input", $("#inputClientID"), function(){
+        
+        $("#inputClientID").val($("#inputClientID").val().toUpperCase());
+ 
       });
-      
-      $("#inputClientID").change(function(e){
+
+      $("span[name=inputClientID]").on("change", $("#inputClientID"),function(e){
 
         $.ajax({
           type: "POST",
           url: "./php/searchUserID.php",
-          data: {inputUserID: this.value},
+          data: {inputUserID: $("#inputClientID").val()},
           
           success: function (data) {
             
@@ -2271,18 +2276,18 @@ $(document).ready(function () {
             
             if(data == null){
               
-              if($("#spnClientFullName").hasClass("redTxt") == false){
-                $("#spnClientFullName").toggleClass("redTxt");
+              if($("span[name=spnReceiptClientNameData]").hasClass("redTxt") == false){
+                $("span[name=spnReceiptClientNameData]").toggleClass("redTxt");
               }
 
-              $("#spnClientFullName").text("No se encuentra el cliente");
+              $("span[name=spnReceiptClientNameData]").text("No se encuentra el cliente");
             }else{
 
-              if($("#spnClientFullName").hasClass("redTxt") == true){
-                $("#spnClientFullName").toggleClass("redTxt");
+              if($("span[name=spnReceiptClientNameData]").hasClass("redTxt") == true){
+                $("span[name=spnReceiptClientNameData]").toggleClass("redTxt");
               }
 
-              $("#spnClientFullName").text(data.name + " " + data.lastname);
+              $("span[name=spnReceiptClientNameData]").text(data.name + " " + data.lastname);
 
             }
           },
@@ -2771,6 +2776,12 @@ $(document).ready(function () {
           $("div[name='modalCustom']").toggleClass("hide");
         }
 
+        //hide input, minor details
+        if($("#inputClientID").hasClass("hide") == false){
+          $("#inputClientID").toggleClass("hide");
+          $("#inputClientID").val("");
+        }
+
         
 
       });
@@ -2780,6 +2791,12 @@ $(document).ready(function () {
         if(e.target === this){
           if($("div[name='modalCustom']").hasClass("hide") == false){
             $("div[name='modalCustom']").toggleClass("hide");
+          }
+
+          //hide input, minor details
+          if($("#inputClientID").hasClass("hide") == false){
+            $("#inputClientID").toggleClass("hide");
+            $("#inputClientID").val("");
           }
         }
 

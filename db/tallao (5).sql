@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2020 a las 08:15:04
+-- Tiempo de generación: 13-06-2020 a las 06:14:46
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -88,7 +88,10 @@ INSERT INTO `orders` (`laundryInitials`, `customerid`, `customername`, `id`, `st
 ('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-50', 'status-wait', 'shirt-iron=1', 'shirt-iron=0.65', 1, '2020-05-31 00:00:00', '2020-06-04 01:43:00', '0.65', ''),
 ('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-51', 'status-wait', 'pants-iron=1,shirt-iron=1', 'pants-iron=0.65,shirt-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:47:00', '1.3', ' Buenos díaas!'),
 ('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-52', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:49:00', '1.3', ''),
-('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-53', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:50:00', '1.3', '');
+('VICNT', 'GUQ13', 'Robert  Lu Zheng ', 'B-53', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-31 00:00:00', '2020-06-04 01:50:00', '1.3', ''),
+('VICNT', 'none', 'none', 'B-54', 'status-wait', 'pants-iron=1,shirt-iron=1,coat-iron=1,skirt-iron=1', 'pants-iron=0.65,shirt-iron=0.65,coat-iron=1.3,skirt-iron=0.65', 4, '2020-06-10 00:00:00', '2020-06-12 13:49:00', '3.25', ''),
+('VICNT', 'none', 'none', 'B-55', 'status-wait', 'coat-iron=1,sweater-iron=1', 'coat-iron=1.3,sweater-iron=0.65', 2, '2020-06-11 21:00:00', '2020-06-13 22:31:00', '1.95', ''),
+('VICNT', 'none', 'none', 'B-56', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-06-12 22:00:00', '2020-06-13 23:48:00', '1.3', ' Buenos díaas!');
 
 -- --------------------------------------------------------
 
@@ -142,7 +145,7 @@ CREATE TABLE `superusers` (
 --
 
 INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`, `lastreceiptid`) VALUES
-('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$6B2W38vJ5y5hFN75BSBEsuZMyWdhaCx/9eQAcrxM//abvAR6KTUxO', 'B-53'),
+('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$6B2W38vJ5y5hFN75BSBEsuZMyWdhaCx/9eQAcrxM//abvAR6KTUxO', 'B-56'),
 ('VICAT', 'XyLc6PHXgAREDy9FZtQ7', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', '', 'Robert ', 'Lu Zheng ', 'robert_lu20@hotmail.com', '$2y$12$duBXbwmPwP87cWTQpjAXDeA3ioqmjSS9vshKoIlJYN4ghwNuhHx.i', '');
 
 -- --------------------------------------------------------
