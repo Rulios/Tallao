@@ -59,7 +59,7 @@ mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
             if($data["id"] == ""){ //doesn't exists the id
                 //INSERT statement
 
-                $sql = "INSERT INTO custommessages (laundryinitials, id, colortag, tag, message, status) VALUES ('$inputInitials','$x','$colorTag', '$tagName','$msgText', '$status')";
+                $sql = "INSERT INTO custommessages (laundryInitials, id, colortag, tag, message, status) VALUES ('$inputInitials','$x','$colorTag', '$tagName','$msgText', '$status')";
 
                 if(mysqli_query($conn,$sql)){
                     echo "Insertado";

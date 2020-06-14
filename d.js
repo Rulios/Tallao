@@ -42,14 +42,14 @@ if((typeof document.cookie == undefined) || (document.cookie == "")){
               fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
                 
                 let initials = dataCallback.initials;
-                let laundryname = dataCallback.laundryname;
+                let laundryName = dataCallback.laundryName;
                 let location = dataCallback.location;
                 let name = dataCallback.legalreprName;
                 let lastname = dataCallback.legalreprLastname;
                 let email = dataCallback.email;
 
                 
-                tagShowLaundryName(laundryname);
+                tagShowLaundryName(laundryName);
                 tagShowInitials(initials);
                 tagShowLocation(location);
                 tagShowLegalReprName(name);
@@ -90,7 +90,7 @@ if((typeof document.cookie == undefined) || (document.cookie == "")){
               fetchServiceOffer(function(dataCallback){
                 
 
-                serviceOffer = dataCallback.serviceoffer.trim().split(",");
+                serviceOffer = dataCallback.serviceOffer.trim().split(",");
                 
                 for(let i = 0; i < serviceOffer.length; i++){
 
@@ -167,7 +167,7 @@ if((typeof document.cookie == undefined) || (document.cookie == "")){
               fetchMyAccountData(cookie.userhash, cookie.usertype, function(dataCallback){
     
                 let initials = dataCallback.initials;
-                let laundryName = dataCallback.laundryname;
+                let laundryName = dataCallback.laundryName;
                 console.log(laundryName);
                 tagShowLaundryName(laundryName);
                 superuser.initials = initials;
@@ -195,7 +195,7 @@ if((typeof document.cookie == undefined) || (document.cookie == "")){
     
               fetchServiceOffer(function(dataCallback){
                   
-                serviceOffer = dataCallback.serviceoffer.trim().split(",");
+                serviceOffer = dataCallback.serviceOffer.trim().split(",");
                 
                 for(let i = 0; i < serviceOffer.length; i++){
     

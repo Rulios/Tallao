@@ -21,7 +21,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT serviceoffer FROM superusers WHERE hashcode= '$inputUserHash'";
+$sql = "SELECT serviceOffer FROM superusers WHERE hashcode= '$inputUserHash'";
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 $result = mysqli_query($conn, $sql);
@@ -35,8 +35,8 @@ $data = [];
 $data = mysqli_fetch_array($result);
 
 
-if($data["serviceoffer"] == ""){
-    $data["serviceoffer"] = "null";
+if($data["serviceOffer"] == ""){
+    $data["serviceOffer"] = "null";
     
 }
 

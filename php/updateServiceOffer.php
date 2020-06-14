@@ -15,7 +15,7 @@ $inputServiceOffer = "wash-iron,wash,dry-clean"; */
 
 if(isset($inputServiceOffer, $userHashCode)){
     $userHashCode = $_POST['inputUserHash'];
-    $inputServiceOffer = $_POST['serviceoffer'];
+    $inputServiceOffer = $_POST['serviceOffer'];
     
 }
 
@@ -30,7 +30,7 @@ echo "Connected successfully";
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 
-$sql = "UPDATE superusers SET serviceoffer='$inputServiceOffer' WHERE hashcode='$userHashCode'";
+$sql = "UPDATE superusers SET serviceOffer='$inputServiceOffer' WHERE hashcode='$userHashCode'";
 
 
 if(mysqli_query($conn,$sql)){

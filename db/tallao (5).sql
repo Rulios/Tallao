@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2020 a las 06:14:46
+-- Tiempo de generación: 14-06-2020 a las 06:41:53
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `custommessages` (
-  `laundryinitials` text NOT NULL,
+  `laundryInitials` text NOT NULL,
   `id` text NOT NULL COMMENT 'id of the message',
   `colortag` text NOT NULL COMMENT 'Specifies the background color of the tag',
   `tag` text NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `custommessages` (
 -- Volcado de datos para la tabla `custommessages`
 --
 
-INSERT INTO `custommessages` (`laundryinitials`, `id`, `colortag`, `tag`, `message`, `status`) VALUES
+INSERT INTO `custommessages` (`laundryInitials`, `id`, `colortag`, `tag`, `message`, `status`) VALUES
 ('VICNT', 'VICNT1', '#DCA2E8', 'Buenos día123', 'Buenos díaas!', ''),
 ('VICAT', 'VICAT1', 'white', 'Sin pliegue / 不折', 'Sin pliegue', 'blocked');
 
@@ -53,15 +53,15 @@ INSERT INTO `custommessages` (`laundryinitials`, `id`, `colortag`, `tag`, `messa
 
 CREATE TABLE `orders` (
   `laundryInitials` text NOT NULL,
-  `customerid` text NOT NULL,
-  `customername` text NOT NULL,
+  `customerID` text NOT NULL,
+  `customerName` text NOT NULL,
   `id` text NOT NULL,
   `status` text NOT NULL COMMENT 'Show the state of the order',
   `elementsQuantity` text NOT NULL,
   `elementsPrice` text NOT NULL,
   `hookQuantity` int(11) NOT NULL,
-  `dateReceived` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
-  `dateAssigned` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
+  `dateReceive` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
+  `dateAssign` datetime NOT NULL COMMENT 'Format: Y-M-D 24h',
   `totalprice` text NOT NULL,
   `indications` text NOT NULL COMMENT 'Text in which the user specifies some specific order to be done.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the orders data';
@@ -70,7 +70,7 @@ CREATE TABLE `orders` (
 -- Volcado de datos para la tabla `orders`
 --
 
-INSERT INTO `orders` (`laundryInitials`, `customerid`, `customername`, `id`, `status`, `elementsQuantity`, `elementsPrice`, `hookQuantity`, `dateReceived`, `dateAssigned`, `totalprice`, `indications`) VALUES
+INSERT INTO `orders` (`laundryInitials`, `customerID`, `customerName`, `id`, `status`, `elementsQuantity`, `elementsPrice`, `hookQuantity`, `dateReceive`, `dateAssign`, `totalprice`, `indications`) VALUES
 ('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-36', 'status-wait', 'shirt-iron=1,pants-iron=1', 'shirt-iron=0.65,pants-iron=0.65', 2, '2020-05-13 00:00:00', '2020-05-16 00:01:00', '1.3', ' FLASH'),
 ('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-37', 'status-wait', 'shirt-iron=1,overall-iron=1', 'shirt-iron=0.65,overall-iron=1.3', 2, '2020-05-21 22:00:00', '2020-05-23 22:24:00', '1.95', ' Buenos díaas!'),
 ('VICNT', 'GUQ13', 'Robert Lu Zheng', 'B-38', 'status-wait', 'pants-iron=1,custom1-iron*Colcha*Pantalón con pliegue=1', 'pants-iron=0.65,custom1-iron*Colcha*Pantalón con pliegue=1.5', 2, '2020-05-21 22:00:00', '2020-05-29 14:23:00', '2.15', ''),
@@ -129,22 +129,22 @@ INSERT INTO `pricechart` (`hashcode`, `iron`, `wash`, `washiron`, `dryclean`, `h
 CREATE TABLE `superusers` (
   `initials` text NOT NULL,
   `hashcode` text NOT NULL,
-  `laundryname` text NOT NULL,
+  `laundryName` text NOT NULL,
   `location` text NOT NULL,
   `schedule` text NOT NULL,
-  `serviceoffer` text NOT NULL,
+  `serviceOffer` text NOT NULL,
   `legalreprName` text NOT NULL,
   `legalreprLastname` text NOT NULL,
   `email` text NOT NULL,
   `password` text NOT NULL,
-  `lastreceiptid` text NOT NULL COMMENT 'Shows the last receipt id in which will be the point reference to the next receipt id'
+  `lastReceiptID` text NOT NULL COMMENT 'Shows the last receipt id in which will be the point reference to the next receipt id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `superusers`
 --
 
-INSERT INTO `superusers` (`initials`, `hashcode`, `laundryname`, `location`, `schedule`, `serviceoffer`, `legalreprName`, `legalreprLastname`, `email`, `password`, `lastreceiptid`) VALUES
+INSERT INTO `superusers` (`initials`, `hashcode`, `laundryName`, `location`, `schedule`, `serviceOffer`, `legalreprName`, `legalreprLastname`, `email`, `password`, `lastReceiptID`) VALUES
 ('VICNT', '8XMqSGzajxRRQiyLZj8m', 'Lavandería Vicente', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', 'monday/8:00*AM-8:30*PM,tuesday/8:00*AM-8:30*PM,wednesday/8:00*AM-8:30*PM,thursday/8:00*AM-8:30*PM,friday/8:00*AM-3:00*PM,saturday/8:00*AM-8:30*PM,sunday/8:00*AM-8:30*PM', 'iron,washiron,wash,dryclean', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$6B2W38vJ5y5hFN75BSBEsuZMyWdhaCx/9eQAcrxM//abvAR6KTUxO', 'B-56'),
 ('VICAT', 'XyLc6PHXgAREDy9FZtQ7', 'Lavandería Vicente #2', 'Panamá, Panamá, Juan Díaz, Entrada de Villa Catalina, Edifico Santiago', '', '', 'Robert ', 'Lu Zheng ', 'robert_lu20@hotmail.com', '$2y$12$duBXbwmPwP87cWTQpjAXDeA3ioqmjSS9vshKoIlJYN4ghwNuhHx.i', '');
 
@@ -216,14 +216,14 @@ CREATE TABLE `users` (
   `email` text NOT NULL,
   `password` text NOT NULL,
   `orders` text NOT NULL COMMENT 'These are the receipts id that the user is affiliated to',
-  `accountverified` text NOT NULL COMMENT 'Check that the user has verified the email.'
+  `accountVerified` text NOT NULL COMMENT 'Check that the user has verified the email.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='MAIN';
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`, `accountverified`) VALUES
+INSERT INTO `users` (`id`, `hashcode`, `name`, `lastname`, `email`, `password`, `orders`, `accountVerified`) VALUES
 ('GUQ13', 'QTEBQqu9zz5G9e8Ir9DC', 'Robert ', 'Lu Zheng ', 'wardinpro123@gmail.com', '$2y$12$v61fhL2sZcS5JU4ZOROaAud1tMDJJQZGUPH.MZCIAVIP1QiTtCWuC', 'B-12,B-13,B-14,B-15,B-16,B-17,B-50,B-51,B-52,B-53', '');
 
 --

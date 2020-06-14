@@ -14,7 +14,7 @@ $db = "tallao";
 //set the constant of the limit
 const limit = 10000;
 
-if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceived'], $_POST['dateAssigned'], $_POST['totalPrice'], $_POST['indications'])){
+if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePrice'], $_POST['hookQuantity'], $_POST['dateReceive'], $_POST['dateAssign'], $_POST['totalPrice'], $_POST['indications'])){
     
     $initials = $_POST['initials'];
     $clientID = $_POST['clientID'];
@@ -22,8 +22,8 @@ if(isset($_POST['initials'],$_POST['clientID'],$_POST['eQuantity'], $_POST['ePri
     $elementQuantityString = $_POST['eQuantity'];
     $elementPriceString = $_POST['ePrice'];
     $hookQuantity = $_POST['hookQuantity'];
-    $dateReceived = $_POST['dateReceived'];
-    $dateAssigned = $_POST['dateAssigned'];
+    $dateReceive = $_POST['dateReceive'];
+    $dateAssign = $_POST['dateAssign'];
     $totalPrice = $_POST['totalPrice'];
     $indications = $_POST['indications'];
 }else{
@@ -36,8 +36,8 @@ $clientName = "Robert Lu Zheng";
 $elementQuantityString = "shirt-iron=1,pants-iron=1";
 $elementPriceString = "shirt-iron=1,pants-iron=0.65";
 $hookQuantity = "2";
-$dateReceived = "2020-04-30 23:00";
-$dateAssigned = "2020-05-01 23:32";
+$dateReceive = "2020-04-30 23:00";
+$dateAssign = "2020-05-01 23:32";
 $totalPrice = "1.65"; */
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
@@ -58,14 +58,14 @@ mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 //Format A-1541
 
-$sql = "SELECT lastreceiptid FROM superusers WHERE initials = '$initials'";
+$sql = "SELECT lastReceiptID FROM superusers WHERE initials = '$initials'";
 
 if(mysqli_query($conn,$sql)){
     $result = mysqli_query($conn,$sql);
     $data = [];
     $data = mysqli_fetch_array($result);
 
-    $lastId = trim($data["lastreceiptid"]); //remove whitespaces
+    $lastId = trim($data["lastReceiptID"]); //remove whitespaces
     $arr = [];
     $arr = explode("-", $lastId);//[0] = character, [1] number
 
@@ -86,12 +86,12 @@ if(mysqli_query($conn,$sql)){
     $lastRID = $nextChar. "-" . $nextNumber;
 
     //update this receipt id as the last receipt id to be the reference
-    $sql = "UPDATE superusers SET lastreceiptid = '$lastRID' WHERE initials = '$initials'";
+    $sql = "UPDATE superusers SET lastReceiptID = '$lastRID' WHERE initials = '$initials'";
     
     if(mysqli_query($conn,$sql)){
         //continue to the receipt insertion at the database
-        $sql = "INSERT INTO orders (laundryinitials, customerid, customername, id, status, elementsQuantity, elementsPrice, hookQuantity, dateReceived, dateAssigned, totalPrice, indications)
-        VALUES ('$initials','$clientID','$clientName', '$lastRID','$FIRST_STATUS', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceived', '$dateAssigned', '$totalPrice', '$indications')";
+        $sql = "INSERT INTO orders (laundryInitials, customerID, customerName, id, status, elementsQuantity, elementsPrice, hookQuantity, dateReceive, dateAssign, totalPrice, indications)
+        VALUES ('$initials','$clientID','$clientName', '$lastRID','$FIRST_STATUS', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceive', '$dateAssign', '$totalPrice', '$indications')";
         
 
         if(mysqli_query($conn,$sql)){

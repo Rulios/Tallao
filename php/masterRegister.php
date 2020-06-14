@@ -73,7 +73,7 @@ $inputPassword = hashPassword($inputPassword);
 
 //2st query
 
- $sql = "INSERT INTO superusers (initials,hashcode,laundryname, location, legalreprName, legalreprLastname, email, password)
+ $sql = "INSERT INTO superusers (initials,hashcode,laundryName, location, legalreprName, legalreprLastname, email, password)
 VALUES ('$initials','$hashCode','$inputLaundryName', '$inputLocation','$inputName', '$inputLastname', '$inputEmail', '$inputPassword')";
 
 echo $sql;

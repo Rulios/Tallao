@@ -15,9 +15,9 @@ $serviceSelected = "iron";
 $inputPriceConfig = "shirt=0.65,skirt=0.65";
 $inputPriceHook = "0.10"; */
 
-if(isset($_POST['inputUserHash'],$_POST['serviceoffer'],$_POST['priceConfig'],$_POST['priceHook'])){
+if(isset($_POST['inputUserHash'],$_POST['serviceOffer'],$_POST['priceConfig'],$_POST['priceHook'])){
     $userHashCode = $_POST['inputUserHash'];
-    $serviceSelected = $_POST['serviceoffer'];
+    $serviceSelected = $_POST['serviceOffer'];
     $inputPriceConfig = $_POST['priceConfig'];
     $inputPriceHook = $_POST['priceHook'];
     

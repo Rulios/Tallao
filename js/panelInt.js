@@ -299,8 +299,8 @@ var receiptDetails = {
     let strElementPrice = "";
 
     let hookQ = this.totalHookQuantity;
-    let dateReceived = time.year + "-" + time.month + "-" + time.day + " " + time.hour24;
-    let dateAssigned = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
+    let dateReceive = time.year + "-" + time.month + "-" + time.day + " " + time.hour24;
+    let dateAssign = $("#inputDate4Order").val() + " " + $("#inputTime4Order").val();
 
     let clientID = $("#inputClientID").val();
     let clientName = $("span[name=spnReceiptClientNameData]").text();
@@ -331,8 +331,8 @@ var receiptDetails = {
     console.log(strElementQuantity);
     console.log(strElementPrice);
     console.log(hookQ);
-    console.log(dateReceived);
-    console.log(dateAssigned);
+    console.log(dateReceive);
+    console.log(dateAssign);
     console.log(totalPrice); */
 
     $.ajax({
@@ -345,8 +345,8 @@ var receiptDetails = {
           eQuantity: strElementQuantity,
           ePrice: strElementPrice,
           hookQuantity: hookQ,
-          dateReceived: dateReceived,
-          dateAssigned: dateAssigned,
+          dateReceive: dateReceive,
+          dateAssign: dateAssign,
           totalPrice: totalPrice,
           indications: strIndications
 
@@ -1422,13 +1422,13 @@ var order = {
 
           let a = [];
 
-          a = obj[i].dateAssigned.split(" ");
+          a = obj[i].dateAssign.split(" ");
           //change the time 24 to time 12, it uses slice to delete the seconds representation
           //and change date hyphens to slash
-          obj[i].dateAssigned = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+          obj[i].dateAssign = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
          
-          a = obj[i].dateReceived.split(" ");
-          obj[i].dateReceived = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+          a = obj[i].dateReceive.split(" ");
+          obj[i].dateReceive = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
 
           if(c ===  3){ //add a row
             row = genRow(); //generates a new row
@@ -1529,6 +1529,8 @@ var order = {
         div.append(genSpan(elementNameString, "bold"));
         div.append(genSpan(ELEMENTQUANTITY, "floatRight"));
 
+        
+
         return div;
       };
 
@@ -1555,9 +1557,9 @@ var order = {
 
       //client name
       $("span[name=spnReceiptClientNameTag]").text("Cliente:");
-      $("span[name=spnReceiptClientNameData]").text(obj.customername);
-      if(obj.customername === "none"){
-        console.log("DAW")
+      $("span[name=spnReceiptClientNameData]").text(obj.customerName);
+
+      if(obj.customerName === "none"){
         let x = document.createElement("A");
         x.setAttribute("class", "modalEditUserLink");
         x.textContent = "Afiliar a cliente";
@@ -1577,7 +1579,6 @@ var order = {
             
           } 
 
-
         });
         $("span[name=spnReceiptClientNameData]").append(x);
         $("span[name=inputClientID]").append(input);
@@ -1586,11 +1587,11 @@ var order = {
 
       //order date receive
       $("span[name=spnReceiptDateReceiveTag]").text("Día Recibido:");
-      $("span[name=spnReceiptDateReceiveData]").text(obj.dateReceived);
+      $("span[name=spnReceiptDateReceiveData]").text(obj.dateReceive);
 
       //order date assign
       $("span[name=spnReceiptDateAssignTag]").text("Día Asignado:");
-      $("span[name=spnReceiptDateAssignData]").text(obj.dateAssigned);
+      $("span[name=spnReceiptDateAssignData]").text(obj.dateAssign);
 
       //order date time difference
       let x = [];
@@ -1603,7 +1604,7 @@ var order = {
       };
       let dateNow = `${time.year}/${time.month}/${time.day} ${time.hour24}:${time.minutes}`;
       
-      x = obj.dateAssigned.split(" ");
+      x = obj.dateAssign.split(" ");
       dateFuture.date = x[0];
       dateFuture.hour12 = x[1];
       dateFuture.cycle = dateFuture.hour12.slice(-2);
@@ -1646,6 +1647,10 @@ var order = {
       //order price
       $("span[name=spnReceiptPriceTag]").text("Precio:");
       $("span[name=spnReceiptPriceData]").text("$" + obj.totalprice);
+
+      //insert metadata to the modal
+      $("div[name=modalContent]").data("id" , obj.id);
+      $("div[name=modalContent]").data("status" , obj.status);
       
     });
 
@@ -1669,20 +1674,20 @@ var order = {
     divCustomerNameTag.setAttribute("name", "customerNameTag");
 
     divCustomerNameTag.append(genSpan("Cliente:", true));
-    divCustomerNameTag.append(genSpan(obj.customername, false));
+    divCustomerNameTag.append(genSpan(obj.customerName, false));
 
 
     let divDateAssign = document.createElement("DIV");
     divDateAssign.setAttribute("name", "dateAssignTag");
 
     divDateAssign.append(genSpan("Día Asignado:", true));
-    divDateAssign.append(genSpan(obj.dateAssigned, false));
+    divDateAssign.append(genSpan(obj.dateAssign, false));
 
     let divDateReceiveTag = document.createElement("DIV");
     divDateReceiveTag.setAttribute("name", "dateReceiveTag");
     
     divDateReceiveTag.append(genSpan("Día Recibido:", true));
-    divDateReceiveTag.append(genSpan(obj.dateReceived, false));
+    divDateReceiveTag.append(genSpan(obj.dateReceive, false));
 
     let divHookQuantity = document.createElement("DIV");
     divHookQuantity.setAttribute("name", "hookQuantityTag");
@@ -1722,6 +1727,46 @@ var order = {
     col4.append(buttonBack);
  
     return col4;
+  },
+
+  updateOrderData : function(paramOrder){
+    //paramOrder is a obj
+    //so to prevent having a undefined value, this should set the other values to ""
+    Object.keys(paramOrder).map((currentVal) =>{
+
+      paramOrder[currentVal] = paramOrder[currentVal] || "";
+
+    });
+    /* paramOrder["customerName"] = paramOrder["customerName"] || "";
+    paramOrder["status"] = paramOrder["status"] || "";
+    paramOrder["elementsQuantity"] = paramOrder["elementsQuantity"] || "";
+    paramOrder["elementsPrice"] = paramOrder["elementsPrice"] || "";
+    paramOrder["hookQuantity"] = paramOrder["hookQuantity"] || "";
+    paramOrder["dateReceive"] = paramOrder["dateReceive"] || "";
+    paramOrder["dateAssign"] = paramOrder["dateAssign"] || "";
+    paramOrder["totalPrice"] = paramOrder["totalPrice"] || "";
+    paramOrder["indications"] = paramOrder["indications"] || ""; */
+
+    paramOrder["initials"] = superuser.initials;
+    paramOrder["id"] = $("div[name=modalContent]").data("id");
+
+    $.ajax({
+      type: "POST",
+      url: "./php/updateReceiptData.php",
+      data: paramOrder,
+      dataType: "json",
+      success: function (response) {
+        
+      },
+      error: function(jqXHR, status, error){
+
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error); 
+  
+      }
+    });
+
   }
 
 };
@@ -1781,7 +1826,7 @@ $(document).ready(function () {
 
                       superuser.initials = data.initials;
                       console.log(data);
-                      tagShowLaundryName(data.laundryname);
+                      tagShowLaundryName(data.laundryName);
                       tagShowInitials(data.initials);
                       tagShowLocation(data.location);
                       tagShowLegalReprName(data.legalreprName);
@@ -1789,7 +1834,7 @@ $(document).ready(function () {
                       tagShowSuperUserEmail(data.email);
                       
                       schedule.generateScheduleBox(data.schedule);
-                      serviceOffer.fillServiceBasicElementsHTML(data.serviceoffer);
+                      serviceOffer.fillServiceBasicElementsHTML(data.serviceOffer);
                     })
                     .then(() => {
                       
@@ -1856,9 +1901,9 @@ $(document).ready(function () {
 
                       superuser.initials = data.initials;
                       console.log(data);
-                      tagShowLaundryName(data.laundryname);  
+                      tagShowLaundryName(data.laundryName);  
                       schedule.generateScheduleBox(data.schedule);
-                      serviceOffer.fillServiceBasicElementsHTML(data.serviceoffer);
+                      serviceOffer.fillServiceBasicElementsHTML(data.serviceOffer);
                     })
                     .then(() => {
                       
@@ -2146,7 +2191,7 @@ $(document).ready(function () {
           url: "./php/updateServiceOffer.php",
           data: {
               inputUserHash: cookie.userhash,
-              serviceoffer: string
+              serviceOffer: string
           },
           success: function (response) {
               $("#submitChangeOffer").toggleClass("disableButton");
@@ -2213,7 +2258,7 @@ $(document).ready(function () {
           url: "./php/updatePriceConfig.php",
           data: {
               inputUserHash: cookie.userhash,
-              serviceoffer: serviceSelected,
+              serviceOffer: serviceSelected,
               priceConfig: string,
               priceHook: hookPrice
 
@@ -2283,11 +2328,16 @@ $(document).ready(function () {
               $("span[name=spnReceiptClientNameData]").text("No se encuentra el cliente");
             }else{
 
+              //update the database to the new affiliate of the order
+              
+
               if($("span[name=spnReceiptClientNameData]").hasClass("redTxt") == true){
                 $("span[name=spnReceiptClientNameData]").toggleClass("redTxt");
               }
 
               $("span[name=spnReceiptClientNameData]").text(data.name + " " + data.lastname);
+
+
 
             }
           },

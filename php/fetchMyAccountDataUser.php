@@ -26,7 +26,7 @@ if($userType == "user"){
     $sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
 
 }else if ($userType == "superuser"){
-    $sql = "SELECT initials,laundryname, location,schedule, serviceoffer, legalreprName, legalreprLastname, email FROM superusers WHERE hashcode= '$inputUserHash'";
+    $sql = "SELECT initials,laundryName, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM superusers WHERE hashcode= '$inputUserHash'";
     
 }
 

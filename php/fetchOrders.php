@@ -8,7 +8,7 @@ $db = "tallao";
 
 $endHour = "23:59:59";
 
-//SELECT * FROM orders WHERE dateAssigned BETWEEN '2020-05-29 15:00:00' AND '2020-05-29 23:59:59' ORDER BY dateAssigned ASC LIMIT 0,10
+//SELECT * FROM orders WHERE dateAssign BETWEEN '2020-05-29 15:00:00' AND '2020-05-29 23:59:59' ORDER BY dateAssign ASC LIMIT 0,10
 
 if (isset($_POST['userType'], $_POST['initials'], $_POST['filterMode'], $_POST['params'], $_POST['startIndex'], $_POST['status'])){
 
@@ -75,9 +75,9 @@ if($userType == "user"){
             $endDate = getDateFromSingleDateTime($params)." ".$endHour ;
 
             if($status == 'status-all'){
-                $sql = "SELECT * FROM orders WHERE dateAssigned BETWEEN '$params' AND '$endDate' ORDER BY dateAssigned ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE dateAssign BETWEEN '$params' AND '$endDate' ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
             }else{
-                $sql = "SELECT * FROM orders WHERE status='$status' AND dateAssigned BETWEEN '$params' AND '$endDate' ORDER BY dateAssigned ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE status='$status' AND dateAssign BETWEEN '$params' AND '$endDate' ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
             }
             
         break;    
@@ -86,9 +86,9 @@ if($userType == "user"){
             $endDate = getDateFromSingleDateTime($params)." ".$endHour ;
 
             if($status == 'status-all'){
-                $sql = "SELECT * FROM orders WHERE dateReceived BETWEEN '$params' AND '$endDate' ORDER BY dateReceived ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE dateReceive BETWEEN '$params' AND '$endDate' ORDER BY dateReceive ASC LIMIT ".$startIndex.",10";
             }else{
-                $sql = "SELECT * FROM orders WHERE status='$status' AND dateReceived BETWEEN '$params' AND '$endDate' ORDER BY dateReceived ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE status='$status' AND dateReceive BETWEEN '$params' AND '$endDate' ORDER BY dateReceive ASC LIMIT ".$startIndex.",10";
             }
 
             
@@ -100,9 +100,9 @@ if($userType == "user"){
             $dateArr = getDateFromRangeDateTime($params);
 
             if($status == "status-all"){
-                $sql = "SELECT * FROM orders WHERE dateAssigned BETWEEN '$dateArr[0]' AND '$dateArr[1]' ORDER BY dateAssigned ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE dateAssign BETWEEN '$dateArr[0]' AND '$dateArr[1]' ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
             }else{
-                $sql = "SELECT * FROM orders WHERE status='$status' AND dateAssigned BETWEEN '$dateArr[0]' AND '$dateArr[1]' ORDER BY dateAssigned ASC LIMIT ".$startIndex.",10";
+                $sql = "SELECT * FROM orders WHERE status='$status' AND dateAssign BETWEEN '$dateArr[0]' AND '$dateArr[1]' ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
             }
             
         break;
@@ -115,7 +115,7 @@ if($userType == "user"){
         break;
         
         case "customer-id":
-            $sql = "SELECT * FROM orders WHERE customerid='$params' ORDER BY dateAssigned ASC LIMIT ".$startIndex.",10";
+            $sql = "SELECT * FROM orders WHERE customerID='$params' ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
         break;    
     }    
 
