@@ -2,7 +2,7 @@ var verification = {
     inputActualPassword: false,
     inputPassword: false,
     inputRePassword: false
-}
+};
 var cookie = getCookieData(document.cookie);
 
 var serviceOfferString = {
@@ -26,6 +26,14 @@ var elementsString = {
  blouse: "Blusa",
  largeSuit: "Vestido",
  quilt: "Colcha",
+ 
+ custom: function(name){
+    //this function is called when it's fetching 
+    //custom elements. This will create a new prop on 
+    //this object.  
+    console.log(this);
+    this[name] = name;
+ }
 
 };
 var scheduleString = {
@@ -91,9 +99,8 @@ var serviceOffer = {
   
           array = data[serviceSelected].split(",");
           receiptDetails.hookPrice = hookPrice;
-  
-          for(let i = 0; i < array.length; i++){
-            
+
+          array.map((value, i) =>{
             let elementSplit = array[i].split("=");
             let id = elementSplit[0];
             let price = elementSplit[1];
@@ -109,34 +116,32 @@ var serviceOffer = {
               $("#inputPrice4" + id).val(price);
               $("#inputPrice4hook").val(hookPrice);
             }
-          
-          }
-  
+          });
+
         
         }else{
   
           let objKeys = Object.keys(elementsString);
   
           if(window.location.pathname == "/Tallao/masterpanel.html"){
-            
-            for(let i = 0; i < objKeys.length; i++){
-              
+
+            objKeys.map((value, i) =>{
+
               $("#priceTag4" + objKeys[i]).text("Precio no asignado");
               $("#priceTag4" + objKeys[i]).val("nonAssigned");
-             
-            }
+
+            });
+            
   
           }else if(window.location.pathname == "/Tallao/myaccount.html"){
             
-            for(let i = 0; i < objKeys.length; i++){
+            objKeys.map((value, i) =>{
               $("#inputPrice4" + objKeys[i]).val("");
-            }
+            });
   
           }
   
-          for(let i = 0; i < objKeys.length; i++){
-            $("#inputPrice4" + objKeys[i]).val("");
-          }
+         
   
         }
   
@@ -251,9 +256,10 @@ var receiptDetails = {
   fullHookQuantity: function(){//used to check the quantity hook equals the quantity 
     let allSum = 0;
 
-    for(let i = 0; i < this.elements.length; i++){
-      allSum += +this[this.elements[i]]["quantity"];
-    }
+    this.elements.map((value, i) =>{
+      allSum += +this[value]["quantity"];
+    });
+   
 
     this.totalHookQuantity = allSum;
 
@@ -272,10 +278,9 @@ var receiptDetails = {
     let totalPrice = 0;
     let hookPrice = (this.totalElementQuantity - this.totalHookQuantity) * parseFloat(receiptDetails.hookPrice);
 
-    for(let i = 0; i < this.elements.length; i++){
-      totalPrice += (this[this.elements[i]]["quantity"] * this[this.elements[i]]["unitPrice"]);
-      //console.log(this[this.elements[i]]["quantity"] +"*" + this[this.elements[i]]["unitPrice"])
-    }
+    this.elements.map((value, i) =>{
+      totalPrice += (this[value]["quantity"] * this[value]["unitPrice"]);
+    });
     
     //add the price of the hooks
     totalPrice += hookPrice;
@@ -305,18 +310,15 @@ var receiptDetails = {
     let clientID = $("#inputClientID").val();
     let clientName = $("span[name=spnReceiptClientNameData]").text();
     let strIndications = $("#inputIndications").text();
-
-
     let totalPrice = this.totalPrice;
 
-    for(let i = 0; i < this.elements.length; i++){
-      let string = "";
 
-      arrElementQuantity.push(this.elements[i] + "=" + this[this.elements[i]]["quantity"]);
-      arrElementPrice.push(this.elements[i] + "=" + this[this.elements[i]]["unitPrice"]);
+    let string = "";
+    this.elements.map((value, i) => {
+      arrElementQuantity.push(value + "=" + this[value]["quantity"]);
+      arrElementPrice.push(value + "=" + this[value]["unitPrice"]);
+    });
 
-    }
-    
     strElementQuantity = arrElementQuantity.join(",");
     strElementPrice = arrElementPrice.join(",");
 
@@ -370,7 +372,6 @@ var receiptDetails = {
 
           if($("#successAnimation").hasClass("hide") == true){
             setTimeout(function(){
-              
               //show it
               $("#successAnimation").toggleClass("hide");
               
@@ -378,10 +379,12 @@ var receiptDetails = {
                 //hide it
                 $("#successAnimation").toggleClass("hide");
                 $("#receiptConfigPanel").toggleClass("opacityAndDisable");
-              },2500)
+              },1500)
             }, 40);
           }
         }
+        //scroll to top
+        window.scrollTo(0,0);
           
       },
       error: function(jqXHR, status, error){
@@ -402,18 +405,16 @@ var receiptDetails = {
     //create a duplicate of the elements obj
     //so at the for loop it won't affect the original obj
     //as a point of reference
-    for(let i = 0; i< this.elements.length; i++){
-      elementsDup.push(this.elements[i]);
-    }
-   
+    this.elements.map((value) =>{
+      elementsDup.push(value);
+    });
+  
     //remove HTML receipt element list
     //remove element at the array
-    for(let i = 0; i < elementsDup.length; i++){
-      
-      $("#elementReceipt4" + elementsDup[i]).remove();
-      receiptDetails.closeElement(elementsDup[i]);
-      
-    }
+    elementsDup.map(value =>{
+      $("#elementReceipt4" + value).remove();
+      receiptDetails.closeElement(value);
+    });
     
     receiptDetails.updateTotalPrice();
   }
@@ -443,7 +444,7 @@ var schedule = {
 
     let daysID = Object.keys(scheduleString);
 
-    for(let i = 0; i < daysID.length; i++){
+    daysID.map( (value, i) => {
 
       let s;
       let day;
@@ -464,7 +465,7 @@ var schedule = {
       
       if(( data.schedule == "null") || (typeof data.schedule == null)){
         
-        day = daysID[i];
+        day = value;
 
         startDayValueHour = "";
         startDayValueCycle = "AM";
@@ -495,10 +496,10 @@ var schedule = {
 
       let elementBox = document.createElement("DIV");
       elementBox.setAttribute("class", "col-lg-3  styleElementBox");
-      elementBox.setAttribute("id", "divScheduleBox4" + daysID[i]);
+      elementBox.setAttribute("id", "divScheduleBox4" + value);
 
       let spnElementName = document.createElement("SPAN");
-      spnElementName.setAttribute("id", "spn4" + daysID[i]);
+      spnElementName.setAttribute("id", "spn4" + value);
       spnElementName.setAttribute("class", "styleElementName");
       spnElementName.textContent = dayName;
 
@@ -524,6 +525,7 @@ var schedule = {
       let inputScheduleStartHour = document.createElement("INPUT");
       inputScheduleStartHour.setAttribute("id", "inputScheduleBegin4" + day);
       inputScheduleStartHour.setAttribute("type", "text");
+
       //since this thing executes only one time
       //set to disable input
       if(startDayValueCycle == "closed"){
@@ -550,7 +552,7 @@ var schedule = {
 
       iconStartDayDiv.append(iconStartDaySubDiv);
       iconStartDayDiv.append(inputScheduleStartHour);
-      iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + daysID[i],daysID[i], timeCycles, startDayValueCycle));
+      iconStartDayDiv.append(schedule.createSelectList("selectBeginTimeCycle4" + value,value, timeCycles, startDayValueCycle));
 
       
 
@@ -599,14 +601,17 @@ var schedule = {
 
       iconEndDayDiv.append(iconEndDaySubDiv);
       iconEndDayDiv.append(inputScheduleEndHour);
-      iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + daysID[i],daysID[i], timeCycles, endDayValueCycle));
+      iconEndDayDiv.append(schedule.createSelectList("selectEndTimeCycle4" + value,value, timeCycles, endDayValueCycle));
 
       elementBox.append(spnElementName);
       elementBox.append(iconStartDayDiv);
       elementBox.append(iconEndDayDiv);
 
       $("#divScheduleAppend").append(elementBox);
-    }
+
+    });
+
+   
 
 
   },
@@ -628,20 +633,17 @@ var schedule = {
     
     let x = Object.keys(optionProp);
     
-    for(let i = 0; i < x.length; i++){
-
+    x.map(value => {
       let option = document.createElement("OPTION");
-      option.setAttribute("value", x[i]);
-      option.textContent = optionProp[x[i]];
+      option.setAttribute("value", value);
+      option.textContent = optionProp[value];
       
-      if(optionSelected == x[i]){
+      if(optionSelected == value){
         option.setAttribute("selected", "");
-        
       }
-
       select.append(option);
+    });
 
-    }
 
     //if it select closed, it means that the business is closed
     //so it disables both inputs and changes the Selected option from
@@ -762,29 +764,28 @@ var customMessages = {
 
     if(mode == "edit"){
 
-      for(let i = 0; i < keys.length; i++){
+      keys.map(value => {
         // console.log(dataObj[keys[i]]);
-        let idMessage = dataObj[keys[i]]["id"];
-        let colorTag = dataObj[keys[i]]["colortag"];
-        let tagTxt = dataObj[keys[i]]["tag"];
-        let msgTxt = dataObj[keys[i]]["message"];
+        let idMessage = dataObj[value]["id"];
+        let colorTag = dataObj[value]["colortag"];
+        let tagTxt = dataObj[value]["tag"];
+        let msgTxt = dataObj[value]["message"];
 
         customMessages.createNewMessageBox(superuser.initials, idMessage, colorTag, tagTxt, msgTxt );
-
-      }    
-
+      });
+      
     }else if(mode == "use"){
 
-      for(let i = 0; i < keys.length; i++){
-        //console.log(dataObj[keys[i]]);
-        let idMessage = dataObj[keys[i]]["id"];
-        let colorTag = dataObj[keys[i]]["colortag"];
-        let tagTxt = dataObj[keys[i]]["tag"];
-        let msgTxt = dataObj[keys[i]]["message"];
+      keys.map(value => {
+        // console.log(dataObj[keys[i]]);
+        let idMessage = dataObj[value]["id"];
+        let colorTag = dataObj[value]["colortag"];
+        let tagTxt = dataObj[value]["tag"];
+        let msgTxt = dataObj[value]["message"];
 
         customMessages.messages.push(idMessage);
         customMessages.createInstantMsgTag(idMessage, colorTag, tagTxt, msgTxt);
-      }
+      });
 
     }
 
@@ -851,7 +852,6 @@ var customMessages = {
       customMessages.deleteDBmessage(idElement, function(data){
 
         let obj = JSON.parse(data);
-        
 
         if(obj["status"] == "null"){
             //delete the index
@@ -1051,15 +1051,17 @@ var customMessages = {
 
     var paramJSON = "";
 
-    for(let i = 0; i < customMessages.messages.length; i++){
-      //define as obj
-      params[customMessages.messages[i]] = {};
-      
-      params[customMessages.messages[i]]["msgTagName"] = customMessages[customMessages.messages[i]]["msgTagName"];
-      params[customMessages.messages[i]]["msgColor"] = customMessages[customMessages.messages[i]]["msgColor"];
-      params[customMessages.messages[i]]["msgText"] = customMessages[customMessages.messages[i]]["msgText"];
+    customMessages.messages.map(value =>{
 
-    }
+      //define as obj
+      params[value] = {};
+      
+      params[value]["msgTagName"] = customMessages[value]["msgTagName"];
+      params[value]["msgColor"] = customMessages[value]["msgColor"];
+      params[value]["msgText"] = customMessages[value]["msgText"];
+
+    });
+
     //send as JSON string
     paramJSON = JSON.stringify(params);
     //console.log(paramJSON);
@@ -1112,13 +1114,11 @@ var customMessages = {
       let tagMsgText = this.getAttribute("data-msg");
      
       $("#inputIndications").text(currentTxt + " " + tagMsgText);
-
     });
 
     $("#appendCustomMessages").append(button);
 
   }
-
 };
 
 
@@ -1253,10 +1253,8 @@ var time = {
       minutes = "00";
     }
 
-    if (hours === '12') {
-      hours = '00';
-    }
-    
+    hours = (hours === "12") ? "00": hours; 
+
     if (modifier === 'PM') {
       hours = parseInt(hours, 10) + 12;
     }
@@ -1311,15 +1309,6 @@ var time = {
     const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
     diffInMilliSeconds -= minutes * 60;
     console.log('minutes', minutes);
-
-    /* let difference = '';
-    if (days > 0) {
-      difference += (days === 1) ? `${days} day, ` : `${days} days, `;
-    }
-
-    difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
-
-    difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`;  */
 
     objDiff.timeStatus = ((dateFuture - dateNow) < 0) ? "past": "future";
 
@@ -1400,7 +1389,6 @@ var order = {
         $("#appendOrdersFromParams").empty();
 
         let obj = JSON.parse(data);
-
         let genRow = () => {
           let x = document.createElement("DIV"); 
           x.setAttribute("class", "row small-mediumSeparation");
@@ -1416,19 +1404,16 @@ var order = {
         //so it can be used when scrolling and fetching info
         order.startIndexFetch = l;
 
-        
-        
-        for(let i = 0; i < l; i++){
-
+        obj.map((value , i) => {
           let a = [];
 
-          a = obj[i].dateAssign.split(" ");
+          a = value.dateAssign.split(" ");
           //change the time 24 to time 12, it uses slice to delete the seconds representation
           //and change date hyphens to slash
-          obj[i].dateAssign = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+          value.dateAssign = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
          
-          a = obj[i].dateReceive.split(" ");
-          obj[i].dateReceive = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
+          a = value.dateReceive.split(" ");
+          value.dateReceive = time.convertDateSeparationHyphenToSlash(a[0]) + " " +time.convertTime24To12(a[1].slice(0, -3));
 
           if(c ===  3){ //add a row
             row = genRow(); //generates a new row
@@ -1440,9 +1425,9 @@ var order = {
           //appendString += order.generateOrderBox(obj[i]);
           row.append(order.generateOrderBox(obj[i]));
           c += 1;
-        }
-        console.log(obj);
-        //$("#xa").text("Hola:");
+
+        });
+
         $("#appendOrdersFromParams").append(appendString); //append outside loop
         
       },
@@ -1513,23 +1498,37 @@ var order = {
         let arr2 = elementPriceStr.split("="); //get service
         let arr3 = arr1[0].split("-"); //get element name and service
 
-        const ELEMENT = arr3[0];
-        const SERVICE = arr3[1];
+        const ELEMENTPROCESS = function(){
+          if(arr3[0].indexOf("custom") >= 0){
+            let z = [];
+            z = arr3[1].split("*");
+
+            //this will set a new prop on the obj, so it will prevent undefined
+            elementsString.custom(z[1]);
+
+            //this is a swap, since when custom, it appears 
+            //to be inversed
+            return [z[1],z[0]]; //[elementName, elementService]
+          }else{
+            return arr3;
+          }
+        };
+        
+        const ELEMENT = ELEMENTPROCESS()[0];
+        const SERVICE = ELEMENTPROCESS()[1];
         const ELEMENTQUANTITY = arr1[1];
         const ELEMENTPRICE = arr2[1];
+        
 
         let div = document.createElement("DIV");
         div.setAttribute("element", ELEMENT);
         div.setAttribute("class", "smallSeparationOnXs");
         //div.data("element", ELEMENT);
-
-        let elementNameString = "- &nbsp; " + elementsString[ELEMENT] + "|" + serviceOfferString[SERVICE] + " $" + ELEMENTPRICE + " =";
-
+        
+        let elementNameString = `- &nbsp; ${elementsString[ELEMENT]}|${serviceOfferString[SERVICE]} $${ELEMENTPRICE} =`;
 
         div.append(genSpan(elementNameString, "bold"));
         div.append(genSpan(ELEMENTQUANTITY, "floatRight"));
-
-        
 
         return div;
       };
@@ -1559,7 +1558,7 @@ var order = {
       $("span[name=spnReceiptClientNameTag]").text("Cliente:");
       $("span[name=spnReceiptClientNameData]").text(obj.customerName);
 
-      if(obj.customerName === "none"){
+      if(obj.customerName === "none" || obj.customerName === ""){
         let x = document.createElement("A");
         x.setAttribute("class", "modalEditUserLink");
         x.textContent = "Afiliar a cliente";
@@ -1737,26 +1736,18 @@ var order = {
       paramOrder[currentVal] = paramOrder[currentVal] || "";
 
     });
-    /* paramOrder["customerName"] = paramOrder["customerName"] || "";
-    paramOrder["status"] = paramOrder["status"] || "";
-    paramOrder["elementsQuantity"] = paramOrder["elementsQuantity"] || "";
-    paramOrder["elementsPrice"] = paramOrder["elementsPrice"] || "";
-    paramOrder["hookQuantity"] = paramOrder["hookQuantity"] || "";
-    paramOrder["dateReceive"] = paramOrder["dateReceive"] || "";
-    paramOrder["dateAssign"] = paramOrder["dateAssign"] || "";
-    paramOrder["totalPrice"] = paramOrder["totalPrice"] || "";
-    paramOrder["indications"] = paramOrder["indications"] || ""; */
+    /* parameters = customerName, status, elementQuantity, elementsPrice,
+                 hookQuantity, dateReceive, dateAssign, totalPrice, indications */
 
     paramOrder["initials"] = superuser.initials;
     paramOrder["id"] = $("div[name=modalContent]").data("id");
-
+    console.log(paramOrder);
     $.ajax({
       type: "POST",
       url: "./php/updateReceiptData.php",
       data: paramOrder,
-      dataType: "json",
       success: function (response) {
-        
+        console.log("Cambio Realizado");
       },
       error: function(jqXHR, status, error){
 
@@ -1776,7 +1767,7 @@ $(document).ready(function () {
   
     console.log(window.location.pathname);
 
-    if((typeof document.cookie == undefined) || (document.cookie == "")){
+    if((typeof document.cookie == undefined) || (document.cookie === "")){
 
         alert("Vuelve a iniciar sesión");
 
@@ -1785,7 +1776,7 @@ $(document).ready(function () {
     }else{
         //start to fetch values
 
-        if((typeof document.cookie == undefined) || (document.cookie == "")){
+        if((typeof document.cookie == undefined) || (document.cookie === "")){
 
           alert("Vuelve a iniciar sesión");
       
@@ -1801,7 +1792,7 @@ $(document).ready(function () {
       
                   formVerification("load", false);
       
-                  if(cookie.usertype == "user"){
+                  if(cookie.usertype === "user"){
       
                     $("#userForm").toggleClass("hide");
                     
@@ -1815,8 +1806,7 @@ $(document).ready(function () {
                     })          
                     
       
-                  }else if(cookie.usertype == "superuser"){
-                    
+                  }else if(cookie.usertype === "superuser"){
                     
                     $("#superuserForm").toggleClass("hide");  
                     $("#masterUserValueConfiguration").toggleClass("hide");
@@ -1825,7 +1815,6 @@ $(document).ready(function () {
                     accountData.then(data => {
 
                       superuser.initials = data.initials;
-                      console.log(data);
                       tagShowLaundryName(data.laundryName);
                       tagShowInitials(data.initials);
                       tagShowLocation(data.location);
@@ -1925,7 +1914,7 @@ $(document).ready(function () {
                       $("#dateTimeInfo").text("Fecha de hoy: " + time.date + " | Hora: " + time.hour12 + time.timeCycle);
 
                       time.limitMinMaxInputs();
-                    }, 600000);
+                    }, 60000);
                     
                     /* time.processFetchedDateTimePHP()
                     .then(() => {
@@ -1942,21 +1931,6 @@ $(document).ready(function () {
               case "/Tallao/myorders.html":
               case "myorders.html":
                   
-                /* fetchMyAccountData(cookie.userhash, cookie.usertype)
-                .then((data) => {
-                  superuser.initials = data.initials;
-
-                  //since it is the first time opening the site, to prevent
-                  //twice fetching, it will only trigger the startDateParamInput (first default select field)
-                  return time.processFetchedDateTimePHP();
-                }).then(() => {
-                    $("#startDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
-                    $("#endDateParamInput").val(time.year + "-" + time.month + "-" + time.day);
-                    $("#startDateParamInput").change();
-                    time.getLocalMachineTime();
-                })
-                .catch(err => console.error(err)); */
-
                 fetchMyAccountData(cookie.userhash, cookie.usertype)
                 .then(data => {
 
@@ -2329,13 +2303,16 @@ $(document).ready(function () {
             }else{
 
               //update the database to the new affiliate of the order
-              
+              order.updateOrderData({customerName: `${data.name}${data.lastname}`, customerID: $("#inputClientID").val()});
+              $("#inputClientID").val("");
+              $("#inputClientID").toggleClass("hide");
+
 
               if($("span[name=spnReceiptClientNameData]").hasClass("redTxt") == true){
                 $("span[name=spnReceiptClientNameData]").toggleClass("redTxt");
               }
 
-              $("span[name=spnReceiptClientNameData]").text(data.name + " " + data.lastname);
+              $("span[name=spnReceiptClientNameData]").text(`${data.name} ${data.lastname}`);
 
 
 
@@ -2415,7 +2392,6 @@ $(document).ready(function () {
         formVerification("submit", false);
         if($("#submitOrder").hasClass("disableButton") == false){
           receiptDetails.submitReceipt(superuser.initials);
-
         }
         
       });
@@ -3145,7 +3121,7 @@ function generateCustomElementReceiptBox(id, service){
   colImgAsset.setAttribute("class", "col-lg-1 hideOnXs");
 
   let imgAsset = document.createElement("img");
-  imgAsset.setAttribute("src", "./imgs/assets/"+idAsset+ "/" + idAsset + ".svg");
+  imgAsset.setAttribute("src", `./imgs/assets/${idAsset}/${idAsset}.svg`);
   imgAsset.setAttribute("class", "assetStayStatic");
 
   colImgAsset.append(imgAsset);
@@ -3194,6 +3170,7 @@ function generateCustomElementReceiptBox(id, service){
       }
 
     });
+
   }else{
     elementNameHTML = document.createElement("SPAN");
     elementNameHTML.setAttribute("class", "bold subTxt");

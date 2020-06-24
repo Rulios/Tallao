@@ -6,16 +6,17 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-//$inputEmail = "robert_lu20@hotmail.com";
 
-if (isset($_POST['inputEmail'])){
+if (isset($_POST["inputEmail"], $_POST["userType"])){
 
     $inputEmail = $_POST["inputEmail"];
-
+    $userType = $_POST["userType"];
 }
+/* $inputEmail = "robert_lu20@hotmail.com";
+$userType = "superuser"; */
 
-
-
+//correct the usertype tag and the Table name
+$userType = ($userType == "user") ? "users" : "superusers";
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 
@@ -25,7 +26,7 @@ if ($conn->connect_error) {
 }
 
 
-$sql = "SELECT email FROM users WHERE email= '$inputEmail'";
+$sql = "SELECT email FROM $userType WHERE email= '$inputEmail' ";
 
 
 

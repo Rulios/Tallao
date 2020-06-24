@@ -1,134 +1,46 @@
-var verification = {
-    inputEmail: false,
-    inputPassword: false
-};
 
-var clickStatus = {
-    user: false,
-    superUser: false
-}
-
-var cookie = getCookieData(document.cookie);
 $(document).ready(function(){
 
-    if((cookie.userhash != "") && (cookie.usertype == "user")){
-      window.location.replace("./panel.html");
-    }else if((cookie.userhash != "") && (cookie.usertype == "superuser")){
-      window.location.replace("./masterpanel.html");
-    }
+  formVerification.invokeVerify("load", false);
 
-    formVerification("load", false);
 
-    
-      $("#frmUserLogin").submit(function(e){
-        formVerification("submit", false);
-        
-        e.preventDefault();
-
-        if(($("#submitRegister").hasClass("disableButton") == false) || ($("#submitLoginSuperUser").hasClass("disableButton") == false)){
-          
-          let inputEmail = $("#inputEmail").val();
-          let inputPassword = $("#inputPassword").val();
-          
-
-          if(clickStatus.user == true){
-
-            
-            $.ajax({
-              type: "POST",
-              url: "./php/userLoginProcess.php",
-              data: {
-                inputEmail: inputEmail,
-                inputPassword: inputPassword
-              },
-              dataType: "json ",
-
-              success: function (data) {
-                let status = convertStringToBoolean(data.status);
-                
-                pageRedirection(status, "user");
-              },
-              error: function(jqXHR, status, error){
-
-                console.log('Status: ' + status);
-                console.log('Error ' + error);
-                alert("Error " + status + error);
-
-                deleteAppendError(id);
-                formAppendError(id, "Error en realizar la operación", "red");
-          
-              }
-            });
-
-          }else if(clickStatus.superUser == true){
-          
-            $.ajax({
-              type: "POST",
-              url: "./php/superUserLoginProcess.php",
-              data: {
-                inputEmail: inputEmail,
-                inputPassword: inputPassword
-              },
-              dataType: "json ",
-
-              success: function (data) {
-                let status = convertStringToBoolean(data.status);
-                
-                pageRedirection(status, "superuser");
-              },
-              error: function(jqXHR, status, error){
-
-                console.log('Status: ' + status);
-                console.log('Error ' + error);
-                alert("Error " + status + error);
-
-                deleteAppendError(id);
-                formAppendError(id, "Error en realizar la operación", "red");
-          
-              }
-            });
-
-          }
-
-        }
-    
-      });
 
       $("#inputEmail").change(function(e){
         let id = "inputEmail";
 
-        if($("#inputEmail").val() == ""){
-            formVerification(id, false);
+        if($("#inputEmail").val() === ""){
+            
+            formVerification.invokeVerify(id, false);
         }else{
-            formVerification(id,true);
+            
+            formVerification.invokeVerify(id, true);
         }
       });
 
       $("#inputPassword").change(function(e){
         let id = "inputPassword";
 
-        if($("#inputPassword").val() == ""){
-            formVerification(id, false);
+        if($("#inputPassword").val() === ""){
+            
+            formVerification.invokeVerify(id, false);
         }else{
-            formVerification(id,true);
+            
+            formVerification.invokeVerify(id, true);
         }
       });
 
+      $("#frmUserLogin").submit(function(e){
+        e.preventDefault();
+        formVerification.invokeVerify();
+      });
+
       $("#submitLoginSuperUser").click(function(e){
-
-        clickStatus.superUser = true;
-        clickStatus.user = false;
-
+        checkLoginAJAX("superuser");
       });
 
-      $("#submitLogin").click(function(e){
-        
-        clickStatus.user = true;
-        clickStatus.superUser = false;
-
+      $("#submitLoginUser").click(function(e){
+        checkLoginAJAX("user");
       });
-
-
 
       $('#inputEmail').change(function(e){
 
@@ -137,11 +49,12 @@ $(document).ready(function(){
         let verSame = false;
     
         if(validateEmail(email) == false){
-          deleteAppendError(id);
-          formAppendError(id, "¡Escribe un correo válido!" ,"red");
-          formVerification(id, false);
+          formVerification.deleteAppendError(id);
+          formVerification.formAppendError(id, "¡Escribe un correo válido!" ,"red");
+          
+          formVerification.invokeVerify(id, false);
         }else{
-          deleteAppendError(id);
+          formVerification.deleteAppendError(id);
         }
       });  
 
@@ -154,38 +67,95 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-function formVerification(field, status){
+function pageRedirection(data, type){
+  //type: user, superuser
 
-    let objectValues = [];
-   
-    if((field == "load") || (field == "submit")){
-      
-      verification["load"] = true;
-      verification["submit"] = true;
-  
-    }else{  
-  
-      if(status == false){
-        verification[field] = false;
-      }else{
-        verification[field] = true;
-      }
-    }  
-    
-    objectValues = Object.values(verification);
-  
-    if(objectValues.includes(false) == true){
-      
-      toggleSubmitButton(true);
-    }else{
-      toggleSubmitButton(false);
+  let id = "inputPassword";
+ 
+  if(data){
+    formVerification.deleteAppendError(id);
+    if(type == "user"){
+
+      window.location.replace("./panel.html");
+
+    }else if (type == "superuser"){
+      window.location.replace("./masterpanel.html");
     }
+
+  }else{
+    formVerification.deleteAppendError(id);
+    formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
+  }
+
 }
 
-function formAppendError(id, message, color){
+function convertStringToBoolean(string){
+  let boolean = false;
 
-    let txtColor = "";
+  if(string === "true"){
+    boolean = true;
+  }else if(string === "false"){
+    boolean = false;
+  }
+
+  return boolean;
+}
+function checkLoginAJAX(userType){
+
+  let inputEmail = $("#inputEmail").val();
+  let inputPassword = $("#inputPassword").val();
+
+  $.ajax({
+    type: "POST",
+    url: "./php/loginProcess.php",
+    data: {
+      inputEmail: inputEmail,
+      inputPassword: inputPassword,
+      userType: userType
+    },
+    dataType: "json",
+
+    success: function (data) {
+      let status = convertStringToBoolean(data.status);
+      pageRedirection(status, userType);
+    },
+    error: function(jqXHR, status, error){
+
+      console.log('Status: ' + status);
+      console.log('Error ' + error);
+      alert("Error " + status + error);
+
+      formVerification.deleteAppendError(id);
+      formVerification.formAppendError(id, "Error en realizar la operación", "red");
+
+    }
+  });
+
+}
+
+var formVerification  = (function(){
+  'use strict';
+
+  let fieldVerification = {
+    inputEmail: false,
+    inputPassword: false
+  };
+
+  function toggleSubmitButton(status){
+    //status = true | enables the button
+    //status = false | disables the button
+
+    //status dictates the condition of the disableButton class, so if it exists
+    //it will toggle it.
+    if($('button[type="submit"]').hasClass("disableButton") === status){
+      $('button[type="submit"]').toggleClass("disableButton");
+    }
   
+  
+  }
+
+  function formAppendError(id, message, color){
+    let txtColor = "";
     switch (color) {
         case "red":
           txtColor = "redTxt";
@@ -204,82 +174,52 @@ function formAppendError(id, message, color){
         break;
       
     }
-  
     if($("#msg4"+ id).length == 0){
       $("#"+ id).parent().append("<span id='msg4" + id+ "' class='"+txtColor+"'>" + message + "</span>" );
     }
   }
 
+  function verify(field, status){
+    
+    if((field === "load")){
+      fieldVerification["load"] = true;
+    }else if( field === undefined){
+      //want to make a exception when no param is passed
+      //this means that it will just run to check and toogleSubmitButton
+    }else{  
+      fieldVerification[field] = status;
+    } 
 
-function pageRedirection(data, type){
-  //type: user, superuser
+    Object.keys(fieldVerification).map(value =>{
 
-  let id = "inputPassword";
- 
-  if(data === true){
-
-    console.log(data);
-    deleteAppendError(id);
-    if(type == "user"){
-
-      window.location.replace("./panel.html");
-
-    }else if (type == "superuser"){
-      window.location.replace("./masterpanel.html");
-    }
-
-  }else{
-    deleteAppendError(id);
-    formAppendError(id, "El usuario o la contraseña no coinciden", "red");
-  }
-
-}
-
-function deleteAppendError(id){
-    $("#msg4"+ id).remove();
-}  
-function toggleSubmitButton(status){
-
-    //status = false | enables the button
-    //status = true | disables the button
-  
-    if(status == true){
-      if($('button[type="submit"]').hasClass("disableButton") == false){
-        $('button[type="submit"]').addClass("disableButton");
+      if(fieldVerification[value]){
+        fieldVerification["submit"] = true;
+      }else{
+        fieldVerification["submit"] = false;
       }
-    } else{
-      $('button[type="submit"]').removeClass("disableButton");
+
+    });
+
+    if(!Object.values(fieldVerification).includes(false)){
+      toggleSubmitButton(true);
+    }else{
+      toggleSubmitButton(false);
     }
-  
-}
-function convertStringToBoolean(string){
-  let boolean = false;
-
-  if(string == "true"){
-    boolean = true;
-  }else if(string == "false"){
-    boolean = false;
+    
   }
 
-  return boolean;
-}
-
-function getCookieData(string){
-  let hash = "";
-  let userCode = "";
-  let obj = {};
-  let arr = [];
-  hash = string.trim();
-
-  hash = hash.split(";");
-  
-
-  for (let i = 0; i < hash.length; i++){
-
-    arr = hash[i].trim().split("=");
-    obj[arr[0]] = arr[1];
-
+  function invokeVerify(field, status){
+    verify(field, status);
   }
 
-  return obj;
-}
+  function deleteAppendError(id){
+    $("#msg4"+ id).remove();
+  }
+
+  return{
+    invokeVerify : invokeVerify,
+    deleteAppendError: deleteAppendError,
+    formAppendError: formAppendError
+  };
+})();
+

@@ -4,43 +4,24 @@ $(document).ready(function () {
 
   console.log(window.location.pathname);
   
-  if((window.location.pathname == "/Tallao/masterRegister.html") || (window.location.pathname == "masterRegister.html")){
+  if((window.location.pathname === "/Tallao/masterRegister.html") || (window.location.pathname === "masterRegister.html")){
       
-      status = "superuser";
+      formVerification.setUserType("superuser");
 
-      verification = {
-        inputLaundryName: false,
-        inputLocation: false,
-        inputName: false,
-        inputLastname : false,
-        inputEmail: false,
-        inputPassword: false,
-        inputRePassword: false
-      };
-
-  }else if((window.location.pathname == "/Tallao/register.html") || (window.location.pathname == "register.html")){
-      status = "user";
-
-      verification = {
-        inputName: false,
-        inputLastname : false,
-        inputEmail: false,
-        inputPassword: false,
-        inputRePassword: false,
-        inputTargetMarket: false
-      };
+  }else if((window.location.pathname === "/Tallao/register.html") || (window.location.pathname === "register.html")){
+      
+      formVerification.setUserType("user");
   }
 
   
 
-  formVerification("load", false);
+  formVerification.invokeVerify("load", false);
 
   $("#frmUserRegister").submit(function(e){
 
     
 
-    formVerification("submit", false);
-    console.log(verification);
+    formVerification.invokeVerify("submit", false);
     e.preventDefault();
 
     //Securities issue solver
@@ -103,10 +84,7 @@ $(document).ready(function () {
 
   $("#frmMasterUserRegister").submit(function(e){
 
-    
-
-    formVerification("submit", false);
-    console.log(verification);
+    formVerification.invokeVerify("submit", false);
     e.preventDefault();
 
     //Securities issue solver
@@ -120,16 +98,6 @@ $(document).ready(function () {
       let inputLastname = capitalizeFirstLetter($("#inputLastname").val());
       let inputEmail = $("#inputEmail").val();
       let inputPassword = $("#inputPassword").val();
-
-        var obj = {
-        inputInitials : initials,
-        inputLaundryName: inputLaundryName,
-        inputLocation: inputLocation,
-        inputName: inputName,
-        inputLastname: inputLastname,
-        inputEmail: inputEmail,
-        inputPassword: inputPassword
-        };
         
       $.ajax({
         type: "POST",
@@ -150,8 +118,7 @@ $(document).ready(function () {
 
           //input a obligatory tag
 
-          let obligatoryFirstCustomMsg = {
-          }
+          let obligatoryFirstCustomMsg = {};
 
           let firstCustomMsgID = initials + "1";
           obligatoryFirstCustomMsg[firstCustomMsgID] = {};
@@ -215,13 +182,13 @@ $(document).ready(function () {
     let msg = "Escribe un nombre correcto";
 
 
-    deleteAppendError(id);
+    formVerification.deleteAppendError(id);
     if((name == "") || (name.length < 3)){
-      formAppendError(id, msg, "red");
-      formVerification(id, false);
+      formVerification.formAppendError(id, msg, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      deleteAppendError(id);
-      formVerification(id, true);
+      formVerification.deleteAppendError(id);
+      formVerification.invokeVerify(id, true);
     }
 
   });
@@ -233,13 +200,13 @@ $(document).ready(function () {
     let msg = "Escribe un apellido correcto";
 
 
-    deleteAppendError(id);
+    formVerification.deleteAppendError(id);
     if((lastName == "") || (lastName.length < 2)){
-      formAppendError(id, msg, "red");
-      formVerification(id, false);
+      formVerification.formAppendError(id, msg, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      deleteAppendError(id);
-      formVerification(id, true);
+      formVerification.deleteAppendError(id);
+      formVerification.invokeVerify(id, true);
     }
 
   });
@@ -248,35 +215,27 @@ $(document).ready(function () {
 
     let email = $("#inputEmail").val();
     let id = "inputEmail";
-    let verSame = false;
 
-    if(validateEmail(email) == false){
-      deleteAppendError(id);
-      formAppendError(id, "¡Escribe un correo válido!" ,"red");
-      formVerification(id, false);
+    if(!validateEmail(email)){
+      formVerification.deleteAppendError(id);
+      formVerification.formAppendError(id, "¡Escribe un correo válido!" ,"red");
+      formVerification.invokeVerify(id, false);
     }else{
 
-      checkRepEmail(email, function(dataCallback){
-        
-        if(dataCallback["length"] == 1){
-          verSame = true;
-          //formAppendError(id, "¡El correo existe!");
+      checkRepEmail(email).then(data => {
+        //convert to integer to evaluate on if
+        data["length"] = parseInt(data["length"]);
+
+        if(data["length"]){
+          formVerification.deleteAppendError(id);
+          formVerification.formAppendError(id, "¡El correo existe!", "red");
+          formVerification.invokeVerify(id, false);
         }else{
-          verSame = false;
-          //deleteAppendError(id);
+          formVerification.deleteAppendError(id);
+          formVerification.invokeVerify(id, true);
         }
 
-        
-        if(verSame == true){
-          deleteAppendError(id);
-          formAppendError(id, "¡El correo existe!", "red");
-          formVerification(id, false);
-        }else{
-          deleteAppendError(id);
-          formVerification(id, true);
-        }
-       
-      });
+      }).catch(err => console.error(err));
       
     }
   });
@@ -294,28 +253,28 @@ $(document).ready(function () {
       msg4: "Contraseña fuerte"
     };
 
-    deleteAppendError(id);
+    formVerification.deleteAppendError(id);
 
     switch (true) {
 
       case (actualLength < weakLength):
-          formAppendError(id, msg.msg1, "red");
-          formVerification(id, false);
+          formVerification.formAppendError(id, msg.msg1, "red");
+          formVerification.invokeVerify(id, false);
       break;
     
       case ((actualLength >= weakLength) && (actualLength <= mediumLength)):
-          formAppendError(id, msg.msg2, "yellow");
-          formVerification(id, true);
+          formVerification.formAppendError(id, msg.msg2, "yellow");
+          formVerification.invokeVerify(id, true);
       break;
 
       case ((actualLength > mediumLength) && (actualLength <= strongLength)):
-          formAppendError(id, msg.msg3, "yellowGreen");
-          formVerification(id, true);
+          formVerification.formAppendError(id, msg.msg3, "yellowGreen");
+          formVerification.invokeVerify(id, true);
       break;
 
       case (actualLength > strongLength):
-          formAppendError(id, msg.msg4, "green");
-          formVerification(id, true);
+          formVerification.formAppendError(id, msg.msg4, "green");
+          formVerification.invokeVerify(id, true);
       break;
     }
 
@@ -340,13 +299,13 @@ $(document).ready(function () {
       msg2: "¡Las contraseñas coinciden!"
     };
 
-    deleteAppendError(id);
+    formVerification.deleteAppendError(id);
     if(inputRepassword != inputPassword){
-      formAppendError(id, msg.msg1, "red");
-      formVerification(id, false);
+      formVerification.formAppendError(id, msg.msg1, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      formAppendError(id, msg.msg2, "green");
-      formVerification(id, true);
+      formVerification.formAppendError(id, msg.msg2, "green");
+      formVerification.invokeVerify(id, true);
     }
   });
 
@@ -360,12 +319,12 @@ $(document).ready(function () {
     
 
     if(inputTargetMarket == "none"){
-      deleteAppendError(id);
-      formAppendError(id, msg, "red");
-      formVerification(id, false);
+      formVerification.deleteAppendError(id);
+      formVerification.formAppendError(id, msg, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      deleteAppendError(id);
-      formVerification(id,true);
+      formVerification.deleteAppendError(id);
+      formVerification.invokeVerify(id,true);
     }
 
   });
@@ -397,11 +356,11 @@ $(document).ready(function () {
 
     if($("#inputLaundryName").val().length < minLength){
       
-      formAppendError(id, msg, "red");
-      formVerification(id, false);
+      formVerification.formAppendError(id, msg, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      deleteAppendError(id);
-      formVerification(id, true);
+      formVerification.deleteAppendError(id);
+      formVerification.invokeVerify(id, true);
     }
 
   });
@@ -411,11 +370,11 @@ $(document).ready(function () {
     let msg = "Escribe una ubicación válida";
 
     if($("#inputLocation").val().length < 50){
-      formAppendError(id, msg, "red");
-      formVerification(id, false);
+      formVerification.formAppendError(id, msg, "red");
+      formVerification.invokeVerify(id, false);
     }else{
-      deleteAppendError(id);
-      formVerification(id, true);
+      formVerification.deleteAppendError(id);
+      formVerification.invokeVerify(id, true);
     }
   });
 
@@ -430,33 +389,36 @@ $(document).ready(function () {
     let id = "inputInitials";
     let msg = {
       msg1: "¡Abreviatura existente! Escribe otra",
-      msg2: "¡Abreviatura válida!"
+      msg2: "¡Abreviatura válida!",
+      msg3: "Ingrese una Abreviatura válida"
     };
-    let verSame = false;
 
-    let initials = $("#inputInitials").val();
+    //data validation
+    if($("#inputInitials").val() !== ""){
 
-    checkRepInitials(initials, function(dataCallback){
+      checkRepInitials($("#inputInitials").val()).then(data =>{
+        //convert to integer to evaluate on if
+        data["length"] = parseInt(data["length"]);
+  
+        if(data["length"]){
+          formVerification.deleteAppendError(id);
+          formVerification.formAppendError(id, msg.msg1 , "red");
+          formVerification.invokeVerify(id, false);
+        }else{
+          formVerification.deleteAppendError(id);
+          formVerification.formAppendError(id, msg.msg2 , "green");
+          formVerification.invokeVerify(id, true);
+        }
+      })
+      .catch(err => console.error(err));
 
-      if(dataCallback["length"] == 1){
-        verSame = true;
-        //formAppendError(id, "¡El correo existe!");
-      }else{
-        verSame = false;
-        //deleteAppendError(id);
-      }
+    }else{ //when it doesn't has any input value
+      formVerification.deleteAppendError(id);
+      formVerification.formAppendError(id, msg.msg3 , "red");
+      formVerification.invokeVerify(id, false);
+    }
 
-      
-      if(verSame == true){
-        deleteAppendError(id);
-        formAppendError(id, msg.msg1 , "red");
-        formVerification(id, false);
-      }else{
-        deleteAppendError(id);
-        formAppendError(id, msg.msg2 , "green");
-        formVerification(id, true);
-      }
-    });
+    
   });
 
 
@@ -492,87 +454,23 @@ function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
+function checkRepEmail(email){
 
-function formAppendError(id, message, color){
-
-  let txtColor = "";
-
-  switch (color) {
-      case "red":
-        txtColor = "redTxt";
-      break;
-
-      case "yellow":
-        txtColor = "yellowTxt";
-      break;
-
-      case "yellowGreen":
-        txtColor = "yellowGreenTxt";
-      break;
-  
-      case "green":
-        txtColor = "greenTxt";
-      break;
-    
-  }
-
-  if($("#msg4"+ id).length == 0){
-    $("#"+ id).parent().append("<span id='msg4" + id+ "' class='"+txtColor+"'>" + message + "</span>" );
-  }
-}
-function deleteAppendError(id){
-  $("#msg4"+ id).remove();
-}
-
-function checkRepEmail(email, callbackResult){
-  let verifySame = false;
-
-  if(status == "user"){
-
-    $.ajax({
-      type: "POST",
-      url: "./php/checkRepEmail.php",
-      data: {inputEmail: email},
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-  
-    }, callbackResult);
-
-  }else if(status == "superuser"){
-    
-    $.ajax({
-      type: "POST",
-      url: "./php/checkRepSuperUserEmail.php",
-      data: {inputEmail: email},
-      dataType: 'json',
-      error: function(jqXHR, status, error){
-  
-        console.log('Status: ' + status);
-        console.log('Error ' + error);
-        alert("Error " + status + error);
-  
-      }
-    }).done(function(data){
-  
-    }, callbackResult);
-
-  }
-
-  
+  return $.ajax({
+    type: "POST",
+    url: "./php/checkRepEmail.php",
+    data: {
+      inputEmail: email,
+      userType: formVerification.getUserType()
+    },
+    dataType: 'json',
+  })  
 
 }
 
 function checkRepInitials(initials, callbackResult){
-  let verifySame = false;
 
-  $.ajax({
+  return $.ajax({
     type: "POST",
     url: "./php/checkRepInitials.php",
     data: {inputInitials: initials},
@@ -584,53 +482,8 @@ function checkRepInitials(initials, callbackResult){
       alert("Error " + status + error);
 
     }
-  }).done(function(data){
+  });
 
-  }, callbackResult);
-
-}
-
-function toggleSubmitButton(status){
-
-  //status = false | enables the button
-  //status = true | disables the button
-
-  if(status == true){
-    if($('button[type="submit"]').hasClass("disableButton") == false){
-      $('button[type="submit"]').addClass("disableButton");
-    }
-  } else{
-    $('button[type="submit"]').removeClass("disableButton");
-  }
-
-}
-
-function formVerification(field, status){
-
-  let objectValues = [];
- 
-  if((field == "load") || (field == "submit")){
-    
-    verification["load"] = true;
-    verification["submit"] = true;
-
-  }else{  
-
-    if(status == false){
-      verification[field] = false;
-    }else{
-      verification[field] = true;
-    }
-  }  
-  
-  objectValues = Object.values(verification);
-
-  if(objectValues.includes(false) == true){
-    
-    toggleSubmitButton(true);
-  }else{
-    toggleSubmitButton(false);
-  }
 }
 function capitalizeFirstLetter(string) { 
   //set all string to lowCase
@@ -638,17 +491,133 @@ function capitalizeFirstLetter(string) {
   let result = "";
   string = string.toLowerCase();
   string = string.trim();
-
   arr = string.split(" ");
 
-  
   for(let i = 0; i < arr.length; i++){
-
     result += arr[i][0].toUpperCase() + arr[i].slice(1) + " "; 
+  }
+
+  return result;
+} 
+
+
+var formVerification  = (function(){
+  'use strict';
+
+  let fieldVerification = {};
+
+  let userType = "";
+
+  function setUserType(type){
+
+    //data validation and set the fields to verify
+    if(type === "superuser"){
+
+      fieldVerification = {
+        inputLaundryName: false,
+        inputLocation: false,
+        inputName: false,
+        inputLastname : false,
+        inputEmail: false,
+        inputPassword: false,
+        inputRePassword: false
+      };
+
+      //set for later use
+      userType = type;
+    }else if(type === "user"){
+
+      fieldVerification = {
+        inputName: false,
+        inputLastname : false,
+        inputEmail: false,
+        inputPassword: false,
+        inputRePassword: false,
+        inputTargetMarket: false
+      };
+
+      //set for later use
+      userType = type;
+    }
     
   }
 
+  function getUserType(){
+    return userType;
+  }
+
+  function toggleSubmitButton(status){
+    //status = true | enables the button
+    //status = false | disables the button
+
+    //status dictates the condition of the disableButton class, so if it exists
+    //it will toggle it.
+    if($('button[type="submit"]').hasClass("disableButton") === status){
+      $('button[type="submit"]').toggleClass("disableButton");
+    }
   
-   
-  return result;
-} 
+  
+  }
+
+  function formAppendError(id, message, color){
+    let txtColor = "";
+    switch (color) {
+        case "red":
+          txtColor = "redTxt";
+        break;
+  
+        case "yellow":
+          txtColor = "yellowTxt";
+        break;
+  
+        case "yellowGreen":
+          txtColor = "yellowGreenTxt";
+        break;
+    
+        case "green":
+          txtColor = "greenTxt";
+        break;
+      
+    }
+    if($("#msg4"+ id).length == 0){
+      $("#"+ id).parent().append("<span id='msg4" + id+ "' class='"+txtColor+"'>" + message + "</span>" );
+    }
+  }
+
+  function verify(field, status){
+
+    if((field === "load") || (field === "submit")){
+      fieldVerification["load"] = true;
+    }else{  
+      fieldVerification[field] = status;
+    } 
+
+    if(!Object.values(fieldVerification).includes(false)){
+      toggleSubmitButton(true);
+    }else{
+      toggleSubmitButton(false);
+    }
+    
+  }
+
+  function invokeVerify(field, status){
+    verify(field, status);
+  }
+
+  function invokeSetUserType(type){
+    setUserType(type);
+  }
+
+  function deleteAppendError(id){
+    $("#msg4"+ id).remove();
+  }
+
+  return{
+    invokeVerify : invokeVerify,
+    deleteAppendError: deleteAppendError,
+    formAppendError: formAppendError,
+    invokeSetUserType: invokeSetUserType,
+    getUserType: getUserType,
+    setUserType: setUserType
+  };
+})();
