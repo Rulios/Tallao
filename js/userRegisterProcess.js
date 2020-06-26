@@ -25,8 +25,8 @@ $(document).ready(function () {
     e.preventDefault();
 
     //Securities issue solver
-    if($("#submitRegister").hasClass("disableButton") == false){
 
+    if(formVerification.invokeVerify("submit")){
 
       let id = makeid(5);
       let inputName = capitalizeFirstLetter($("#inputName").val());
@@ -84,12 +84,11 @@ $(document).ready(function () {
 
   $("#frmMasterUserRegister").submit(function(e){
 
-    formVerification.invokeVerify("submit", false);
     e.preventDefault();
 
     //Securities issue solver
-    if($("#submitRegister").hasClass("disableButton") == false){
 
+    if(formVerification.invokeVerify("submit")){
 
       let initials = $("#inputInitials").val();
       let inputLaundryName = $("#inputLaundryName").val();
@@ -138,7 +137,6 @@ $(document).ready(function () {
             success: function (response) {
               
               console.log("enviado");
-              console.log(obj);
               $("#frmMasterUserRegister").toggleClass("hide");
               $("#congrSection").toggleClass("hide");
 
@@ -154,9 +152,6 @@ $(document).ready(function () {
             }
 
           });
-
-          
-          
         },
 
         error: function(jqXHR, status, error){
@@ -168,9 +163,8 @@ $(document).ready(function () {
         }
         
       });
-
     }
-
+    
   });
 
 
@@ -585,23 +579,42 @@ var formVerification  = (function(){
   }
 
   function verify(field, status){
-
-    if((field === "load") || (field === "submit")){
+    
+    if((field === "load")){
       fieldVerification["load"] = true;
     }else{  
       fieldVerification[field] = status;
     } 
 
-    if(!Object.values(fieldVerification).includes(false)){
-      toggleSubmitButton(true);
-    }else{
-      toggleSubmitButton(false);
-    }
+    Object.keys(fieldVerification).map(value =>{
+
+      if(fieldVerification[value]){
+        fieldVerification["submit"] = true;
+      }else{
+        fieldVerification["submit"] = false;
+      }
+
+    }); 
+
     
+
+    if(field === "submit"){ 
+        //exception, it disables HTTP operation if it fieldVerification includes false
+        //else, it will return true, so it will enable the operation
+        return (!Object.values(fieldVerification).includes(false)) ? true: false;
+
+    }else{
+
+        if(!Object.values(fieldVerification).includes(false)){
+          toggleSubmitButton(true);
+        }else{
+          toggleSubmitButton(false);
+        }
+    }
   }
 
   function invokeVerify(field, status){
-    verify(field, status);
+    return verify(field, status);
   }
 
   function invokeSetUserType(type){

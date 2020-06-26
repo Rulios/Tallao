@@ -31,7 +31,6 @@ $(document).ready(function(){
 
       $("#frmUserLogin").submit(function(e){
         e.preventDefault();
-        formVerification.invokeVerify();
       });
 
       $("#submitLoginSuperUser").click(function(e){
@@ -105,31 +104,38 @@ function checkLoginAJAX(userType){
   let inputEmail = $("#inputEmail").val();
   let inputPassword = $("#inputPassword").val();
 
-  $.ajax({
-    type: "POST",
-    url: "./php/loginProcess.php",
-    data: {
-      inputEmail: inputEmail,
-      inputPassword: inputPassword,
-      userType: userType
-    },
-    dataType: "json",
+  //submit button reference is used to toggle the submit button
+  if(formVerification.invokeVerify("submit")){
+    
+    $.ajax({
+      type: "POST",
+      url: "./php/loginProcess.php",
+      data: {
+        inputEmail: inputEmail,
+        inputPassword: inputPassword,
+        userType: userType
+      },
+      dataType: "json",
+  
+      success: function (data) {
+        let status = convertStringToBoolean(data.status);
+        pageRedirection(status, userType);
+      },
+      error: function(jqXHR, status, error){
+  
+        console.log('Status: ' + status);
+        console.log('Error ' + error);
+        alert("Error " + status + error);
+  
+        formVerification.deleteAppendError(id);
+        formVerification.formAppendError(id, "Error en realizar la operación", "red");
+  
+      }
+    });
 
-    success: function (data) {
-      let status = convertStringToBoolean(data.status);
-      pageRedirection(status, userType);
-    },
-    error: function(jqXHR, status, error){
+  }
 
-      console.log('Status: ' + status);
-      console.log('Error ' + error);
-      alert("Error " + status + error);
-
-      formVerification.deleteAppendError(id);
-      formVerification.formAppendError(id, "Error en realizar la operación", "red");
-
-    }
-  });
+  
 
 }
 
@@ -183,9 +189,6 @@ var formVerification  = (function(){
     
     if((field === "load")){
       fieldVerification["load"] = true;
-    }else if( field === undefined){
-      //want to make a exception when no param is passed
-      //this means that it will just run to check and toogleSubmitButton
     }else{  
       fieldVerification[field] = status;
     } 
@@ -198,18 +201,27 @@ var formVerification  = (function(){
         fieldVerification["submit"] = false;
       }
 
-    });
+    }); 
 
-    if(!Object.values(fieldVerification).includes(false)){
-      toggleSubmitButton(true);
-    }else{
-      toggleSubmitButton(false);
-    }
     
+
+    if(field === "submit"){ 
+        //exception, it disables HTTP operation if it fieldVerification includes false
+        //else, it will return true, so it will enable the operation
+        return (!Object.values(fieldVerification).includes(false)) ? true: false;
+
+    }else{
+
+        if(!Object.values(fieldVerification).includes(false)){
+          toggleSubmitButton(true);
+        }else{
+          toggleSubmitButton(false);
+        }
+    }
   }
 
   function invokeVerify(field, status){
-    verify(field, status);
+    return verify(field, status );
   }
 
   function deleteAppendError(id){
