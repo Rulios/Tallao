@@ -1,4 +1,3 @@
-var verification = {};
 var status = "";
 $(document).ready(function () {
 
@@ -19,13 +18,10 @@ $(document).ready(function () {
 
   $("#frmUserRegister").submit(function(e){
 
-    
-
     formVerification.invokeVerify("submit", false);
     e.preventDefault();
 
     //Securities issue solver
-
     if(formVerification.invokeVerify("submit")){
 
       let id = makeid(5);
@@ -35,16 +31,6 @@ $(document).ready(function () {
       let inputPassword = $("#inputPassword").val();
       let inputTargetMarket = $("#inputTargetMarket").val();
 
-
-
-      var obj = {
-        id : id,
-        inputName: inputName,
-        inputLastname:inputLastname,
-        inputEmail: inputEmail,
-        inputPassword: inputPassword,
-        inputTargetMarket : inputTargetMarket,
-      };
       
       $.ajax({
         type: "POST",
@@ -495,7 +481,7 @@ function capitalizeFirstLetter(string) {
 } 
 
 
-var formVerification  = (function(){
+/* var formVerification  = (function(){
   'use strict';
 
   let fieldVerification = {};
@@ -633,4 +619,4 @@ var formVerification  = (function(){
     getUserType: getUserType,
     setUserType: setUserType
   };
-})();
+})(); */

@@ -22,8 +22,8 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
     $inputPassword = $_POST['inputPassword'];
     $userType = $_POST["userType"];
 }
-/* 
-$inputEmail = "wardinpro123@gmail.com";
+
+/* $inputEmail = "wardinpro123@gmail.com";
 $inputPassword = "getrekt123";
 $userType = "superuser"; */
 
@@ -98,6 +98,17 @@ class Cookie{
     function setOnCookies(){
       
        setcookie($this->name, $this->value, time()+(1800), "/", null, null, true);
+
+       //PHP > 7.3
+       /* setcookie($name, $value, [
+        'expires' => time()+(1800),
+        'path' => "/",
+        'domain' => null,
+        'samesite' => "Strict",
+        'secure' => null,
+        'httponly' => true,
+        ]); */
+
     }
 
 }

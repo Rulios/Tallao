@@ -127,8 +127,8 @@ function checkLoginAJAX(userType){
         console.log('Error ' + error);
         alert("Error " + status + error);
   
-        formVerification.deleteAppendError(id);
-        formVerification.formAppendError(id, "Error en realizar la operación", "red");
+        /* formVerification.deleteAppendError(id);
+        formVerification.formAppendError(id, "Error en realizar la operación", "red"); */
   
       }
     });
