@@ -82,7 +82,7 @@ var serviceOffer = {
     
     $.ajax({
       type: "POST",
-      url: "./php/fetchElementPriceString.php",
+      url: "./php/fetchElementPrice.php",
       data: {
           inputUserHash: userHash,
           serviceOffer: serviceSelected
@@ -339,7 +339,7 @@ var receiptDetails = {
 
     $.ajax({
       type: "POST",
-      url: "./php/submitReceipt.php",
+      url: "./php/submitOrder.php",
       data: {
           initials: initials,
           clientID: clientID,
@@ -1744,7 +1744,7 @@ var order = {
     console.log(paramOrder);
     $.ajax({
       type: "POST",
-      url: "./php/updateReceiptData.php",
+      url: "./php/updateOrder.php",
       data: paramOrder,
       success: function (response) {
         console.log("Cambio Realizado");
@@ -2229,7 +2229,7 @@ $(document).ready(function () {
         
         $.ajax({
           type: "POST",
-          url: "./php/updatePriceConfig.php",
+          url: "./php/updatePriceElements.php",
           data: {
               inputUserHash: cookie.userhash,
               serviceOffer: serviceSelected,
@@ -2286,7 +2286,7 @@ $(document).ready(function () {
 
         $.ajax({
           type: "POST",
-          url: "./php/searchUserID.php",
+          url: "./php/searchClientID.php",
           data: {inputUserID: $("#inputClientID").val()},
           
           success: function (data) {
@@ -2418,7 +2418,7 @@ $(document).ready(function () {
         console.log(strToSend);
         $.ajax({
           type: "POST",
-          url: "./php/updateSuperuserSchedule.php",
+          url: "./php/updateSchedule.php",
           data: {
               initials: superuser.initials,
               schedule: strToSend
@@ -3027,7 +3027,7 @@ function checkSamePassword(userHash, userType, password){
 
     return $.ajax({
       type: "POST",
-      url: "./php/userCheckSamePassword.php",
+      url: "./php/verifyPassword.php",
       data: {
           inputUserHash: userHash,
           inputPassword: password,
