@@ -82,7 +82,7 @@ var serviceOffer = {
     
     $.ajax({
       type: "POST",
-      url: "./php/fetchElementPrice.php",
+      url: "./php/fetchElementsPrice.php",
       data: {
           inputUserHash: userHash,
           serviceOffer: serviceSelected
@@ -2067,7 +2067,7 @@ $(document).ready(function () {
 
             $.ajax({
               type: "POST",
-              url: "./php/userNewPassword.php",
+              url: "./php/updateNewPassword.php",
               data: {
                   inputUserHash: cookie.userhash,
                   inputPassword: inputPassword,
@@ -2287,7 +2287,7 @@ $(document).ready(function () {
         $.ajax({
           type: "POST",
           url: "./php/searchClientID.php",
-          data: {inputUserID: $("#inputClientID").val()},
+          data: {inputClientID: $("#inputClientID").val()},
           
           success: function (data) {
             
@@ -3008,7 +3008,7 @@ function fetchPanelData(userHash, userType, callbackResult){
 
     return $.ajax({
       type: "POST",
-      url: "./php/fetchMyAccountDataUser.php",
+      url: "./php/fetchAccountCreds.php",
       data: {
         inputUserHash: userHash,
         userType: userType

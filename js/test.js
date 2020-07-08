@@ -6,18 +6,18 @@ require.config({
             "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
             "../Tallao/js/lib/jquery"
         ],
-        formVerification : "components/formVerification"
+        formVerification : "frontendModules/formVerification"
+
+        
 
     }
 
 });
 
-/* require(["jquery", "formVerification"], function($, formVerification){
-
-    console.log(formVerification.invokeVerify());
+require(["ajaxReqCheckExists"], function(ajaxReqCheckExists){
 
 
-}); */
+});
 
 
 

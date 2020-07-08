@@ -1,23 +1,17 @@
-requirejs.config({
-    paths:{
-        jquery: [
-            "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
-            "../Tallao/js/lib/jquery"]
-    }
-});
-
-define(["jquery"], function($){
+define(["ajaxReq"], function(ajaxReq){
+    //this module includes all the AJAX fetches that involves on the
+    //submitting, fetching, and updating orders created by the superuser
 
     async function submitOrder(obj){
         //params: clientID, clientName, eQuantity, ePrice(elementPrice string)
         //hookQuantity, dateReceive, dateAssign, totalPrice, indications
-        return await doAJAX("POST", "./php/submitOrder.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/submitOrder.php", obj);
     }
 
     async function fetchOrders(obj){
         //params: filterMode, params, startIndex, status(means order status)
 
-        return await doAJAX("POST", "./php/fetchOrders.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/fetchOrders.php", obj);
     }
 
     async function updateOrder(obj){
@@ -26,7 +20,7 @@ define(["jquery"], function($){
         /* parameters = customerName, status, elementQuantity, elementsPrice,
                  hookQuantity, dateReceive, dateAssign, totalPrice, indications */
         
-        return await doAJAX("POST", "./php/updateOrder.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/updateOrder.php", obj);
     }
 
     return {
@@ -36,13 +30,3 @@ define(["jquery"], function($){
     };
 
 });
-
-async function doAJAX(type, url, obj){
-
-    return await $.ajax({
-        type: type,
-        url: url,
-        data: obj
-    });
-
-}
