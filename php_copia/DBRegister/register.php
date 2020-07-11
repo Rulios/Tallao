@@ -15,7 +15,13 @@ $inputPassword = "";
 $inputTargetMarket = "";
 $hashCode = "";
 
-if(isset($_POST["id"], $_POST["inputName"], $_POST["inputLastname"], $_POST["inputEmail"], $_POST["inputPassword"], $_POST["inputTargetMarket"])){
+if(isset($_POST["id"], 
+    $_POST["inputName"], 
+    $_POST["inputLastname"], 
+    $_POST["inputEmail"], 
+    $_POST["inputPassword"], 
+    $_POST["inputTargetMarket"])){
+        
     $id = $_POST['id'];
     $inputName = $_POST['inputName'];
     $inputLastname = $_POST['inputLastname'];

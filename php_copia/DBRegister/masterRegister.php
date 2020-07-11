@@ -22,10 +22,7 @@ $inputName = $_POST['inputName'];
 $inputLastname = $_POST['inputLastname'];
 $inputEmail = $_POST['inputEmail'];
 $inputPassword = $_POST['inputPassword'];
-
 $hashCode = "";
-
-
 
 if(isset($_POST["inputInitials"], 
     $_POST["inputLaundryName"], $_POST["inputLocation"], 

@@ -19,12 +19,9 @@ $(document).ready(function(){
 
       $("#inputPassword").change(function(e){
         let id = "inputPassword";
-
         if($("#inputPassword").val() === ""){
-            
             formVerification.invokeVerify(id, false);
         }else{
-            
             formVerification.invokeVerify(id, true);
         }
       });
@@ -134,9 +131,6 @@ function checkLoginAJAX(userType){
     });
 
   }
-
-  
-
 }
 
 var formVerification  = (function(){

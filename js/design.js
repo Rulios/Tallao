@@ -27,8 +27,6 @@ function resize2FitTheBig(){
     var arrObj = $("div[name='pContainer']");
     let objLength = Object.keys(arrObj).length;
  
-    
-    
     //objLength - 2 because the last two Keys are 
     //default properties from the jquery DOM
     for(let i = 0; i < objLength - 2; i++){
@@ -39,12 +37,6 @@ function resize2FitTheBig(){
                 maxHeight = arrObj[i].offsetHeight;
             }
         } 
-        //console.log(maxHeight);
     }
-    
-    
     $("div[name='pContainer']").css("height",  maxHeight + "px");
-  
-    
-
 }

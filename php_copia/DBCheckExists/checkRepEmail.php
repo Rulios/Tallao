@@ -11,14 +11,13 @@ if(Classes\Cookies::readCookies()){
     $db = "tallao";
 
     if (isset($_POST["inputEmail"])){
+        $userType = Classes\Cookies::getUserTypeCookie();
         $inputEmail = $_POST["inputEmail"];
     }
     /* $inputEmail = "robert_lu20@hotmail.com";
     $userType = "superuser"; */
-
     
     //correct the usertype tag and the Table name
-    $userType = Classes\Cookies::getUserTypeCookie();
     $tableName = $userType . "s";
 
     $conn = new mysqli($serverName, $userConn, $passwordConn);

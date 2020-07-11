@@ -9,9 +9,7 @@ $db = "tallao";
 //$inputEmail = "robert_lu20@hotmail.com";
 
 if (isset($_POST['inputInitials'])){
-
     $inputInitials = $_POST["inputInitials"];
-
 }
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);

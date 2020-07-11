@@ -1,5 +1,7 @@
 <?php
 
+require_once "../includes/autoload.php";
+
 //Connection param
 $serverName = "localhost";
 $userConn = "root";
@@ -14,56 +16,54 @@ $laundryInitials = "";
 $arrSET = []; //array to then implode() to convert it a string
 $stringSET = ""; //string of the SET SQL query argument
 
+/*These are all the fields that can be updated 
+customerName, status, elementsQuantity, elementsPrice,
+hookQuantity, dateReceive, dateAssign, totalPrice, indications
+*/
 
-/* if(isset($_POST["id"], $_POST["customerName"], $_POST["status"], $_POST["elementsQuantity"], $_POST["elementsPrice"], $_POST["hookQuantity"], $_POST["dateReceive"], $_POST["dateAssign"], $_POST["totalPrice"], $_POST["indications"])){
-  
-} */
 
-$id = $_POST["id"];
-$laundryInitials = $_POST["initials"];
-
-//since they're required values, they should be there always
-//then unsetting it to get the variables values
-unset($_POST["id"]);
-unset($_POST["initials"]); 
-
-foreach ($_POST as $key => $value) {
-    if(isset($_POST[$key])){
-        array_push($arrSET, "$key='$value'");
+if(Classes\Cookies::readCookies()){
+    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+    
+    //since they're required values, they should be there always
+    //then unsetting it to get the variables values
+    $id = $_POST["id"];
+    unset($_POST["id"]);
+    foreach ($_POST as $key => $value) {
+        if(isset($_POST[$key])){
+            array_push($arrSET, "$key='$value'");
+        }
     }
+
+    /* array_push($arrSET, "customerName='Robert Lu Zheng'");
+    array_push($arrSET, "customerID='GUQ13'");
+    $id = "B-56";
+    $laundryInitials = "VICNT"; */
+
+    $stringSET = implode(",", $arrSET);
+
+    $conn = new mysqli($serverName, $userConn, $passwordConn);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+
+    $sql = "UPDATE orders SET $stringSET WHERE id='$id' AND laundryInitials ='$laundryInitials'";
+
+    if(!mysqli_query($conn,$sql)){
+        echo mysqli_error($conn);
+    }
+
+    mysqli_close($conn);
 }
 
 
-/* array_push($arrSET, "customerName='Robert Lu Zheng'");
-array_push($arrSET, "customerID='GUQ13'");
-$id = "B-56";
-$laundryInitials = "VICNT"; */
-
-$stringSET = implode(",", $arrSET);
-
-$conn = new mysqli($serverName, $userConn, $passwordConn);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-//echo "Connected successfully";
 
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
-$sql = "UPDATE orders SET $stringSET WHERE id='$id' AND laundryInitials ='$laundryInitials'";
-//echo $sql;
-
-
-if(mysqli_query($conn,$sql)){
-
-}else{
-    echo mysqli_error($conn);
-} 
-
-mysqli_close($conn);
 
 ?>
 

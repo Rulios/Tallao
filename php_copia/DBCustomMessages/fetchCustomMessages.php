@@ -1,48 +1,48 @@
 <?php
 
+require_once "../includes/autoload.php";
+
 //Connection param
 $serverName = "localhost";
 $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
+//$initials = "VICNT";
 
-if (isset($_POST['inputInitials'])){
+if(Classes\Cookies::readCookies()){
 
-    $inputInitials = $_POST["inputInitials"];
-
-} 
-
-//$inputInitials = "VICNT";
-
-$conn = new mysqli($serverName, $userConn, $passwordConn);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	$initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+	
+	$conn = new mysqli($serverName, $userConn, $passwordConn);
+	
+	// Check connection
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
+	}
+	
+	$sql = "SELECT id, colortag, tag, message FROM custommessages WHERE laundryInitials= '$initials'";
+	//echo $sql;
+	mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+	$result = mysqli_query($conn, $sql);
+	
+	if(!$result ) {
+		die('Could not get data: ' . mysql_error());
+	 }  
+	
+	//echo mysqli_num_rows($result);
+	$data = [];
+	while ($row = mysqli_fetch_array($result)) {
+		 $data[] = $row;
+	}
+	echo json_encode($data);
+	
+	mysqli_close($conn);
 }
 
-$sql = "SELECT id, colortag, tag, message FROM custommessages WHERE laundryInitials= '$inputInitials'";
-//echo $sql;
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
-$result = mysqli_query($conn, $sql);
 
-if(!$result ) {
-    die('Could not get data: ' . mysql_error());
- }  
-
-//echo mysqli_num_rows($result);
-$data = [];
-while ($row = mysqli_fetch_array($result)) {
-
-	# code...
-	 $data[] = $row;
-}
 
 /* //Convert codification
-
-
-
 $arrlength = count($data);
 $data2 = array();
 for ($i=0; $i < $arrlength; $i++) { 
@@ -70,17 +70,10 @@ for ($i=0; $i < $arrlength; $i++) {
     $data2[$i]['message'] = $textoMessage;
 	//print_r($data2);
 	//$data[] = $texto;
-
 }
-
-
 //We don't send $data because it contains the unconverted text
 //So we use $data2 as an temporal array to store the converted text
 echo json_encode($data2); */
-
-echo json_encode($data);
-
-mysqli_close($conn);
-
-
 ?>
+
+

@@ -1,5 +1,7 @@
 <?php
 
+require_once "../includes/autoload.php";
+
 //Connection param
 $serverName = "localhost";
 $userConn = "root";
@@ -11,14 +13,11 @@ $verification = [];
 //This is to toggle between the Names of the Cookie and the Table Name on DB
 $tableName = "";
 
-
-if(isset($_POST["inputEmail"], $_POST["inputPassword"])){
+if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
     $inputEmail = $_POST['inputEmail'];
     $inputPassword = $_POST['inputPassword'];
+    $userType = $_POST["userType"];
 }
-
-require_once "../includes/autoload.php";
-
 
 /* $inputEmail = "wardinpro123@gmail.com";
 $inputPassword = "getrekt123";
@@ -37,7 +36,6 @@ if ($conn->connect_error) {
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 $sql = "SELECT hashcode, password FROM $tableName WHERE email='$inputEmail' LIMIT 1" ;
-
 
 $result = mysqli_query($conn, $sql);
 
@@ -66,20 +64,14 @@ if (mysqli_num_rows($result) == 1){
         // Uses a secure connection (HTTPS) if possible
         ini_set('session.cookie_secure', 1);
     } else {
-       
         $verification["status"] = "false";
-        
     }
     
 }else{
     //echo "Error en realizar la operación";
     $verification["status"] = "false";
 }
-
-    echo json_encode($verification);
+echo json_encode($verification);
 
 mysqli_close($conn);
-
-
-
 ?>
