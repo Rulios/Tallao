@@ -1,3 +1,8 @@
+require.config({
+    paths:{
+        ajaxReq: "./requestsModules/ajaxReq"
+    }
+});
 define(["ajaxReq"], function(ajaxReq){
     //this module includes all the condiguration that the superuser
     //has. Except for Custom Messages, since it's a bigger module

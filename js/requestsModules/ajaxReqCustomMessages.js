@@ -1,3 +1,8 @@
+require.config({
+    paths:{
+        ajaxReq: "./requestsModules/ajaxReq"
+    }
+});
 define(["ajaxReq"], function(ajaxReq){
 
     async function update(obj){

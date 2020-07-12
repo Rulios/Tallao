@@ -1,3 +1,8 @@
+require.config({
+    paths:{
+        ajaxReq: "./requestsModules/ajaxReq"
+    }
+});
 define(["ajaxReq"], function(ajaxReq){
     //this module includes all the AJAX fetches that involves on the
     //submitting, fetching, and updating orders created by the superuser

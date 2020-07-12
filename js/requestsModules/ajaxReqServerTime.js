@@ -1,15 +1,14 @@
 require.config({
 
     paths:{
-
         jquery: [
             "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
-            "../Tallao/js/lib/jquery"]
+            "../Tallao/js/lib/jquery"],
+        ajaxReq: "./requestsModules/ajaxReq"
     }
-
 });
 
-define(["ajaxReq"], function(ajaxReq){
+define(["jquery","ajaxReq"], function($,ajaxReq){
 
     async function fetchDateTimeServer(){
 

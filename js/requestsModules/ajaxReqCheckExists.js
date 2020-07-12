@@ -1,8 +1,12 @@
-
+require.config({
+    paths:{
+        ajaxReq: "./requestsModules/ajaxReq"
+    }
+});
 define(["ajaxReq"], function(ajaxReq){
 
     async function email(obj){
-        //props: inputEmail
+        //props: inputEmail, userType
         try{
             return await ajaxReq.doAJAX("POST", "./php/checkRepEmail.php", obj);
         }catch(err){
@@ -12,6 +16,7 @@ define(["ajaxReq"], function(ajaxReq){
     }
 
     async function laundryInitials(obj){
+        //props: inputInitials
         try{
             return await ajaxReq.doAJAX("POST", "./php/checkRepInitials.php", obj);
         }catch(err){

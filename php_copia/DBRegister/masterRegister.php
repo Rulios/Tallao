@@ -41,59 +41,45 @@ if(isset($_POST["inputInitials"],
     echo "no hay ni na'";
 }
 
-
 $conn = new mysqli($serverName, $userConn, $passwordConn);
-
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 //1st query check if hashcode exists
- 
 do{
-
     $hashCode = createRandomCode();
 
     $sql = "SELECT 1 FROM users WHERE hashcode= '$hashCode' LIMIT 1";
-
     if(mysqli_query($conn,$sql)){
         $result = mysqli_query($conn, $sql);
     }else{
         echo mysqli_error($conn);
     }
-    
 } while (mysqli_num_rows($result) == 1);
 
 //subProcess Create a hash code to the password
-
 $inputPassword = hashPassword($inputPassword);
 
 //2st query
-
  $sql = "INSERT INTO superusers (initials,hashcode,laundryName, location, legalreprName, legalreprLastname, email, password)
-VALUES ('$initials','$hashCode','$inputLaundryName', '$inputLocation','$inputName', '$inputLastname', '$inputEmail', '$inputPassword')";
-
-echo $sql;
-
-if(mysqli_query($conn,$sql)){
-
-}else{
+VALUES ('$initials','$hashCode','$inputLaundryName', '$inputLocation','$inputName', '$inputLastname', '$inputEmail', '$inputPassword')
+LIMIT 1";
+if(!mysqli_query($conn,$sql)){
     echo mysqli_error($conn);
 }
 
 //3rd query
-
 $sql = "INSERT INTO pricechart (hashcode) VALUES ('$hashCode')";
-
-if(mysqli_query($conn,$sql)){
-
-}else{
+if(!mysqli_query($conn,$sql)){
     echo mysqli_error($conn);
 }
+
+//4th query create first custom message
+insertFirstCustomMessage($initials);
 
 mysqli_close($conn);
 
@@ -114,6 +100,21 @@ function hashPassword($password){
         'cost' => 12,
     ];
     return password_hash($password, PASSWORD_BCRYPT, $options);
+}
+
+function insertFirstCustomMessage($initials){
+    //inserts into DB the first custom message to have as a laundry
+    $messageID = $initials . "1";
+    $colortag = "white";
+    $tag = "Sin pliegue / 不折";
+    $message = "Sin pliege / 不折";
+    $status = "blocked";
+
+    $sql = "INSERT INTO custommessages(laundryInitials, id, colortag, tag, message, status)
+    VALUES($initials, $messageID, $colortag, $tag, $message, $status) LIMIT 1";
+    if(!mysqli_query($conn,$sql)){
+        echo mysqli_error($conn);
+    }
 }
 
 ?>

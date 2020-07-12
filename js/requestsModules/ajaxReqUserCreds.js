@@ -1,3 +1,8 @@
+require.config({
+    paths:{
+        ajaxReq: "./requestsModules/ajaxReq"
+    }
+});
 define(["ajaxReq"], function(ajaxReq){
     //This module has functions that involves all the AJAX requests 
     //within the limits of User Credentials.

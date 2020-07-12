@@ -2,11 +2,10 @@ require.config({
     paths:{
         ajaxReq: "./requestsModules/ajaxReq"
     }
-})
+});
 define(["ajaxReq"], function(ajaxReq){
     async function login(obj = {}){
         //params: inputEmail, inputPassword, userType
-        console.log("ADAWDAWD");
         return await ajaxReq.doAJAX("POST", "./php_copia/DBLogin/loginProcess.php", obj);
     }
 
