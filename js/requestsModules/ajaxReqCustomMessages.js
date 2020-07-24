@@ -6,7 +6,7 @@ require.config({
 define(["ajaxReq"], function(ajaxReq){
 
     async function update(obj){
-        //props: initials, messageObj(json format)
+        //props:  messageObj(json format)
 
         try{    
             return await ajaxReq.doAJAX("POST", "./php/submitUpdateCustomMessage.php", obj);
@@ -16,7 +16,7 @@ define(["ajaxReq"], function(ajaxReq){
     }
 
     async function fetch(obj){
-        //props: inputInitials
+        //props: 
         try{
             return await ajaxReq.doAJAX("POST", "./php/fetchCustomMessages.php", obj);
         }catch(err){

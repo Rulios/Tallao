@@ -49,7 +49,7 @@ if (mysqli_num_rows($result) == 1){
     if (password_verify($inputPassword, $hashPassword)){
         //true
         $verification["status"] = "true";
-        
+        $verification["url"] = Classes\URL::loginURL($userType);
         Classes\Cookies::create("usertype", $userType);
         Classes\Cookies::create("userhash", $hashUserCode);
         

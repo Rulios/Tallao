@@ -171,13 +171,13 @@ var receiptDetails = {
     let totalUpdate = 0;
     
     
-    if(cQuantity == 0){
+    if(!cQuantity){
       formVerification("inputElements", false);
     }else{
       formVerification("inputElements", true);
     }
 
-    if((typeof this[id] == undefined) || (typeof this[id] == "undefined") || (this[id] == "") || (this[id] == 0)){
+    if(!this[id]){
       this.elements.push(id);
 
       //define the obj property as a object
@@ -298,7 +298,6 @@ var receiptDetails = {
     
     let arrElementQuantity = [];
     let arrElementPrice = [];
-    let objKeys = Object.keys(this);
 
     let strElementQuantity = "";
     let strElementPrice = "";
@@ -312,8 +311,6 @@ var receiptDetails = {
     let strIndications = $("#inputIndications").text();
     let totalPrice = this.totalPrice;
 
-
-    let string = "";
     this.elements.map((value, i) => {
       arrElementQuantity.push(value + "=" + this[value]["quantity"]);
       arrElementPrice.push(value + "=" + this[value]["unitPrice"]);
@@ -842,8 +839,8 @@ var customMessages = {
     let closeMessageButton = document.createElement("BUTTON");
     closeMessageButton.setAttribute("class", "closeMessageButtonStyle");
     closeMessageButton.textContent = "x";
+
     closeMessageButton.addEventListener("click", function(e){
-      
       let indexToDel = customMessages.messages.indexOf(idElement);
 
       //it needs to delete the record at the Database first
@@ -1044,9 +1041,6 @@ var customMessages = {
   },
 
   submitCustomMessages: function(initials){
-
-    var myarray = new Array();
-
     var params = {};
 
     var paramJSON = "";

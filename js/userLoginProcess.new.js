@@ -153,7 +153,10 @@ function($, formVerification){
         let inputPassword = $("#inputPassword").val();
         
         if(formVerification.invokeVerify("submit")){
-            require(["./requestsModules/ajaxReqLogin"], function(ajaxReqLogin){
+
+            require(["./requestsModules/ajaxReqLogin", "./frontendModules/pageRedirection"], 
+            function(ajaxReqLogin, page){
+
                 let obj = {
                     inputEmail: inputEmail,
                     inputPassword: inputPassword,
@@ -161,8 +164,17 @@ function($, formVerification){
                 }
                 
                 let query =  ajaxReqLogin.login(obj);
-                
-                query.then((data) => console.log(data))
+                query.then(dataJSON =>{
+                  const id = "inputPassword";
+                  let data = JSON.parse(dataJSON);
+                  if(convertStringToBoolean(data.status)){
+                    page.loginRedirection(data.url);
+                  }else{
+                    formVerification.deleteAppendError(id);
+                    formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
+                  }
+                  
+                })
                 .catch(err => console.error(err));
                 //ajaxReqLogin.urlExists();
                                   

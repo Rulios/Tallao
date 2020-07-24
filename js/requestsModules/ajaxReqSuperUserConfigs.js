@@ -17,7 +17,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function fetchElementsPrice(obj){
         //params : serviceOffer
 
-        return await ajaxReq.doAJAX("POST", "./php/fetchElementsPrice.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/fetchElementsPrice.php", obj);
     }         
     
     async function updateElementsPrice(obj){
