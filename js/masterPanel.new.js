@@ -7,7 +7,9 @@ require.config({
             "./lib/jquery"],
         formVerification:["frontendModules/formVerification"],
         design: "design.new",
-        bootstrap: ["./lib/bootstrap.bundle.min"]
+        bootstrap: ["./lib/bootstrap.bundle.min"],
+        'react': 'https://unpkg.com/react@16/umd/react.development',
+        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development'
         
     },
     shim: {
@@ -315,6 +317,27 @@ require(["jquery","formVerification", "design", "bootstrap"], function($, formVe
 
             require(["frontendModules/sessionHandler"], function(session){
                 session.check();
+
+                require(["./reactComponents/customMessages", "react", "react-dom"], function (customMessages, React, ReactDOM){
+                    
+                    require(["./requestsModules/ajaxReqCustomMessages"], function(ajaxReq){
+                        ajaxReq.fetch().then(data=>{
+                           
+                            /* let compo = React.createElement(customMessages.MessagePanel, {
+                                data: data,
+                                mode: "edit",
+
+                            }); */
+
+                            /* ReactDOM.render(
+                                compo,
+                                document.getElementById("appendCustomMessages")
+                            ); */
+                            //console.log(compo);
+                        }).catch(err => console.error(err));
+                    });
+
+                });
             });
 
         });

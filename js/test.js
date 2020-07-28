@@ -4,38 +4,57 @@ require.config({
     paths: {
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.production.min',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.production.min',
-        jquery: [
-            "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
-            "../Tallao/js/lib/jquery"]
+        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.production.min'
+
     }
 });
 
 // load the modules defined above
-require(['react', 'react-dom', "jquery"], function(React, ReactDOM, $) {
+require(['react', 'react-dom'], function(React, ReactDOM ) {
     // now you can render your React elements
-
-    $(document).ready(function(e){
-
-        class Hola extends React.Component{
-            construtor(props){
-            }
-            render(){
-                return(
-                    React.createElement("h1", 
-                        {
-                            id: "uep",
-
-                        }
-                    , "Hola")
-                );
-            }
+    class Box extends React.Component{
+        constructor(props){
+            super(props);
+            console.log(this.props);
         }
-        
-        ReactDOM.render(
-            React.createElement(Hola, {name:"miNomb"}, this),
-            document.getElementById("root")
-        );
-    });
+        render(){
+            return(
+                React.createElement("input",{
+                    type:"text",
+                    onInput: () =>{this.props.onInput()}
+                })
+            );
+        }
+    }
+
+    ////////////Start to implement functions events
+
+    class Main extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                boxText : ""
+            };
+            
+        }
+
+        onChangeText (event){
+            console.log(this.state.boxText);
+            //this.setState({ boxText: event.target.value});
+        }
+
+        render(){
+            return(
+                React.createElement(Box, {
+                    onInput: () => { this.onChangeText(event)}
+                })
+            );
+        }
+    }
+
+    ReactDOM.render(
+        React.createElement(Main),
+        document.getElementById("root")
+    )
     
 });

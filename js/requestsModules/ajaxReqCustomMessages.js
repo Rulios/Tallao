@@ -18,7 +18,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function fetch(obj){
         //props: 
         try{
-            return await ajaxReq.doAJAX("POST", "./php/fetchCustomMessages.php", obj);
+            return await ajaxReq.doAJAX("POST", "./php_copia/DBCustomMessages/fetchCustomMessages.php", obj);
         }catch(err){
             console.error(err);
         }

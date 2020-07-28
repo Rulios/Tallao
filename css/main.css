@@ -66,7 +66,7 @@ html {
     font-size: 30px;
 }
 .subTxt{
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .smallText{
@@ -592,7 +592,7 @@ input[type='checkbox']{
 .customTextAreaStyle{
     font-size: 14px;
     width: 100%;
-    height: auto;
+    height: 50px;
 }
 .instantMsgTagStyle{
 
