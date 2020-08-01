@@ -337,6 +337,10 @@ require(["jquery","formVerification", "design", "bootstrap"], function($, formVe
                         }).catch(err => console.error(err));
                     });
 
+                    require(["./reactComponents/writeOrder"], function(writeOrder){
+                        
+                    });
+
                 });
             });
 

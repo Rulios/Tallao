@@ -4,15 +4,14 @@ require.config({
     paths: {
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        "divComp": "./reactComponents/divComponents"
+        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development'
     }
 });
 
 // load the modules defined above
 //inputs shouldn't have a children
 //styles should be a object
-define(['react', 'react-dom', "divComp"], function(React, ReactDOM, divComp) {
+define(['react', 'react-dom'], function(React, ReactDOM) {
     const color = {
         none: "",
         skyblue: "#7FE5FF",

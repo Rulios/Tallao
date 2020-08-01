@@ -10,7 +10,7 @@
             //this will push forward the cookie creation request
             //$cookiesArr[$name] = $value;
             self::$cookiesArr[$name] = $value;
-            setcookie($name, $value, time()+(2000), "/", null, null, true);
+            setcookie($name, $value, time()+(60*60*7), "/", null, null, true);
             //PHP > 7.3
            /* setcookie($name, $value, [
             'expires' => time()+(1800),
