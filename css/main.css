@@ -514,7 +514,7 @@ input[type='checkbox']{
 .closeMessageButtonStyle:hover{
     background-color: #FF0409;
 }
-#totalPriceSpan{
+.totalPriceSpan{
     float:right;
     font-weight: bold;
 }

@@ -4,14 +4,15 @@ require.config({
     paths: {
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development'
+        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
+        inputPrevent: "./frontendModules/inputPrevent"
     }
 });
 
 // load the modules defined above
 //inputs shouldn't have a children
 //styles should be a object
-define(['react', 'react-dom'], function(React, ReactDOM){
+define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPrevent){
 
     const elements = {
         custom : "Elemento personalizable",
@@ -108,7 +109,8 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                     },
                         inputElementChangeOnCustom,
                         React.createElement("button", {
-                            className: "closeElementButtonStyle"
+                            className: "closeElementButtonStyle",
+                            onClick: () => {props.onClickDelete(props.id)}
                         }, "x"),
                         React.createElement("div", {
                             className: "container small-mediumSeparation"
@@ -122,7 +124,13 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                                         className :"inputNumberReceiptStyle",
                                         name: "inputQuantity",
                                         value: props.quantity,
-                                        onChange: () => {}
+                                        onChange: (e) => {
+                                            inputPrevent.notNegative(e);
+                                            props.onUpdateQuantity(props.id, e);
+                                        },
+                                        onKeyPress: (e) =>{
+                                            inputPrevent.onlyIntegers(e);
+                                        }
                                     })
                                 ),
 
@@ -133,7 +141,15 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                                         type: "number",
                                         className: "inputNumberReceiptStyle",
                                         value: props.price,
-                                        onChange: () => {}
+                                        onChange: (e) => {
+                                            inputPrevent.notNegative(e);
+                                            props.onUpdateUnitPrice(props.id, e);
+                                        },
+                                        onKeyPress: (e) =>{
+                                            inputPrevent.asteriskAndHyphen(e);
+                                            inputPrevent.notExponential(e);
+                                            inputPrevent.notNegative(e);
+                                        }
                                     })
                                 ),
 
@@ -158,7 +174,10 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                     id: value,
                     price: props.activeElementsOnOrder[value]["price"],
                     quantity: props.activeElementsOnOrder[value]["quantity"],
-                    service: props.service
+                    service: props.service, 
+                    onClickDelete: (id) =>{props.onClickDelete(id);},
+                    onUpdateQuantity: (id, e) => {props.onUpdateQuantity(id, e);},
+                    onUpdateUnitPrice: (id, e) =>{props.onUpdateUnitPrice(id,e);}
                 })
             })
         );
@@ -167,6 +186,7 @@ define(['react', 'react-dom'], function(React, ReactDOM){
     class writeOrderPanel extends React.Component{
         //props: priceElements (in JSON format), hookPrice, serviceOffer,
         //idActiveOnOrderElement(id of HTML element to append when clicking element)
+        //idToTotalPrice (id of HTML element to update the total price)
 
         //states definitions:
         //activeElementsOnList = all the elements rendered by selectableElementToOrder
@@ -186,7 +206,8 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                 elements: elements,
                 activeElementsOnList: elements,
                 activeElementsOnOrder: {},
-                totalPrice: 0 
+                totalPrice: 0,
+                indexCustom: []
             };
         }   
 
@@ -194,7 +215,27 @@ define(['react', 'react-dom'], function(React, ReactDOM){
             //create new activeElementsOnList , and activeElementsOnOrder
             let newActiveElementsOnList = JSON.parse(JSON.stringify(this.state.activeElementsOnList));
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
-            
+            let newIndexCustom = this.state.indexCustom.slice();
+            //the format is about custom1, custom2, custom3... and so on
+            //So this.state.indexCustom will store all the indices, and it will be resorted
+            //every time it inputs a new index (inputs a new custom element), this is just
+            //to naming purposes of object properties at activeElementsOnOrder
+            if(id.indexOf("custom") !== -1){
+                if(newIndexCustom.length === 0){
+                    id = `${id}1`; //as first custom element of the order
+                    newIndexCustom.push(1);
+                }else{
+                    //sort the array in ascending order
+                    newIndexCustom.sort(function(a, b){return a-b}); 
+
+                    //get the last element in array and increment it by 1
+                    id = `${id}${newIndexCustom[newIndexCustom.length - 1] + 1}`; 
+
+                    //add new index
+                    newIndexCustom.push(newIndexCustom.length + 1);
+                }
+            }
+
             //add new element to order 
             if(Object.keys(newActiveElementsOnOrder).indexOf(id) === -1){ //new
                 newActiveElementsOnOrder[id] = {};
@@ -211,33 +252,89 @@ define(['react', 'react-dom'], function(React, ReactDOM){
             this.setState({
                 activeElementsOnList: newActiveElementsOnList,
                 activeElementsOnOrder: newActiveElementsOnOrder,
+                indexCustom: newIndexCustom
                 
             }, () =>{//callback
                 this.setState({totalPrice: this.calcTotalPrice()})
             });
         }
-        
-        
 
         calcTotalPrice(){
             let total = 0;
             Object.keys(this.state.activeElementsOnOrder).map(value =>{
-                total += this.state.activeElementsOnOrder[value]["price"];
+                total += this.state.activeElementsOnOrder[value]["price"] * this.state.activeElementsOnOrder[value]["quantity"];
             });
-            return total.toFixed(2);
+            return parseFloat(total.toFixed(2));
         }
 
+        deleteElementFromOnOrder(id){
+            const newActiveElementsOnList = {};
+            const newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            //add in the same order to activeElementsOnList
+            Object.keys(this.state.elements).map(value =>{
+                if(Object.keys(this.state.activeElementsOnList).indexOf(value) !== -1 || value === id){
+                    newActiveElementsOnList[value] = this.state.elements[value];
+                }
+            });
+
+            //delete prop from activeElementsOnOrder
+            delete newActiveElementsOnOrder[id];
+
+            this.setState({
+                activeElementsOnList: newActiveElementsOnList,
+                activeElementsOnOrder: newActiveElementsOnOrder,
+                
+            }, () =>{//callback
+                this.setState({totalPrice: this.calcTotalPrice()})
+            });
+        }
+
+        updateQuantity(id, e){
+            const activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            const quantity = e.target.value; //this input just accepts positive integers
+
+            activeElementsOnOrder[id]["quantity"] = quantity;
+
+            this.setState({
+                activeElementsOnOrder: activeElementsOnOrder
+            }, () =>{
+                this.setState({totalPrice: this.calcTotalPrice()});
+            });
+        }
+
+        updateUnitPrice(id, e){
+            const activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            const unitPrice = e.target.value;
+
+            activeElementsOnOrder[id]["price"] = unitPrice;
+
+            this.setState({
+                activeElementsOnOrder: activeElementsOnOrder
+            }, () =>{
+                this.setState({totalPrice: this.calcTotalPrice()});
+            });
+        }
+        
+
         componentDidUpdate(){ //render the list that the user has chosen
+            //update the total price text
+            document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
             ReactDOM.render(
                 React.createElement(renderElementOnOrder,{
                     activeElementsOnOrder: this.state.activeElementsOnOrder,
-                    service: this.props.serviceOffer
+                    service: this.props.serviceOffer,
+                    onClickDelete: (id) =>{this.deleteElementFromOnOrder(id);},
+                    onUpdateQuantity: (id, e) => {this.updateQuantity(id, e);},
+                    onUpdateUnitPrice: (id, e) =>{this.updateUnitPrice(id,e);}
+
                 }),
                 document.getElementById(this.props.idOnActiveOrderElement)
             ); 
         }
 
         render(){
+            console.log(this.state.indexCustom);
+            console.log(this.state.activeElementsOnOrder);
             return(
                 Object.keys(this.state.activeElementsOnList).map((value, i) =>{
                     return React.createElement(selectableElementToOrder, {
@@ -245,7 +342,7 @@ define(['react', 'react-dom'], function(React, ReactDOM){
                         id: value,
                         elementPrice: this.state.elementsPrice[value],
                         elementString: this.state.activeElementsOnList[value],
-                        onClick: (id) => {this.onElementClick(id)}
+                        onClick: (id) => {this.onElementClick(id);},
                     })
                 })
             );
@@ -258,7 +355,8 @@ define(['react', 'react-dom'], function(React, ReactDOM){
             let obj = JSON.parse(data);
             Object.assign(obj, {
                 serviceOffer: "iron",
-                idOnActiveOrderElement: "activeElementsOnOrderAppendable"
+                idOnActiveOrderElement: "activeElementsOnOrderAppendable",
+                idToTotalPrice: "totalPriceSpanValue"
             });
             ReactDOM.render(
                 React.createElement(writeOrderPanel, obj),
