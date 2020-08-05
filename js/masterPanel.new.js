@@ -19,7 +19,8 @@ require.config({
     }
 });
 
-require(["jquery","formVerification", "design", "bootstrap"], function($, formVerification){
+require(["jquery","formVerification", "design", "bootstrap"], 
+function($, formVerification){
 
     //1st session handling
     (function(){
@@ -318,33 +319,64 @@ require(["jquery","formVerification", "design", "bootstrap"], function($, formVe
             require(["frontendModules/sessionHandler"], function(session){
                 session.check();
 
-                require(["./reactComponents/customMessages", "react", "react-dom"], function (customMessages, React, ReactDOM){
+                require([ "react", "react-dom"], function (React, ReactDOM){
                     
-                    require(["./requestsModules/ajaxReqCustomMessages"], function(ajaxReq){
-                        ajaxReq.fetch().then(data=>{
-                           
-                            /* let compo = React.createElement(customMessages.MessagePanel, {
-                                data: data,
-                                mode: "edit",
-
-                            }); */
-
-                            /* ReactDOM.render(
-                                compo,
-                                document.getElementById("appendCustomMessages")
-                            ); */
-                            //console.log(compo);
+                    require(["./requestsModules/ajaxReqCustomMessages", "./reactComponents/customMessages"], 
+                    function(ajaxReq, customMessages){
+                        ajaxReq.fetch().then(data =>{
+                            ReactDOM.render(
+                                React.createElement(customMessages.MessagePanel, {data:data, mode: "use", targetID:"inputIndications"}),
+                                document.getElementById("appendCustomMessages") 
+                            )
                         }).catch(err => console.error(err));
                     });
 
-                    require(["./reactComponents/writeOrder"], function(writeOrder){
-                        
+                    require(["./requestsModules/ajaxReqSuperUserConfigs","./reactComponents/writeOrder"], 
+                    function(ajaxReq, writeOrder){
+                        ajaxReq.fetchElementsPrice({serviceOffer:"iron"}).then(data =>{
+                            let obj = JSON.parse(data);
+                            Object.assign(obj, {
+                                serviceOffer: "iron",
+                                idOnActiveOrderElement: "activeElementsOnOrderAppendable",
+                                idToTotalPrice: "totalPriceSpanValue",
+                            });
+                            let order =  ReactDOM.render(
+                                React.createElement(writeOrder.WriteOrderPanel, obj),
+                                document.getElementById("divSelectableElements")
+                            );
+                        });
+                    });
+
+
+                    $("#submitOrder").click(function(e){
+                        require(["./requestsModules/ajaxReqSuperUserConfigs","./reactComponents/writeOrder"], 
+                        function(ajaxReq, writeOrder){
+                            ajaxReq.fetchElementsPrice({serviceOffer:"washiron"}).then(data =>{
+                                let obj = JSON.parse(data);
+                                //console.log(data);
+                                Object.assign(obj, {
+                                    serviceOffer: "washiron",
+                                    idOnActiveOrderElement: "activeElementsOnOrderAppendable",
+                                    idToTotalPrice: "totalPriceSpanValue",
+                                });
+                                let order =  ReactDOM.render(
+                                    React.createElement(writeOrder.WriteOrderPanel, obj),
+                                    document.getElementById("divSelectableElements")
+                                );
+                            });
+                        });
                     });
 
                 });
             });
 
+
+
         });
+
+        function newWriteOrder(){ //returns a new instance of panel
+
+        }
 
         
 

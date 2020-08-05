@@ -83,21 +83,13 @@
             <div class="  karla_font showIDTxt bottomBorder">
 
                 <div class="row">
-
                     <div id="showLaundryName" class="text-center col-lg-12">
-                        
-                        
                     </div>
-                    
                 </div>
 
                 <div class="row">
-                    
                     <div id="dateTimeInfo" class="text-center col-lg-12 titleTxt">
-
-
                     </div>
-
                 </div>
 
             </div>
@@ -119,22 +111,8 @@
 
                             <div class="titleTxt text-center">Detalles de la factura:</div>
 
-                            <div class="container text-center">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <span id="spnTagIDClient"><b>ID del Cliente</b></span>
-                                        <span name="inputClientID">
-                                            <input type="text" maxlength="5" id="inputClientID">
-                                        </span>
-                                        
-                                        
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <span name="spnReceiptClientNameTag" ><b>Cliente:</b></span>
-                                        <span name="spnReceiptClientNameData"></span>
-                                    </div>
-                                </div>
+                            <div class="container text-center" id="containerSelectedClient">
+                                
                             </div>
                             
 
@@ -174,8 +152,6 @@
                                 <br>
 
                                 <div id="appendCustomMessages">
-                                    
-                                    
                                 </div>
                             </div>
 
@@ -205,210 +181,6 @@
 
                             
                             <div id="divSelectableElements" class="eightyPercentMaxHeight doubleScrollable scrollY">
-                                
-                                <!-- <button value="custom" name="elementButton" class="buttonElementStyle">
-                                    <div class="container ">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/custom/custom.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4custom" class="subTxt"><b>Elemento personalizable</b></span>
-                                                <br>
-
-                                                <span id="priceTag4custom">Precio personalizable</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                                
-                                <button value="shirt" name="elementButton" class="buttonElementStyle">
-                                    <div class="container ">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/shirt/shirt.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4shirt" class="subTxt"><b>Camisa</b></span>
-                                                <br>
-
-                                                <span id="priceTag4shirt"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="pants" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/pants/pants.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4pants" class="subTxt"><b>Pantalón</b></span>
-                                                <br>
-
-                                                <span id="priceTag4pants"></span>
-                                            </div>
-                                        </div>
-                                    </div>  
-                                </button>
-
-                                <button value="skirt" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/skirt/skirt.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4skirt" class="subTxt"><b>Falda</b></span>
-                                                <br>
-
-                                                <span id="priceTag4skirt"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="coat" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/coat/coat.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4coat" class="subTxt"><b>Saco</b></span>
-                                                <br>
-
-                                                <span id="priceTag4coat"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="sweater" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/sweater/sweater.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4sweater" class="subTxt"><b>Suéter</b></span>
-                                                <br>
-
-                                                <span id="priceTag4sweater"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="pleatedSkirt" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/pleatedSkirt/pleatedSkirt.svg" class="assetStayStatic" alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4pleatedSkirt" class="subTxt"><b>Falda Plizada</b></span>
-                                                <br>
-
-                                                <span id="priceTag4pleatedSkirt"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="overall" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/overall/overall.svg" class="assetStayStatic"alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4overall" class="subTxt"><b>Overol</b></span>
-                                                <br>
-
-                                                <span id="priceTag4overall"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="jumper" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/jumper/jumper.svg" class="assetStayStatic"alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4jumper" class="subTxt"><b>Jumper</b></span>
-                                                <br>
-
-                                                <span id="priceTag4jumper"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="blouse" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/blouse/blouse.svg" class="assetStayStatic"alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4blouse" class="subTxt"><b>Blusa</b></span>
-                                                <br>
-
-                                                <span id="priceTag4blouse"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="largeSuit" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/largeSuit/largeSuit.svg" class="assetStayStatic"alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4largeSuit" class="subTxt"><b>Vestido</b></span>
-                                                <br>
-
-                                                <span id="priceTag4largeSuit"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-
-                                <button value="quilt" name="elementButton" class="buttonElementStyle">
-                                    <div class="container">
-                                        <div class="row bottomBorder elementSelectStyle">
-                                            <div class="col-lg-4">
-                                                <img src="./imgs/assets/quilt/quilt.svg" class="assetStayStatic"alt="">
-                                            </div>
-
-                                            <div class="col-lg-8">
-                                                <span id="nameTag4quilt" class="subTxt"><b>Colcha</b></span>
-                                                <br>
-
-                                                <span id="priceTag4quilt"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button> -->
                                 
                             </div>
 
@@ -458,23 +230,12 @@
                     </div>
 
                     <div class="row supTxt-TitleTxt-Separation">
-
-                        <div class="col-lg-12 formRowSeparation">
-                            
+                        <div class="col-lg-12 formRowSeparation" id="containerSubmit">
                             <button class="submitButtonOrder" type="submit" id="submitOrder">Completar orden</button>
                         </div>
-        
-                    </div>
-                    
-
-                    <div id="test">
-                      
                     </div>
 
                 </div>
-
-                
-
           </div>
     </body>
 

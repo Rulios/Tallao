@@ -45,7 +45,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 value: props.id,
                 name: "elementButton",
                 className: "buttonElementStyle",
-                onClick: () => {props.onClick(props.id)}
+                onClick: () => {props.onClick(props.id, props.service)}
             },
                 React.createElement("div", {className:"container"},
                     React.createElement("div", {
@@ -72,6 +72,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
 
     function elementOnOrder(props){
         //props: id, price, quantity, service
+        console.log(props);
         let idAsset = "";
         let inputElementChangeOnCustom;
         if(props.id.includes("custom")){
@@ -80,7 +81,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             inputElementChangeOnCustom = React.createElement("input",{
                 type: "text",
                 placeholder: "Nombre del elemento",
-                onChange: () =>{}
+                onChange: (e) =>{props.onUpdateElementNameIfCustom(props.id,props.service, e);}
             });
         }else{
             idAsset = props.id;
@@ -110,7 +111,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                         inputElementChangeOnCustom,
                         React.createElement("button", {
                             className: "closeElementButtonStyle",
-                            onClick: () => {props.onClickDelete(props.id)}
+                            onClick: () => {props.onClickDelete(props.id, props.service)}
                         }, "x"),
                         React.createElement("div", {
                             className: "container small-mediumSeparation"
@@ -126,7 +127,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                                         value: props.quantity,
                                         onChange: (e) => {
                                             inputPrevent.notNegative(e);
-                                            props.onUpdateQuantity(props.id, e);
+                                            props.onUpdateQuantity(props.id,props.service, e);
                                         },
                                         onKeyPress: (e) =>{
                                             inputPrevent.onlyIntegers(e);
@@ -143,7 +144,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                                         value: props.price,
                                         onChange: (e) => {
                                             inputPrevent.notNegative(e);
-                                            props.onUpdateUnitPrice(props.id, e);
+                                            props.onUpdateUnitPrice(props.id,props.service, e);
                                         },
                                         onKeyPress: (e) =>{
                                             inputPrevent.asteriskAndHyphen(e);
@@ -166,24 +167,29 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
     }
 
     function renderElementOnOrder(props){
-        
+        //props: activeElementsOnOrder (object)
         return(
-            Object.keys(props.activeElementsOnOrder).map((value, i) =>{
-                return React.createElement(elementOnOrder, {
-                    key: value,
-                    id: value,
-                    price: props.activeElementsOnOrder[value]["price"],
-                    quantity: props.activeElementsOnOrder[value]["quantity"],
-                    service: props.service, 
-                    onClickDelete: (id) =>{props.onClickDelete(id);},
-                    onUpdateQuantity: (id, e) => {props.onUpdateQuantity(id, e);},
-                    onUpdateUnitPrice: (id, e) =>{props.onUpdateUnitPrice(id,e);}
-                })
+            //traverse the elements on order
+            Object.keys(props.activeElementsOnOrder).map((elementName) =>{
+                //traverse the services of the element on order
+                return Object.keys(props.activeElementsOnOrder[elementName]).map(service =>{
+                    return React.createElement(elementOnOrder, {
+                        key: `${elementName}-${props.service}`,
+                        id: elementName,
+                        price: props.activeElementsOnOrder[elementName][service]["price"],
+                        quantity: props.activeElementsOnOrder[elementName][service]["quantity"],
+                        service: service, 
+                        onClickDelete: (id,service) =>{props.onClickDelete(id,service);},
+                        onUpdateQuantity: (id,service, e) => {props.onUpdateQuantity(id,service, e);},
+                        onUpdateUnitPrice: (id,service, e) =>{props.onUpdateUnitPrice(id,service,e);},
+                        onUpdateElementNameIfCustom: (id,service, e) =>{props.onUpdateElementNameIfCustom(id,service, e);}
+                    });
+                });
             })
         );
     }
     
-    class writeOrderPanel extends React.Component{
+    class WriteOrderPanel extends React.Component{
         //props: priceElements (in JSON format), hookPrice, serviceOffer,
         //idActiveOnOrderElement(id of HTML element to append when clicking element)
         //idToTotalPrice (id of HTML element to update the total price)
@@ -199,7 +205,8 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             
             arrEl.map((value, i) =>{
                 let elementKeyValueArr = value.split("=");
-                elementsPrice[elementKeyValueArr[0]] = parseFloat(elementKeyValueArr[1]);
+                elementsPrice[elementKeyValueArr[0]] = {};
+                elementsPrice[elementKeyValueArr[0]][this.props.serviceOffer] = parseFloat(elementKeyValueArr[1]);
             });
             this.state = {
                 elementsPrice: elementsPrice,
@@ -207,19 +214,25 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 activeElementsOnList: elements,
                 activeElementsOnOrder: {},
                 totalPrice: 0,
-                indexCustom: []
+                indexCustom: [],
             };
         }   
 
-        onElementClick(id){
+        returnNewElementsPrice(){ // will return a new obj with the elementsPrice
+
+        }
+
+        onElementClick(id, service){
             //create new activeElementsOnList , and activeElementsOnOrder
             let newActiveElementsOnList = JSON.parse(JSON.stringify(this.state.activeElementsOnList));
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             let newIndexCustom = this.state.indexCustom.slice();
+
             //the format is about custom1, custom2, custom3... and so on
             //So this.state.indexCustom will store all the indices, and it will be resorted
             //every time it inputs a new index (inputs a new custom element), this is just
             //to naming purposes of object properties at activeElementsOnOrder
+            
             if(id.indexOf("custom") !== -1){
                 if(newIndexCustom.length === 0){
                     id = `${id}1`; //as first custom element of the order
@@ -240,8 +253,11 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             if(Object.keys(newActiveElementsOnOrder).indexOf(id) === -1){ //new
                 newActiveElementsOnOrder[id] = {};
             }
-            newActiveElementsOnOrder[id]["quantity"] = 1;
-            newActiveElementsOnOrder[id]["price"] = this.state.elementsPrice[id];
+
+            newActiveElementsOnOrder[id][service] = {};
+            newActiveElementsOnOrder[id][service]["quantity"] = 1;
+            //special case: when clicked the custom element, it should start as 1.
+            newActiveElementsOnOrder[id][service]["price"] = (id.indexOf("custom") !== -1) ? 1 : this.state.elementsPrice[id][service];
             
 
             //delete the property onList
@@ -259,15 +275,19 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-        calcTotalPrice(){
+         calcTotalPrice(){
             let total = 0;
-            Object.keys(this.state.activeElementsOnOrder).map(value =>{
-                total += this.state.activeElementsOnOrder[value]["price"] * this.state.activeElementsOnOrder[value]["quantity"];
+            //traverse for each element on order
+            Object.keys(this.state.activeElementsOnOrder).map(elementName =>{
+                //traverse for each service the element on order
+                Object.keys(this.state.activeElementsOnOrder[elementName]).map(service =>{
+                    total += this.state.activeElementsOnOrder[elementName][service]["price"] * this.state.activeElementsOnOrder[elementName][service]["quantity"];
+                });
             });
             return parseFloat(total.toFixed(2));
         }
 
-        deleteElementFromOnOrder(id){
+         deleteElementFromOnOrder(id, service){
             const newActiveElementsOnList = {};
             const newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             //add in the same order to activeElementsOnList
@@ -278,7 +298,14 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
 
             //delete prop from activeElementsOnOrder
-            delete newActiveElementsOnOrder[id];
+            //if it has no service, it will be totally deleted
+            //else, it will only delete the service property
+            if(Object.keys(newActiveElementsOnOrder[id]).length > 1){
+                delete newActiveElementsOnOrder[id][service];
+            }else{
+                delete newActiveElementsOnOrder[id];
+            }
+            
 
             this.setState({
                 activeElementsOnList: newActiveElementsOnList,
@@ -289,11 +316,11 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-        updateQuantity(id, e){
-            const activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+         updateQuantity(id,service, e){
+            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const quantity = e.target.value; //this input just accepts positive integers
 
-            activeElementsOnOrder[id]["quantity"] = quantity;
+            activeElementsOnOrder[id][service]["quantity"] = parseFloat(quantity);
 
             this.setState({
                 activeElementsOnOrder: activeElementsOnOrder
@@ -302,70 +329,75 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-        updateUnitPrice(id, e){
-            const activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+         updateUnitPrice(id,service, e){
+            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const unitPrice = e.target.value;
 
-            activeElementsOnOrder[id]["price"] = unitPrice;
-
+            activeElementsOnOrder[id][service]["price"] = parseFloat(unitPrice);
             this.setState({
                 activeElementsOnOrder: activeElementsOnOrder
             }, () =>{
                 this.setState({totalPrice: this.calcTotalPrice()});
+            });
+        }
+
+        updateCustomElementName(id,service, e){
+            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            const elementName = e.target.value;
+
+            activeElementsOnOrder[id][service]["name"] = elementName;
+            this.setState({
+                activeElementsOnOrder: activeElementsOnOrder
             });
         }
         
+        returnData(){
+            return {
+                totalPrice: this.state.totalPrice,
+                elementsOnOrder : this.state.activeElementsOnOrder
+            };
+        }
 
-        componentDidUpdate(){ //render the list that the user has chosen
+        componentDidUpdate(prevProps, prevState){ //render the list that the user has chosen
             //update the total price text
+            console.log(prevProps);
+            console.log(prevState);
             document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
             ReactDOM.render(
                 React.createElement(renderElementOnOrder,{
                     activeElementsOnOrder: this.state.activeElementsOnOrder,
                     service: this.props.serviceOffer,
-                    onClickDelete: (id) =>{this.deleteElementFromOnOrder(id);},
-                    onUpdateQuantity: (id, e) => {this.updateQuantity(id, e);},
-                    onUpdateUnitPrice: (id, e) =>{this.updateUnitPrice(id,e);}
+                    onClickDelete: (id, service) =>{this.deleteElementFromOnOrder(id,service,);},
+                    onUpdateQuantity: (id, service, e) => {this.updateQuantity(id,service, e);},
+                    onUpdateUnitPrice: (id, service,e) =>{this.updateUnitPrice(id,service,e);},
+                    onUpdateElementNameIfCustom: (id,service, e) =>{this.updateCustomElementName(id,service, e);}
 
                 }),
                 document.getElementById(this.props.idOnActiveOrderElement)
-            ); 
+            );
         }
-
+  
         render(){
-            console.log(this.state.indexCustom);
-            console.log(this.state.activeElementsOnOrder);
+            //console.log(this.state.activeElementsOnOrder);
+            
             return(
                 Object.keys(this.state.activeElementsOnList).map((value, i) =>{
                     return React.createElement(selectableElementToOrder, {
-                        key: value,
+                        key: `${value}-${this.props.serviceOffer}`,
                         id: value,
-                        elementPrice: this.state.elementsPrice[value],
+                        elementPrice: (this.state.elementsPrice[value] !== undefined) ? this.state.elementsPrice[value][this.props.serviceOffer] : undefined,
                         elementString: this.state.activeElementsOnList[value],
-                        onClick: (id) => {this.onElementClick(id);},
+                        service: this.props.serviceOffer,
+                        onClick: (id, service) => {this.onElementClick(id, service);},
                     })
                 })
             );
         }
-
     }
 
-    require(["./requestsModules/ajaxReqSuperUserConfigs"], function(ajaxReq){
-        ajaxReq.fetchElementsPrice({serviceOffer:"iron"}).then(data =>{
-            let obj = JSON.parse(data);
-            Object.assign(obj, {
-                serviceOffer: "iron",
-                idOnActiveOrderElement: "activeElementsOnOrderAppendable",
-                idToTotalPrice: "totalPriceSpanValue"
-            });
-            ReactDOM.render(
-                React.createElement(writeOrderPanel, obj),
-                document.getElementById("divSelectableElements")
-            )
-        });
-    });
-
-    
+    return{
+        WriteOrderPanel: WriteOrderPanel
+    }
 
 });
 
@@ -390,7 +422,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
 
 
 //example of elementOnOrder in HTML
-{/* <div class="container small-mediumSeparation"> 
+/* <div class="container small-mediumSeparation"> 
 
     <div class="row bottomBorder customElementReceiptStyle">
 
@@ -430,4 +462,5 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             </div>
         </div>
     </div>
-</div> */}
+</div> */
+

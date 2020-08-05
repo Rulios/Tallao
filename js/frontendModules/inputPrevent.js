@@ -48,7 +48,6 @@ define(["jquery"], function ($){
     }
 
     function notNegative(e){
-        console.log(e);
         if(e.target.value <= 0 || e.target.value === ""){
             e.target.value = 1;
         }

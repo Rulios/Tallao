@@ -11,7 +11,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function clientID(obj){
         //params inputClientID (string)
 
-        return await ajaxReq.doAJAX("POST", "./php/searchClientID.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBSearch/searchClientID.php", obj);
     }
 
     return {

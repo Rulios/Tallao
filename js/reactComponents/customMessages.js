@@ -222,17 +222,17 @@ define(['react', 'react-dom'], function(React, ReactDOM) {
         }
     }
 
-    require(["./requestsModules/ajaxReqCustomMessages"], function(ajaxReq){
+    /* require(["./requestsModules/ajaxReqCustomMessages"], function(ajaxReq){
         ajaxReq.fetch().then(data =>{
             ReactDOM.render(
                 React.createElement(MessagePanel, {data:data, mode: "use", targetID:"inputIndications"}),
                 document.getElementById("appendCustomMessages") 
             )
         }).catch(err => console.error(err));
-    });
-    /* return {
+    }); */
+    return {
         MessagePanel: MessagePanel
-    }; */
+    };
     
 });
 
