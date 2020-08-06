@@ -72,7 +72,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
 
     function elementOnOrder(props){
         //props: id, price, quantity, service
-        console.log(props);
+        //console.log(props);
         let idAsset = "";
         let inputElementChangeOnCustom;
         if(props.id.includes("custom")){
@@ -174,7 +174,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 //traverse the services of the element on order
                 return Object.keys(props.activeElementsOnOrder[elementName]).map(service =>{
                     return React.createElement(elementOnOrder, {
-                        key: `${elementName}-${props.service}`,
+                        key: `${elementName}-${service}`,
                         id: elementName,
                         price: props.activeElementsOnOrder[elementName][service]["price"],
                         quantity: props.activeElementsOnOrder[elementName][service]["quantity"],
@@ -188,6 +188,24 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             })
         );
     }
+
+    //function to getDerivedStateFromProps
+    function returnNewElementsPrice(priceString, service, prevObj){ // will return a new obj with the elementsPrice
+        //prevObj is optional, if passed, it will be used as a reference obj to store new price
+        let elementsPrice;
+        if(prevObj === undefined){
+            elementsPrice = {};
+        }else{
+            elementsPrice = Object.assign({}, prevObj);
+        }
+        
+        priceString.trim().split(",").map((value, i) =>{
+            let elementKeyValueArr = value.split("=");
+            elementsPrice[elementKeyValueArr[0]] = {};
+            elementsPrice[elementKeyValueArr[0]][service] = parseFloat(elementKeyValueArr[1]);
+        });
+        return elementsPrice;
+    }
     
     class WriteOrderPanel extends React.Component{
         //props: priceElements (in JSON format), hookPrice, serviceOffer,
@@ -198,28 +216,37 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
         //activeElementsOnList = all the elements rendered by selectableElementToOrder
         //activeElemetnsOnOrder = all the elements renderd by elementOnOrder
         constructor(props){
-
             super(props);
-            let elementsPrice = {};
-            let arrEl = this.props[this.props.serviceOffer].trim().split(",");
-            
-            arrEl.map((value, i) =>{
-                let elementKeyValueArr = value.split("=");
-                elementsPrice[elementKeyValueArr[0]] = {};
-                elementsPrice[elementKeyValueArr[0]][this.props.serviceOffer] = parseFloat(elementKeyValueArr[1]);
-            });
+
+            //set initial service and it's elements available
+            let initialElementsOnList = {};
+            initialElementsOnList[this.props.serviceOffer] = Object.keys(elements);
+
             this.state = {
-                elementsPrice: elementsPrice,
+                elementsPrice: this.returnNewElementsPrice(this.props[this.props.serviceOffer], this.props.serviceOffer),
                 elements: elements,
-                activeElementsOnList: elements,
+                activeElementsOnList: initialElementsOnList,
                 activeElementsOnOrder: {},
                 totalPrice: 0,
                 indexCustom: [],
             };
         }   
 
-        returnNewElementsPrice(){ // will return a new obj with the elementsPrice
-
+        returnNewElementsPrice(priceString, service, prevObj){ // will return a new obj with the elementsPrice
+            //prevObj is optional, if passed, it will be used as a reference obj to store new price
+            let elementsPrice;
+            if(prevObj === undefined){
+                elementsPrice = {};
+            }else{
+                elementsPrice = Object.assign({}, prevObj);
+            }
+            
+            priceString.trim().split(",").map((value, i) =>{
+                let elementKeyValueArr = value.split("=");
+                elementsPrice[elementKeyValueArr[0]] = {};
+                elementsPrice[elementKeyValueArr[0]][service] = parseFloat(elementKeyValueArr[1]);
+            });
+            return elementsPrice;
         }
 
         onElementClick(id, service){
@@ -229,7 +256,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             let newIndexCustom = this.state.indexCustom.slice();
 
             //the format is about custom1, custom2, custom3... and so on
-            //So this.state.indexCustom will store all the indices, and it will be resorted
+            //So this.state.indexCustom will store all the indices, and it will be re-sorted
             //every time it inputs a new index (inputs a new custom element), this is just
             //to naming purposes of object properties at activeElementsOnOrder
             
@@ -258,44 +285,42 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             newActiveElementsOnOrder[id][service]["quantity"] = 1;
             //special case: when clicked the custom element, it should start as 1.
             newActiveElementsOnOrder[id][service]["price"] = (id.indexOf("custom") !== -1) ? 1 : this.state.elementsPrice[id][service];
-            
 
             //delete the property onList
-            if(id !== "custom"){
-                delete newActiveElementsOnList[id];
+            if(id.indexOf("custom") === -1){
+                newActiveElementsOnList[service].splice(newActiveElementsOnList[service].indexOf(id), 1);
             }
             
             this.setState({
                 activeElementsOnList: newActiveElementsOnList,
                 activeElementsOnOrder: newActiveElementsOnOrder,
-                indexCustom: newIndexCustom
-                
-            }, () =>{//callback
-                this.setState({totalPrice: this.calcTotalPrice()})
+                indexCustom: newIndexCustom,
+                totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
 
-         calcTotalPrice(){
+        calcTotalPrice(elementsOnOrder){
             let total = 0;
             //traverse for each element on order
-            Object.keys(this.state.activeElementsOnOrder).map(elementName =>{
+            Object.keys(elementsOnOrder).map(elementName =>{
                 //traverse for each service the element on order
-                Object.keys(this.state.activeElementsOnOrder[elementName]).map(service =>{
-                    total += this.state.activeElementsOnOrder[elementName][service]["price"] * this.state.activeElementsOnOrder[elementName][service]["quantity"];
+                Object.keys(elementsOnOrder[elementName]).map(service =>{
+                    total += elementsOnOrder[elementName][service]["price"] * elementsOnOrder[elementName][service]["quantity"];
                 });
             });
             return parseFloat(total.toFixed(2));
         }
 
-         deleteElementFromOnOrder(id, service){
-            const newActiveElementsOnList = {};
-            const newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
-            //add in the same order to activeElementsOnList
-            Object.keys(this.state.elements).map(value =>{
-                if(Object.keys(this.state.activeElementsOnList).indexOf(value) !== -1 || value === id){
-                    newActiveElementsOnList[value] = this.state.elements[value];
-                }
-            });
+        deleteElementFromOnOrder(id, service){
+            let newActiveElementsOnList = JSON.parse(JSON.stringify(this.state.activeElementsOnList));
+            let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+           
+            //find the initial position of the element to be added on the array on List
+            //except when custom
+            if(id.indexOf("custom") === -1){
+                let positionOnOriginal = Object.keys(this.state.elements).indexOf(id);
+                newActiveElementsOnList[service].splice(positionOnOriginal, 0, id);
+            }
 
             //delete prop from activeElementsOnOrder
             //if it has no service, it will be totally deleted
@@ -305,49 +330,45 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             }else{
                 delete newActiveElementsOnOrder[id];
             }
-            
 
             this.setState({
                 activeElementsOnList: newActiveElementsOnList,
                 activeElementsOnOrder: newActiveElementsOnOrder,
-                
-            }, () =>{//callback
-                this.setState({totalPrice: this.calcTotalPrice()})
+                totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
 
          updateQuantity(id,service, e){
-            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const quantity = e.target.value; //this input just accepts positive integers
 
-            activeElementsOnOrder[id][service]["quantity"] = parseFloat(quantity);
+            newActiveElementsOnOrder[id][service]["quantity"] = parseFloat(quantity);
 
             this.setState({
-                activeElementsOnOrder: activeElementsOnOrder
-            }, () =>{
-                this.setState({totalPrice: this.calcTotalPrice()});
+                activeElementsOnOrder: newActiveElementsOnOrder,
+                totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
 
          updateUnitPrice(id,service, e){
-            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const unitPrice = e.target.value;
 
-            activeElementsOnOrder[id][service]["price"] = parseFloat(unitPrice);
+            newActiveElementsOnOrder[id][service]["price"] = parseFloat(unitPrice);
             this.setState({
-                activeElementsOnOrder: activeElementsOnOrder
-            }, () =>{
-                this.setState({totalPrice: this.calcTotalPrice()});
+                activeElementsOnOrder: newActiveElementsOnOrder,
+                totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
 
         updateCustomElementName(id,service, e){
-            let activeElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
+            let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const elementName = e.target.value;
 
-            activeElementsOnOrder[id][service]["name"] = elementName;
+            newActiveElementsOnOrder[id][service]["name"] = elementName;
             this.setState({
-                activeElementsOnOrder: activeElementsOnOrder
+                activeElementsOnOrder: newActiveElementsOnOrder,
+                totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
         
@@ -358,35 +379,52 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             };
         }
 
-        componentDidUpdate(prevProps, prevState){ //render the list that the user has chosen
-            //update the total price text
-            console.log(prevProps);
-            console.log(prevState);
-            document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
-            ReactDOM.render(
-                React.createElement(renderElementOnOrder,{
-                    activeElementsOnOrder: this.state.activeElementsOnOrder,
-                    service: this.props.serviceOffer,
-                    onClickDelete: (id, service) =>{this.deleteElementFromOnOrder(id,service,);},
-                    onUpdateQuantity: (id, service, e) => {this.updateQuantity(id,service, e);},
-                    onUpdateUnitPrice: (id, service,e) =>{this.updateUnitPrice(id,service,e);},
-                    onUpdateElementNameIfCustom: (id,service, e) =>{this.updateCustomElementName(id,service, e);}
+        static getDerivedStateFromProps(newProps, prevState){
+            //setState is asynchronous, so assigning a object to a state is very
+            //slow that it executes render() without having the changed state. 
+            //This function gets the newProps (serviceOffer) and updates the elementsOnList according to the serviceOffer
+            let updatedElementsOnList = {};
+            updatedElementsOnList = Object.assign({}, prevState.activeElementsOnList);
 
-                }),
-                document.getElementById(this.props.idOnActiveOrderElement)
-            );
+            //set a new service field
+            if(Object.keys(prevState.activeElementsOnList).indexOf(newProps.serviceOffer) === -1){
+                updatedElementsOnList[newProps.serviceOffer] = Object.keys(elements);
+            }
+          
+            return{
+                elementsPrice: returnNewElementsPrice(newProps[newProps.serviceOffer], newProps.serviceOffer),
+                activeElementsOnList: updatedElementsOnList
+            };  
+        }
+
+        componentDidUpdate(prevProps, prevState){ //render the list that the user has chosen
+            if(prevProps.activeElementsOnOrder !== this.props.activeElementsOnOrder){
+                //update the total price text
+                document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
+                ReactDOM.render(
+                    React.createElement(renderElementOnOrder,{
+                        activeElementsOnOrder: this.state.activeElementsOnOrder,
+                        service: this.props.serviceOffer,
+                        onClickDelete: (id, service) =>{this.deleteElementFromOnOrder(id,service);},
+                        onUpdateQuantity: (id, service, e) => {this.updateQuantity(id,service,e);},
+                        onUpdateUnitPrice: (id, service,e) =>{this.updateUnitPrice(id,service,e);},
+                        onUpdateElementNameIfCustom: (id,service, e) =>{this.updateCustomElementName(id,service,e);}
+                    }),
+                    document.getElementById(this.props.idOnActiveOrderElement)
+                );
+            }
         }
   
         render(){
-            //console.log(this.state.activeElementsOnOrder);
-            
+            console.log(this.state);
+            //console.log(this.state.activeElementsOnList[this.props.serviceOffer]);
             return(
-                Object.keys(this.state.activeElementsOnList).map((value, i) =>{
+                this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
                     return React.createElement(selectableElementToOrder, {
-                        key: `${value}-${this.props.serviceOffer}`,
-                        id: value,
-                        elementPrice: (this.state.elementsPrice[value] !== undefined) ? this.state.elementsPrice[value][this.props.serviceOffer] : undefined,
-                        elementString: this.state.activeElementsOnList[value],
+                        key: `${elementName}-${this.props.serviceOffer}`,
+                        id: elementName,
+                        elementPrice: (this.state.elementsPrice[elementName] !== undefined) ? this.state.elementsPrice[elementName][this.props.serviceOffer] : undefined,
+                        elementString: this.state.elements[elementName],
                         service: this.props.serviceOffer,
                         onClick: (id, service) => {this.onElementClick(id, service);},
                     })
