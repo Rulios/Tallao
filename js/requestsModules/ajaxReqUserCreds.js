@@ -22,7 +22,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function fetchAccountCreds(){
         //paarams: none, it's on server side
 
-        return await ajaxReq.doAJAX("POST", ".php/fetchAccountCreds.php");
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/fetchAccountCreds.php");
     }
 
     return{

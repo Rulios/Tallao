@@ -4,14 +4,15 @@ require.config({
     paths: {
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development'
+        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
+        ajaxReqCustomMessages: "../js/requestsModules/ajaxReqCustomMessages"
     }
 });
 
 // load the modules defined above
 //inputs shouldn't have a children
 //styles should be a object
-define(['react', 'react-dom'], function(React, ReactDOM) {
+define(['react', 'react-dom', "ajaxReqCustomMessages"], function(React, ReactDOM, ajaxReq) {
     const color = {
         none: "",
         skyblue: "#7FE5FF",
@@ -129,20 +130,9 @@ define(['react', 'react-dom'], function(React, ReactDOM) {
         constructor(props){
             super(props);
 
-            //start parsing JSON string and storing it
-            let messages = {};
-            let cop;
-            JSON.parse(this.props.data).map(value =>{
-                let {id, colortag, tag, message} = value;
-                messages[id] = {};
-                messages[id]["colorTag"] = colortag;
-                messages[id]["tagTxt"] = tag;
-                messages[id]["messageTxt"] = message;
-            })
-
-            //store on obj, to then be stored on Component state
+            
             this.state = {
-                messages:messages
+                ajaxLoaded: false
             }
         }
 
@@ -187,38 +177,67 @@ define(['react', 'react-dom'], function(React, ReactDOM) {
             document.getElementById(id).value = `${currentTxt} ${message}`;
         }
 
-        render(){
-            return(
-                Object.keys(this.state.messages).map(value =>{
-                    let {colorTag, tagTxt, messageTxt} = this.state.messages[value];
-                    let txt = "";
-                    if(this.props.mode === "edit"){
-                        return React.createElement(MessageBox, {
-                            key:value,
-                            id: value,
-                            colorTag: colorTag,
-                            tagTxt: tagTxt,
-                            messageTxt: messageTxt,
-                            onChangeTagTxt: (id, e) =>{this.changeTagTxt(value, e)},
-                            onChangeColorTag: (id, e) => {this.changeColorTag(value, e)},
-                            onChangeMessageTxt: (id , e) =>{ this.changeMessageTxt(value, e)},
-                            onDeleteMessage: (id , e) => {this.deleteMessage(value, e)}
-                        });
-                  
-                        
-                    }else if(this.props.mode === "use"){
-                        return React.createElement(InstantMsgTag, {
-                            key:value,
-                            id: value,
-                            colorTag: colorTag,
-                            tagTxt: tagTxt,
-                            messageTxt: messageTxt,
-                            targetID: this.props.targetID,
-                            onClickAppendTargetID: (targetID, messageTxt) => this.appendTargetID(targetID, messageTxt)
-                        });
-                    }
+        componentDidMount(){
+            let that = this;
+            if(!this.state.ajaxLoaded){
+                ajaxReq.fetch().then(data =>{
+
+                    //start parsing JSON string and storing it
+                    let messages = {};
+                    let cop;
+                    JSON.parse(data).map(value =>{
+                        let {id, colortag, tag, message} = value;
+                        messages[id] = {};
+                        messages[id]["colorTag"] = colortag;
+                        messages[id]["tagTxt"] = tag;
+                        messages[id]["messageTxt"] = message;
+                    })
+
+                    //store on obj, to then be stored on Component state
+                    this.setState({
+                        messages: messages,
+                        ajaxLoaded: true
+                    });
                 })
-            );
+            }
+        }
+
+        render(){
+            if(this.state.ajaxLoaded){
+                return(
+                    Object.keys(this.state.messages).map(value =>{
+                        let {colorTag, tagTxt, messageTxt} = this.state.messages[value];
+                        let txt = "";
+                        if(this.props.mode === "edit"){
+                            return React.createElement(MessageBox, {
+                                key:value,
+                                id: value,
+                                colorTag: colorTag,
+                                tagTxt: tagTxt,
+                                messageTxt: messageTxt,
+                                onChangeTagTxt: (id, e) =>{this.changeTagTxt(value, e)},
+                                onChangeColorTag: (id, e) => {this.changeColorTag(value, e)},
+                                onChangeMessageTxt: (id , e) =>{ this.changeMessageTxt(value, e)},
+                                onDeleteMessage: (id , e) => {this.deleteMessage(value, e)}
+                            });
+                      
+                            
+                        }else if(this.props.mode === "use"){
+                            return React.createElement(InstantMsgTag, {
+                                key:value,
+                                id: value,
+                                colorTag: colorTag,
+                                tagTxt: tagTxt,
+                                messageTxt: messageTxt,
+                                targetID: this.props.targetID,
+                                onClickAppendTargetID: (targetID, messageTxt) => this.appendTargetID(targetID, messageTxt)
+                            });
+                        }
+                    })
+                );
+            }else{
+                return(null);
+            }
         }
     }
 
@@ -230,9 +249,7 @@ define(['react', 'react-dom'], function(React, ReactDOM) {
             )
         }).catch(err => console.error(err));
     }); */
-    return {
-        MessagePanel: MessagePanel
-    };
+    return MessagePanel;
     
 });
 

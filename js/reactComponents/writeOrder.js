@@ -5,14 +5,16 @@ require.config({
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        inputPrevent: "./frontendModules/inputPrevent"
+        inputPrevent: "./frontendModules/inputPrevent",
+        ajaxReqSuperUserConfigs: "../js/requestsModules/ajaxReqSuperUserConfigs"
     }
 });
 
 // load the modules defined above
 //inputs shouldn't have a children
 //styles should be a object
-define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPrevent){
+define(['react', 'react-dom', "inputPrevent" , "ajaxReqSuperUserConfigs"], 
+function(React, ReactDOM, inputPrevent, ajaxReq){
 
     const elements = {
         custom : "Elemento personalizable",
@@ -208,7 +210,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
     }
     
     class WriteOrderPanel extends React.Component{
-        //props: priceElements (in JSON format), hookPrice, serviceOffer,
+        //props: hookPrice, serviceOffer,
         //idActiveOnOrderElement(id of HTML element to append when clicking element)
         //idToTotalPrice (id of HTML element to update the total price)
 
@@ -223,13 +225,23 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             initialElementsOnList[this.props.serviceOffer] = Object.keys(elements);
 
             this.state = {
+                elementsPrice: undefined,
+                elements: elements,
+                activeElementsOnList: initialElementsOnList,
+                activeElementsOnOrder: {},
+                totalPrice: 0,
+                indexCustom: [],
+                ajaxLoaded: false
+            }
+
+            /* this.state = {
                 elementsPrice: this.returnNewElementsPrice(this.props[this.props.serviceOffer], this.props.serviceOffer),
                 elements: elements,
                 activeElementsOnList: initialElementsOnList,
                 activeElementsOnOrder: {},
                 totalPrice: 0,
                 indexCustom: [],
-            };
+            }; */
         }   
 
         returnNewElementsPrice(priceString, service, prevObj){ // will return a new obj with the elementsPrice
@@ -239,14 +251,28 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 elementsPrice = {};
             }else{
                 elementsPrice = Object.assign({}, prevObj);
-            }
-            
-            priceString.trim().split(",").map((value, i) =>{
+            } 
+            elementsPrice[service] = {};
+            priceString.trim().split(",").map(value =>{
                 let elementKeyValueArr = value.split("=");
-                elementsPrice[elementKeyValueArr[0]] = {};
-                elementsPrice[elementKeyValueArr[0]][service] = parseFloat(elementKeyValueArr[1]);
+                elementsPrice[service][elementKeyValueArr[0]] = parseFloat(elementKeyValueArr[1]);
             });
             return elementsPrice;
+        }
+
+        async updateElementsPrice(service){
+            //this will do the fetching and updating the state
+            //the processing of the elementsPrice is made by 
+            //returnNewElementsPrice
+            try{
+                let data = await ajaxReq.fetchElementsPrice({serviceOffer: this.props.serviceOffer});
+                let priceObj = JSON.parse(data);
+                let newElementsPrice = this.returnNewElementsPrice(priceObj[this.props.serviceOffer], this.props.serviceOffer, this.state.elementsPrice)
+                return newElementsPrice;
+
+            }catch(err){
+                console.error(err);
+            }
         }
 
         onElementClick(id, service){
@@ -284,7 +310,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             newActiveElementsOnOrder[id][service] = {};
             newActiveElementsOnOrder[id][service]["quantity"] = 1;
             //special case: when clicked the custom element, it should start as 1.
-            newActiveElementsOnOrder[id][service]["price"] = (id.indexOf("custom") !== -1) ? 1 : this.state.elementsPrice[id][service];
+            newActiveElementsOnOrder[id][service]["price"] = (id.indexOf("custom") !== -1) ? 1 : this.state.elementsPrice[service][id];
 
             //delete the property onList
             if(id.indexOf("custom") === -1){
@@ -338,7 +364,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-         updateQuantity(id,service, e){
+        updateQuantity(id,service, e){
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const quantity = e.target.value; //this input just accepts positive integers
 
@@ -350,7 +376,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-         updateUnitPrice(id,service, e){
+        updateUnitPrice(id,service, e){
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const unitPrice = e.target.value;
 
@@ -371,7 +397,8 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 totalPrice: this.calcTotalPrice(newActiveElementsOnOrder)
             });
         }
-        
+
+      
         returnData(){
             return {
                 totalPrice: this.state.totalPrice,
@@ -379,7 +406,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             };
         }
 
-        static getDerivedStateFromProps(newProps, prevState){
+        /* static async getDerivedStateFromProps(newProps, prevState){
             //setState is asynchronous, so assigning a object to a state is very
             //slow that it executes render() without having the changed state. 
             //This function gets the newProps (serviceOffer) and updates the elementsOnList according to the serviceOffer
@@ -390,52 +417,121 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             if(Object.keys(prevState.activeElementsOnList).indexOf(newProps.serviceOffer) === -1){
                 updatedElementsOnList[newProps.serviceOffer] = Object.keys(elements);
             }
-          
-            return{
-                elementsPrice: returnNewElementsPrice(newProps[newProps.serviceOffer], newProps.serviceOffer),
-                activeElementsOnList: updatedElementsOnList
-            };  
+            if(prevState.elementsPrice === undefined || prevState.elementsPrice[newProps.serviceOffer] === undefined){
+
+                let priceDataString = await ajaxReq.fetchElementsPrice({serviceOffer: newProps.serviceOffer});
+                let priceString = JSON.parse(priceDataString)[newProps.serviceOffer];
+                let elementsPrice;
+                if(prevState.elementsPrice === undefined){
+                    elementsPrice = {};
+                }else{
+                    elementsPrice = Object.assign({}, prevState.elementsPrice);
+                }
+                priceString.trim().split(",").map((value, i) =>{
+                    let elementKeyValueArr = value.split("=");
+                    elementsPrice[elementKeyValueArr[0]] = {};
+                    elementsPrice[elementKeyValueArr[0]][newProps.serviceOffer] = parseFloat(elementKeyValueArr[1]);
+                });
+
+                updatedElementsOnList[newProps.serviceOffer] = Object.keys(elements);
+                console.log(updatedElementsOnList);
+                return{
+                    activeElementsOnList: updatedElementsOnList,
+                    elementsPrice: elementsPrice
+                }
+            }
+
+        } */
+
+        componentDidMount(){
+            if(!this.state.ajaxLoaded){
+                try{
+                    let newElementsPrice = this.updateElementsPrice(this.props.serviceOffer);
+                    newElementsPrice.then(newObj => {
+                        this.setState({
+                            elementsPrice: newObj,
+                            ajaxLoaded: true
+                        });
+                    });
+
+                }catch(err){
+                    console.error(err);
+                }
+            }
         }
 
         componentDidUpdate(prevProps, prevState){ //render the list that the user has chosen
-            if(prevProps.activeElementsOnOrder !== this.props.activeElementsOnOrder){
-                //update the total price text
-                document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
+
+            //since the selectable list is independent from other components
+            //and only dependable on async operations, it will we be updated 
+            //from here
+            if(this.state.activeElementsOnList[this.props.serviceOffer] !== undefined){
                 ReactDOM.render(
-                    React.createElement(renderElementOnOrder,{
-                        activeElementsOnOrder: this.state.activeElementsOnOrder,
-                        service: this.props.serviceOffer,
-                        onClickDelete: (id, service) =>{this.deleteElementFromOnOrder(id,service);},
-                        onUpdateQuantity: (id, service, e) => {this.updateQuantity(id,service,e);},
-                        onUpdateUnitPrice: (id, service,e) =>{this.updateUnitPrice(id,service,e);},
-                        onUpdateElementNameIfCustom: (id,service, e) =>{this.updateCustomElementName(id,service,e);}
+                    this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
+                        //console.log(this.state.elementsPrice[this.props.serviceOffer]);
+                        return React.createElement(selectableElementToOrder, {
+                            key: `${elementName}-${this.props.serviceOffer}`,
+                            id: elementName,
+                            elementPrice: (this.state.elementsPrice[this.props.serviceOffer] !== undefined) ? this.state.elementsPrice[this.props.serviceOffer][elementName] : undefined,
+                            elementString: this.state.elements[elementName],
+                            service: this.props.serviceOffer,
+                            onClick: (id, service) => {this.onElementClick(id, service);},
+                        })
                     }),
-                    document.getElementById(this.props.idOnActiveOrderElement)
+                    document.getElementById(this.props.idSelectableElements)
                 );
+            }else{
+
+                let newElementsPrice = this.updateElementsPrice(this.props.serviceOffer);
+                let updatedElementsOnList = {};
+                updatedElementsOnList = Object.assign({}, prevState.activeElementsOnList);
+
+                newElementsPrice.then(newObj => {
+                    updatedElementsOnList[this.props.serviceOffer] = Object.keys(elements);
+                    this.setState({
+                        activeElementsOnList: updatedElementsOnList,
+                        elementsPrice: newObj,
+                    });
+                });
             }
         }
   
         render(){
-            console.log(this.state);
-            //console.log(this.state.activeElementsOnList[this.props.serviceOffer]);
+
+            document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
             return(
-                this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
-                    return React.createElement(selectableElementToOrder, {
-                        key: `${elementName}-${this.props.serviceOffer}`,
-                        id: elementName,
-                        elementPrice: (this.state.elementsPrice[elementName] !== undefined) ? this.state.elementsPrice[elementName][this.props.serviceOffer] : undefined,
-                        elementString: this.state.elements[elementName],
-                        service: this.props.serviceOffer,
-                        onClick: (id, service) => {this.onElementClick(id, service);},
-                    })
+                React.createElement(renderElementOnOrder,{
+                    activeElementsOnOrder: this.state.activeElementsOnOrder,
+                    service: this.props.serviceOffer,
+                    onClickDelete: (id, service) =>{this.deleteElementFromOnOrder(id,service);},
+                    onUpdateQuantity: (id, service, e) => {this.updateQuantity(id,service,e);},
+                    onUpdateUnitPrice: (id, service,e) =>{this.updateUnitPrice(id,service,e);},
+                    onUpdateElementNameIfCustom: (id,service, e) =>{this.updateCustomElementName(id,service,e);}
                 })
             );
+        
+         
+            /* if(this.state.ajaxLoaded && this.state.activeElementsOnList[this.props.serviceOffer] !== undefined){
+                return(
+                    this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
+                        return React.createElement(selectableElementToOrder, {
+                            key: `${elementName}-${this.props.serviceOffer}`,
+                            id: elementName,
+                            elementPrice: (this.state.elementsPrice[elementName] !== undefined) ? this.state.elementsPrice[elementName][this.props.serviceOffer] : undefined,
+                            elementString: this.state.elements[elementName],
+                            service: this.props.serviceOffer,
+                            onClick: (id, service) => {this.onElementClick(id, service);},
+                        })
+                    })
+                );
+            }else{
+                return(null);
+            } */
+            
         }
     }
 
-    return{
-        WriteOrderPanel: WriteOrderPanel
-    }
+    return WriteOrderPanel;
 
 });
 
