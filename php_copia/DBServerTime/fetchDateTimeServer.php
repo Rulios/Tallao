@@ -16,16 +16,19 @@ $data["date"] = $date;
 //12 hours format
 $hour12 = date('h');
 $hour24 = date('H');
+$minutes = date("i");
+$timeCycle = date("a");
 //check cycle
-if(date('H') > 12){
+/* if(date('H') > 12){
     $timeCycle = "PM";
 }else{
     $timeCycle = "AM";
 }
-
+ */
 $data["hour12"] = $hour12;
 //$data["hour24"] = $hour24;
 $data["cycle"] = $timeCycle;
+$data["minutes"] = $minutes;
 
 
 echo json_encode($data);

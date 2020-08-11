@@ -405,44 +405,6 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 elementsOnOrder : this.state.activeElementsOnOrder
             };
         }
-
-        /* static async getDerivedStateFromProps(newProps, prevState){
-            //setState is asynchronous, so assigning a object to a state is very
-            //slow that it executes render() without having the changed state. 
-            //This function gets the newProps (serviceOffer) and updates the elementsOnList according to the serviceOffer
-            let updatedElementsOnList = {};
-            updatedElementsOnList = Object.assign({}, prevState.activeElementsOnList);
-
-            //set a new service field
-            if(Object.keys(prevState.activeElementsOnList).indexOf(newProps.serviceOffer) === -1){
-                updatedElementsOnList[newProps.serviceOffer] = Object.keys(elements);
-            }
-            if(prevState.elementsPrice === undefined || prevState.elementsPrice[newProps.serviceOffer] === undefined){
-
-                let priceDataString = await ajaxReq.fetchElementsPrice({serviceOffer: newProps.serviceOffer});
-                let priceString = JSON.parse(priceDataString)[newProps.serviceOffer];
-                let elementsPrice;
-                if(prevState.elementsPrice === undefined){
-                    elementsPrice = {};
-                }else{
-                    elementsPrice = Object.assign({}, prevState.elementsPrice);
-                }
-                priceString.trim().split(",").map((value, i) =>{
-                    let elementKeyValueArr = value.split("=");
-                    elementsPrice[elementKeyValueArr[0]] = {};
-                    elementsPrice[elementKeyValueArr[0]][newProps.serviceOffer] = parseFloat(elementKeyValueArr[1]);
-                });
-
-                updatedElementsOnList[newProps.serviceOffer] = Object.keys(elements);
-                console.log(updatedElementsOnList);
-                return{
-                    activeElementsOnList: updatedElementsOnList,
-                    elementsPrice: elementsPrice
-                }
-            }
-
-        } */
-
         componentDidMount(){
             if(!this.state.ajaxLoaded){
                 try{
@@ -510,24 +472,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 })
             );
         
-         
-            /* if(this.state.ajaxLoaded && this.state.activeElementsOnList[this.props.serviceOffer] !== undefined){
-                return(
-                    this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
-                        return React.createElement(selectableElementToOrder, {
-                            key: `${elementName}-${this.props.serviceOffer}`,
-                            id: elementName,
-                            elementPrice: (this.state.elementsPrice[elementName] !== undefined) ? this.state.elementsPrice[elementName][this.props.serviceOffer] : undefined,
-                            elementString: this.state.elements[elementName],
-                            service: this.props.serviceOffer,
-                            onClick: (id, service) => {this.onElementClick(id, service);},
-                        })
-                    })
-                );
-            }else{
-                return(null);
-            } */
-            
+   
         }
     }
 

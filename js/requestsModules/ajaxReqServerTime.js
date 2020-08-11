@@ -14,11 +14,10 @@ define(["jquery","ajaxReq"], function($,ajaxReq){
 
         return await $.ajax({
             type:"POST",
-            url:"./php/fetchDateTimeServer.php"
+            url:"./php_copia/DBServerTime/fetchDateTimeServer.php"
         });
 
     }
-
     return {
         fetchDateTimeServer: fetchDateTimeServer
     };

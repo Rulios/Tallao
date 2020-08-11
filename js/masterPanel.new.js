@@ -16,7 +16,8 @@ require.config({
         ajaxReqCustomMessages: "./requestsModules/ajaxReqCustomMessages",
         laundryServiceSelector: "./reactComponents/laundryServiceSelector",
         writeOrder: "./reactComponents/writeOrder",
-        customMessages: "./reactComponents/customMessages"
+        customMessages: "./reactComponents/customMessages",
+        time: "./reactComponents/Time"
     },
     shim: {
         bootstrap: {
@@ -44,15 +45,15 @@ function($,React, ReactDOM){
                 );
 
 
-                $("#submitOrder").click(function(e){
-                });
-            });
+            });         
         });
 
         //need to reset the activeElementsOnOrder
         //do the animation of completed
         //and do the AJAX submit call
         class Main extends React.Component{
+
+            todayDate //property handled as global, not as state
 
             constructor(props){
                 super(props);
@@ -66,7 +67,8 @@ function($,React, ReactDOM){
                         customMessages: false
                     },
                     allLoaded: false,
-                    serviceSelected: ""
+                    serviceSelected: "",
+                    todayDate: "",
                 }
             }
 
@@ -101,17 +103,46 @@ function($,React, ReactDOM){
                     );
                 }
             }
+
+            renderTimerShow(){
+                let Timer = require("time");
+                ReactDOM.render(
+                    React.createElement(Timer.Timer,{
+                        getTodayDate: (today) =>{
+                            //parse date
+                            //to prevent updating
+                            this.todayDate = new Date(`${today.month}-${today.day}-${today.year}`);
+                        }   
+                    }),
+                    document.getElementById("containerDateTime")
+                )
+            }
+
+            renderSubmitButton(){
+                ReactDOM.render(
+                    React.createElement("button",{
+                        className:  "submitButtonOrder",
+                        type: "submit",
+                        onClick: (e) =>{
+                            
+                        }
+                    }, "Completar orden"),
+                    document.getElementById("containerSubmit")
+                );
+            }
+
             componentDidMount(){
                 let isAllLoaded = true;
                 Object.values(this.state.modulesStates).map(value =>{
-                    if(value === false){
+                    if(!value){
                         isAllLoaded = false;
                     }
                 });
                 if(!isAllLoaded){
                     let that = this;
-                    require(["formVerification", "laundryServiceSelector", "writeOrder", "customMessages"],
-                    function(formVerification , laundryServiceSelector, writeOrder, customMessages){
+                    require(["formVerification", "laundryServiceSelector", 
+                    "writeOrder", "customMessages", "time"],
+                    function(){
                         that.setState({
                             modulesStates: {
                                 formVerification : true,
@@ -128,9 +159,12 @@ function($,React, ReactDOM){
             componentDidUpdate(){
                 this.renderCustomMessages();
                 this.renderWriteOrder();
+                this.renderSubmitButton();
+                this.renderTimerShow();
             }
             
             render(){
+                console.log(this.state);
                 if(this.state.allLoaded){
                     let ServiceSelector = require("laundryServiceSelector");
                     return(
