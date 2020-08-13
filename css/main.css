@@ -131,6 +131,9 @@ border:1px solid;
 .sectionSeparation{
     margin-top: 6em;
 }
+.small-rightMargin{
+    margin-right:5px;
+}
 .leftSeparation{
     margin-left:10px;
 }
@@ -522,8 +525,8 @@ input[type='checkbox']{
     float: left;
     font-weight: bold;
 }
-.inputNumberHook{
-    width: 30% !important;
+.inputHookQuantity{
+    width: 20% !important;
 }
 .opacityAndDisable{
     opacity: 0.1;

@@ -59,7 +59,6 @@ define(['react', 'react-dom', "ajaxReqUserCreds"], function(React, ReactDOM, aja
 
 
         render(){
-            //console.log(this.state.selected);
             if(this.state.ajaxLoaded){
                 return(
                     React.createElement("select", {

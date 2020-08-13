@@ -53,6 +53,12 @@ define(["jquery"], function ($){
         }
     }
 
+    function minLimitZero(e){ //same as notNegative, this time, until zero
+        if(e.target.value < 0 || e.target.value === ""){
+            e.target.value = 1;
+        }
+    }
+
 
     return{
         asteriskAndHyphen: asteriskAndHyphen,
@@ -61,7 +67,8 @@ define(["jquery"], function ($){
         preventTab: preventTab,
         notNumbers: notNumbers,
         notExponential: notExponential,
-        notNegative: notNegative
+        notNegative: notNegative,
+        minLimitZero: minLimitZero
     };
 
 });

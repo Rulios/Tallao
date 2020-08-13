@@ -13,15 +13,30 @@ define(["react", "react-dom", "ajaxReqTime"],
 function(React, ReactDOM, ajaxReq){
 
 
-    function dateInput(props){
+    function DateInput(props){
         //props: 
-        //min (dateinput format) - specify the min limit of input
+        //min (DateInput format) - specify the min limit of input
         //onChange (event)
         return(
             React.createElement("input",{
                 type:"date",
-                min: this.props.min,
-                onChange: (e) => {this.props.getDate(e);}
+                min: props.min,
+                className: props.className,
+                onChange: (e) => {props.getDate(e);}
+            })
+        )
+    }
+
+    function TimeInput(props){
+        //props: 
+        //min (DateInput format) - specify the min limit of input
+        //onChange (event)
+        return(
+            React.createElement("input",{
+                type:"time",
+                min: props.min,
+                className: props.className,
+                onChange: (e) => {props.getTime(e);}
             })
         )
     }
@@ -59,6 +74,7 @@ function(React, ReactDOM, ajaxReq){
                         });
                         return null;
                     }
+                    
                     return returnObj;
                 });
             }, 60000);
@@ -133,7 +149,8 @@ function(React, ReactDOM, ajaxReq){
 
     return{
         Timer: Timer,
-        dateInput: dateInput
+        DateInput: DateInput,
+        TimeInput: TimeInput
     };
 
 

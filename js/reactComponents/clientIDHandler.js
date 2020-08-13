@@ -75,7 +75,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                     }else{
                         clientData.name = `${data.name} ${data.lastname}`;
                     }
-
+                    that.returnData(clientData);
                     that.setState({
                         client: clientData
                     });
@@ -83,16 +83,18 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             });
         }
 
-        returnData(){ //return data when needed by the main handler
-            return this.state.client;
+        returnData(clientData){ //return data when needed by the main component
+            this.props.getClientData(clientData);
         }
 
         render(){
             if(this.props.mode === "onOrder"){
+                
                 return(
                     React.createElement(clientSelector,{
                         clientID: this.state.client.id,
-                        clientName: this.state.client.name
+                        clientName: this.state.client.name,
+                        onChangeID: (e) =>{this.searchClientByID(e);}
                     })
                 );
             }
