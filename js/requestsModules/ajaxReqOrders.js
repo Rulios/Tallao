@@ -7,10 +7,11 @@ define(["ajaxReq"], function(ajaxReq){
     //this module includes all the AJAX fetches that involves on the
     //submitting, fetching, and updating orders created by the superuser
 
-    async function submitOrder(obj){
-        //params: clientID, clientName, eQuantity, ePrice(elementPrice string)
-        //hookQuantity, dateReceive, dateAssign, totalPrice, indications
-        return await ajaxReq.doAJAX("POST", "./php/submitOrder.php", obj);
+    async function submitOrder(jsonString){
+        //props formatted as json: indications, elementsOnOrder (contains service, price, quantity), hookQuantity, totalPrice,
+        //dateTimeAssignForOrder, dateTimeOrderWritten
+  
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBOrders/submitOrder.php", jsonString);
     }
 
     async function fetchOrders(obj){

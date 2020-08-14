@@ -59,6 +59,26 @@ define(["jquery"], function ($){
         }
     }
 
+    function isInputDate(string){
+        //if it doesn't match with the regex| format YYYY:MM:DD
+        const regex = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/;
+        if(string.match(regex)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function isInputTime(string){
+        //format HH:MM
+        const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+        if(string.match(regex)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     return{
         asteriskAndHyphen: asteriskAndHyphen,
@@ -68,7 +88,9 @@ define(["jquery"], function ($){
         notNumbers: notNumbers,
         notExponential: notExponential,
         notNegative: notNegative,
-        minLimitZero: minLimitZero
+        minLimitZero: minLimitZero,
+        isInputDate: isInputDate,
+        isInputTime : isInputTime 
     };
 
 });

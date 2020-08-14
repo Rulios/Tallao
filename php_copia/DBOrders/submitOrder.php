@@ -17,7 +17,7 @@ $db = "tallao";
 const limit = 10000;
 
 if(Classes\Cookies::readCookies()){
-    if(isset($_POST['clientID'],$_POST['eQuantity'], 
+    /* if(isset($_POST['clientID'],$_POST['eQuantity'], 
              $_POST['ePrice'], $_POST['hookQuantity'], 
              $_POST['dateReceive'], $_POST['dateAssign'],
               $_POST['totalPrice'], $_POST['indications'])){
@@ -35,7 +35,15 @@ if(Classes\Cookies::readCookies()){
         $indications = $_POST['indications'];
     }else{
         echo "no hay ni na'";
+    } */
+
+
+    if(file_get_contents("php://input")){
+        $dataStream = file_get_contents("php://input");
+        $dataObj = json_decode($dataStream);
+        print_r(serialize($dataObj));
     }
+
     /*
     $clientID = "GUQ13";
     $clientName = "Robert Lu Zheng";
@@ -46,7 +54,7 @@ if(Classes\Cookies::readCookies()){
     $dateAssign = "2020-05-01 23:32";
     $totalPrice = "1.65"; */
     
-    $conn = new mysqli($serverName, $userConn, $passwordConn);
+    /* $conn = new mysqli($serverName, $userConn, $passwordConn);
     
     // Check connection
     if ($conn->connect_error) {
@@ -146,7 +154,7 @@ if(Classes\Cookies::readCookies()){
         echo mysqli_error($conn);
     }
     
-    mysqli_close($conn);
+    mysqli_close($conn); */
 }
 
 ?>

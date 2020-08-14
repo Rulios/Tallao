@@ -321,14 +321,52 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             }
         }
 
+        getSumOfElementsQuantity(elementsOnOrder){ //sum all the quantities of elements inside the order
+            let sumElementsQuantity = 0;
+            //traverse for each element on order
+            Object.keys(elementsOnOrder).map(elementName =>{
+                //traverse for each service the element on order
+                Object.keys(elementsOnOrder[elementName]).map(service =>{
+                    sumElementsQuantity += elementsOnOrder[elementName][service]["quantity"];
+                });
+            });
+            return sumElementsQuantity;
+        }
+
+        calcTotalPrice({elementsOnOrder, hookQuantityProvided}){
+            //params: elementsOnOrder (object), hookQuantityProvided (int), sumElementsQuantity (int)
+            let total = 0;
+            let sumElementsQuantity = this.getSumOfElementsQuantity(elementsOnOrder);
+            //traverse for each element on order
+            Object.keys(elementsOnOrder).map(elementName =>{
+                //traverse for each service the element on order
+                Object.keys(elementsOnOrder[elementName]).map(service =>{
+                    total += elementsOnOrder[elementName][service]["price"] * elementsOnOrder[elementName][service]["quantity"];
+                    total = Number(total.toFixed(2));
+                });
+            });
+            
+            hookQuantityProvided = parseInt(hookQuantityProvided);
+            //if missing hooks, multiply by sumElemenetsQuantity - hookQuantityProvided
+            if(hookQuantityProvided !== undefined && hookQuantityProvided < sumElementsQuantity){
+                let priceHook = this.state.hookPrice * (sumElementsQuantity - hookQuantityProvided);
+                priceHook = Number(priceHook.toFixed(2));
+                
+                if(priceHook >= 0){//prevent a discount on priceHooks
+                    total += priceHook; //add missing hookPrice to the original price
+                }
+            }
+            return parseFloat(total.toFixed(2));
+        }
+
         onElementClick(id, service){
             //create new activeElementsOnList , and activeElementsOnOrder
             let newActiveElementsOnList = JSON.parse(JSON.stringify(this.state.activeElementsOnList));
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             let newIndexCustom = this.state.indexCustom.slice();
-            let totalPrice = 0;
-            let sumElementsQuantity = 0;
             let newHookQuantityProvided = 0;
+            let sumElementsQuantity = 0;
+            let totalPrice =0 ;
             //the format is about custom1, custom2, custom3... and so on
             //So this.state.indexCustom will store all the indices, and it will be re-sorted
             //every time it inputs a new index (inputs a new custom element), this is just
@@ -365,13 +403,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 newActiveElementsOnList[service].splice(newActiveElementsOnList[service].indexOf(id), 1);
             }
 
-            //sum the new elements overall quantity
-            Object.keys(newActiveElementsOnOrder).map(elementName =>{
-                Object.keys(newActiveElementsOnOrder[elementName]).map(service =>{
-                    sumElementsQuantity += newActiveElementsOnOrder[elementName][service]["quantity"];
-                });
-            });
-
+            sumElementsQuantity = this.getSumOfElementsQuantity(newActiveElementsOnOrder);
             //if the user has checked full hook, then the hook quantity provided will be the same as sumElementsQuantity
             //if not, it will just increment by one the previous hook quantity provided
             newHookQuantityProvided = 
@@ -380,9 +412,9 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             totalPrice = this.calcTotalPrice({
                 elementsOnOrder: newActiveElementsOnOrder,
                 hookQuantityProvided: newHookQuantityProvided,
-                sumElementsQuantity: sumElementsQuantity
-            });
-            this.returnData(totalPrice, newActiveElementsOnOrder);
+            }); 
+
+            this.returnData(totalPrice, newActiveElementsOnOrder, newHookQuantityProvided);
             this.setState({
                 sumElementsQuantity: sumElementsQuantity,
                 activeElementsOnList: newActiveElementsOnList,
@@ -394,39 +426,12 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             });
         }
 
-        calcTotalPrice({elementsOnOrder, hookQuantityProvided, sumElementsQuantity}){
-            //params: elementsOnOrder (object), hookQuantityProvided (int), sumElementsQuantity (int)
-            let total = 0;
-            let test = 0;
-            //traverse for each element on order
-            Object.keys(elementsOnOrder).map(elementName =>{
-                //traverse for each service the element on order
-                Object.keys(elementsOnOrder[elementName]).map(service =>{
-                    total += elementsOnOrder[elementName][service]["price"] * elementsOnOrder[elementName][service]["quantity"];
-                    total = Number(total.toFixed(2));
-                    //console.log(`${elementsOnOrder[elementName][service]["price"]} - ${elementsOnOrder[elementName][service]["quantity"]}`);
-                });
-            });
-            
-            hookQuantityProvided = parseInt(hookQuantityProvided);
-            //if missing hooks, multiply by sumElemenetsQuantity - hookQuantityProvided
-            if(hookQuantityProvided !== undefined && hookQuantityProvided < sumElementsQuantity){
-                let priceHook = this.state.hookPrice * (sumElementsQuantity - hookQuantityProvided);
-                priceHook = Number(priceHook.toFixed(2));
-                
-                if(priceHook >= 0){//prevent a discount on priceHooks
-                    total += priceHook; //add missing hookPrice to the original price
-                }
-            }
-            return parseFloat(total.toFixed(2));
-        }
-
         deleteElementFromOnOrder(id, service){
             let newActiveElementsOnList = JSON.parse(JSON.stringify(this.state.activeElementsOnList));
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
-            let totalPrice = 0;
             let sumElementsQuantity = 0;
             let newHookQuantityProvided = 0;
+            let totalPrice = 0;
             //find the initial position of the element to be added on the array on List
             //except when custom
             if(id.indexOf("custom") === -1){
@@ -442,22 +447,17 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             }else{
                 delete newActiveElementsOnOrder[id];
             }
-            //sum the new elements overall quantity
-            Object.keys(newActiveElementsOnOrder).map(elementName =>{
-                Object.keys(newActiveElementsOnOrder[elementName]).map(service =>{
-                    sumElementsQuantity += newActiveElementsOnOrder[elementName][service]["quantity"];
-                });
-            });
 
+            sumElementsQuantity = this.getSumOfElementsQuantity(newActiveElementsOnOrder);
             //it shouldn't surpass the sumElementsQuantity, but it shouldn't decrement also
             newHookQuantityProvided = (this.state.hookQuantityProvided > sumElementsQuantity) ? sumElementsQuantity : this.state.hookQuantityProvided;
 
             totalPrice = this.calcTotalPrice({
-                elementsOnOrder: newActiveElementsOnOrder,  
+                elementsOnOrder: newActiveElementsOnOrder,
                 hookQuantityProvided: newHookQuantityProvided,
-                sumElementsQuantity: sumElementsQuantity
-            });
-            this.returnData(totalPrice, newActiveElementsOnOrder);
+            }); 
+
+            this.returnData(totalPrice, newActiveElementsOnOrder, newHookQuantityProvided);
             this.setState({
                 sumElementsQuantity: sumElementsQuantity,
                 activeElementsOnList: newActiveElementsOnList,
@@ -471,27 +471,22 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
         updateQuantity(id,service, e){
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const quantity = e.target.value; //this input just accepts positive integers
+            let newHookQuantityProvided = 0;
             let totalPrice = 0;
             let sumElementsQuantity = 0;
-            let newHookQuantityProvided = 0;
             newActiveElementsOnOrder[id][service]["quantity"] = parseFloat(quantity);
 
-            //sum the new elements overall quantity
-            Object.keys(newActiveElementsOnOrder).map(elementName =>{
-                Object.keys(newActiveElementsOnOrder[elementName]).map(service =>{
-                    sumElementsQuantity += newActiveElementsOnOrder[elementName][service]["quantity"];
-                });
-            });
-
+            sumElementsQuantity = this.getSumOfElementsQuantity(newActiveElementsOnOrder);
             //if user has checked the full hook, it will update to fullhook provided
             //if not it will stay the same
             newHookQuantityProvided = (this.state.fullHookCheckStatus) ? sumElementsQuantity: this.state.hookQuantityProvided;
+
             totalPrice = this.calcTotalPrice({
                 elementsOnOrder: newActiveElementsOnOrder,
                 hookQuantityProvided: newHookQuantityProvided,
-                sumElementsQuantity: sumElementsQuantity
-            });
-            this.returnData(totalPrice, newActiveElementsOnOrder);
+            }); 
+
+            this.returnData(totalPrice, newActiveElementsOnOrder, newHookQuantityProvided);
             this.setState({
                 sumElementsQuantity: sumElementsQuantity,
                 activeElementsOnOrder: newActiveElementsOnOrder,
@@ -504,14 +499,16 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
         updateUnitPrice(id,service, e){
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const unitPrice = e.target.value;
-            let totalPrice = 0;
-
+            let totalPrice =0 ;
+            let sumElementsQuantity = 0;
             newActiveElementsOnOrder[id][service]["price"] = parseFloat(unitPrice);
 
+            sumElementsQuantity = this.getSumOfElementsQuantity(newActiveElementsOnOrder);
             totalPrice = this.calcTotalPrice({
                 elementsOnOrder: newActiveElementsOnOrder,
             });
-            this.returnData(totalPrice, newActiveElementsOnOrder);
+
+            this.returnData(totalPrice, newActiveElementsOnOrder, this.hookQuantityProvided);
             this.setState({
                 activeElementsOnOrder: newActiveElementsOnOrder,
                 totalPrice: totalPrice
@@ -519,9 +516,8 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
         }
 
         updateHookQuantity(data){ //param as boolean or int
-            let totalPrice = 0;
             let newHookQuantityProvided = 0;
-            let fullHookCheckStatus = false;
+            let totalPrice = 0;
             if(typeof data === "boolean" && data){//triggered by checkbox, since it should pass a bool 
                 newHookQuantityProvided = this.state.sumElementsQuantity;
             }else if(typeof data === "boolean" && !data){
@@ -537,22 +533,22 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                     newHookQuantityProvided = data;
                 }
             }
+       
             totalPrice = this.calcTotalPrice({
-                elementsOnOrder: this.state.activeElementsOnOrder, 
+                elementsOnOrder: this.state.activeElementsOnOrder,
                 hookQuantityProvided: newHookQuantityProvided,
-                sumElementsQuantity : this.state.sumElementsQuantity
-            });
+            }); 
+            this.returnData(totalPrice, this.state.activeElementsOnOrder, newHookQuantityProvided);
             this.setState({
                 fullHookCheckStatus : (newHookQuantityProvided === this.state.sumElementsQuantity) ? true: false,
                 hookQuantityProvided: newHookQuantityProvided,
                 totalPrice : totalPrice
-            })
+            });
         }
 
         updateCustomElementName(id,service, e){
             let newActiveElementsOnOrder = JSON.parse(JSON.stringify(this.state.activeElementsOnOrder));
             const elementName = e.target.value;
-            let totalPrice = 0;
 
             newActiveElementsOnOrder[id][service]["name"] = elementName;
 
@@ -633,7 +629,6 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
         }
   
         render(){
-
             document.getElementById(this.props.idToTotalPrice).textContent = this.state.totalPrice;
             
             return(
@@ -648,9 +643,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             );
         }
     }
-
     return WriteOrderPanel;
-
 });
 
 //example of selectableElementToOrder in HTML

@@ -12,6 +12,7 @@ require.config({
         formVerification:["frontendModules/formVerification"],
         sessionHandler: "frontendModules/sessionHandler",
         ajaxReqUserCreds : "./requestsModules/ajaxReqUserCreds",
+        ajaxReqOrders: "./requestsModules/ajaxReqOrders",
         ajaxReqSuperUserConfigs: "./requestsModules/ajaxReqSuperUserConfigs",
         ajaxReqCustomMessages: "./requestsModules/ajaxReqCustomMessages",
         laundryServiceSelector: "./reactComponents/laundryServiceSelector",
@@ -45,9 +46,30 @@ function($,React, ReactDOM){
                     document.getElementById("containerServiceSelector")
                 );
 
-
             });         
         });
+
+        function animateSuccess(){
+            //Animation
+            if($("#receiptConfigPanel").hasClass("opacityAndDisable") == false){
+                $("#receiptConfigPanel").toggleClass("opacityAndDisable");
+    
+                if($("#successAnimation").hasClass("hide") == true){
+                setTimeout(function(){
+                    //show it
+                    $("#successAnimation").toggleClass("hide");
+                    
+                    setTimeout(function(){
+                    //hide it
+                    $("#successAnimation").toggleClass("hide");
+                    $("#receiptConfigPanel").toggleClass("opacityAndDisable");
+                    },1500)
+                }, 40);
+                }
+            }
+            //scroll to top
+            window.scrollTo(0,0);
+        }
 
         //need to reset the activeElementsOnOrder
         //do the animation of completed
@@ -69,13 +91,31 @@ function($,React, ReactDOM){
                     },
                     allLoaded: false,
                     serviceSelected: "",
+                    dateForOrder:"",
+                    timeForOrder:"",
+                    order:{
+                        elementsOnOrder: {},
+                        hookQuantity: 0,
+                        totalPrice: 0
+                    },
+                    client:{
+                        id:"",
+                        name:""
+                    }
                 }
             }
 
             updateServiceSelected(selected){
-                this.setState({
-                    serviceSelected: selected,
-                })
+                this.setState({serviceSelected: selected});
+            }
+
+            updateDateForOrder(date){
+                //console.log(typeof date);
+                this.setState({dateForOrder: date});
+            }
+
+            updateTimeForOrder(time){
+                this.setState({timeForOrder: time});
             }
 
             renderLaundryName(){
@@ -123,7 +163,6 @@ function($,React, ReactDOM){
                             idToTotalPrice: "totalPriceSpanValue",
                             idSelectableElements: "containerSelectableElements" ,
                             getOrderDetails: (details) =>{ 
-                                //console.log(details);
                                 this.setState({
                                     order: details
                                 })
@@ -138,10 +177,18 @@ function($,React, ReactDOM){
                 let Timer = require("time");
                 ReactDOM.render(
                     React.createElement(Timer.Timer,{
-                        getTodayDate: (today) =>{
+                        getTodayDateTime: (today) =>{
                             //parse date
                             //to prevent updating
-                            this.state.todayDate = new Date(`${today.month}-${today.day}-${today.year}`);
+                            //update if single digit
+                            today.month = (today.month < 10) ? `0${today.month}`: today.month;
+                            today.day = (today.day < 10) ? `0${today.day}`: today.day;
+                            today.hour = (today.hour < 10) ? `0${today.hour}`: today.hour;
+                            today.minutes = (today.minutes < 10) ? `0${today.minutes}`: today.minutes;
+
+                            this.state.todayDate = 
+                            `${today.year}-${today.month}-${today.day} ${Timer.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`;
+
                             this.renderDateTimeInputOrder(today);
                         }   
                     }),
@@ -159,24 +206,24 @@ function($,React, ReactDOM){
                     [React.createElement("label", {
                         key: "label4Date",
                         htmlFor: "inputDate4Order",
-                        className: "bold"
+                        className: "bold small-rightMargin"
                     }, "Fecha:"),
                     React.createElement(Time.DateInput, {
                         key: "inputDate4Order",
                         id: "inputDate4Order",
-                        getDate: () =>{},
-                        min: `${date.year}-${(date.month < 10) ? `0${date.month}`: date.month}-${(date.day < 10) ? `0${date.day}`: date.day}`,
+                        getDate: (dateInput) =>{this.updateDateForOrder(dateInput);},
+                        min: `${date.year}-${date.month}-${date.day}`,
                     }),
 
                     React.createElement("label", {
                         key:"label4Time",
                         htmlFor: "inputTime4Order", 
-                        className: "bold"
+                        className: "bold small-rightMargin"
                     }, "Hora:"),
                     React.createElement(Time.TimeInput, {
                         id: "inputTime4Order",
                         key: "inputTime4Order",
-                        getTime: () =>{},
+                        getTime: (timeInput) =>{this.updateTimeForOrder(timeInput);},
                         //className: "disableInput"
                     })]
                     ,
@@ -190,7 +237,35 @@ function($,React, ReactDOM){
                         className:  "submitButtonOrder",
                         type: "submit",
                         onClick: (e) =>{
+                            const indications = document.getElementById("inputIndications").value;
+                            const {order:{elementsOnOrder, hookQuantity, totalPrice}} = this.state;
+                            const {dateForOrder, timeForOrder, todayDate, client} = this.state;
                             console.log(this.state);
+                            console.log(this.state.todayDate.toString());
+                            let jsonString = JSON.stringify({
+                                indications: indications,
+                                elementsOnOrder: elementsOnOrder,
+                                hookQuantity: hookQuantity,
+                                totalPrice: totalPrice,
+                                dateTimeAssignedForOrder: `${dateForOrder} ${timeForOrder}:00`,
+                                dateTimeOrderCreated: todayDate,
+                                clientID: client.id,
+                                clientName: client.name
+                            });
+
+                            console.log(jsonString);
+                            try{
+                                require(["ajaxReqOrders"], function(ajaxReq){
+                                    let query = ajaxReq.submitOrder(jsonString);
+                                    query.then(response =>{
+                                        console.log(response);
+                                        animateSuccess();
+                                    })
+                                    
+                                });
+                                
+                            }catch(err){console.error(err);}
+                            
                         }
                     }, "Completar orden"),
                     document.getElementById("containerSubmit")

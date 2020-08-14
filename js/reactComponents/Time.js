@@ -5,12 +5,13 @@ require.config({
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
+        inputPrevent: "./frontendModules/inputPrevent",
         ajaxReqTime: "../js/requestsModules/ajaxReqServerTime"
     }
 });
 
-define(["react", "react-dom", "ajaxReqTime"],
-function(React, ReactDOM, ajaxReq){
+define(["react", "react-dom", "ajaxReqTime", "inputPrevent"],
+function(React, ReactDOM, ajaxReq, inputPrevent){
 
 
     function DateInput(props){
@@ -19,12 +20,17 @@ function(React, ReactDOM, ajaxReq){
         //onChange (event)
         return(
             React.createElement("input",{
+                id: props.id,
                 type:"date",
                 min: props.min,
                 className: props.className,
-                onChange: (e) => {props.getDate(e);}
+                onChange: (e) => {
+                    if(inputPrevent.isInputDate(e.target.value)){
+                        props.getDate(e.target.value);
+                    }
+                }
             })
-        )
+        );
     }
 
     function TimeInput(props){
@@ -33,12 +39,31 @@ function(React, ReactDOM, ajaxReq){
         //onChange (event)
         return(
             React.createElement("input",{
+                id: props.id,
                 type:"time",
                 min: props.min,
                 className: props.className,
-                onChange: (e) => {props.getTime(e);}
+                onChange: (e) => {
+                    if(inputPrevent.isInputTime(e.target.value)){
+                        props.getTime(e.target.value);
+                    }
+                }
             })
-        )
+        );
+    }
+
+    function convert12hTo24h(time12h){
+        const [time, modifier] = time12h.split(' ');
+
+        let [hours, minutes] = time.split(':');
+
+        if (hours === '12') {
+            hours = '00';
+        }
+        if (modifier === 'PM') {
+            hours = parseInt(hours, 10) + 12;
+        }
+        return `${hours}:${minutes}`;
     }
 
     class Timer extends React.Component{
@@ -74,7 +99,7 @@ function(React, ReactDOM, ajaxReq){
                         });
                         return null;
                     }
-                    
+                    this.returnTodayDateTime();
                     return returnObj;
                 });
             }, 60000);
@@ -112,11 +137,14 @@ function(React, ReactDOM, ajaxReq){
             }catch(err){console.error(err);}
         }
 
-        returnTodayDate(){
-            return this.props.getTodayDate({
+        returnTodayDateTime(){
+            return this.props.getTodayDateTime({
                 day: this.state.day,
                 month: this.state.month,
-                year: this.state.year
+                year: this.state.year,
+                hour: this.state.hour12,
+                minutes: this.state.minutes,
+                cycle: this.state.cycle
             });
         }
         componentDidMount(){
@@ -128,7 +156,7 @@ function(React, ReactDOM, ajaxReq){
                 this.setState(obj);
             }).then(() =>{
                 //return data to main component
-                this.returnTodayDate();
+                this.returnTodayDateTime();
             });
         }
 
@@ -150,7 +178,8 @@ function(React, ReactDOM, ajaxReq){
     return{
         Timer: Timer,
         DateInput: DateInput,
-        TimeInput: TimeInput
+        TimeInput: TimeInput,
+        convert12hTo24h:convert12hTo24h
     };
 
 
