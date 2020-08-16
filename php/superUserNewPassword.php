@@ -32,7 +32,7 @@ mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 $inputPassword = hashPassword($inputPassword);
 
-$sql = "UPDATE superusers SET password='$inputPassword' WHERE hashcode='$userHashCode'";
+$sql = "UPDATE laundries SET password='$inputPassword' WHERE hashcode='$userHashCode'";
 
 
 if(mysqli_query($conn,$sql)){

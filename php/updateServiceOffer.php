@@ -30,7 +30,7 @@ echo "Connected successfully";
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 
-$sql = "UPDATE superusers SET serviceOffer='$inputServiceOffer' WHERE hashcode='$userHashCode'";
+$sql = "UPDATE laundries SET serviceOffer='$inputServiceOffer' WHERE hashcode='$userHashCode'";
 
 
 if(mysqli_query($conn,$sql)){

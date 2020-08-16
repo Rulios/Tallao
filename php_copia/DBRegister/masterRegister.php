@@ -65,7 +65,7 @@ do{
 $inputPassword = hashPassword($inputPassword);
 
 //2st query
- $sql = "INSERT INTO superusers (initials,hashcode,laundryName, location, legalreprName, legalreprLastname, email, password)
+ $sql = "INSERT INTO laundries (initials,hashcode,name, location, legalreprName, legalreprLastname, email, password)
 VALUES ('$initials','$hashCode','$inputLaundryName', '$inputLocation','$inputName', '$inputLastname', '$inputEmail', '$inputPassword')
 LIMIT 1";
 if(!mysqli_query($conn,$sql)){

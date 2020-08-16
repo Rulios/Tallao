@@ -28,7 +28,7 @@ if(Classes\Cookies::readCookies()){
     if($userType == "user"){
         $sql = "SELECT password FROM users WHERE hashcode= '$inputUserHash' LIMIT 1";
     }else if($userType == "superuser"){
-        $sql = "SELECT password FROM superusers WHERE hashcode= '$inputUserHash' LIMIT 1";
+        $sql = "SELECT password FROM laundries WHERE hashcode= '$inputUserHash' LIMIT 1";
     }
     
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");

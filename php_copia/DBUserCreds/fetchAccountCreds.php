@@ -23,8 +23,8 @@ if(Classes\Cookies::readCookies()){
     if($userType == "user"){
         $sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
     
-    }else if ($userType == "superuser"){
-        $sql = "SELECT initials,laundryName, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM superusers WHERE hashcode= '$inputUserHash'";
+    }else if ($userType == "laundry"){
+        $sql = "SELECT initials,name, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM laundries WHERE hashcode= '$inputUserHash'";
         
     }
     

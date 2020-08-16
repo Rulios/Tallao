@@ -19,7 +19,7 @@ if($_COOKIE > 0){
     $userType = $_COOKIE["usertype"];
     $userHash = $_COOKIE["userhash"];
 
-    $tableName = ($userType == "user") ? "users" : "superusers"; //correct to table name
+    $tableName = ($userType == "user") ? "users" : "laundries"; //correct to table name
 }else{
 
 } */
@@ -47,7 +47,7 @@ function fetchMyAccountData($userType, $userHash){
         $sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$userHash'";
     
     }else if ($userType == "superuser"){
-        $sql = "SELECT initials,laundryName, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM superusers WHERE hashcode= '$userHash'";
+        $sql = "SELECT initials,name, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM laundries WHERE hashcode= '$userHash'";
         
     }
 

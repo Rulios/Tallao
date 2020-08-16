@@ -1,4 +1,4 @@
-// main.js
+/* // main.js
 require.config({
     // module name mapped to CDN url
     paths: {
@@ -57,4 +57,5 @@ require(['react', 'react-dom'], function(React, ReactDOM ) {
         document.getElementById("root")
     )
     
-});
+}); */
+

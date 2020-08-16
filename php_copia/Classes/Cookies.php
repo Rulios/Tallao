@@ -59,7 +59,11 @@
 
         private function verifyIfExistUserHash(){
             //verify if user hash exists
-            $tableName = $_COOKIE["usertype"] . "s";
+            if($_COOKIE["usertype"] == "laundry"){
+                $tableName = "laundries";
+            }else if($_COOKIE["usertype"] == "user"){
+                $tableName = "users";
+            }
             $userhash = $_COOKIE["userhash"]; //since associative arrays can't be inserted on sql queries
             //Connection param
             $serverName = "localhost";

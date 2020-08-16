@@ -1,6 +1,7 @@
 define(["formVerification"], function(formVerification){
 
     function loginRedirection(url){
+        console.log(url);
         window.location.replace(url);
     }
 

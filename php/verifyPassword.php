@@ -25,7 +25,7 @@ if ($conn->connect_error) {
 if($userType == "user"){
     $sql = "SELECT password FROM users WHERE hashcode= '$inputUserHash' LIMIT 1";
 }else if($userType == "superuser"){
-    $sql = "SELECT password FROM superusers WHERE hashcode= '$inputUserHash' LIMIT 1";
+    $sql = "SELECT password FROM laundries WHERE hashcode= '$inputUserHash' LIMIT 1";
 }
 
 

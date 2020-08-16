@@ -25,7 +25,7 @@ if ($conn->connect_error) {
 }
 
 
-$sql = "SELECT initials FROM superUsers WHERE initials= '$inputInitials'";
+$sql = "SELECT initials FROM laundries WHERE initials= '$inputInitials'";
 
 
 

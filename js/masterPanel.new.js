@@ -98,7 +98,7 @@ function($,React, ReactDOM){
                         hookQuantity: 0,
                         totalPrice: 0
                     },
-                    client:{
+                    customer:{
                         id:"",
                         name:""
                     }
@@ -122,7 +122,7 @@ function($,React, ReactDOM){
                 require(["ajaxReqUserCreds"],  function(ajaxReq){
                     ajaxReq.fetchAccountCreds().then(query =>{
                         let data = JSON.parse(query);
-                        document.getElementById("showLaundryName").textContent = data.laundryName;
+                        document.getElementById("showLaundryName").textContent = data.name;
                     });
                 });
             }
@@ -145,7 +145,7 @@ function($,React, ReactDOM){
                         mode: "onOrder",
                         getClientData : (data) =>{
                             this.setState({
-                                client: data
+                                customer: data
                             });
                         }
                     }),
@@ -239,9 +239,9 @@ function($,React, ReactDOM){
                         onClick: (e) =>{
                             const indications = document.getElementById("inputIndications").value;
                             const {order:{elementsOnOrder, hookQuantity, totalPrice}} = this.state;
-                            const {dateForOrder, timeForOrder, todayDate, client} = this.state;
-                            console.log(this.state);
-                            console.log(this.state.todayDate.toString());
+                            const {dateForOrder, timeForOrder, todayDate, customer} = this.state;
+                            /* console.log(this.state);
+                            console.log(this.state.todayDate.toString()); */
                             let jsonString = JSON.stringify({
                                 indications: indications,
                                 elementsOnOrder: elementsOnOrder,
@@ -249,8 +249,8 @@ function($,React, ReactDOM){
                                 totalPrice: totalPrice,
                                 dateTimeAssignedForOrder: `${dateForOrder} ${timeForOrder}:00`,
                                 dateTimeOrderCreated: todayDate,
-                                clientID: client.id,
-                                clientName: client.name
+                                clientID: customer.id,
+                                clientName: customer.name
                             });
 
                             console.log(jsonString);

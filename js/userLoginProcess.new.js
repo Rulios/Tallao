@@ -47,7 +47,7 @@ function($, formVerification){
             });
         
             $("#submitLoginSuperUser").click(function(e){
-                checkLoginAJAX("superuser");
+                checkLoginAJAX("laundry");
             });
         
             $("#submitLoginUser").click(function(e){

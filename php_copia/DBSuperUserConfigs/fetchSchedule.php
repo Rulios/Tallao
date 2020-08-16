@@ -19,7 +19,7 @@ if(Classes\Cookies::readCookies()){
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT schedule FROM superusers WHERE initials= '$initials'";
+    $sql = "SELECT schedule FROM laundries WHERE initials= '$initials'";
 
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     $result = mysqli_query($conn, $sql);

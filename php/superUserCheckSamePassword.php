@@ -22,7 +22,7 @@ if ($conn->connect_error) {
 }
 
 
-$sql = "SELECT password FROM superusers WHERE hashcode= '$inputUserHash'";
+$sql = "SELECT password FROM laundries WHERE hashcode= '$inputUserHash'";
 
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");

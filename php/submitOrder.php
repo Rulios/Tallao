@@ -58,7 +58,7 @@ mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
 //Format A-1541
 
-$sql = "SELECT lastReceiptID FROM superusers WHERE initials = '$initials'";
+$sql = "SELECT lastReceiptID FROM laundries WHERE initials = '$initials'";
 
 if(mysqli_query($conn,$sql)){
     $result = mysqli_query($conn,$sql);
@@ -86,7 +86,7 @@ if(mysqli_query($conn,$sql)){
     $lastRID = $nextChar. "-" . $nextNumber;
 
     //update this receipt id as the last receipt id to be the reference
-    $sql = "UPDATE superusers SET lastReceiptID = '$lastRID' WHERE initials = '$initials'";
+    $sql = "UPDATE laundries SET lastReceiptID = '$lastRID' WHERE initials = '$initials'";
     
     if(mysqli_query($conn,$sql)){
         //continue to the receipt insertion at the database

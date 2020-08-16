@@ -35,7 +35,7 @@ $inputPassword = hashPassword($inputPassword);
 if($userType == "user"){
     $sql = "UPDATE users SET password='$inputPassword' WHERE hashcode='$userHashCode'";
 }else if($userType == "superuser"){
-    $sql = "UPDATE superusers SET password='$inputPassword' WHERE hashcode='$userHashCode'";
+    $sql = "UPDATE laundries SET password='$inputPassword' WHERE hashcode='$userHashCode'";
 
 }
 

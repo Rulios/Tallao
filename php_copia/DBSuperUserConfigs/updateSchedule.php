@@ -28,7 +28,7 @@ if(Classes\Cookies::readCookies()){
     }
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     
-    $sql = "UPDATE superusers SET schedule='$schedule' WHERE initials='$initials'";
+    $sql = "UPDATE laundries SET schedule='$schedule' WHERE initials='$initials'";
     
     if(!mysqli_query($conn,$sql)){
         echo mysqli_error($conn);

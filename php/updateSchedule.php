@@ -31,7 +31,7 @@ echo "Connected successfully";
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 
-$sql = "UPDATE superusers SET schedule='$schedule' WHERE initials='$initials'";
+$sql = "UPDATE laundries SET schedule='$schedule' WHERE initials='$initials'";
 
 
 

@@ -16,7 +16,7 @@ if (isset($_POST["inputEmail"], $_POST["userType"])){
 $userType = "superuser"; */
 
 //correct the usertype tag and the Table name
-$userType = ($userType == "user") ? "users" : "superusers";
+$userType = ($userType == "user") ? "users" : "laundries";
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 

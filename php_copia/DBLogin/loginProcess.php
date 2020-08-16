@@ -23,7 +23,11 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
 $inputPassword = "getrekt123";
 $userType = "superuser"; */
 
-$tableName = $userType . "s"; //correct to table name
+if($userType == "laundry"){
+    $tableName = "laundries";
+}else if($userType == "user"){
+    $tableName = "users";
+}
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 

@@ -19,7 +19,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT initials FROM superUsers WHERE initials= '$inputInitials'";
+$sql = "SELECT initials FROM laundries WHERE initials= '$inputInitials'";
 
 mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
 $result = mysqli_query($conn, $sql);

@@ -30,7 +30,7 @@ if(Classes\Cookies::readCookies()){
     }
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     
-    $sql = "UPDATE superusers SET serviceOffer='$inputServiceOffer' WHERE hashcode='$inputUserHash'";
+    $sql = "UPDATE laundries SET serviceOffer='$inputServiceOffer' WHERE hashcode='$inputUserHash'";
     
     if(mysqli_query($conn,$sql)){
     

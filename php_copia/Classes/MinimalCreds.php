@@ -23,7 +23,7 @@
                 die("Connection failed: " . $conn->connect_error);
             }
             mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
-            $sql = "SELECT initials FROM superusers WHERE hashcode='$userhash' LIMIT 1";
+            $sql = "SELECT initials FROM laundries WHERE hashcode='$userhash' LIMIT 1";
 
             $result = mysqli_query($conn, $sql);
             

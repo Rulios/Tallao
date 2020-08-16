@@ -16,6 +16,13 @@
         $userType = Classes\Cookies::getUserTypeCookie();
 
         $tableName = $userType . "s";
+
+        if($userType == "laundry"){
+            $tableName = "laundries";
+        }else if($userType == "user"){
+            $tableName = "users";
+        }
+
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);

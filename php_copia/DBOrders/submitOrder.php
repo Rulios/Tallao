@@ -17,32 +17,39 @@ $db = "tallao";
 const limit = 10000;
 
 if(Classes\Cookies::readCookies()){
-    /* if(isset($_POST['clientID'],$_POST['eQuantity'], 
-             $_POST['ePrice'], $_POST['hookQuantity'], 
-             $_POST['dateReceive'], $_POST['dateAssign'],
-              $_POST['totalPrice'], $_POST['indications'])){
-                  
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+  
+    $jsonTest = '{"indications":" Sin pliegue","elementsOnOrder":{"shirt":{"iron":{"quantity":1,"price":0.65}},
+    "pants":{"iron":{"quantity":1,"price":0.65}}},"hookQuantity":2,"totalPrice":1.3,"dateTimeAssignedForOrder":"2020-08-15 22:39:00",
+    "dateTimeOrderCreated":"2020-08-14 21:34","customerID":"GUQ13","customerName":"Robert Lu Zheng"}';
 
-        $clientID = $_POST['clientID'];
-        $clientName = $_POST['clientName'];
-        $elementQuantityString = $_POST['eQuantity'];
-        $elementPriceString = $_POST['ePrice'];
-        $hookQuantity = $_POST['hookQuantity'];
-        $dateReceive = $_POST['dateReceive'];
-        $dateAssign = $_POST['dateAssign'];
-        $totalPrice = $_POST['totalPrice'];
-        $indications = $_POST['indications'];
-    }else{
-        echo "no hay ni na'";
-    } */
+    $dataObj = json_decode($jsonTest);
 
+    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+    $customerID = $dataObj->customerID;
+    $customerName = $dataObj ->customerName;
+ 
+    $status = "status-wait";
+    $elementsDetails = json_encode($dataObj->elementsOnOrder);
+    $hookQuantity = $dataObj->hookQuantity;
+    $dateCreated = $dataObj->dateTimeOrderCreated;
+    $dateAssigned = $dataObj->dateTimeAssignedForOrder;
+    $totalPrice = $dataObj->totalPrice;
+    $indications = $dataObj->indications;
 
-    if(file_get_contents("php://input")){
+    Classes\OrderIDHandler::process($laundryInitials);
+    $newID = [];
+    $newID = Classes\OrderIDHandler::getNewLastOrderID();
+    $newIDChar = $newID["char"];
+    $newIDNumber = $newID["number"];
+    print_r($newID);
+
+    /* if(file_get_contents("php://input")){
         $dataStream = file_get_contents("php://input");
         $dataObj = json_decode($dataStream);
-        print_r(serialize($dataObj));
-    }
+        $dateTimeOrderCreated = $dataObj->elementsOnOrder;
+        //print_r($dataObj);
+        echo $dateTimeOrderCreated;
+    } */
 
     /*
     $clientID = "GUQ13";
@@ -54,7 +61,7 @@ if(Classes\Cookies::readCookies()){
     $dateAssign = "2020-05-01 23:32";
     $totalPrice = "1.65"; */
     
-    /* $conn = new mysqli($serverName, $userConn, $passwordConn);
+    $conn = new mysqli($serverName, $userConn, $passwordConn);
     
     // Check connection
     if ($conn->connect_error) {
@@ -70,91 +77,21 @@ if(Classes\Cookies::readCookies()){
     
     //Format A-1541
     
-    $sql = "SELECT lastReceiptID FROM superusers WHERE initials = '$initials'";
-    
+    $sql = "INSERT INTO orders (laundryInitials, customerID, customerName, idChar, idNumber, status,elementsDetails, hookQuantity, 
+    dateReceive, dateAssign, totalPrice, indications)
+    VALUES ('$laundryInitials','$customerID','$customerName', '$newIDChar','$newIDNumber','$FIRST_STATUS',
+    '$elementsDetails' ,'$hookQuantity', '$dateCreated', '$dateAssigned', '$totalPrice', '$indications')
+    LIMIT 1";
+
     if(mysqli_query($conn,$sql)){
-        $result = mysqli_query($conn,$sql);
-        $data = [];
-        $data = mysqli_fetch_array($result);
-    
-        $lastId = trim($data["lastReceiptID"]); //remove whitespaces
-        $arr = [];
-        $arr = explode("-", $lastId);//[0] = character, [1] number
-    
-        $nextChar = "";
-        $nextNumber = 0;
+        Classes\OrderIDHandler::updateLastOrderID($laundryInitials);
+
+        echo "YEYO!";
         
-        if($arr[1] == limit){
-            
-            $nextChar = strtolower($arr[0]);
-            $nextChar = ++ $nextChar;
-            $nextChar = strtoupper($nextChar);
-            $nextNumber = 0;
-        }else{
-            $nextChar = $arr[0];
-            $nextNumber = $arr[1] + 1;
-        }
-    
-        $lastRID = $nextChar. "-" . $nextNumber;
-    
-        //update this receipt id as the last receipt id to be the reference
-        $sql = "UPDATE superusers SET lastReceiptID = '$lastRID' WHERE initials = '$initials'";
-        
-        if(mysqli_query($conn,$sql)){
-            //continue to the receipt insertion at the database
-            $sql = "INSERT INTO orders (laundryInitials, customerID, customerName, id, status, elementsQuantity, elementsPrice, hookQuantity, dateReceive, dateAssign, totalPrice, indications)
-            VALUES ('$initials','$clientID','$clientName', '$lastRID','$FIRST_STATUS', '$elementQuantityString', '$elementPriceString', '$hookQuantity', '$dateReceive', '$dateAssign', '$totalPrice', '$indications')
-            LIMIT 1";
-    
-            if(mysqli_query($conn,$sql)){
-    
-                //affiliate the receipt ID to the client side(user table)
-                if($clientID != "none"){
-    
-                    $sql = "SELECT orders FROM users WHERE id='$clientID'";
-    
-                    if(mysqli_query($conn,$sql)){
-    
-                        $result = mysqli_query($conn, $sql);
-                        $clientDBorders = [];
-                        $clientDBorders = mysqli_fetch_array($result);
-                        $str1 = trim($clientDBorders["orders"]);
-    
-                        if($str1 != ""){//this fixes the bug of having a , at new data
-                            $clientOrders = explode(",", $str1);
-    
-                            //add the element to the existing string at the db
-                            array_push($clientOrders, $lastRID);
-                            $newStrOrders = implode(",", $clientOrders);
-                        }else{
-    
-                            $newStrOrders = $lastRID;
-                        }
-                        
-                        
-                        $sql = "UPDATE users SET orders='$newStrOrders' WHERE id='$clientID'";
-                        if(mysqli_query($conn,$sql)){
-                        }else{
-                            echo mysqli_error($conn);
-                        }  
-                    }else{
-    
-                    echo mysqli_error($conn);
-                    }
-                }
-            }else{
-                echo mysqli_error($conn);
-            }
-    
-        }else{
-            echo mysqli_error($conn);
-        }
-    
     }else{
         echo mysqli_error($conn);
     }
-    
-    mysqli_close($conn); */
+    mysqli_close($conn);
 }
 
 ?>

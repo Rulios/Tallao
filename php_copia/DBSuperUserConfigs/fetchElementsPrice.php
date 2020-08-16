@@ -32,7 +32,7 @@ if(Classes\Cookies::readCookies()){
     -washiron
     -dryclean   */
     
-    $sql = "SELECT " . $serviceSelected . ", hook FROM pricechart WHERE hashcode='$inputUserHash'";
+    $sql = "SELECT " . $serviceSelected . ", hook FROM pricechart WHERE laundryInitials='$inputUserHash'";
     
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     $result = mysqli_query($conn, $sql);

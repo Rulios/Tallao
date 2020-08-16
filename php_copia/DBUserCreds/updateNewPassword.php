@@ -37,7 +37,7 @@ if(Classes\Cookies::readCookies()){
     if($userType == "user"){
         $sql = "UPDATE users SET password='$inputPassword' WHERE hashcode='$inputUserHash'";
     }else if($userType == "superuser"){
-        $sql = "UPDATE superusers SET password='$inputPassword' WHERE hashcode='$inputUserHash'";
+        $sql = "UPDATE laundries SET password='$inputPassword' WHERE hashcode='$inputUserHash'";
     
     }
     
