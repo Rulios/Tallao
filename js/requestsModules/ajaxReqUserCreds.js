@@ -9,8 +9,7 @@ define(["ajaxReq"], function(ajaxReq){
 
     async function verifyPassword(obj){
         //params: inputPassword (string, to be convalidate with DB data)
-
-        return await ajaxReq.doAJAX("POST", "./php/verifyPassword.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/verifyPassword.php", obj);
     }
 
     async function newPassword(obj){

@@ -71,7 +71,10 @@
         }
 
         function incrementOrderID($char, $number){
-            define("LIMIT_NUMBER", 10000);
+
+            if(!defined("LIMIT_NUMBER")){
+                define("LIMIT_NUMBER", 10000);
+            }
 
             $newChar = trim($char);
 

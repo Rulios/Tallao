@@ -12,12 +12,12 @@ $verify = false;
 
 if(Classes\Cookies::readCookies()){
 
-    if (isset($_POST['inputUserHash'], $_POST['inputPassword'], $_POST['userType'])){
+    if (isset($_POST['inputPassword'])){
         $inputUserHash = Classes\Cookies::getUserHashCookie();
         $userType = Classes\Cookies::getUserTypeCookie();
         $inputPassword = $_POST['inputPassword'];
     }
-    
+    print_r($_POST);
     $conn = new mysqli($serverName, $userConn, $passwordConn);
     
     // Check connection
@@ -27,7 +27,7 @@ if(Classes\Cookies::readCookies()){
     
     if($userType == "user"){
         $sql = "SELECT password FROM users WHERE hashcode= '$inputUserHash' LIMIT 1";
-    }else if($userType == "superuser"){
+    }else if($userType == "laundry"){
         $sql = "SELECT password FROM laundries WHERE hashcode= '$inputUserHash' LIMIT 1";
     }
     

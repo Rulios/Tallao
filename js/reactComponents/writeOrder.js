@@ -271,7 +271,6 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             //set initial service and it's elements available
             let initialElementsOnList = {};
             initialElementsOnList[this.props.serviceOffer] = Object.keys(elements);
-
             this.state = {
                 elementsPrice: undefined,
                 hookPrice : 0,
@@ -285,7 +284,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 indexCustom: [],
                 ajaxLoaded: false
             }
-
+            this.resetState.bind(this);
         }   
 
         returnNewElementsPrice(priceString, service, prevObj){ // will return a new obj with the elementsPrice
@@ -566,7 +565,12 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 totalPrice: totalPrice,
                 elementsOnOrder :activeElementsOnOrder,
                 hookQuantity: hookQuantity
-            })
+            });
+        }
+
+        resetState(){
+            console.log(this);
+            //this.setState(this.baseState);
         }
 
         componentDidMount(){
@@ -579,6 +583,9 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                             ajaxLoaded: true,
                             hookPrice: returnOBJ.hookPrice
                         });
+                        //set baseState, so when it resets
+                        //it returns to this state
+                    
                     });
                 }catch(err){
                     console.error(err);
@@ -624,6 +631,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                         activeElementsOnList: updatedElementsOnList,
                         elementsPrice: newObj,
                     });
+                    this.baseState = JSON.parse(JSON.stringify(this.state));
                 });
             }
         }

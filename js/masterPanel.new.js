@@ -123,6 +123,8 @@ function($,React, ReactDOM){
                     ajaxReq.fetchAccountCreds().then(query =>{
                         let data = JSON.parse(query);
                         document.getElementById("showLaundryName").textContent = data.name;
+                    }).catch( () =>{
+                        document.getElementById("showLaundryName").textContent = "Error";
                     });
                 });
             }
@@ -259,12 +261,19 @@ function($,React, ReactDOM){
                                     let query = ajaxReq.submitOrder(jsonString);
                                     query.then(response =>{
                                         console.log(response);
+                                        let WriteOrderPanel = require("writeOrder");
+                                        //reset the write order handler
+                                        console.log(WriteOrderPanel.prototype.resetState);
+                                        WriteOrderPanel.prototype.resetState();
                                         animateSuccess();
-                                    })
+
+                                    });
                                     
                                 });
                                 
-                            }catch(err){console.error(err);}
+                            }catch(err){
+                                console.error(err);
+                            }
                             
                         }
                     }, "Completar orden"),

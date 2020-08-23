@@ -24,7 +24,7 @@ if(Classes\Cookies::readCookies()){
         $sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
     
     }else if ($userType == "laundry"){
-        $sql = "SELECT initials,name, location,schedule, serviceOffer, legalreprName, legalreprLastname, email FROM laundries WHERE hashcode= '$inputUserHash'";
+        $sql = "SELECT initials,name, location,schedule, serviceOffer, legalReprName, legalReprSurname, email FROM laundries WHERE hashcode= '$inputUserHash'";
         
     }
     
@@ -38,6 +38,7 @@ if(Classes\Cookies::readCookies()){
     //echo mysqli_num_rows($result);
     $data = [];
     $data = mysqli_fetch_array($result);
+    $data["userType"] = $userType;
     
     echo json_encode($data);
     
