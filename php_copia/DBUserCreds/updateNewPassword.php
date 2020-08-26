@@ -15,7 +15,7 @@ $inputPassword = "";
 
 if(Classes\Cookies::readCookies()){
 
-    if(isset($_POST['inputUserHash'], $_POST['inputPassword'], $_POST['userType'])){
+    if(isset($_POST['inputPassword'])){
         $inputUserHash = Classes\Cookies::getUserHashCookie();
         $userType = Classes\Cookies::getUserTypeCookie();
         $inputPassword = $_POST['inputPassword'];
@@ -26,8 +26,8 @@ if(Classes\Cookies::readCookies()){
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
+        http_response_code(405);
     }
-    echo "Connected successfully";
     
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     
@@ -36,15 +36,17 @@ if(Classes\Cookies::readCookies()){
     
     if($userType == "user"){
         $sql = "UPDATE users SET password='$inputPassword' WHERE hashcode='$inputUserHash'";
-    }else if($userType == "superuser"){
+    }else if($userType == "laundry"){
         $sql = "UPDATE laundries SET password='$inputPassword' WHERE hashcode='$inputUserHash'";
     
     }
     
     if(!mysqli_query($conn,$sql)){
-        echo mysqli_error($conn);
+        http_response_code(400);
+        die(mysqli_error($conn));
     } 
-    
+    echo "true";
+    http_response_code(200);
     mysqli_close($conn);
 }
 

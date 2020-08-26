@@ -31,6 +31,7 @@ define(["react"], function(React){
         return React.createElement("a", {
             href:"", 
             className:"bold",
+            id: "changePasswordLink",
             onClick: (e) =>{
                 e.preventDefault();
                 handleClick();
@@ -42,7 +43,8 @@ define(["react"], function(React){
         return React.createElement("button", {
             type: "submit",
             className: "submitButtonLogin formRowSeparation",
-            onClick : () =>{eventHandler();}
+            onClick : () =>{
+                eventHandler();}
         }, text);
     };
 

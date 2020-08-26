@@ -15,7 +15,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function newPassword(obj){
         //params: inputPassword(string, must be validated first)
 
-        return await ajaxReq.doAJAX("POST", "./php/updateNewPassword.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/updateNewPassword.php", obj);
     }
 
     async function fetchAccountCreds(){

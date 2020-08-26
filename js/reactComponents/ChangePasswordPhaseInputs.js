@@ -98,7 +98,6 @@ define(["react", "ChangePasswordComp"], function(React, ChangePasswordComp){
 
     function InputChangePasswordsPhases({
         actualPassword, newPassword, rePassword, phase, inputHandler}){ //renders the three phases
-            console.log(phase);
         return(
             [
                 React.createElement(FirstInputChangePassword,{

@@ -17,7 +17,6 @@ if(Classes\Cookies::readCookies()){
         $userType = Classes\Cookies::getUserTypeCookie();
         $inputPassword = $_POST['inputPassword'];
     }
-    print_r($_POST);
     $conn = new mysqli($serverName, $userConn, $passwordConn);
     
     // Check connection
@@ -45,6 +44,7 @@ if(Classes\Cookies::readCookies()){
     
     echo json_encode($verify);
     
+    http_response_code(200);
     mysqli_close($conn);
 
 }

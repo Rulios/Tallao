@@ -5,11 +5,14 @@ require.config({
         'react': 'https://unpkg.com/react@16/umd/react.development',
         ChangePasswordPhaseInputs : "./reactComponents/ChangePasswordPhaseInputs",
         ChangePasswordComp: "./reactComponents/ChangePasswordComp",
+        passwordLengthHandler: "./frontendModules/passwordLengthHandler",
         ajaxReqUserCreds: "./requestsModules/ajaxReqUserCreds"
     }
 });
-define(["react", "ChangePasswordPhaseInputs", "ChangePasswordComp", "ajaxReqUserCreds"], 
-function(React, ChangePasswordPhaseInputs, ChangePasswordComp, ajaxReq){
+define(["react", "ChangePasswordPhaseInputs",
+ "ChangePasswordComp", "ajaxReqUserCreds", "passwordLengthHandler"], 
+function(React, ChangePasswordPhaseInputs, 
+    ChangePasswordComp, ajaxReq, passwordLengthHandler){
     
     function ChangePasswordLink({onClick}){
         return(
@@ -40,7 +43,8 @@ function(React, ChangePasswordPhaseInputs, ChangePasswordComp, ajaxReq){
                     actualPassword: true,
                     newPassword: true,
                     rePassword: true,
-                }
+                },
+                canSubmit: false
             }
         }
 
@@ -55,26 +59,107 @@ function(React, ChangePasswordPhaseInputs, ChangePasswordComp, ajaxReq){
             });
         }
 
+        //enables or disables the second phase (new password)
         async checkActualPassword(password){
             let query = await ajaxReq.verifyPassword({inputPassword:password});
-            console.log(query);
+            let isSame = false;
+            if(query === "true"){
+                isSame = false;
+            }else{
+                isSame = true;
+            }
+            this.setState({
+                newPassword: "",
+                disabled: {
+                    actualPassword: false,
+                    newPassword: isSame,
+                    rePassword: true
+                }
+            });
+        }
+
+        //enables or disables the third phase (repeat password)
+        checkNewPassword(password){
+            if(password !== this.state.actualPassword){
+                this.setState({
+                    disabled:{
+                        actualPassword: false,
+                        newPassword: false,
+                        rePassword: !passwordLengthHandler("inputNewPassword",password)
+                    }
+                });
+            }else{
+                passwordLengthHandler("inputNewPassword", password, "new");
+                this.setState({
+                    rePassword: "",
+                    disabled:{
+                        actualPassword: false,
+                        newPassword: false,
+                        rePassword: true
+                    }
+                });
+            }
+        }
+        //check if new password equals the repeated introduced password
+        checkRePassword(password){
+            if(password === this.state.newPassword){
+                passwordLengthHandler("inputRePassword", password, "repeatTrue");
+                this.setState({canSubmit: true});
+            }else{
+                passwordLengthHandler("inputRePassword", password, "repeatFalse");
+                this.setState({canSubmit: false});
+            }
+            
         }
 
         inputHandlerPasswordPhase(value, passwordPhase){
             switch(passwordPhase){
                 case "actualPassword":
                     this.checkActualPassword(value);
-                    this.setState({actualPassword: value});
+                    this.setState({
+                        actualPassword: value});
                 break;
 
                 case "newPassword":
+                    this.checkNewPassword(value);
                     this.setState({newPassword: value});
                 break;
 
                 case "rePassword":
+                    this.checkRePassword(value);
                     this.setState({rePassword:value});
                 break;
             }
+        }
+
+        updatePassword(){
+            let that = this;
+            require(["./requestsModules/ajaxReqUserCreds"],  function(ajaxReq){
+                ajaxReq.newPassword({inputPassword: that.state.rePassword})
+                .then(response =>{
+                    if(response === "true"){
+                        passwordLengthHandler("changePasswordLink", undefined, "passwordUpdateSuccess");
+                        that.resetComponentState();
+                    }
+                }).catch(err =>{
+                    console.error(err);
+                })
+            });
+        }
+
+        resetComponentState(){
+            this.setState({
+                actualPassword: "",
+                newPassword :"",
+                rePassword: "",
+                isShow: false,
+                disabled: {
+                    actualPassword: true,
+                    newPassword: true,
+                    rePassword: true,
+                },
+                canSubmit: false
+            });
         }
 
         render(){
@@ -100,6 +185,16 @@ function(React, ChangePasswordPhaseInputs, ChangePasswordComp, ajaxReq){
                         }
                     })
                 );
+            }
+
+            if(this.state.canSubmit){
+                el2Render.push(
+                    React.createElement(ChangePasswordComp.ChangePasswordSubmitButton, {
+                        key:"submitChangePassword",
+                        text: "Cambiar contraseña",
+                        eventHandler: () =>{this.updatePassword();}
+                    })
+                );  
             }
             return el2Render.map(component =>{return component;});
         }
