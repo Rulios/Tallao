@@ -6,19 +6,19 @@ require.config({
         // Require.js appends `.js` extension for you
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        ajaxReqUserCreds: "../js/requestsModules/ajaxReqUserCreds"
+        ajaxReqSuperUserConfigs: "../js/requestsModules/ajaxReqSuperUserConfigs"
     }
 });
 
 // load the modules defined above
 //inputs shouldn't have a children
 //styles should be a object
-define(['react', 'react-dom', "ajaxReqUserCreds"], function(React, ReactDOM, ajaxReq){
+define(['react', 'react-dom', "ajaxReqSuperUserConfigs"], function(React, ReactDOM, ajaxReq){
     const serviceOfferString = {
         iron: "Planchado",
-        washiron: "Lavado y planchado",
+        washIron: "Lavado y planchado",
         wash: "Lavado",
-        dryclean: "Lavado en seco"
+        dryClean: "Lavado en seco"
     };
 
     class ServiceSelector extends React.Component{
@@ -45,8 +45,8 @@ define(['react', 'react-dom', "ajaxReqUserCreds"], function(React, ReactDOM, aja
         componentDidMount(){
             let that = this;
             if(!this.state.ajaxLoaded){
-                ajaxReq.fetchAccountCreds().then(data =>{
-                    let services = JSON.parse(data).serviceOffer.trim().split(",");
+                ajaxReq.fetchServiceOffer().then(ServiceStr =>{
+                    let services = ServiceStr.trim().split(",");
                     this.returnData(services[0]);
                     that.setState({
                         selected: services[0],

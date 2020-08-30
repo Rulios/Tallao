@@ -24,7 +24,7 @@ if(Classes\Cookies::readCookies()){
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT schedule FROM laundries WHERE initials= '$initials' LIMIT 1";
+    $sql = "SELECT serviceOffer FROM laundries WHERE initials= '$initials' LIMIT 1";
 
     mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
     $result = mysqli_query($conn, $sql);
@@ -37,7 +37,7 @@ if(Classes\Cookies::readCookies()){
     $data = mysqli_fetch_array($result);
   
     http_response_code(200);
-    echo $data["schedule"];
+    echo $data["serviceOffer"];
     mysqli_close($conn);
 }
 

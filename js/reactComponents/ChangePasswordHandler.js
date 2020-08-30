@@ -121,13 +121,18 @@ function(React, ChangePasswordPhaseInputs,
                 break;
 
                 case "newPassword":
-                    this.checkNewPassword(value);
-                    this.setState({newPassword: value});
+                    //prevent from writing when disabled
+                    if(!this.state.disabled.newPassword){
+                        this.checkNewPassword(value);
+                        this.setState({newPassword: value});
+                    }
                 break;
 
                 case "rePassword":
-                    this.checkRePassword(value);
-                    this.setState({rePassword:value});
+                    if(!this.state.disabled.rePassword){
+                        this.checkRePassword(value);
+                        this.setState({rePassword: value});
+                    }
                 break;
             }
         }

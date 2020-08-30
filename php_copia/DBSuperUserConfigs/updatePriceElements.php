@@ -8,43 +8,46 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-//Data
-$inputUserHash = "";
-$inputServiceOffer = "";
-
-/* $inputUserHash = "8XMqSGzajxRRQiyLZj8m";
-$serviceSelected = "iron";
-$inputPriceConfig = "shirt=0.65,skirt=0.65";
-$inputPriceHook = "0.10"; */
-
 if(Classes\Cookies::readCookies()){
 
-    if(isset($_POST['serviceOffer'],$_POST['priceConfig'],$_POST['priceHook'])){
+    if(isset($_POST['serviceOffer'],$_POST['elementsPrice'], $_POST["hookPrice"])){
 
-        $inputUserHash = Classes\Cookies::getUserHashCookie();
+        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
         $serviceSelected = $_POST['serviceOffer'];
-        $inputPriceConfig = $_POST['priceConfig'];
-        $inputPriceHook = $_POST['priceHook'];
+        $elementsPriceJSON = $_POST['elementsPrice'];
+        $hookPrice = $_POST["hookPrice"];
         
+        $priceOBJ = json_decode($elementsPriceJSON);
+        if(!count(get_object_vars($priceOBJ))){
+            http_response_code(400); //set error
+            die("Error no elements price sent");
+        }
+
+        $conn = new mysqli($serverName, $userConn, $passwordConn);
+    
+        // Check connection
+        if ($conn->connect_error) {
+            http_response_code(400); //set error
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+        echo $serviceSelected;
+        $sql = "UPDATE pricechart SET " . $serviceSelected . "='$elementsPriceJSON', hook='$hookPrice' WHERE laundryInitials='$laundryInitials'";
+        if(mysqli_query($conn,$sql)){
+            echo "OK";
+            http_response_code(200);
+        }else{
+            http_response_code(400);
+            die(mysqli_error($conn));
+        }
+        
+        mysqli_close($conn);
     }
     
-    $conn = new mysqli($serverName, $userConn, $passwordConn);
-    
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
-    mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
-    
-    $sql = "UPDATE pricechart SET " . $serviceSelected . "='$inputPriceConfig', hook='$inputPriceHook' WHERE hashcode='$inputUserHash'";
-    echo $sql;
-    
-    if(!mysqli_query($conn,$sql)){
-        echo mysqli_error($conn);
-    }
-    
-    mysqli_close($conn);
+    //ERROR FOR TOMORRO
+    //SINCE JSON FIELDS DOESN'T ACCEPTS NULL OR UNDEFINED VALUES
+    //CONVERT UNDEFINED A NULL VALUES TO ACCEPTED FORMAATS
 
 }
 ?>

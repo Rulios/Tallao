@@ -11,7 +11,10 @@ require.config({
         formVerification:["frontendModules/formVerification"],
         sessionHandler: "frontendModules/sessionHandler",
         AccountCreds: "./reactComponents/AccountCreds",
-        ChangePasswordHandler: "./reactComponents/ChangePasswordHandler"
+        ChangePasswordHandler: "./reactComponents/ChangePasswordHandler",
+        ScheduleHandler: "./reactComponents/ScheduleHandler",
+        EditServiceOfferHandler: "./reactComponents/EditServiceOfferHandler",
+        EditElementsPriceHandler: "./reactComponents/EditElementsPriceHandler"
     },
     shim: {
         bootstrap: {
@@ -40,6 +43,31 @@ function($,React, ReactDOM){
             ReactDOM.render(
                 React.createElement(ChangePassword),
                 document.getElementById("changePasswordContainer")
+            );
+        });
+
+        require(["ScheduleHandler"], function(Schedule){
+            ReactDOM.render(
+                React.createElement(Schedule, {
+                    mode: "edit"
+                }),
+                document.getElementById("divScheduleAppend")
+            );
+        });
+
+        require(["EditServiceOfferHandler"], function(ServiceOfferHandler){
+            ReactDOM.render(
+                React.createElement(ServiceOfferHandler, {}),
+                document.getElementById("ServiceOfferEditContainer")
+            );
+        });
+
+        require(["EditElementsPriceHandler"], function(EditElementsPriceHandler){
+            ReactDOM.render(
+                React.createElement(EditElementsPriceHandler, {
+                    service: "iron",
+                }),
+                document.getElementById("EditElementsPriceContainer")
             )
         });
 

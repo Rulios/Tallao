@@ -137,11 +137,15 @@ border:1px solid;
 .leftSeparation{
     margin-left:10px;
 }
+
 .supTxt-TitleTxt-Separation{
     margin-top: 4em;
 }
 .smallSeparation{
     margin-top: 0.5em;
+}
+.smallMarginBottom{
+    margin-bottom: 2em;
 }
 .oneEMSeparation{
     margin-top: 1em;
@@ -562,6 +566,13 @@ input[type='checkbox']{
     margin: -10px 0 0 -100px;
     transition: 0.2s;
 }  
+.hoverShadow{
+    transition-duration: 0.3s;
+    padding:1em;
+}
+.hoverShadow:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 @keyframes start {
     0% {
       opacity: 0;

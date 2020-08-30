@@ -15,7 +15,7 @@ require.config({
         ajaxReqOrders: "./requestsModules/ajaxReqOrders",
         ajaxReqSuperUserConfigs: "./requestsModules/ajaxReqSuperUserConfigs",
         ajaxReqCustomMessages: "./requestsModules/ajaxReqCustomMessages",
-        laundryServiceSelector: "./reactComponents/laundryServiceSelector",
+        LaundryServiceSelector: "./reactComponents/LaundryServiceSelector",
         clientIDHandler: "./reactComponents/clientIDHandler",
         writeOrder: "./reactComponents/writeOrder",
         customMessages: "./reactComponents/customMessages",
@@ -291,7 +291,7 @@ function($,React, ReactDOM){
                 });
                 if(!isAllLoaded){
                     let that = this;
-                    require(["formVerification", "laundryServiceSelector", 
+                    require(["formVerification", "LaundryServiceSelector", 
                     "clientIDHandler","writeOrder", "customMessages", "time"],
                     function(){
                         that.setState({
@@ -319,7 +319,7 @@ function($,React, ReactDOM){
             render(){
                 //console.log(this.state);
                 if(this.state.allLoaded){
-                    let ServiceSelector = require("laundryServiceSelector");
+                    let ServiceSelector = require("LaundryServiceSelector");
                     return(
                         React.createElement(ServiceSelector,{
                             getServiceSelected : (selected) =>{this.updateServiceSelected(selected);}

@@ -17,32 +17,38 @@ define(["ajaxReq"], function(ajaxReq){
     async function fetchElementsPrice(obj){
         //params : serviceOffer
 
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/fetchElementsPrice.php", obj);
+        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchElementsPrice.php", obj);
     }         
     
     async function updateElementsPrice(obj){
         //params: serviceOFfer(string), priceConfig(string)
         //hookPrice(string)
 
-        return await ajaxReq.doAJAX("POST", "./php/updatePriceElements.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updatePriceElements.php", obj);
     }
 
     async function fetchSchedule(){
         //params : none, it's on cookies
 
-        return await ajaxReq.doAJAX("POST", "./php/fetchSchedule.php");
+        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchSchedule.php");
     }
 
-    async function updateSchedule(obj){
-        //params: schedule(string)
+    async function updateSchedule(str){
+        //params: schedule JSON
 
-        return await ajaxReq.doAJAX("POST", "./php/updateSchedule.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updateSchedule.php", str);
     }   
+
+    async function fetchServiceOffer(){
+        //params: none, it's on cookies
+
+        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchServiceOffer.php");
+    }
 
     async function updateServiceOffer(obj){
         //params serviceOffer(string)
         
-        return await ajaxReq.doAJAX("POST", "./php/updateServiceOffer.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updateServiceOffer.php", obj);
     }
 
     return {  
@@ -50,7 +56,8 @@ define(["ajaxReq"], function(ajaxReq){
         updateElementsPrice: updateElementsPrice,
         fetchSchedule: fetchSchedule,
         updateSchedule: updateSchedule,
-        updateServiceOffer: updateServiceOffer
+        updateServiceOffer: updateServiceOffer,
+        fetchServiceOffer: fetchServiceOffer
     };
 
 });

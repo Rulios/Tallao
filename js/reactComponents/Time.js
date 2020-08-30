@@ -54,9 +54,7 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
 
     function convert12hTo24h(time12h){
         const [time, modifier] = time12h.split(' ');
-
         let [hours, minutes] = time.split(':');
-
         if (hours === '12') {
             hours = '00';
         }
