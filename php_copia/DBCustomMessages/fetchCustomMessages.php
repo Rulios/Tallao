@@ -18,15 +18,17 @@ if(Classes\Cookies::readCookies()){
 	
 	// Check connection
 	if ($conn->connect_error) {
+		http_response_code(400);
 		die("Connection failed: " . $conn->connect_error);
 	}
 	
-	$sql = "SELECT id, colortag, tag, message FROM custommessages WHERE laundryInitials= '$initials'";
+	$sql = "SELECT id, colorTag, tag, message FROM custommessages WHERE laundryInitials= '$initials'";
 	//echo $sql;
-	mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+	mysqli_select_db($conn, $db) or die("Connection Error");
 	$result = mysqli_query($conn, $sql);
 	
 	if(!$result ) {
+		http_response_code(400);
 		die('Could not get data: ' . mysql_error());
 	 }  
 	

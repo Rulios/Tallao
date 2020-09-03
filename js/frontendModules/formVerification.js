@@ -130,7 +130,7 @@ define(["jquery"], function($){
         return (!Object.values(fieldVerification).includes(false)) ? true: false;
 
     }else{
-        console.log(fieldVerification);
+        //console.log(fieldVerification);
         if(!Object.values(fieldVerification).includes(false)){
           toggleSubmitButton(true);
         }else{

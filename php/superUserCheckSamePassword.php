@@ -25,7 +25,7 @@ if ($conn->connect_error) {
 $sql = "SELECT password FROM laundries WHERE hashcode= '$inputUserHash'";
 
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 $result = mysqli_query($conn, $sql);
 
 $row = mysqli_fetch_array($result);

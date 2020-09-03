@@ -48,7 +48,7 @@ if ($conn->connect_error) {
 }
 
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 
 //Get the last receipt id as a reference point, then increment it by one
 //and upgrade it on the superuser db as the last reference point

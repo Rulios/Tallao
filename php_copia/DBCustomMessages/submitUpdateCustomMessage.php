@@ -28,7 +28,7 @@ if(Classes\Cookies::readCookies()){
         die("Connection failed: " . $conn->connect_error);
     }
     
-    mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+    mysqli_select_db($conn, $db) or die("Connection Error");
     
         //iterate for each element, then see if it exists at the DB
         //IF IT EXISTS: do a UPDATE statement to the fields

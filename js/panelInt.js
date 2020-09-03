@@ -3175,7 +3175,7 @@ function generateCustomElementReceiptBox(id, service){
   
 
   let closeElementButton = document.createElement("BUTTON");
-  closeElementButton.setAttribute("class", "closeElementButtonStyle");
+  closeElementButton.setAttribute("class", "closeButtonStyle");
   closeElementButton.setAttribute("id", "closeElementButton4" + idElement);
   closeElementButton.textContent = "x";
 

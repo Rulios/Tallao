@@ -58,7 +58,7 @@ if(Classes\Cookies::readCookies()){
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
-        mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+        mysqli_select_db($conn, $db) or die("Connection Error");
 
         
         $sql = "INSERT INTO orders (laundryInitials, customerID, customerName, idChar, idNumber, status,elementsDetails, hookQuantity, 

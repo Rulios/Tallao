@@ -69,9 +69,7 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
                 elementsPrice: JSON.stringify(this.state.elements),
                 hookPrice: this.state.extras.hook
             }).then(response =>{
-                if(response === "OK"){
-                    EditElementsPriceContainers.SuccessMessage();
-                }
+                EditElementsPriceContainers.SuccessMessage();
             }).catch(err =>{
                 console.error(err);
             })
@@ -90,6 +88,7 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
                     let fetchedElementsPrice = JSON.parse(obj[this.props.service]);
                     let newState = JSON.parse(JSON.stringify(this.state));
                     newState.elements = fetchedElementsPrice;
+                    console.log(fetchedElementsPrice);
                     newState.extras.hook = obj.hook;
 
                     this.setState(newState);

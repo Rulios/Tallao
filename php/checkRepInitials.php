@@ -29,7 +29,7 @@ $sql = "SELECT initials FROM laundries WHERE initials= '$inputInitials'";
 
 
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 $result = mysqli_query($conn, $sql);
 
 //echo mysqli_num_rows($result);

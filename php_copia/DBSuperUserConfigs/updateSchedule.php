@@ -26,7 +26,7 @@ if(Classes\Cookies::readCookies()){
             http_response_code(400);
             die("Connection failed: " . $conn->connect_error);
         }
-        mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+        mysqli_select_db($conn, $db) or die("Connection Error");
         
         $sql = "UPDATE laundries SET schedule='$schedule' WHERE initials='$initials'";
         

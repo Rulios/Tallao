@@ -15,10 +15,10 @@ define(["ajaxReq"], function(ajaxReq){
         }
     }
 
-    async function fetch(obj){
+    async function fetch(){
         //props: 
         try{
-            return await ajaxReq.doAJAX("POST", "./php_copia/DBCustomMessages/fetchCustomMessages.php", obj);
+            return await ajaxReq.doAJAX("GET", "./php_copia/DBCustomMessages/fetchCustomMessages.php");
         }catch(err){
             console.error(err);
         }

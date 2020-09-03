@@ -1,27 +1,11 @@
 <?php
-
+require_once "../includes/autoload.php";
 //Connection param
 $serverName = "localhost";
 $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-//Data
-/* $initials = "";
-$inputLaundryName = "";
-$inputLocation = "";
-$inputName = "";
-$inputLastname = "";
-$inputEmail = "";
-$inputPassword = ""; */
-
-$initials = $_POST['inputInitials'];
-$inputLaundryName = $_POST['inputLaundryName'];
-$inputLocation = $_POST['inputLocation'];
-$inputName = $_POST['inputName'];
-$inputLastname = $_POST['inputLastname'];
-$inputEmail = $_POST['inputEmail'];
-$inputPassword = $_POST['inputPassword'];
 $hashCode = "";
 
 if(isset($_POST["inputInitials"], 
@@ -38,83 +22,52 @@ if(isset($_POST["inputInitials"],
     $inputPassword = $_POST['inputPassword'];
     
 }else{
-    echo "no hay ni na'";
+    http_response_code(400);
+    die("Incomplete information sent");
 }
 
 $conn = new mysqli($serverName, $userConn, $passwordConn);
 // Check connection
 if ($conn->connect_error) {
+    http_response_code(404);
     die("Connection failed: " . $conn->connect_error);
 }
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
-
-//1st query check if hashcode exists
-do{
-    $hashCode = createRandomCode();
-
-    $sql = "SELECT 1 FROM users WHERE hashcode= '$hashCode' LIMIT 1";
-    if(mysqli_query($conn,$sql)){
-        $result = mysqli_query($conn, $sql);
-    }else{
-        echo mysqli_error($conn);
-    }
-} while (mysqli_num_rows($result) == 1);
+mysqli_select_db($conn, $db) or die("Connection Error");
+// 1 - Create Hashcode
+$hashCode = Classes\NewLaundryActions::createHashCode4Laundry();
 
 //subProcess Create a hash code to the password
 $inputPassword = hashPassword($inputPassword);
 
-//2st query
- $sql = "INSERT INTO laundries (initials,hashcode,name, location, legalreprName, legalreprLastname, email, password)
+//2 - insert new laundry into DB
+ $sql = "INSERT INTO laundries (initials,hashcode,name, location, legalReprName, legalReprSurname, email, password)
 VALUES ('$initials','$hashCode','$inputLaundryName', '$inputLocation','$inputName', '$inputLastname', '$inputEmail', '$inputPassword')
 LIMIT 1";
 if(!mysqli_query($conn,$sql)){
-    echo mysqli_error($conn);
+    //die(mysqli_error($conn));
+    http_response_code(400);
+    die("Can't create laundry");
 }
 
-//3rd query
-$sql = "INSERT INTO pricechart (hashcode) VALUES ('$hashCode')";
-if(!mysqli_query($conn,$sql)){
-    echo mysqli_error($conn);
-}
+// 3 - insert new row into pricechart with empty json format values
+Classes\NewLaundryActions::setInitialPriceChart($initials);
 
 //4th query create first custom message
-insertFirstCustomMessage($initials);
+Classes\NewLaundryActions::insertFirstCustomMessage($initials);
+
+//5 - creates a new row to indicate order id
+Classes\NewLaundryActions::createLastOrderID($initials);
 
 mysqli_close($conn);
 
-function createRandomCode($length = 20){
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    
-    return $randomString;
-}
 
 function hashPassword($password){
-   
     $options = [
         'cost' => 12,
     ];
     return password_hash($password, PASSWORD_BCRYPT, $options);
 }
 
-function insertFirstCustomMessage($initials){
-    //inserts into DB the first custom message to have as a laundry
-    $messageID = $initials . "1";
-    $colortag = "white";
-    $tag = "Sin pliegue / 不折";
-    $message = "Sin pliege / 不折";
-    $status = "blocked";
-
-    $sql = "INSERT INTO custommessages(laundryInitials, id, colortag, tag, message, status)
-    VALUES($initials, $messageID, $colortag, $tag, $message, $status) LIMIT 1";
-    if(!mysqli_query($conn,$sql)){
-        echo mysqli_error($conn);
-    }
-}
 
 ?>

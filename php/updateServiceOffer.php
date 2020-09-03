@@ -27,7 +27,7 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 
 
 $sql = "UPDATE laundries SET serviceOffer='$inputServiceOffer' WHERE hashcode='$userHashCode'";

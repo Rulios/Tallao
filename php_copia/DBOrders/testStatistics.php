@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 
 $sql = "SELECT elementsDetails FROM orders WHERE laundryInitials='VICNT'";
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 $result = mysqli_query($conn, $sql);
 
 $data = [];

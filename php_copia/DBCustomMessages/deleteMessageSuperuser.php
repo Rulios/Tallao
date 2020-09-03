@@ -28,7 +28,7 @@ if(Classes\Cookies::readCookies()){
         die("Connection failed: " . $conn->connect_error);
     }
     
-    mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+    mysqli_select_db($conn, $db) or die("Connection Error");
     
     //First, check the status. If it tags as blocked, it can't be removed.
     //else, to remove.

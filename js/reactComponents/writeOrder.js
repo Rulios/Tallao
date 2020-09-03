@@ -33,9 +33,9 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
 
     const serviceOfferString = {
         iron: "Planchado",
-        washiron: "Lavado y planchado",
+        washIron: "Lavado y planchado",
         wash: "Lavado",
-        dryclean: "Lavado en seco"
+        dryClean: "Lavado en seco"
     };
 
     //button that contains info of the order
@@ -112,7 +112,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                     },
                         inputElementChangeOnCustom,
                         React.createElement("button", {
-                            className: "closeElementButtonStyle",
+                            className: "closeButtonStyle",
                             onClick: () => {props.onClickDelete(props.id, props.service)}
                         }, "x"),
                         React.createElement("div", {
@@ -287,19 +287,23 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             this.resetState.bind(this);
         }   
 
-        returnNewElementsPrice(priceString, service, prevObj){ // will return a new obj with the elementsPrice
+        returnNewElementsPrice(priceObj, service, prevObj){ // will return a new obj with the elementsPrice
             //prevObj is optional, if passed, it will be used as a reference obj to store new price
-            let elementsPrice;
-            if(prevObj === undefined){
-                elementsPrice = {};
-            }else{
-                elementsPrice = Object.assign({}, prevObj);
-            } 
-            elementsPrice[service] = {};
-            priceString.trim().split(",").map(value =>{
-                let elementKeyValueArr = value.split("=");
-                elementsPrice[service][elementKeyValueArr[0]] = parseFloat(elementKeyValueArr[1]);
-            });
+            let elementsPrice = {
+                [service] : {}
+            };
+            if(priceObj === null){
+                let defaultPrice = {};
+                Object.keys(elements).map(element =>{
+                    defaultPrice[element] = 0;
+                });
+                priceObj = defaultPrice;
+            }
+            elementsPrice = Object.assign({
+                [service] : priceObj
+            }, prevObj);
+
+            Object.assign(elementsPrice[service],{custom: 0});
             return elementsPrice;
         }
 
@@ -308,9 +312,9 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             //the processing of the elementsPrice is made by 
             //returnNewElementsPrice
             try{
-                let data = await ajaxReq.fetchElementsPrice({serviceOffer: this.props.serviceOffer});
+                let data = await ajaxReq.fetchElementsPrice({serviceOffer: service});
                 let priceObj = JSON.parse(data);
-                let newElementsPrice = this.returnNewElementsPrice(priceObj[this.props.serviceOffer], this.props.serviceOffer, this.state.elementsPrice)
+                let newElementsPrice = this.returnNewElementsPrice(JSON.parse(priceObj[service]), service, this.state.elementsPrice)
                 return {
                     newElementsPrice: newElementsPrice,
                     hookPrice : Number(parseFloat(priceObj.hook).toFixed(2)) //toFixed returns a string, so using Number returns a int
@@ -584,7 +588,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                             hookPrice: returnOBJ.hookPrice
                         });
                         //set baseState, so when it resets
-                        //it returns to this state
+                        //it returns to this states
                     
                     });
                 }catch(err){
@@ -604,14 +608,13 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             //since the selectable list is independent from other components
             //and only dependable on async operations, it will we be updated 
             //from here
-            if(this.state.activeElementsOnList[this.props.serviceOffer] !== undefined){
+            if(typeof this.state.activeElementsOnList[this.props.serviceOffer] !== "undefined"){
                 ReactDOM.render(
                     this.state.activeElementsOnList[this.props.serviceOffer].map(elementName =>{
-                        //console.log(this.state.elementsPrice[this.props.serviceOffer]);
                         return React.createElement(selectableElementToOrder, {
                             key: `${elementName}-${this.props.serviceOffer}`,
                             id: elementName,
-                            elementPrice: (this.state.elementsPrice[this.props.serviceOffer] !== undefined) ? this.state.elementsPrice[this.props.serviceOffer][elementName] : undefined,
+                            elementPrice: (typeof this.state.elementsPrice[this.props.serviceOffer] !== "undefined") ? this.state.elementsPrice[this.props.serviceOffer][elementName] : undefined,
                             elementString: this.state.elements[elementName],
                             service: this.props.serviceOffer,
                             onClick: (id, service) => {this.onElementClick(id, service);},
@@ -624,12 +627,11 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
                 let newElementsPrice = this.updateElementsPrice(this.props.serviceOffer);
                 let updatedElementsOnList = {};
                 updatedElementsOnList = Object.assign({}, prevState.activeElementsOnList);
-
                 newElementsPrice.then(newObj => {
                     updatedElementsOnList[this.props.serviceOffer] = Object.keys(elements);
                     this.setState({
                         activeElementsOnList: updatedElementsOnList,
-                        elementsPrice: newObj,
+                        elementsPrice: newObj.newElementsPrice,
                     });
                     this.baseState = JSON.parse(JSON.stringify(this.state));
                 });
@@ -684,7 +686,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
         </div>
 
         <div class="col-lg-11">
-            <button class="closeElementButtonStyle">x</button>
+            <button class="closeButtonStyle">x</button>
             
             //if element rendered as custom
             <input type="text" placeholder="Nombre del elemento">

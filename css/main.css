@@ -489,23 +489,24 @@ input[type='checkbox']{
 #inputClientID{
     width: 40%;
 }
-.closeElementButtonStyle{
+.closeButtonStyle{
     font-size: 1em;
     right:0; 
     top:0; 
     margin-top: 0.5em; 
     margin-right: 0.5em; 
     position:absolute;
-    border-radius: 5px;
+    /* border-radius: 5px; */
+    
     border: solid 1px black;
     background-color: transparent;
     transition-duration: 0.3s;
 }
-.closeElementButtonStyle:hover{
+.closeButtonStyle:hover{
     background-color: #E84DA5;
 }
 .closeMessageButtonStyle{
-    font-size: 0.5em;
+    font-size: 0.7em;
     right:0; 
     top:0; 
     margin-top: 0.5em; 
@@ -573,6 +574,13 @@ input[type='checkbox']{
 .hoverShadow:hover{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+.hoverCustomColorShadow{
+    transition-duration: 0.3s;
+    padding:1em;
+}
+.hoverCustomColorShadow:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 @keyframes start {
     0% {
       opacity: 0;
@@ -595,18 +603,22 @@ input[type='checkbox']{
     padding: 20px;
 }
 .inputMessageTagStyle{
-    width: 100%;
+    width: auto;
     height: auto;
-   font-size: 18px;
+    font-size: 16px;
+    float: right;
 }
 .customColorTagStyle{
-    width: 100%;
+    width: auto;
     height: auto;
+    float:right;
 }
 .customTextAreaStyle{
     font-size: 14px;
-    width: 100%;
+    width: 70%;
     height: 50px;
+    float:right;
+
 }
 .instantMsgTagStyle{
 

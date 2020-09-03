@@ -31,7 +31,7 @@ if(Classes\Cookies::readCookies()){
         
         $sql = "SELECT " . $serviceSelected . ", hook FROM pricechart WHERE laundryInitials='$laundryInitials'";
         
-        mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+        mysqli_select_db($conn, $db) or die("Connection Error");
         $result = mysqli_query($conn, $sql);
         
         if(!$result ) {
@@ -42,7 +42,7 @@ if(Classes\Cookies::readCookies()){
         $data = [];
         $data = mysqli_fetch_array($result);
         
-        if($data[$serviceSelected] == ""){
+        if($data[$serviceSelected] == "{}"){
             $data[$serviceSelected] = "null";
         }
         

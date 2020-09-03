@@ -31,8 +31,7 @@ if(Classes\Cookies::readCookies()){
             die("Connection failed: " . $conn->connect_error);
         }
         
-        mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
-        echo $serviceSelected;
+        mysqli_select_db($conn, $db) or die("Connection Error");
         $sql = "UPDATE pricechart SET " . $serviceSelected . "='$elementsPriceJSON', hook='$hookPrice' WHERE laundryInitials='$laundryInitials'";
         if(mysqli_query($conn,$sql)){
             echo "OK";

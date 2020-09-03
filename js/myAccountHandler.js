@@ -14,7 +14,8 @@ require.config({
         ChangePasswordHandler: "./reactComponents/ChangePasswordHandler",
         ScheduleHandler: "./reactComponents/ScheduleHandler",
         EditServiceOfferHandler: "./reactComponents/EditServiceOfferHandler",
-        EditElementsPriceHandler: "./reactComponents/EditElementsPriceHandler"
+        EditElementsPriceHandler: "./reactComponents/EditElementsPriceHandler",
+        EditCustomMessagesHandler: "./reactComponents/EditCustomMessagesHandler"
     },
     shim: {
         bootstrap: {
@@ -69,6 +70,14 @@ function($,React, ReactDOM){
                 }),
                 document.getElementById("EditElementsPriceContainer")
             )
+        });
+
+        require(["EditCustomMessagesHandler"], function(EditCustomMessagesHandler){
+            console.log(EditCustomMessagesHandler);
+            ReactDOM.render(
+                React.createElement(EditCustomMessagesHandler, {}),
+                document.getElementById("divAppendCustomMessages")
+            );
         });
 
     });

@@ -26,7 +26,7 @@ if ($conn->connect_error) {
 
 $sql = "SELECT name, lastname FROM users WHERE id='$inputUserID'";
 
-mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+mysqli_select_db($conn, $db) or die("Connection Error");
 $result = mysqli_query($conn, $sql);
 
 if(!$result ) {

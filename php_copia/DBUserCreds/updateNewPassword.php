@@ -29,7 +29,7 @@ if(Classes\Cookies::readCookies()){
         http_response_code(405);
     }
     
-    mysqli_select_db($conn, $db) or die("Error al conectarse a la base de datos");
+    mysqli_select_db($conn, $db) or die("Connection Error");
     
     //subProcess Create a hash code to the password
     $inputPassword = hashPassword($inputPassword);

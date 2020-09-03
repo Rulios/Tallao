@@ -79,8 +79,9 @@ function($, formVerification){
                         
                         let query =  ajaxRegister.registerSuperUser(obj);
                         query.then(data =>{
-                            $("#frmMasterUserRegister").toggleClass("hide");
-                            $("#congrSection").toggleClass("hide");
+                            console.log(data);
+                            /* $("#frmMasterUserRegister").toggleClass("hide");
+                            $("#congrSection").toggleClass("hide"); */
                         })
                         .catch(err => console.error(err));
                     });
