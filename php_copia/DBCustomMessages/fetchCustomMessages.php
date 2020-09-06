@@ -13,7 +13,6 @@ $db = "tallao";
 if(Classes\Cookies::readCookies()){
 
 	$initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
-	
 	$conn = new mysqli($serverName, $userConn, $passwordConn);
 	
 	// Check connection

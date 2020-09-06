@@ -1,4 +1,4 @@
-define(["formVerification"], function(formVerification){
+define([], function(){
 
     function loginRedirection(url){
         console.log(url);

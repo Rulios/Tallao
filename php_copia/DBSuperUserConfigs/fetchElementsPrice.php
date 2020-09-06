@@ -10,10 +10,10 @@ $db = "tallao";
 
 
 if(Classes\Cookies::readCookies()){
-    if (isset($_GET['serviceOffer'])){
+    if (isset($_GET['serviceSelected'])){
 
         $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
-        $serviceSelected = $_GET["serviceOffer"];
+        $serviceSelected = $_GET["serviceSelected"];
 
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         
@@ -45,10 +45,15 @@ if(Classes\Cookies::readCookies()){
         if($data[$serviceSelected] == "{}"){
             $data[$serviceSelected] = "null";
         }
-        
+
+        http_response_code(200);
+
         echo json_encode($data);
         
         mysqli_close($conn);
+    }else{
+        http_response_code(400);
+        die("Error");
     }
     
     

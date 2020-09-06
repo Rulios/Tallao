@@ -14,8 +14,8 @@ require.config({
         ChangePasswordHandler: "./reactComponents/ChangePasswordHandler",
         ScheduleHandler: "./reactComponents/ScheduleHandler",
         EditServiceOfferHandler: "./reactComponents/EditServiceOfferHandler",
-        EditElementsPriceHandler: "./reactComponents/EditElementsPriceHandler",
-        EditCustomMessagesHandler: "./reactComponents/EditCustomMessagesHandler"
+        EditCustomMessagesHandler: "./reactComponents/EditCustomMessagesHandler",
+        EditElementsPriceBundle: "./reactComponents/EditElementsPriceBundle"
     },
     shim: {
         bootstrap: {
@@ -56,6 +56,18 @@ function($,React, ReactDOM){
             );
         });
 
+        require(["EditElementsPriceBundle"], function(EditElementsPriceBundle){
+            ReactDOM.render(
+                React.createElement(EditElementsPriceBundle),
+                document.getElementById("ServiceSelector4EditPriceContainer")
+            );
+        });
+        /* //render Edit Price
+        ReactDOM.render(
+            React.createElement(RenderEditPriceChart),
+            document.getElementById("EditElementsPriceContainer")
+        );
+ */
         require(["EditServiceOfferHandler"], function(ServiceOfferHandler){
             ReactDOM.render(
                 React.createElement(ServiceOfferHandler, {}),
@@ -63,29 +75,20 @@ function($,React, ReactDOM){
             );
         });
 
-        require(["EditElementsPriceHandler"], function(EditElementsPriceHandler){
-            ReactDOM.render(
-                React.createElement(EditElementsPriceHandler, {
-                    service: "iron",
-                }),
-                document.getElementById("EditElementsPriceContainer")
-            )
-        });
-
         require(["EditCustomMessagesHandler"], function(EditCustomMessagesHandler){
-            console.log(EditCustomMessagesHandler);
             ReactDOM.render(
-                React.createElement(EditCustomMessagesHandler, {}),
+                React.createElement(EditCustomMessagesHandler, {
+                    addNewMessageButtonID: "addNewMessageButtonContainer"
+                }),
                 document.getElementById("divAppendCustomMessages")
             );
         });
 
     });
 
-    class Main extends React.Component{
-        constructor(props){
-            super(props);
-        }
-    }
+    
+
+    
 
 });
+

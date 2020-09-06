@@ -18,7 +18,7 @@ require.config({
         LaundryServiceSelector: "./reactComponents/LaundryServiceSelector",
         clientIDHandler: "./reactComponents/clientIDHandler",
         writeOrder: "./reactComponents/writeOrder",
-        customMessages: "./reactComponents/customMessages",
+        CustomMessages: "./reactComponents/UseCustomMessagesHandler",
         time: "./reactComponents/Time"
     },
     shim: {
@@ -87,7 +87,7 @@ function($,React, ReactDOM){
                         formVerification: false,
                         serviceSelector : false,
                         writeOrder: false,
-                        customMessages: false
+                        CustomMessages: false
                     },
                     allLoaded: false,
                     serviceSelected: "",
@@ -130,7 +130,7 @@ function($,React, ReactDOM){
             }
 
             renderCustomMessages(){
-                let CustomMessages = require("customMessages");
+                let CustomMessages = require("CustomMessages");
                 ReactDOM.render(
                     React.createElement(CustomMessages, {
                         mode: "use",
@@ -292,14 +292,14 @@ function($,React, ReactDOM){
                 if(!isAllLoaded){
                     let that = this;
                     require(["formVerification", "LaundryServiceSelector", 
-                    "clientIDHandler","writeOrder", "customMessages", "time"],
+                    "clientIDHandler","writeOrder", "CustomMessages", "time"],
                     function(){
                         that.setState({
                             modulesStates: {
                                 formVerification : true,
                                 serviceSelector: true,
                                 writeOrder: true,
-                                customMessages: true
+                                CustomMessages: true
                             },
                             allLoaded: true
                         });

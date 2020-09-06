@@ -11,9 +11,9 @@ require.config({
 define(["react", "react-dom", "EditElementsPriceContainers", "ajaxReqSuperUserConfigs"],
 function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
 
-    async function getElementsPrice({serviceOffer}){
+    async function getElementsPrice({serviceSelected}){
         try {
-            let query = await ajaxReq.fetchElementsPrice({serviceOffer: serviceOffer});
+            let query = await ajaxReq.fetchElementsPrice({serviceSelected: serviceSelected});
             return query;
         }catch(err){console.error(err);}
     }
@@ -28,6 +28,7 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
     }
 
     class EditElementsPrice extends React.Component{
+
         constructor(props){
             super(props);
             this.state = {
@@ -65,7 +66,7 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
 
         updateElementsPrice(){
             ajaxReq.updateElementsPrice({
-                serviceOffer: this.props.service,
+                serviceSelected: this.props.service,
                 elementsPrice: JSON.stringify(this.state.elements),
                 hookPrice: this.state.extras.hook
             }).then(response =>{
@@ -75,6 +76,30 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
             })
         }
 
+        processElementsPrice(){
+            getElementsPrice({serviceSelected:this.props.serviceSelected}).then(dataJSON =>{
+                let obj = JSON.parse(dataJSON);
+                if(obj[this.props.serviceSelected] !== "null" && obj[this.props.serviceSelected] !== ""){
+                    let fetchedElementsPrice = JSON.parse(obj[this.props.serviceSelected]);
+                    let newState = JSON.parse(JSON.stringify(this.state));
+                    newState.elements = fetchedElementsPrice;
+                    newState.extras.hook = obj.hook;
+                    this.setState(newState);    
+                }else{ 
+                    //run through all the elements and set them to 0
+                    //except for hook price
+                    let newElements = JSON.parse(JSON.stringify(this.state.elements));
+                    Object.keys(newElements).map(element =>{
+                        newElements[element] = 0;
+                    });
+                    this.setState({
+                        elements: newElements
+                    });
+
+                }
+            });
+        }
+
         componentDidMount(){
             //render update button
             renderUpdateButton({
@@ -82,22 +107,19 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
                 onClick: () => {this.updateElementsPrice();}
             });
             //fetch data
-            getElementsPrice({serviceOffer:this.props.service}).then(dataJSON =>{
-                let obj = JSON.parse(dataJSON);
-                if(obj[this.props.service] !== "null" && obj[this.props.service] !== ""){
-                    let fetchedElementsPrice = JSON.parse(obj[this.props.service]);
-                    let newState = JSON.parse(JSON.stringify(this.state));
-                    newState.elements = fetchedElementsPrice;
-                    console.log(fetchedElementsPrice);
-                    newState.extras.hook = obj.hook;
-
-                    this.setState(newState);
-                }
-            });
+            if(this.props.serviceSelected !== ""){
+                this.processElementsPrice();
+            }
         }
 
+        componentDidUpdate(prevProps){
+            if(prevProps.serviceSelected !== this.props.serviceSelected){
+                this.processElementsPrice();
+            }
+        }
+
+
         render(){
-            console.log(this.state);
             return Object.keys(this.state.elements).map(element =>{  
                 return React.createElement(EditElementsPriceContainers.EditBox,{
                     key: `EditElementsPrice4${element}`,

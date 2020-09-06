@@ -76,7 +76,6 @@ function(React, ReactDOM, ServiceOfferContainers, ajaxReq){
         }
 
         render(){
-            console.log(this.state.availableServices);
             let el2Render = [];
             el2Render = this.state.baseServices.map(service =>{
                 return React.createElement(ServiceOfferContainers.EditBox, {

@@ -9,7 +9,7 @@ require.config({
 define(["pageRedirection", "ajaxReq"], function(page, ajaxReq){
 
     function check(){
-        let query =  ajaxReq.doAJAX("POST", "./php_copia/DBSession/keepSession.php")
+        let query =  ajaxReq.doAJAX("GET", "./php_copia/DBSession/keepSession.php")
         query.then(dataJSON =>{
             let data = JSON.parse(dataJSON);
             

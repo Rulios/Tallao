@@ -312,7 +312,7 @@ function(React, ReactDOM, inputPrevent, ajaxReq){
             //the processing of the elementsPrice is made by 
             //returnNewElementsPrice
             try{
-                let data = await ajaxReq.fetchElementsPrice({serviceOffer: service});
+                let data = await ajaxReq.fetchElementsPrice({serviceSelected: service});
                 let priceObj = JSON.parse(data);
                 let newElementsPrice = this.returnNewElementsPrice(JSON.parse(priceObj[service]), service, this.state.elementsPrice)
                 return {

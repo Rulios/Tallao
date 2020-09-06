@@ -15,12 +15,33 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
         colorTxt: "Color:",
         messageTxt: "Texto:",
         messageTxtPlaceholder: "texto...",
+        addNewMessage: "+ Añadir un nuevo mensaje personalizado",
         updateSuccess: "¡Precios actualizados!",
         update: "Actualizar Mensajes Personalizados",
+        updateError: "ERROR AL ACTUALIZAR MENSAJES"
     };
 
+    function AddNewMessageButton({onClick}) {
+        return [
+            React.createElement("div", {key: "divAddNewMessage1", className:"col-lg-4"}),
+            React.createElement("div", {
+                key: "divAddNewMessage2", 
+                className:"col-lg-4",
+                style:{
+                    paddingRight: "3em",
+                    paddingLeft :"3em"
+                }
+            },
+                React.createElement(EditCustomMessagesComp.AddNewMessageButton, {
+                    text: textEs.addNewMessage,
+                    onClick: () => {onClick();}
+                })
+            )
+        ];
+    }
+
     //this function uses hooks
-    function EditCustomMessageBox({messageDetails}){
+    function EditCustomMessageBox({messageDetails, inputHandlers}){
         //messageObj contains tag, colorTag, message, status (not in use right now)
         const [isHover, setHover] = React.useState(false);
         return React.createElement("div", {
@@ -39,7 +60,8 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
         },
             [
                 React.createElement(EditCustomMessagesComp.CloseMessageButton,{
-                    key: `CloseMessageButton4${messageDetails.id}`
+                    key: `CloseMessageButton4${messageDetails.id}`,
+                    onClick: () => inputHandlers.deleteMessage(messageDetails.id)
                 }),
                 React.createElement(EditCustomMessagesComp.TitleDiv, {
                     key: `TitleDiv4${messageDetails.id}`,
@@ -51,14 +73,15 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
                 }),
                 [
                     MessageDetailsDiv({
-                        messageDetails: messageDetails
+                        messageDetails: messageDetails,
+                        inputHandlers: inputHandlers
                     })
                 ]
             ]
         )
     }
 
-    function MessageDetailsDiv({messageDetails}){
+    function MessageDetailsDiv({messageDetails, inputHandlers}){
         return [
             React.createElement("div", {
                 key: `Details4${messageDetails.id}`,
@@ -74,7 +97,8 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
                         key: `inputTag4${messageDetails.id}`,
                         id: `inputTag4${messageDetails.id}`,
                         value: messageDetails.tag,
-                        placeholder: textEs.tagPlaceholder
+                        placeholder: textEs.tagPlaceholder,
+                        onChange: (value)  =>{inputHandlers.onChangeTag(messageDetails.id,value);}
                     }),
                     React.createElement("br", {key: `BrTag${messageDetails.id}`}),
                     React.createElement(EditCustomMessagesComp.LabelForInput, {
@@ -85,7 +109,8 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
                     React.createElement(EditCustomMessagesComp.ColorInput, {
                         key: `inputColor${messageDetails.id}`,
                         id: `inputColor${messageDetails.id}`,
-                        value: messageDetails.colorTag
+                        value: messageDetails.colorTag,
+                        onChange: (value)  =>{inputHandlers.onChangeColorTag(messageDetails.id,value);}
                     }),
                     React.createElement("br", {key: `BrColor${messageDetails.id}`}),
                     React.createElement(EditCustomMessagesComp.LabelForInput, {
@@ -97,7 +122,8 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
                         key: `inputMsgTxt4${messageDetails.id}`,
                         id: `inputMsgTxt4${messageDetails.id}`,
                         value: messageDetails.message,
-                        placeholder: textEs.messageTxtPlaceholder
+                        placeholder: textEs.messageTxtPlaceholder,
+                        onChange: (value)  =>{inputHandlers.onChangeMessage(messageDetails.id,value);}
                     }),
                 ]
             )
@@ -115,10 +141,16 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
         alert(textEs.updateSuccess);
     }
 
+    function ErrorMessage(){
+        alert(textEs.updateError);
+    }
+
     return{
+        AddNewMessageButton:AddNewMessageButton,
         EditBox: EditCustomMessageBox,
         UpdateElementsPriceButton: UpdateElementsPriceButton,
-        SuccessMessage: SuccessMessage
+        SuccessMessage: SuccessMessage,
+        ErrorMessage:ErrorMessage
     };
 
 });
@@ -140,4 +172,14 @@ define(["react", "EditCustomMessagesComp"], function(React, EditCustomMessagesCo
         <label for= "" class="subTxt">Texto:</label>
         <textarea name="" id="" class="customTextAreaStyle" placeholder="texto..."></textarea>
     </div>
+</div> */
+
+//example of addNewMessage
+
+/* <div class="col-lg-4"></div>
+<div class="col-lg-4" style="padding-left:3em; padding-right:3em"">
+    <button class="buttonAddCustomMessage bold" >
+        <!-- <i class="fa fa-plus" aria-hidden="true"></i> -->
+        + Añadir un nuevo mensaje personalizado
+    </button>
 </div> */

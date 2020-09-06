@@ -79,6 +79,14 @@ define(["jquery"], function ($){
         }
     }
 
+    function isHexColor(string){
+        const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+        if(string.match(regex)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     return{
         asteriskAndHyphen: asteriskAndHyphen,
@@ -90,7 +98,8 @@ define(["jquery"], function ($){
         notNegative: notNegative,
         minLimitZero: minLimitZero,
         isInputDate: isInputDate,
-        isInputTime : isInputTime 
+        isInputTime : isInputTime,
+        isHexColor:isHexColor
     };
 
 });

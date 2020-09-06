@@ -9,7 +9,7 @@ define(["ajaxReq"], function(ajaxReq){
         //props:  messageObj(json format)
 
         try{    
-            return await ajaxReq.doAJAX("POST", "./php/submitUpdateCustomMessage.php", obj);
+            return await ajaxReq.doAJAX("POST", "./php_copia/DBCustomMessages/submitUpdateCustomMessage.php", obj);
         }catch(err){
             console.error(err);
         }

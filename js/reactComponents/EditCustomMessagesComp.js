@@ -9,10 +9,10 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
     
     //All the low components, in charge of just displaying single components
 
-    const CloseMessageButton = ({messageID,onClick}) =>{
+    const CloseMessageButton = ({onClick}) =>{
         return React.createElement("button",{
             className: "closeButtonStyle",
-            onClick: () => {onClick(messageID);}
+            onClick: () => {onClick();}
         }, "x");
     };
 
@@ -28,31 +28,42 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         }, text);
     };
 
-    const TextInput = ({value, id, placeholder}) =>{
+    const TextInput = ({value, id, placeholder, onChange}) =>{
         return React.createElement("input", {
             type: "text",
             className: "inputMessageTagStyle",
             placeholder: placeholder,
             id: id,
-            value: value
+            value: value,
+            onChange: (e) =>{
+                onChange(e.target.value);
+            }
         });
     };
 
-    const ColorInput = ({value, id}) =>{
+    const ColorInput = ({id, value, onChange}) =>{
         return React.createElement("input" ,{
             type:"color",
             value: value,
             id: id,
-            className: "floatRight"
+            className: "floatRight",
+            onChange: (e) =>{
+                if(inputPrevent.isHexColor(e.target.value)){
+                    onChange(e.target.value);
+                }
+            }
         });
     };
 
-    const TextArea = ({value, id, placeholder}) =>{
+    const TextArea = ({value, id, placeholder, onChange}) =>{
         return React.createElement("textarea", {
             id: id,
             value: value,
             placeholder: placeholder,
-            className: "customTextAreaStyle"
+            className: "customTextAreaStyle",
+            onChange: (e) =>{
+                onChange(e.target.value);
+            }
         });
     };
 
@@ -64,6 +75,13 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
                 backgroundColor: color                
             }
         });
+    };
+
+    const AddNewMessageButton = ({text, onClick}) =>{
+        return React.createElement("button", {
+            className: "bold buttonAddCustomMessage",
+            onClick: () =>{onClick();}
+        }, text);
     };
 
     const submitButton = ({text,onClick}) =>{
@@ -81,7 +99,8 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         TextInput: TextInput,
         ColorInput: ColorInput,
         TextArea:TextArea,
-        ColorDiv:ColorDiv
+        ColorDiv:ColorDiv,
+        AddNewMessageButton:AddNewMessageButton
     };
 
 });
