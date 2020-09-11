@@ -10,6 +10,7 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
     //All the low components, in charge of just displaying single components
     const Label4Input = ({id, text}) =>{
         return React.createElement("label", {
+            className: "small-rightMargin",
             htmlFor: id
         }, text);
     };
@@ -33,7 +34,7 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         });
     };
 
-    const InputHour = ({id, value,onChange}) =>{
+    const InputTime = ({id, value,onChange}) =>{
         return React.createElement("input", {
             id: id,
             type: "time",
@@ -46,11 +47,15 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         });
     };
 
-    const InputText = ({id, value, onChange}) =>{
+    const InputText = ({id, isCharInput, value, onChange}) =>{
         return React.createElement("input", {
             id: id,
             type: "text",
             value : value,
+            maxLength: "7",
+            style: {
+                width: (isCharInput) ? "2em" : ""
+            },  
             onChange : (e) =>{
                 onChange(e.target.value);
             },
@@ -60,8 +65,24 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         });
     }
 
+    const InputNumber = ({id, value, onChange}) =>{
+        return React.createElement("input", {
+            id: id,
+            type: "number",
+            value: value,
+            onChange: (e) =>{ 
+                onChange(e.target.value);
+            }
+        })
+    }
+
     return{
-   
+        Label4Input:Label4Input,
+        Legend4Div:Legend4Div,
+        InputDate:InputDate,
+        InputTime:InputTime,
+        InputText:InputText,
+        InputNumber:InputNumber
     };
 
 });

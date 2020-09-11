@@ -86,9 +86,9 @@
 
             </div>  
 
-            <div class="row supTxt-TitleTxt-Separation centerOnXs">
-
-                <div class="col-lg-4">
+            <div class="row supTxt-TitleTxt-Separation centerOnXs" id="SearchOrderParamContainer">
+                
+               <!--  <div class="col-lg-4">
                     <label for="selectMetricFunnel">Buscar por:</label>
                     <select name="selectMetricFunnel" id="selectMetricFunnel">
                         <option value="date-assign" selected>Fecha asignada</option>
@@ -155,23 +155,27 @@
                             </div>        
                         </div>
 
-                        <div id="divTxtInput" class="hide">
+                        <div id="divTxtInput" class="">
                             <label for="txtParamInput">Número de orden:</label>
-                            <input class="inputTxtParamSearch" type="text" id="txtParamInput">
+                            <div style="display:inline-block">
+                                <input type="text" style="width:2em">
+                                <input class="inputTxtParamSearch" type="number" id="txtParamInput">
+                            </div>
+                            
                         </div>
 
 
                     </fieldset>
 
                 </form>
-
+ -->
 
             </div>
-
+<!-- 
             <div class="row ">
 
                 <div class="container" id="appendOrdersFromParams">
-                   <!-- <div class="row small-mediumSeparation" id="AppendOrder"> 
+                   <div class="row small-mediumSeparation" id="AppendOrder"> 
 
                         <div class="col-lg-4">
                             <button class="orderListElementStyle ">
@@ -210,11 +214,11 @@
                         </div>
                     </div>
                     
-                </div> -->
+                </div>
                 
                 </div>
 
-            </div>    
+            </div>     -->
 
                 <!-- The Modal -->
             <div id="orderDetailsModal" name="modalCustom" class="modalCustom hide">

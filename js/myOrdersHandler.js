@@ -9,6 +9,7 @@ require.config({
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         sessionHandler: "frontendModules/sessionHandler",
+        SearchOrdersParamHandler: "./reactComponents/SearchOrdersParamHandler"
     },
     shim: {
         bootstrap: {
@@ -23,6 +24,15 @@ function($,React, ReactDOM){
 
         require(["sessionHandler"], function(session){
             session.check();
+        });
+        let obj  ={};
+        require(["SearchOrdersParamHandler"], function(SearchOrder){
+            ReactDOM.render(
+                React.createElement(SearchOrder,{
+                    getSearchParams: (params) =>{console.log(params)},
+                }),
+                document.getElementById("SearchOrderParamContainer")
+            );
         });
 
     });

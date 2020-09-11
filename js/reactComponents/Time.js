@@ -64,6 +64,40 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         return `${hours}:${minutes}`;
     }
 
+    async function getDateTimeFromServer(){
+        //format from server: YYYY/MM/DD
+        try{
+            let query = await ajaxReq.fetchDateTimeServer();
+            let dateTime = JSON.parse(query);
+            let newObj = {};
+            //convert NaN to uppecase, and numbers char to number
+            Object.keys(dateTime).map(timeProp =>{
+                if(!isNaN(dateTime[timeProp])){
+                    newObj[timeProp] = parseInt(dateTime[timeProp]);
+                }else{
+                    newObj[timeProp] = dateTime[timeProp].toUpperCase();
+                }
+            });
+            return newObj;
+        }catch(err){console.error(err);}
+    }
+
+    function splitDate(dateString){
+        //returns a object with day, month, monthString, year
+        //from string format YYYY/MM/DD
+        const months = [
+            "enero", "febrero", "marzo", "abril", "mayo", "junio",
+            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+        ];
+        let arr = dateString.split("-");
+        return{
+            year: parseInt(arr[0]),
+            month: parseInt(arr[1]),
+            day: parseInt(arr[2]),
+            monthString: months[parseInt(arr[2]) -1],
+        }
+    }
+
     class Timer extends React.Component{
 
         constructor(props){
@@ -90,7 +124,7 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
                     if(returnObj["hour12"] == 12){
                         clearInterval(timer);
                         returnObj["ajaxLoaded"] = false;
-                        this.updateDateTime().then(obj =>{
+                        getDateTimeFromServer().then(obj =>{
                             Object.assign(obj, {ajaxLoaded: true});
                             this.updateEveryMinute();
                             this.setState(obj);
@@ -103,37 +137,8 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
             }, 60000);
         }
         
-        splitDate(dateString){
-            //returns a object with day, month, monthString, year
-            const months = [
-                "enero", "febrero", "marzo", "abril", "mayo", "junio",
-                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-            ];
-            let arr = dateString.split("/");
-            return{
-                day: parseInt(arr[0]),
-                month: parseInt(arr[1]),
-                monthString: months[parseInt(arr[1]) -1],
-                year: parseInt(arr[2])
-            }
-        }
+        
 
-        async updateDateTime(){
-            try{
-                let query = await ajaxReq.fetchDateTimeServer();
-                let dateTime = JSON.parse(query);
-
-                let newObj = {};
-                Object.keys(dateTime).map(timeProp =>{
-                    if(!isNaN(dateTime[timeProp])){
-                        newObj[timeProp] = parseInt(dateTime[timeProp]);
-                    }else{
-                        newObj[timeProp] = dateTime[timeProp].toUpperCase();
-                    }
-                });
-                return newObj;
-            }catch(err){console.error(err);}
-        }
 
         returnTodayDateTime(){
             return this.props.getTodayDateTime({
@@ -147,10 +152,10 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         }
         componentDidMount(){
             //get time from server
-            this.updateDateTime().then(obj =>{
+            getDateTimeFromServer().then(obj =>{
                 this.updateEveryMinute();
                 Object.assign(obj, {ajaxLoaded: true});
-                Object.assign(obj, this.splitDate(obj.date));
+                Object.assign(obj, splitDate(obj.date));
                 this.setState(obj);
             }).then(() =>{
                 //return data to main component
@@ -177,7 +182,9 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         Timer: Timer,
         DateInput: DateInput,
         TimeInput: TimeInput,
-        convert12hTo24h:convert12hTo24h
+        convert12hTo24h:convert12hTo24h,
+        getDateTimeFromServer:getDateTimeFromServer,
+        splitDate:splitDate
     };
 
 

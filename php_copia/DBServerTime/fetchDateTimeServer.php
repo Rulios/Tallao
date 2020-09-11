@@ -9,7 +9,7 @@ $db = "tallao";
 // set default timezone
 date_default_timezone_set('America/Panama'); // CDT
 
-$date = date('d/m/Y');
+$date = date('Y-m-d');
 
 $data["date"] = $date;
 
