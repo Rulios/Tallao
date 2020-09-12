@@ -16,8 +16,7 @@ define(["ajaxReq"], function(ajaxReq){
 
     async function fetchOrders(obj){
         //params: filterMode, params, startIndex, status(means order status)
-
-        return await ajaxReq.doAJAX("POST", "./php/fetchOrders.php", obj);
+        return await ajaxReq.doAJAX("GET", "./php_copia/DBOrders/fetchOrders.php", obj);
     }
 
     async function updateOrder(obj){

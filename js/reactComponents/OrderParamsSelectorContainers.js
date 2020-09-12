@@ -2,10 +2,10 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        SearchOrdersParamComp: "./reactComponents/SearchOrdersParamComp"
+        OrderParamsSelectorComp: "./reactComponents/OrderParamsSelectorComp"
     }
 });
-define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp){
+define(["react","OrderParamsSelectorComp"], function(React, OrderParamsSelectorComp){
 
     /* This is a middle order component, responsible for translation
     and bundling of low order components */
@@ -45,12 +45,12 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
                         key: paramsObj.paramSelected,
                         id: paramsObj.paramSelected,
                         values: {
-                            date: inputsValues.dateInput.startDate,
-                            time: inputsValues.hourInput.startHour
+                            date: inputsValues.dateInput.endDate,
+                            time: inputsValues.hourInput.endHour
                         },
                         changeHandler: {
-                            onDateChange: (value) => changeHandler.onDateChange("startDate", value),
-                            onHourChange: (value) => changeHandler.onHourChange("startHour", value)
+                            onDateChange: (value) => changeHandler.onDateChange("endDate", value),
+                            onHourChange: (value) => changeHandler.onHourChange("endHour", value)
                         }
                     })
                 );
@@ -136,7 +136,7 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
                     className: "border p-2"
                 },
                     [
-                        React.createElement(SearchOrdersParamComp.Legend4Div, {
+                        React.createElement(OrderParamsSelectorComp.Legend4Div, {
                             key: "Legend4Div",
                             text: textEs.param4Search
                         }),
@@ -159,7 +159,7 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
     function paramListSelect({paramsArr, selected, onChange}){
         //params (array)
         return [
-            React.createElement(SearchOrdersParamComp.Label4Input, {
+            React.createElement(OrderParamsSelectorComp.Label4Input, {
                 key: "Lbl4ParamList",
                 id: "SelectParamList",
                 text: textEs.searchBy
@@ -183,7 +183,7 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
     function SelectStatusInput({statusArr, selected, onChange}){
         //status (array)
         return [
-            React.createElement(SearchOrdersParamComp.Label4Input, {
+            React.createElement(OrderParamsSelectorComp.Label4Input, {
                 key: "Lbl4StatusInput",
                 id: "SelectStatusInput",
                 text: textEs.status
@@ -211,12 +211,12 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
                 [   
                     React.createElement("div", {key: `DivDate${id}`, className:"col-xs-12"},
                         [
-                            React.createElement(SearchOrdersParamComp.Label4Input, {
+                            React.createElement(OrderParamsSelectorComp.Label4Input, {
                                 key: `LblDate${id}`,
                                 id: id,
                                 text: (typeof isDateRange !== "undefined") ? textEs[rangeType] : textEs.date
                             }),
-                            React.createElement(SearchOrdersParamComp.InputDate, {
+                            React.createElement(OrderParamsSelectorComp.InputDate, {
                                 key: `Date4${id}`,
                                 id: `inputDate4${id}`,
                                 value: values.date,
@@ -226,12 +226,12 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
                     ),
                     React.createElement("div", {key: `DivTime${id}`,className: "col-xs-12"}, 
                         [
-                            React.createElement(SearchOrdersParamComp.Label4Input, {
+                            React.createElement(OrderParamsSelectorComp.Label4Input, {
                                 key: `LblTime${id}`,
                                 id: id,
                                 text: textEs.time
                             }),
-                            React.createElement(SearchOrdersParamComp.InputTime, {
+                            React.createElement(OrderParamsSelectorComp.InputTime, {
                                 key: `Time4${id}`,
                                 id: `inputTime4${id}`,
                                 value: values.time,
@@ -247,12 +247,12 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
     function TextInput ({id,txtType, value , onChange}) {
         return  React.createElement("div", null, 
                 [
-                    React.createElement(SearchOrdersParamComp.Label4Input, {
+                    React.createElement(OrderParamsSelectorComp.Label4Input, {
                         key: `LblText${id}`,
                         id: id,
                         text: `${textEs[txtType]}:`
                     }),
-                    React.createElement(SearchOrdersParamComp.InputText,{
+                    React.createElement(OrderParamsSelectorComp.InputText,{
                         key: `Text${id}`,
                         id: id,
                         value: value,
@@ -265,7 +265,7 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
     function OrderInput ({id, values , onChange}) {
         return  React.createElement("div", null, 
                 [
-                    React.createElement(SearchOrdersParamComp.Label4Input, {
+                    React.createElement(OrderParamsSelectorComp.Label4Input, {
                         key: `LblText${id}`,
                         id: id,
                         text: `${textEs["orderID"]}:`
@@ -278,14 +278,14 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
                         }
                     },
                         [
-                            React.createElement(SearchOrdersParamComp.InputText,{
+                            React.createElement(OrderParamsSelectorComp.InputText,{
                                 key: `Char${id}`,
                                 id: `Char4${id}`,
                                 value: values.char,
                                 isCharInput: true,
                                 onChange: (value) => onChange.orderChar(value)
                             }),
-                            React.createElement(SearchOrdersParamComp.InputNumber, {
+                            React.createElement(OrderParamsSelectorComp.InputNumber, {
                                 key: `Number${id}`,
                                 id: id,
                                 value: values.number,
@@ -303,3 +303,86 @@ define(["react","SearchOrdersParamComp"], function(React, SearchOrdersParamComp)
     };
 
 });
+
+//example of MainContainer
+
+/* <div class="col-lg-4">
+    <label for="selectMetricFunnel">Buscar por:</label>
+    <select name="selectMetricFunnel" id="selectMetricFunnel">
+        <option value="date-assign" selected>Fecha asignada</option>
+        <option value="date-receive">Fecha recibida</option>
+        <option value="date-range">Entre dos fechas </option>
+        <option value="order-id">Número de Orden (ID)</option>
+        <option value="customer-id">Identificación del cliente</option>
+    </select>
+</div>
+
+<form class="col-lg-8 paramBoxStyle ">
+
+    <fieldset class="border p-2 " id="paramElements">
+
+        <legend class="w-auto legendTxt">Parámetros de la búsqueda</legend>
+        
+        <div id="divStatusInput" class="">
+
+            <label for="selectInputStatus" >Estado:</label>
+
+            <select  id="selectInputStatus">
+                <option value="status-all">Todos los estados</option>
+                <option value="status-wait">En espera</option>
+                <option value="status-ironing">Planchando</option>
+                <option value="status-ready">Listo</option>
+                
+            </select>
+            
+        </div>
+
+        
+
+        <div id="divStartDateInput" class="hide container">
+            
+                <div class="row">
+                
+                    <div class="col-xs-12">
+                        <label for="startDateParamInput" >Fecha:</label>
+                        <input type="date"  id="startDateParamInput">
+                    </div>
+                
+                    <div class="col-xs-12">
+                        <label for="startHourParamInput">Hora:</label>
+                        <input type="time"  id="startHourParamInput">
+                    </div>    
+
+                </div>        
+        </div>
+
+        <div id="divEndDateInput" class="hide container">
+            
+            <div class="row">
+            
+                <div class="col-xs-12">
+                    <label for="endDateParamInput">Fecha:</label>
+                    <input type="date"  id="endDateParamInput">
+                </div>
+            
+                <div class="col-xs-12">
+                    <label for="endHourParamInput">Hora:</label>
+                    <input type="time"  id="endHourParamInput">
+                </div>    
+
+            </div>        
+        </div>
+
+        <div id="divTxtInput" class="">
+            <label for="txtParamInput">Número de orden:</label>
+            <div style="display:inline-block">
+                <input type="text" style="width:2em">
+                <input class="inputTxtParamSearch" type="number" id="txtParamInput">
+            </div>
+            
+        </div>
+
+
+    </fieldset>
+
+</form> */

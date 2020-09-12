@@ -9,7 +9,7 @@ require.config({
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         sessionHandler: "frontendModules/sessionHandler",
-        SearchOrdersParamHandler: "./reactComponents/SearchOrdersParamHandler"
+        OrderBoxSearchBundle: "./reactComponents/OrderBoxSearchBundle"
     },
     shim: {
         bootstrap: {
@@ -17,29 +17,20 @@ require.config({
         },
     }
 });
-require(["jquery", "react", "react-dom", "design", "bootstrap"], 
-function($,React, ReactDOM){ 
+require(["jquery", "react", "react-dom","OrderBoxSearchBundle", "design", "bootstrap"], 
+function($,React, ReactDOM, OrderBoxSearchBundle){ 
+
+    //this file acts like a bundle, since all the components here
+    //needs to be connected to a only true source of data
 
     $(document).ready(() =>{
 
         require(["sessionHandler"], function(session){
             session.check();
-        });
-        let obj  ={};
-        require(["SearchOrdersParamHandler"], function(SearchOrder){
             ReactDOM.render(
-                React.createElement(SearchOrder,{
-                    getSearchParams: (params) =>{console.log(params)},
-                }),
-                document.getElementById("SearchOrderParamContainer")
-            );
+                React.createElement(OrderBoxSearchBundle),
+                document.getElementById("OrderParamsSelectorContainer")
+            )
         });
-
     });
-
-    
-
-    
-
 });
-

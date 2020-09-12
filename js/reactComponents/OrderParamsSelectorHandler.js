@@ -3,12 +3,12 @@ require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        SearchOrdersParamContainers: "./reactComponents/SearchOrdersParamContainers",
+        OrderParamsSelectorContainers: "./reactComponents/OrderParamsSelectorContainers",
         Time: "./reactComponents/Time"
     }
 });
-define(["react", "react-dom","Time","SearchOrdersParamContainers"], 
-function(React, ReactDOM,Time,SearchOrdersParamContainers){
+define(["react", "react-dom","Time","OrderParamsSelectorContainers"], 
+function(React, ReactDOM,Time,OrderParamsSelectorContainers){
 
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
@@ -35,7 +35,7 @@ function(React, ReactDOM,Time,SearchOrdersParamContainers){
                 },
                 hourInput: {
                     startHour: "00:00",
-                    endHour: "00:00"
+                    endHour: "23:59"
                 },
                 orderInput: {
                     char: "A",
@@ -78,14 +78,14 @@ function(React, ReactDOM,Time,SearchOrdersParamContainers){
             this.setState({orderInput: newOrderParam});
         }
 
-        returnData(){
+        returnData(newState){
             this.props.getSearchParams({
-                paramSelected: this.state.paramSelected,
-                statusSelected: this.state.statusSelected,
-                txtInput: this.state.txtInput,
-                dateInput: this.state.dateInput,
-                hourInput: this.state.hourInput,
-                orderInput: this.state.orderInput
+                paramSelected: newState.paramSelected,
+                statusSelected: newState.statusSelected,
+                txtInput: newState.txtInput,
+                dateInput: newState.dateInput,
+                hourInput: newState.hourInput,
+                orderInput: newState.orderInput
             });
         }
 
@@ -98,9 +98,18 @@ function(React, ReactDOM,Time,SearchOrdersParamContainers){
             });
         }
 
+        shouldComponentUpdate(newProps, newState){
+            if(this.state !== newState){
+                this.returnData(newState);
+                return true;
+            }else{
+                return false;
+            }
+        }
+
         render(){
-            this.returnData();
-            return React.createElement(SearchOrdersParamContainers.MainContainer,{
+            //this.returnData();
+            return React.createElement(OrderParamsSelectorContainers.MainContainer,{
                 paramsObj: {
                     paramSelected: this.state.paramSelected,
                     paramList: this.state.paramList,

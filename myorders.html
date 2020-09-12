@@ -86,93 +86,17 @@
 
             </div>  
 
-            <div class="row supTxt-TitleTxt-Separation centerOnXs" id="SearchOrderParamContainer">
+            <div class="row supTxt-TitleTxt-Separation centerOnXs" id="OrderParamsSelectorContainer">
                 
-               <!--  <div class="col-lg-4">
-                    <label for="selectMetricFunnel">Buscar por:</label>
-                    <select name="selectMetricFunnel" id="selectMetricFunnel">
-                        <option value="date-assign" selected>Fecha asignada</option>
-                        <option value="date-receive">Fecha recibida</option>
-                        <option value="date-range">Entre dos fechas </option>
-                        <option value="order-id">Número de Orden (ID)</option>
-                        <option value="customer-id">Identificación del cliente</option>
-                    </select>
-                </div>
-
-                <form class="col-lg-8 paramBoxStyle ">
-
-                    <fieldset class="border p-2 " id="paramElements">
-
-                        <legend class="w-auto legendTxt">Parámetros de la búsqueda</legend>
-                        
-                        <div id="divStatusInput" class="">
-
-                            <label for="selectInputStatus" >Estado:</label>
-
-                            <select  id="selectInputStatus">
-                                <option value="status-all">Todos los estados</option>
-                                <option value="status-wait">En espera</option>
-                                <option value="status-ironing">Planchando</option>
-                                <option value="status-ready">Listo</option>
-                                
-                            </select>
-                            
-                        </div>
-
-                        
-
-                        <div id="divStartDateInput" class="hide container">
-                            
-                                <div class="row">
-                               
-                                    <div class="col-xs-12">
-                                        <label for="startDateParamInput" >Fecha:</label>
-                                        <input type="date"  id="startDateParamInput">
-                                    </div>
-                                
-                                    <div class="col-xs-12">
-                                        <label for="startHourParamInput">Hora:</label>
-                                        <input type="time"  id="startHourParamInput">
-                                    </div>    
-
-                                </div>        
-                        </div>
-
-                        <div id="divEndDateInput" class="hide container">
-                            
-                            <div class="row">
-                           
-                                <div class="col-xs-12">
-                                    <label for="endDateParamInput">Fecha:</label>
-                                    <input type="date"  id="endDateParamInput">
-                                </div>
-                            
-                                <div class="col-xs-12">
-                                    <label for="endHourParamInput">Hora:</label>
-                                    <input type="time"  id="endHourParamInput">
-                                </div>    
-
-                            </div>        
-                        </div>
-
-                        <div id="divTxtInput" class="">
-                            <label for="txtParamInput">Número de orden:</label>
-                            <div style="display:inline-block">
-                                <input type="text" style="width:2em">
-                                <input class="inputTxtParamSearch" type="number" id="txtParamInput">
-                            </div>
-                            
-                        </div>
-
-
-                    </fieldset>
-
-                </form>
- -->
 
             </div>
-<!-- 
-            <div class="row ">
+
+            <button id ="testBTN">Click ME</button>
+
+            <div class="row small-mediumSeparation" id="AppendOrdersContainer">
+
+            </div>
+            <!-- <div class="row ">
 
                 <div class="container" id="appendOrdersFromParams">
                    <div class="row small-mediumSeparation" id="AppendOrder"> 
@@ -188,18 +112,20 @@
 
                                     <label for="" class="bold">Cliente:</label>
                                     <div name="customerNameTag" ><span class="bold"> Cliente:</span> <span>Robert Lu Zheng</span></div>
-                                    <div name="dateAssignTag">Día asignado: 10/10/2020</div>
+                                    <div>
+                                        <span class="bold">Día Asignado:</span> <span style="float:right">10/10/2020</span>
+                                    </div>
+                                    <div name="dateAssignTag">Día asignado:</div>  <div style="float:right">10/10/2020</div>
                                     <div name="dateReceiveTag">Día recibido: 10/10/2020</div>
                                     <div name="hookQuantityTag">Cantidad de Ganchos: 2</div>
 
+                                    
+                                </div>  
                                     <hr class="hrGreyBorder">
 
                                     <div name="priceTag" class="text-center bold">Precio: $1.30</div>
 
                                     <div class="text-center detailsText">Toca para ver más detalles</div>
-
-                                </div>  
-                                
                             </button>
                         </div>
 

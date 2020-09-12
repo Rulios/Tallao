@@ -1637,7 +1637,7 @@ var order = {
       $("span[name=spnReceiptHookQuantityTag]").text("Cantidad de Ganchos/Perchas");
       $("span[name=spnReceiptHookQuantityData]").text(obj.hookQuantity);
 
-      //order price
+      //order price 
       $("span[name=spnReceiptPriceTag]").text("Precio:");
       $("span[name=spnReceiptPriceData]").text("$" + obj.totalprice);
 

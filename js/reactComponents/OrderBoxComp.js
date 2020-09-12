@@ -21,17 +21,37 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         });
     };
 
-    const DivTxt = (text, isCenter) =>{
+    const CenterBoldDiv = ({text, color, isDetailsText}) =>{
         return React.createElement("div", {
-            className: `${(isCenter) ? "text-center bold": ""}`
+            className: `text-center bold ${(typeof isDetailsText !== "undefined" && isDetailsText) ? "detailsText": ""}`,
+            style: {
+                color: (typeof color !== "undefined") ? color: "black"
+            }
         }, text);
+    };
+
+    const FieldValue = ({id, fieldTxt, value}) =>{
+        return React.createElement("div", null, 
+            [
+                React.createElement("span", {
+                    key: `FieldSpan${id}`,
+                    className: "bold"
+                }, fieldTxt),
+                React.createElement("span", {
+                    key: `ValueSpan${id}`,
+                    style:{float:"right"}
+                }, value)
+            ]
+        );
     };
 
 
 
-
     return{
-      
+        H3:H3,
+        HrGrey:HrGrey,
+        CenterBoldDiv:CenterBoldDiv,
+        FieldValue: FieldValue
     };
 
 });

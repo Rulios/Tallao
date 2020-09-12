@@ -13,17 +13,144 @@ if(Classes\Cookies::readCookies()){
 
     $endHour = "23:59:59";
 
-    if (isset($_POST['initials'], $_POST['filterMode'], $_POST['params'], $_POST['startIndex'], $_POST['status'])){
+    if (isset($_GET['filterMode'], $_GET['params'], $_GET['startIndex'], $_GET['status'])){
         $userType = Classes\Cookies::getUserTypeCookie();
         $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
 
-        $filterMode = $_POST['filterMode'];
-        $params = $_POST['params'];
-        $startIndex = $_POST['startIndex'];
-        $status = $_POST['status'];
+        $filterMode = $_GET['filterMode'];
+        $params = json_decode($_GET['params']);
+        $startIndex = $_GET['startIndex'];
+        $status = $_GET['status'];
+        //parameters
+        
+        $dateParam = $params->dateInput;
+        $hourParam = $params->hourInput;
+        $orderParam = $params->orderInput;
+
+      
+        $conn = new mysqli($serverName, $userConn, $passwordConn);
+        // Check connection
+        if ($conn->connect_error) {
+            http_response_code(400);
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        if($userType == "user"){
+            //$sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
+        }else if ($userType == "laundry"){
+        
+            switch($filterMode){
+                case "dateAssign":
+                    $endDateTime = "$dateParam->endDate  $hourParam->endHour";
+                    if($status == "all"){
+                        $sql = "SELECT * FROM orders 
+                            WHERE laundryInitials = '$initials' AND dateAssign BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
+                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                    }else{
+                        $sql = "SELECT * FROM orders 
+                            WHERE laundryInitials = '$initials' AND status='$status' AND dateAssign BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
+                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                    }
+                    
+                break;    
+                case "dateReceive":
+                    $endDateTime = "$dateParam->endDate  $hourParam->endHour";
+                        if($status == "all"){
+                            $sql = "SELECT * FROM orders 
+                                WHERE laundryInitials = '$initials' AND dateReceive BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
+                                ORDER BY dateReceive ASC LIMIT ".$startIndex.",10;";
+                        }else{
+                            $sql = "SELECT * FROM orders 
+                                WHERE laundryInitials = '$initials' AND status='$status' AND dateReceive BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
+                                ORDER BY dateReceive ASC LIMIT ".$startIndex.",10;";
+                        }
+                break;
+        
+                case "dateRange":
+                    $dateArr = [];
+                    $dateArr = getDateFromRangeDateTime($params);
+                    $startDate = "$dateParam->startDate $hourParam->startHour";
+                    $endDate = "$dateParam->endDate $hourParam->endHour";
+
+                    if($status == "all"){
+                        $sql = "SELECT * FROM orders 
+                                WHERE laundryInitials = '$initials' 
+                                AND dateAssign 
+                                BETWEEN '$startDate'
+                                AND '$endDate' 
+                                ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                    }else{
+                        $sql = "SELECT * FROM orders 
+                                WHERE laundryInitials = '$initials' 
+                                AND status='$status' 
+                                AND dateAssign 
+                                BETWEEN '$startDate' 
+                                AND '$endDate' 
+                                ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                    }
+                break;
+        
+                case "orderID":
+                    
+                    $sql = "SELECT * FROM orders 
+                            WHERE laundryInitials = '$initials' 
+                            AND idChar='$orderParam->char'
+                            AND idNumber='$orderParam->number' LIMIT 1";
+        
+                break;
+                
+                case "customerID":
+                    $sql = "SELECT * FROM orders 
+                            WHERE customerID='$params' 
+                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
+                break;    
+            }    
+        
+        }
+        
+        mysqli_select_db($conn, $db) or die("Connection Error");
+        $result = mysqli_query($conn, $sql);
+        
+        if(!$result ) {
+            http_response_code(404);
+            die('Could not get data: ');
+        }  
+        
+        $data = [];
+        //$data = mysqli_fetch_array($result);
+        
+        while ($row = mysqli_fetch_array($result)) {
+            # code...
+            $data[] = $row;
+            print_r($row);
+            echo "<br>";
+            echo "<br>";
+        }
+        //http_reponse_code(200);
+        echo json_encode($data);
+        
+        mysqli_close($conn);
+
     }
 
-   /*  $userType = Classes\Cookies::getUserTypeCookie();
+}
+
+function getDateFromSingleDateTime($str){
+    //format "date hour"
+    //returns the date
+    $arr = [];
+    $arr = explode(" ", $str);
+    return $arr[0];
+}
+
+function getDateFromRangeDateTime($str){
+    //should return a 2 elements array
+    $arr = [];
+    $arr = explode("/", $str);
+    return $arr;
+}
+
+ /*  $userType = Classes\Cookies::getUserTypeCookie();
     $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie()); */
 
     //test with date-assign mode
@@ -55,113 +182,5 @@ if(Classes\Cookies::readCookies()){
     $params = "GUQ13";
     $startIndex = 1;
     $status = "status-wait"; */
-    $conn = new mysqli($serverName, $userConn, $passwordConn);
-    
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
-    if($userType == "user"){
-        //$sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
-    }else if ($userType == "superuser"){
-    
-        switch($filterMode){
-            case "date-assign":
-                $endDate = getDateFromSingleDateTime($params)." ".$endHour ;
-                if($status == 'status-all'){
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND dateAssign BETWEEN '$params' AND '$endDate' 
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
-                }else{
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND status='$status' AND dateAssign BETWEEN '$params' AND '$endDate' 
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
-                }
-            break;    
-            case "date-receive":
-                $endDate = getDateFromSingleDateTime($params)." ".$endHour ;
-                if($status == 'status-all'){
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND dateReceive BETWEEN '$params' AND '$endDate' 
-                            ORDER BY dateReceive ASC LIMIT ".$startIndex.",10";
-                }else{
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND status='$status' AND dateReceive BETWEEN '$params' AND '$endDate' 
-                            ORDER BY dateReceive ASC LIMIT ".$startIndex.",10";
-                }
-            break;
-    
-            case "date-range":
-                $dateArr = [];
-                $dateArr = getDateFromRangeDateTime($params);
-                if($status == "status-all"){
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND dateAssign BETWEEN '$dateArr[0]' AND '$dateArr[1]' 
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
-                }else{
-                    $sql = "SELECT * FROM orders 
-                            WHERE laundryInitials = '$initials' AND status='$status' AND dateAssign BETWEEN '$dateArr[0]' AND '$dateArr[1]' 
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
-                }
-            break;
-    
-            case "order-id":
-                
-                //this will not have a $status parameter
-                $sql = "SELECT * FROM orders 
-                        WHERE laundryInitials = '$initials' AND id='$params'";
-    
-            break;
-            
-            case "customer-id":
-                $sql = "SELECT * FROM orders 
-                        WHERE customerID='$params' 
-                        ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
-            break;    
-        }    
-    
-    }
-    
-    mysqli_select_db($conn, $db) or die("Connection Error");
-    $result = mysqli_query($conn, $sql);
-    
-    if(!$result ) {
-        die('Could not get data: ' . mysql_error());
-     }  
-    
-    $data = [];
-    //$data = mysqli_fetch_array($result);
-    
-    while ($row = mysqli_fetch_array($result)) {
-        # code...
-         $data[] = $row;
-         print_r($row);
-         echo "<br>";
-         echo "<br>";
-    }
-    //echo json_encode($data);
-    mysqli_close($conn);
-
-}
-
-
-
-
-function getDateFromSingleDateTime($str){
-    //format "date hour"
-    //returns the date
-    $arr = [];
-    $arr = explode(" ", $str);
-    return $arr[0];
-}
-
-function getDateFromRangeDateTime($str){
-    //should return a 2 elements array
-    $arr = [];
-    $arr = explode("/", $str);
-    return $arr;
-}
-
 
 ?>
