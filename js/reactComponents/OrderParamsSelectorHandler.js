@@ -80,12 +80,16 @@ function(React, ReactDOM,Time,OrderParamsSelectorContainers){
 
         returnData(newState){
             this.props.getSearchParams({
-                paramSelected: newState.paramSelected,
-                statusSelected: newState.statusSelected,
-                txtInput: newState.txtInput,
-                dateInput: newState.dateInput,
-                hourInput: newState.hourInput,
-                orderInput: newState.orderInput
+                searchParams:{
+                    paramSelected: newState.paramSelected,
+                    statusSelected: newState.statusSelected,
+                },
+                inputsParams: {
+                    txtInput: newState.txtInput,
+                    dateInput: newState.dateInput,
+                    hourInput: newState.hourInput,
+                    orderInput: newState.orderInput
+                }
             });
         }
 
@@ -99,6 +103,8 @@ function(React, ReactDOM,Time,OrderParamsSelectorContainers){
         }
 
         shouldComponentUpdate(newProps, newState){
+           /*  console.log(this.state !== newState);
+            console.log(this.props !== newProps); */
             if(this.state !== newState){
                 this.returnData(newState);
                 return true;
@@ -108,7 +114,6 @@ function(React, ReactDOM,Time,OrderParamsSelectorContainers){
         }
 
         render(){
-            //this.returnData();
             return React.createElement(OrderParamsSelectorContainers.MainContainer,{
                 paramsObj: {
                     paramSelected: this.state.paramSelected,

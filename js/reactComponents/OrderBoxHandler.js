@@ -4,29 +4,14 @@ require.config({
         'react': 'https://unpkg.com/react@16/umd/react.development',
         'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         OrderBoxContainers: "./reactComponents/OrderBoxContainers",
-        ajaxReqOrders: "./requestsModules/ajaxReqOrders",
     }
 });
-define(["react", "react-dom","OrderBoxContainers", "ajaxReqOrders"], 
-function(React, ReactDOM,OrderBoxContainers, ajaxReq){
+define(["react", "react-dom","OrderBoxContainers"], 
+function(React, ReactDOM,OrderBoxContainers){
 
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
 
- 
-    async function getOrders(data){
-        console.log(data);
-        try {
-            let query = await ajaxReq.fetchOrders({
-                filterMode: data.filterMode,
-                params: JSON.stringify(data.params),
-                startIndex: data.startIndex,
-                status: data.status
-            });
-            return query;
-        }catch(err){console.error(err);}
-    }
-    
     class OrderBoxes extends React.Component{
         constructor(props){
             super(props);
@@ -36,25 +21,30 @@ function(React, ReactDOM,OrderBoxContainers, ajaxReq){
             }
         }
 
-        componentDidMount(){
-            getOrders({
-                filterMode: this.props.paramSelected,
-                status: this.props.statusSelected,
-                startIndex: this.state.startIndex,
-                params: {
-                    dateInput: this.props.dateInput,
-                    hourInput: this.props.hourInput,
-                    orderInput: this.props.orderInput,
-                    txtInput: this.props.txtInput
-                }
-            }).then(data =>{
-                console.log(data);
-            }).catch(err => console.error(err));
+
+        returnDataOnClick(orderID){
+            this.props.onClick(orderID);
         }
 
-
         render(){
-            return null;
+            return Object.values(this.props.orders).map(order =>{
+                return React.createElement(OrderBoxContainers.OrderBox, {
+                    key: `${order.idChar}${order.idNumber}`,
+                    status: order.status,
+                    orderID: {
+                        idChar: order.idChar,
+                        idNumber: order.idNumber
+                    },
+                    orderDetails: {
+                        customerName: order.customerName,
+                        dateAssign: order.dateAssign,
+                        dateReceive: order.dateReceive,
+                        hookQuantity: order.hookQuantity,
+                        totalPrice: order.totalPrice
+                    },
+                    onClick: (orderID) => this.returnDataOnClick(orderID)
+                })
+            });
         }
     }
     

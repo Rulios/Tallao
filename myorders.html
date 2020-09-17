@@ -91,69 +91,23 @@
 
             </div>
 
-            <button id ="testBTN">Click ME</button>
+            <!-- <button id ="testBTN">Click ME</button> -->
 
             <div class="row small-mediumSeparation" id="AppendOrdersContainer">
 
             </div>
-            <!-- <div class="row ">
 
-                <div class="container" id="appendOrdersFromParams">
-                   <div class="row small-mediumSeparation" id="AppendOrder"> 
+            <div id="OrderModalContainer">
 
-                        <div class="col-lg-4">
-                            <button class="orderListElementStyle ">
+            </div>
 
-                                <h3 name="orderIdTag" class="bold"> B-13</h3>
-                                <div name="statusTag">Estado: En espera</div>
-                                <hr class="hrGreyBorder">
+            <div id="orderDetailsModal" name="modalCustom" class="modalCustom ">
 
-                                <div class="dataOrderStyle">
-
-                                    <label for="" class="bold">Cliente:</label>
-                                    <div name="customerNameTag" ><span class="bold"> Cliente:</span> <span>Robert Lu Zheng</span></div>
-                                    <div>
-                                        <span class="bold">Día Asignado:</span> <span style="float:right">10/10/2020</span>
-                                    </div>
-                                    <div name="dateAssignTag">Día asignado:</div>  <div style="float:right">10/10/2020</div>
-                                    <div name="dateReceiveTag">Día recibido: 10/10/2020</div>
-                                    <div name="hookQuantityTag">Cantidad de Ganchos: 2</div>
-
-                                    
-                                </div>  
-                                    <hr class="hrGreyBorder">
-
-                                    <div name="priceTag" class="text-center bold">Precio: $1.30</div>
-
-                                    <div class="text-center detailsText">Toca para ver más detalles</div>
-                            </button>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <button class="orderListElementStyle">
-                            </button>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <button class="orderListElementStyle">
-                            </button>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                </div>
-
-            </div>     -->
-
-                <!-- The Modal -->
-            <div id="orderDetailsModal" name="modalCustom" class="modalCustom hide">
-
-                <!-- Modal content -->
                 <div class="modal-contentCustom " name="modalContent">
                     <div class="modal-headerCustom ">
                         <span name="spnReceiptId">Orden B-37</span>
-                        <span class="close">&times;</span>
+                        <!-- <span class="close">&times;</span> -->
+                        <button class="closeButtonStyle">x</button>
                     </div>
 
                     <hr class="hrBlackBorder">
@@ -169,37 +123,52 @@
                             
                             <div name="divReceiptClientName">
                                 <span class="bold" name="spnReceiptClientNameTag">Cliente:</span>
-                                <span name="spnReceiptClientNameData">Robert Lu Zheng</span>
+                                <span name="spnReceiptClientNameData" >Robert Lu Zheng</span>
                                 <span name="inputClientID"></span>
                             </div>
                             <div name="divReceiptDateReceive">
                                 <span class="bold" name="spnReceiptDateReceiveTag">Día Recibido:</span>
-                                <span name="spnReceiptDateReceiveData">2020/05/29 9:59 AM</span>
+                                <span name="spnReceiptDateReceiveData" >2020/05/29 9:59 AM</span>
                             </div>    
                             <div class="smallSeparation text-center" name="divReceiptDateAssign">
                                 <span class="bold" name="spnReceiptDateAssignTag">Día Asignado:</span>
                                 <span name="spnReceiptDateAssignData">2020/05/31 1:00 PM</span> 
                             </div>
                             <div class="text-center bold" name="divDateDifference">Faltan 2 días y 4 horas</div>
-                            <!-- <div name="spnReceiptClientID">GUQ13</div> -->
-                            <div name="divOrderElements" class="smallSeparation">
 
+
+                            <div name="divOrderElements" class="smallSeparation">
                                 <div class="bold" name="divElementsTag">Elementos:</div>
 
+                                <span class="bold">
+                                    Planchado:
+                                </span>
                                 <div name="appendReceiptOrderElements">
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
                                     
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
                                 </div>
 
-                                <!-- <div element="shirt-iron">
-                                    <span class="bold">- &ensp; Camisa/Planchado $0.65 = </span>
-                                    <span class="floatRight">15</span>
+                                <span class="bold">
+                                    &ensp;&ensp;Lavado y planchado:
+                                </span>
+                                <div name="appendReceiptOrderElements">
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
+                                    
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
                                 </div>
-                                
-                                <div element="shirt-iron">
-                                    <span class="bold">- &ensp; Pantalón/Planchado $0.65 = </span>
-                                    <span class="floatRight">15</span>
-                                </div>  -->
-
                             </div>
 
                             <div name="divReceiptHookQuantity" class="smallSeparation smallSeparationOnXs">

@@ -3,7 +3,6 @@
 require_once "../includes/autoload.php";
 
 //constant // Can't use define since at SQL string won't know if it's a variable, just plain text
-$FIRST_STATUS = "status-wait";
 
 //Connection param
 $serverName = "localhost";
@@ -32,7 +31,8 @@ if(Classes\Cookies::readCookies()){
         $customerID = isset($dataObj->customerID) ? $dataObj->customerID: "";
         $customerName = isset($dataObj ->customerName) ? $dataObj->customerName: "";
 
-        $status = "status-wait";
+        //default order status
+        $status = "wait";
         //if(isset($dataObj->elementsO))
         if(!count(get_object_vars($dataObj->elementsOnOrder))){
             http_response_code(400); //set error
@@ -63,7 +63,7 @@ if(Classes\Cookies::readCookies()){
         
         $sql = "INSERT INTO orders (laundryInitials, customerID, customerName, idChar, idNumber, status,elementsDetails, hookQuantity, 
         dateReceive, dateAssign, totalPrice, indications)
-        VALUES ('$laundryInitials','$customerID','$customerName', '$newIDChar','$newIDNumber','$FIRST_STATUS',
+        VALUES ('$laundryInitials','$customerID','$customerName', '$newIDChar','$newIDNumber','$status',
         '$elementsDetails' ,'$hookQuantity', '$dateCreated', '$dateAssigned', '$totalPrice', '$indications')
         LIMIT 1";
 

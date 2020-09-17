@@ -4,6 +4,7 @@ require_once "../includes/autoload.php";
 
 
 if(Classes\Cookies::readCookies()){
+    
 
     //Connection param
     $serverName = "localhost";
@@ -11,13 +12,13 @@ if(Classes\Cookies::readCookies()){
     $passwordConn = "hola1234";
     $db = "tallao";
 
-    $endHour = "23:59:59";
 
-    if (isset($_GET['filterMode'], $_GET['params'], $_GET['startIndex'], $_GET['status'])){
+    if (isset($_GET['paramSelected'], $_GET['params'], $_GET['startIndex'], $_GET['status'])){
         $userType = Classes\Cookies::getUserTypeCookie();
         $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        
 
-        $filterMode = $_GET['filterMode'];
+        $paramSelected = $_GET['paramSelected'];
         $params = json_decode($_GET['params']);
         $startIndex = $_GET['startIndex'];
         $status = $_GET['status'];
@@ -27,7 +28,6 @@ if(Classes\Cookies::readCookies()){
         $hourParam = $params->hourInput;
         $orderParam = $params->orderInput;
 
-      
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         // Check connection
         if ($conn->connect_error) {
@@ -39,7 +39,7 @@ if(Classes\Cookies::readCookies()){
             //$sql = "SELECT id, name, lastname, email FROM users WHERE hashcode= '$inputUserHash'";
         }else if ($userType == "laundry"){
         
-            switch($filterMode){
+            switch($paramSelected){
                 case "dateAssign":
                     $endDateTime = "$dateParam->endDate  $hourParam->endHour";
                     if($status == "all"){
@@ -120,17 +120,16 @@ if(Classes\Cookies::readCookies()){
         //$data = mysqli_fetch_array($result);
         
         while ($row = mysqli_fetch_array($result)) {
-            # code...
             $data[] = $row;
-            print_r($row);
-            echo "<br>";
-            echo "<br>";
         }
         //http_reponse_code(200);
         echo json_encode($data);
         
         mysqli_close($conn);
 
+    }else{
+        http_response_code(400);
+        die("Bad Request");
     }
 
 }
@@ -154,31 +153,31 @@ function getDateFromRangeDateTime($str){
     $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie()); */
 
     //test with date-assign mode
-    /* $filterMode = "date-assign";
+    /* $paramSelected = "date-assign";
     $params = "2020-05-29 15:00:00";
     $startIndex = 0;
     $status = "status-wait"; */
     
     //test with date-receive mode
-    /* $filterMode = "date-receive";
+    /* $paramSelected = "date-receive";
     $params = "2020-05-24 15:00:00";
     $startIndex = 0;
     $status = "status-wait"; */
     
     //test with date-range mode
-    /* $filterMode = "date-range";
+    /* $paramSelected = "date-range";
     $params = "2020-05-24 15:00:00 / 2020-06-06 23:59:59";
     $startIndex = 2;
     $status = "status-wait"; */
     
     /* //test with order-id mode
-    $filterMode = "order-id";
+    $paramSelected = "order-id";
     $params = "B-47";
     $startIndex = 1;
     $status = "status-wait"; */
     
     //test with customer-id mode
-    /* $filterMode = "customer-id";
+    /* $paramSelected = "customer-id";
     $params = "GUQ13";
     $startIndex = 1;
     $status = "status-wait"; */
