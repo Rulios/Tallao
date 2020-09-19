@@ -59,11 +59,12 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
         );
     }
 
-    function RenderModal(order){
-        console.log(order);
+    function RenderModal({order, onClickClose, isShowing}){
         ReactDOM.render(
             React.createElement(OrderModalHandle,{
-                order: order
+                order: order,
+                onClickClose: () => onClickClose(),
+                isShowing: isShowing
             }),
             document.getElementById("OrderModalContainer")
         )
@@ -86,7 +87,8 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                 },
                 orders: {},
                 isFirstOrdersLoaded: false,
-                isModalPoppedOut: false
+                isModalPoppedOut: false,
+                orderInModal: ""
             }
         }
 
@@ -104,6 +106,7 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                     txtInput: this.state.inputsParams.txtInput
                 }
             }).then(data =>{
+                //console.log(data);
                 let orderObj = JSON.parse(data);
                 let newOrdersInState = {};
                 if(isAppendOrders){
@@ -132,11 +135,22 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             }).catch(err => console.error(err));
         }
 
-        onClickOrderBoxHandler(orderID){
+        onClickOrderBoxHandler(){
             //show modal
-            if(!this.state.isModalPoppedOut){
-                RenderModal(this.state.orders[orderID]);
-            }
+            //since setState is async, we need to unmount the 
+            //component the first click, not the second one
+            //this holds directly the change
+            let tempIsShowing = this.state.isModalPoppedOut;
+            RenderModal({
+                order: this.state.orders[this.state.orderInModal],
+                onClickClose: () => {
+                    tempIsShowing = false;
+                    this.setState({
+                        isModalPoppedOut: false
+                    });
+                },
+                isShowing: tempIsShowing
+            });
         }
 
       /*   shouldComponentUpdate(newProps, newState){
@@ -150,8 +164,14 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             }
             RenderOrderBoxes({
                 orders:this.state.orders, 
-                onClick: (orderID) =>this.onClickOrderBoxHandler(orderID)
+                onClick: (orderID) =>{
+                    this.setState({
+                        isModalPoppedOut: true,
+                        orderInModal: orderID
+                    });
+                }
             });
+            this.onClickOrderBoxHandler();
         }
 
         render(){

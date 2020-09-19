@@ -2,13 +2,11 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         OrderModalContainers: "./reactComponents/OrderModalContainers",
-        ajaxReqOrders: "./requestsModules/ajaxReqOrders",
     }
 });
-define(["react", "react-dom","OrderModalContainers", "ajaxReqOrders"], 
-function(React, ReactDOM,OrderModalContainers, ajaxReq){
+define(["react", "OrderModalContainers"], 
+function(React, OrderModalContainers){
 
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
@@ -18,16 +16,21 @@ function(React, ReactDOM,OrderModalContainers, ajaxReq){
             super(props);
         }
 
-        render(){
-            return React.createElement(OrderModalContainers, {
-                orderDetails: this.props.order
-            })
+        closeModal(){
+            this.props.onClickClose();
         }
 
+        render(){
+            if(this.props.isShowing && typeof this.props.order !== "undefined"){
+                return React.createElement(OrderModalContainers, {
+                    orderDetails: this.props.order,
+                    onClickClose: () => this.closeModal()
+                });
+            }else{
+                return null;
+            }
+        }
     }
-
-
-
     return OrderModal;
 });
 

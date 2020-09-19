@@ -29,14 +29,15 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
 
     };
 
-    function OrderBox({orderID, status, orderDetails, onClick}){
+    function OrderBox({orderID, status, orderDetails, onClickOrder}){
         let elementID  = `${orderID.idChar}${orderID.idNumber}`;
         return React.createElement("div", {
             className: "col-lg-4",
-            onClick: () => onClick(`${orderID.idChar}${orderID.idNumber}`)
+            
         },
             React.createElement("button", {
-                className: "orderListElementStyle"
+                className: "orderListElementStyle",
+                onClick: () => onClickOrder(`${orderID.idChar}${orderID.idNumber}`)
             },
                 [
                     React.createElement(OrderBoxComp.H3, {

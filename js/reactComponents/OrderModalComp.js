@@ -52,16 +52,17 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         }, text);
     };
 
-    const CloseMessageButton = ({onClick}) =>{
+    const CloseButton = ({onClick}) =>{
         return React.createElement("button",{
             className: "closeButtonStyle",
-            onClick: () => {onClick();}
+            onClick: () => onClick()
         }, "x");
     };
 
-    const ModalStateButton = ({text}) =>{
+    const ModalStateButton = ({text, onClick}) =>{
         return React.createElement("button", {
-            className: "col-lg-12 modalStateButton"
+            className: "col-lg-12 modalStateButton",
+            onClick: () => onClick()
         }, text);
     };
 
@@ -76,7 +77,7 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
         FieldValue:FieldValue,
         FieldRightValue:FieldRightValue,
         CenterBoldDiv:CenterBoldDiv,
-        CloseMessageButton:CloseMessageButton,
+        CloseButton:CloseButton,
         ModalStateButton:ModalStateButton,
         Legend4Div:Legend4Div,
     };

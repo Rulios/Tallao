@@ -493,9 +493,10 @@ input[type='checkbox']{
     font-size: 1em;
     right:0; 
     top:0; 
+    position:relative;
     margin-top: 0.5em; 
     margin-right: 0.5em; 
-    
+    float:right;
     border: solid 1px black;
     background-color: transparent;
     transition-duration: 0.3s;
@@ -710,6 +711,7 @@ input[type='checkbox']{
       text-decoration: none;
       border: solid 2px black;
       padding:1em;
+      margin-top: 2em;
   }
   .modalStateButton:hover{
       background-color: transparent;

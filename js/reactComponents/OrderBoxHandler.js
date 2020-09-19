@@ -42,7 +42,7 @@ function(React, ReactDOM,OrderBoxContainers){
                         hookQuantity: order.hookQuantity,
                         totalPrice: order.totalPrice
                     },
-                    onClick: (orderID) => this.returnDataOnClick(orderID)
+                    onClickOrder: (orderID) => this.returnDataOnClick(orderID)
                 })
             });
         }

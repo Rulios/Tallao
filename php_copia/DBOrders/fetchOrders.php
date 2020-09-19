@@ -67,8 +67,6 @@ if(Classes\Cookies::readCookies()){
                 break;
         
                 case "dateRange":
-                    $dateArr = [];
-                    $dateArr = getDateFromRangeDateTime($params);
                     $startDate = "$dateParam->startDate $hourParam->startHour";
                     $endDate = "$dateParam->endDate $hourParam->endHour";
 
@@ -134,7 +132,7 @@ if(Classes\Cookies::readCookies()){
 
 }
 
-function getDateFromSingleDateTime($str){
+/* function getDateFromSingleDateTime($str){
     //format "date hour"
     //returns the date
     $arr = [];
@@ -148,7 +146,7 @@ function getDateFromRangeDateTime($str){
     $arr = explode("/", $str);
     return $arr;
 }
-
+ */
  /*  $userType = Classes\Cookies::getUserTypeCookie();
     $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie()); */
 
