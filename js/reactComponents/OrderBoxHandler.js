@@ -21,7 +21,6 @@ function(React, ReactDOM,OrderBoxContainers){
             }
         }
 
-
         returnDataOnClick(orderID){
             this.props.onClick(orderID);
         }

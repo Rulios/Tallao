@@ -28,10 +28,16 @@ define(["ajaxReq"], function(ajaxReq){
         return await ajaxReq.doAJAX("POST", "./php/updateOrder.php", obj);
     }
 
+    async function advanceToNextStatus(jsonString){
+        //params: orderID (json)
+        return await ajaxReq.doAJAX("PUT", "./php_copia/DBOrders/advanceToNextStatus.php", jsonString);
+    }
+
     return {
         submitOrder: submitOrder,
         fetchOrders: fetchOrders,
-        updateOrder: updateOrder
+        updateOrder: updateOrder,
+        advanceToNextStatus:advanceToNextStatus
     };
 
 });

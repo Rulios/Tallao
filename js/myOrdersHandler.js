@@ -70,6 +70,15 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
         )
     }
 
+    function getDocHeight() {
+        var D = document;
+        return Math.max(
+            D.body.scrollHeight, D.documentElement.scrollHeight,
+            D.body.offsetHeight, D.documentElement.offsetHeight,
+            D.body.clientHeight, D.documentElement.clientHeight
+        );
+    }
+
     class SearchOrderByParams extends React.Component{
         constructor(props){
             super(props);
@@ -106,10 +115,10 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                     txtInput: this.state.inputsParams.txtInput
                 }
             }).then(data =>{
-                //console.log(data);
                 let orderObj = JSON.parse(data);
+                console.log(orderObj);
                 let newOrdersInState = {};
-                if(isAppendOrders){
+                if(Object.keys(this.state.orders).length > 0){
                     newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
                 }
                 orderObj.map(order =>{
@@ -157,6 +166,20 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             return (this.state.params !== newState.params);
         } */
 
+        componentDidMount(){
+            let that = this;
+            window.addEventListener("scroll", function(){
+            
+                if(document.documentElement.clientHeight + window.pageYOffset > getDocHeight() -100){
+                    let newSearchParams = JSON.parse(JSON.stringify(that.state.searchParams));
+                    newSearchParams["startIndex"] += 10;
+                    that.setState({
+                        searchParams: newSearchParams
+                    });
+                }
+            });
+        }
+
         componentDidUpdate(prevProps, prevState){
             if(this.state.searchParams !== prevState.searchParams || 
                 this.state.inputsParams !== prevState.inputsParams){
@@ -178,9 +201,14 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             //console.log(this.state.orders);
             return  React.createElement(OrderParamsSelectorHandler,{
                 getSearchParams: (params) =>{
+                    let newStartIndex = 0;
+                    if(params.searchParams.paramSelected === this.state.searchParams.paramSelected){
+                        newStartIndex = this.state.searchParams.startIndex;
+                    }
+                    console.log();
                     this.setState({
                         searchParams: Object.assign(params.searchParams, {
-                            startIndex:this.state.searchParams.startIndex
+                            startIndex: newStartIndex
                         }),
                         inputsParams: params.inputsParams
                     });

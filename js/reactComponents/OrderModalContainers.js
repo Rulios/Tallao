@@ -44,11 +44,17 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
             blouse: "Blusa",
             largeSuit: "Vestido",
             quilt: "Colcha"
+        },
+        nextStatus:{
+            wait: "Procesar la orden",
+            processing: "Terminar la orden",
+            ready: "Orden terminada"
         }
         
     }
 
-    function OrderModal({orderDetails, onClickClose}){
+    function OrderModal({orderDetails, onClickClose, onClickNextStatus}){
+        //console.log(orderDetails);
         let idComp = `${orderDetails.idChar}${orderDetails.idNumber}`;
         return React.createElement("div", {className:"modalCustom"},
             React.createElement("div", {className:"modal-contentCustom"},
@@ -163,15 +169,16 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
                                     orderID: {
                                         idChar: orderDetails.idChar,    
                                         idNumber:  orderDetails.idNumber
-                                    }
+                                    },
+                                    indications: orderDetails.indications
                                 })
                             )
                         ]
                     ),
                     React.createElement(OrderModalComp.ModalStateButton,{
                         key: `ModalStateButton4${idComp}`,
-                        text: "",
-                        onClick: () => console.log("DAWDW")
+                        text: `${textEs.nextStatus[orderDetails.status]}`,
+                        onClick: () => onClickNextStatus()
                     })
                 ]
             )
@@ -214,7 +221,7 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
     }
 
     //right side of the modal
-    function NotificationsAndChat({orderID}){
+    function NotificationsAndChat({orderID, indications}){
         let idComp = `${orderID.idChar}${orderID.idNumber}`;
         return React.createElement("form", null,
             React.createElement("fieldset",{
@@ -229,7 +236,7 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
                         key: `Indications4Order${idComp}`,
                         id: `Indications4Order${idComp}`,
                         fieldTxt: `${textEs.indications}:`,
-                        value: ""
+                        value: `${indications}`
                     })
                 ]
             )
