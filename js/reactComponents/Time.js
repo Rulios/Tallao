@@ -52,6 +52,43 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         );
     }
 
+    function calcTimeDifference(dateFuture, dateNow){
+        //returns a obj with the time difference in days, months and years
+        let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
+        let objDiff  = {
+        days: 0,
+        hours : 0,
+        minutes: 0,
+        timeStatus : "" //Two values, past or future.
+                        //To determine if a order date assign is on the past or on the future
+        };
+        console.log(dateFuture);
+        console.log(dateNow);
+        console.log(diffInMilliSeconds);
+        // calculate days
+        const days = Math.floor(diffInMilliSeconds / 86400);
+        diffInMilliSeconds -= days * 86400;
+       // console.log('calculated days', days);
+
+        // calculate hours
+        const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+        diffInMilliSeconds -= hours * 3600;
+       // console.log('calculated hours', hours);
+
+        // calculate minutes
+        const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+        diffInMilliSeconds -= minutes * 60;
+        //console.log('minutes', minutes);
+
+        objDiff.timeStatus = ((dateFuture - dateNow) < 0) ? "past": "future";
+
+        objDiff.days = days;
+        objDiff.hours = hours;
+        objDiff.minutes = minutes;
+
+        return objDiff;
+    }
+
     function convert12hTo24h(time12h){
         const [time, modifier] = time12h.split(' ');
         let [hours, minutes] = time.split(':');
@@ -63,6 +100,18 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         }
         return `${hours}:${minutes}`;
     }
+
+    const convert24hTo12h = (time24) => {
+        const [sHours, minutes] = time24.match(/([0-9]{1,2}):([0-9]{2})/).slice(1);
+        const period = +sHours < 12 ? 'AM' : 'PM';
+        const hours = +sHours % 12 || 12;
+        
+        return {
+            hours: hours,
+            minutes: minutes,
+            cycle: period
+        };
+      }
 
     async function getDateTimeFromServer(){
         //format from server: YYYY/MM/DD
@@ -94,8 +143,8 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
             year: parseInt(arr[0]),
             month: parseInt(arr[1]),
             day: parseInt(arr[2]),
-            monthString: months[parseInt(arr[2]) -1],
-        }
+            monthString: months[parseInt(arr[1]) -1],
+        };
     }
 
     class Timer extends React.Component{
@@ -107,39 +156,6 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
             }
         }
 
-        updateEveryMinute(){
-            let timer = setInterval(() =>{
-                this.setState(()=>{
-                    let returnObj = {};
-                    //increment
-                    if(this.state.minutes + 1 == 60){
-                        returnObj["minutes"] = 0;
-                        returnObj["hour12"] = this.state.hour12 + 1;
-                    }else{
-                        returnObj["minutes"] = this.state.minutes + 1;
-                        
-                    }
-
-                    //fetchs new date time from server
-                    if(returnObj["hour12"] == 12){
-                        clearInterval(timer);
-                        returnObj["ajaxLoaded"] = false;
-                        getDateTimeFromServer().then(obj =>{
-                            Object.assign(obj, {ajaxLoaded: true});
-                            this.updateEveryMinute();
-                            this.setState(obj);
-                        });
-                        return null;
-                    }
-                    this.returnTodayDateTime();
-                    return returnObj;
-                });
-            }, 60000);
-        }
-        
-        
-
-
         returnTodayDateTime(){
             return this.props.getTodayDateTime({
                 day: this.state.day,
@@ -150,10 +166,9 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
                 cycle: this.state.cycle
             });
         }
-        componentDidMount(){
-            //get time from server
+
+        processDateTime(){
             getDateTimeFromServer().then(obj =>{
-                this.updateEveryMinute();
                 Object.assign(obj, {ajaxLoaded: true});
                 Object.assign(obj, splitDate(obj.date));
                 this.setState(obj);
@@ -162,6 +177,13 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
                 this.returnTodayDateTime();
             });
         }
+        componentDidMount(){
+            //get time from server
+            this.processDateTime();
+            setInterval(() =>{
+                this.processDateTime();
+            }, 60000);
+        }    
 
         render(){
             if(this.state.ajaxLoaded){
@@ -183,8 +205,10 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         DateInput: DateInput,
         TimeInput: TimeInput,
         convert12hTo24h:convert12hTo24h,
+        convert24hTo12h:convert24hTo12h,
         getDateTimeFromServer:getDateTimeFromServer,
-        splitDate:splitDate
+        splitDate:splitDate,
+        calcTimeDifference:calcTimeDifference,
     };
 
 

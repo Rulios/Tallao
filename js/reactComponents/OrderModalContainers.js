@@ -29,7 +29,8 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
             all: "Todos los estados", 
             wait: "En espera",
             processing: "Procesando",
-            ready: "Listo"
+            ready: "Listo",
+            retired: "Retirado"
         },
         elementsStr: {
             custom : "Elemento personalizable",
@@ -48,10 +49,18 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
         nextStatus:{
             wait: "Procesar la orden",
             processing: "Terminar la orden",
-            ready: "Orden terminada"
+            ready: "Orden terminada",
+            retired: "Retirado"
         }
         
     }
+
+    const statusColors = {
+        wait: "#DB4438",
+        processing: "#DBA502",
+        ready: "#00A822",
+        retired: "#999DA3"
+    };
 
     function OrderModal({orderDetails, onClickClose, onClickNextStatus}){
         //console.log(orderDetails);
@@ -89,7 +98,7 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
                                     },
                                         React.createElement(OrderModalComp.CenterBoldDiv,{
                                             text: `${textEs.status}: ${textEs.strStatus[orderDetails.status]}`,
-                                            color :"",
+                                            color: statusColors[orderDetails.status],
                                         })
                                     ),
                                     React.createElement("div", {

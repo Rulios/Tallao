@@ -26,7 +26,7 @@ function(React, ReactDOM,Time,OrderParamsSelectorContainers){
                 ],
                 statusSelected:"all",
                 statusList: [
-                    "all", "wait", "processing", "ready"
+                    "all", "wait", "processing", "ready", "retired"
                 ],
                 txtInput: "",
                 dateInput: {

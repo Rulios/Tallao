@@ -14,22 +14,40 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
         wait: "En espera",
         processing: "Procesando",
         ready: "Listo para retirar",
+        retired: "Retirado",
         status: "Estado",
         customer: "Cliente",
         dateAssign: "Fecha Asignada",
         dateReceive: "Fecha Recibida",
         hookQuantity: "Cantidad de Ganchos",
         touchForDetails: "Toca para más detalles",
-        totalPrice: "Precio Total"
+        totalPrice: "Precio Total",
+        timeLeft: "Faltan",
+        days: "días",
+        hours: "horas",
+        minutes: "minutos",
+        delayed: "Atrasado",
+        ago: "hace",
+        by: "por"
     };
 
     //this contains 3 colors that define the text of status
     //should be in hex
     const statusColors = {
-
+        wait: "#DB4438",
+        processing: "#DBA502",
+        ready: "#00A822",
+        retired: "#999DA3"
     };
 
-    function OrderBox({orderID, status, orderDetails, onClickOrder}){
+    const dateDiffColors = {
+        early: "#00A822",
+        near: "#DBA502",
+        late: "#DB4438"
+    };
+
+    function OrderBox({orderID, status, orderDetails,dateTimeDifference, onClickOrder}){
+        console.log(dateTimeDifference);
         let elementID  = `${orderID.idChar}${orderID.idNumber}`;
         return React.createElement("div", {
             className: "col-lg-4",
@@ -47,7 +65,11 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
                     React.createElement(OrderBoxComp.CenterBoldDiv, {
                         key: `OrderStatusTag${elementID}`,
                         text: `${textEs.status}: ${textEs[status]}`,
-                        color :""
+                        color : statusColors[status]
+                    }),
+                    React.createElement(dateTimeDifferenceDiv,{
+                        key: `OrderDateTimeDiff${elementID}`,
+                        dateTimeDifference: dateTimeDifference
                     }),
                     React.createElement(OrderBoxComp.HrGrey, {key: `TitleHR${elementID}`}),
                     React.createElement("div", {
@@ -96,6 +118,35 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
                 ]
             )
         )
+    }
+
+    function dateTimeDifferenceDiv({dateTimeDifference}){
+        let color = "";
+        let daysStr = `${dateTimeDifference.days} ${textEs.days}`;
+        let hoursStr = `${dateTimeDifference.hours} ${textEs.hours}`;
+        let minutesStr = `${dateTimeDifference.minutes} ${textEs.minutes}`;
+        let displayStr = `${textEs.timeLeft} ${daysStr}, ${hoursStr}, ${minutesStr}`;
+    
+        switch(true){
+            case (dateTimeDifference.hours > 1):
+                color = dateDiffColors.early;
+            break;
+
+            case (dateTimeDifference.hours < 1 && dateTimeDifference.minutes > 0):
+                color = dateDiffColors.near;
+            break;
+
+            default:
+                color = dateDiffColors.late;
+            break;  
+        }
+        
+        return React.createElement("div", {
+            className: "bold",
+            style: {
+                color: color
+            }
+        },displayStr);
     }
     
     return{

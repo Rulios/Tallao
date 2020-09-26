@@ -27,7 +27,8 @@ define(["react","OrderParamsSelectorComp"], function(React, OrderParamsSelectorC
             all: "Todos los estados", 
             wait: "En espera",
             processing: "Procesando",
-            ready: "Listo"
+            ready: "Listo",
+            retired: "Retirado"
         }
     };
 

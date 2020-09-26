@@ -13,7 +13,7 @@ $db = "tallao";
 // wait, processing, ready
 
 define("STATUS_LIST", [
-    "wait", "processing", "ready"
+    "wait", "processing", "ready", "retired"
 ]);
 
 

@@ -3,11 +3,11 @@ require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
         OrderModalContainers: "./reactComponents/OrderModalContainers",
-        ajaxReqOrders: "./requestsModules/ajaxReqOrders"
+        ajaxReqOrders: "./requestsModules/ajaxReqOrders",
     }
 });
-define(["react", "OrderModalContainers", "ajaxReqOrders"], 
-function(React, OrderModalContainers,ajaxReqOrders){
+define(["react", "OrderModalContainers","ajaxReqOrders"], 
+function(React, OrderModalContainers,  ajaxReqOrders){
 
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
@@ -22,16 +22,21 @@ function(React, OrderModalContainers,ajaxReqOrders){
         }
 
         advanceToNextStatus(){
-            ajaxReqOrders.advanceToNextStatus(JSON.stringify({
-                idChar: this.props.order.idChar,
-                idNumber: this.props.order.idNumber
-            })).then(response =>{
-                console.log(response);
-            }).catch(err => console.error());
+            if(this.props.order.status !== "retired"){
+                ajaxReqOrders.advanceToNextStatus(JSON.stringify({
+                    idChar: this.props.order.idChar,
+                    idNumber: this.props.order.idNumber
+                })).then(response =>{
+                    this.props.onClickNextStatus();
+                }).catch(err => console.error());
+            }
         }
+
 
         render(){
             if(this.props.isShowing && typeof this.props.order !== "undefined"){
+                let {dateAssign, dateReceive} = this.props.order;
+                //console.log(Time.calcTimeDifference(new Date(dateAssign), new Date()));
                 return React.createElement(OrderModalContainers, {
                     orderDetails: this.props.order,
                     onClickClose: () => this.closeModal(),

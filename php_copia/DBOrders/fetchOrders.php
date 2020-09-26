@@ -13,14 +13,14 @@ if(Classes\Cookies::readCookies()){
     $db = "tallao";
 
 
-    if (isset($_GET['paramSelected'], $_GET['params'], $_GET['startIndex'], $_GET['status'])){
+    if (isset($_GET['paramSelected'], $_GET['params'], $_GET['elementsToFetch'], $_GET['status'])){
         $userType = Classes\Cookies::getUserTypeCookie();
         $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
         
 
         $paramSelected = $_GET['paramSelected'];
         $params = json_decode($_GET['params']);
-        $startIndex = $_GET['startIndex'];
+        $elementsToFetch = $_GET['elementsToFetch'];
         $status = $_GET['status'];
         //parameters
         
@@ -45,11 +45,11 @@ if(Classes\Cookies::readCookies()){
                     if($status == "all"){
                         $sql = "SELECT * FROM orders 
                             WHERE laundryInitials = '$initials' AND dateAssign BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                            ORDER BY dateAssign ASC LIMIT $elementsToFetch";
                     }else{
                         $sql = "SELECT * FROM orders 
                             WHERE laundryInitials = '$initials' AND status='$status' AND dateAssign BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                            ORDER BY dateAssign ASC LIMIT $elementsToFetch";
                     }
                     
                 break;    
@@ -58,11 +58,11 @@ if(Classes\Cookies::readCookies()){
                         if($status == "all"){
                             $sql = "SELECT * FROM orders 
                                 WHERE laundryInitials = '$initials' AND dateReceive BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
-                                ORDER BY dateReceive ASC LIMIT ".$startIndex.",10;";
+                                ORDER BY dateReceive ASC LIMIT $elementsToFetch";
                         }else{
                             $sql = "SELECT * FROM orders 
                                 WHERE laundryInitials = '$initials' AND status='$status' AND dateReceive BETWEEN '$dateParam->endDate 00:00' AND '$endDateTime'
-                                ORDER BY dateReceive ASC LIMIT ".$startIndex.",10;";
+                                ORDER BY dateReceive ASC LIMIT $elementsToFetch";
                         }
                 break;
         
@@ -76,7 +76,7 @@ if(Classes\Cookies::readCookies()){
                                 AND dateAssign 
                                 BETWEEN '$startDate'
                                 AND '$endDate' 
-                                ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                                ORDER BY dateAssign DESC LIMIT $elementsToFetch";
                     }else{
                         $sql = "SELECT * FROM orders 
                                 WHERE laundryInitials = '$initials' 
@@ -84,7 +84,7 @@ if(Classes\Cookies::readCookies()){
                                 AND dateAssign 
                                 BETWEEN '$startDate' 
                                 AND '$endDate' 
-                                ORDER BY dateAssign ASC LIMIT ".$startIndex.",10;";
+                                ORDER BY dateAssign DESC LIMIT $elementsToFetch";
                     }
                 break;
         
@@ -100,12 +100,15 @@ if(Classes\Cookies::readCookies()){
                 case "customerID":
                     $sql = "SELECT * FROM orders 
                             WHERE customerID='$params' 
-                            ORDER BY dateAssign ASC LIMIT ".$startIndex.",10";
+                            ORDER BY dateAssign ASC LIMIT $elementsToFetch";
                 break;    
             }    
         
         }
         
+        /* echo $sql;
+        echo "<br><br>"; */
+
         mysqli_select_db($conn, $db) or die("Connection Error");
         $result = mysqli_query($conn, $sql);
         
@@ -119,6 +122,9 @@ if(Classes\Cookies::readCookies()){
         
         while ($row = mysqli_fetch_array($result)) {
             $data[] = $row;
+       
+            /* echo $row["idChar"] . $row["idNumber"];
+            echo "<br><br>"; */
         }
         //http_reponse_code(200);
         echo json_encode($data);
@@ -153,31 +159,31 @@ function getDateFromRangeDateTime($str){
     //test with date-assign mode
     /* $paramSelected = "date-assign";
     $params = "2020-05-29 15:00:00";
-    $startIndex = 0;
+    $elementsToFetch = 0;
     $status = "status-wait"; */
     
     //test with date-receive mode
     /* $paramSelected = "date-receive";
     $params = "2020-05-24 15:00:00";
-    $startIndex = 0;
+    $elementsToFetch = 0;
     $status = "status-wait"; */
     
     //test with date-range mode
     /* $paramSelected = "date-range";
     $params = "2020-05-24 15:00:00 / 2020-06-06 23:59:59";
-    $startIndex = 2;
+    $elementsToFetch = 2;
     $status = "status-wait"; */
     
     /* //test with order-id mode
     $paramSelected = "order-id";
     $params = "B-47";
-    $startIndex = 1;
+    $elementsToFetch = 1;
     $status = "status-wait"; */
     
     //test with customer-id mode
     /* $paramSelected = "customer-id";
     $params = "GUQ13";
-    $startIndex = 1;
+    $elementsToFetch = 1;
     $status = "status-wait"; */
 
 ?>

@@ -12,6 +12,7 @@ require.config({
         OrderBoxHandler: "./reactComponents/OrderBoxHandler",
         OrderParamsSelectorHandler: "./reactComponents/OrderParamsSelectorHandler",
         OrderModalHandler: "./reactComponents/OrderModalHandler",
+        Time: "./reactComponents/Time",
         ajaxReqOrders: "./requestsModules/ajaxReqOrders",
     },
     shim: {
@@ -21,8 +22,9 @@ require.config({
     }
 });
 require(["jquery", "react", "react-dom","OrderBoxHandler","OrderParamsSelectorHandler",
-"OrderModalHandler","ajaxReqOrders","design", "bootstrap"], 
-function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderModalHandle, ajaxReq){ 
+"OrderModalHandler","Time","ajaxReqOrders","design", "bootstrap"], 
+function($,React, ReactDOM, OrderBoxHandler, 
+    OrderParamsSelectorHandler,OrderModalHandle,Time, ajaxReq){ 
 
     //this file acts like a bundle, since all the components here
     //needs to be connected to a only true source of data
@@ -41,30 +43,33 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             let query = await ajaxReq.fetchOrders({
                 paramSelected: data.paramSelected,
                 params: JSON.stringify(data.params),
-                startIndex: data.startIndex,
+                elementsToFetch: data.elementsToFetch,
+                //startIndex: data.startIndex,
                 status: data.status
             });
             return query;
         }catch(err){console.error(err);}
     }
 
-    function RenderOrderBoxes({orders, onClick}){
-        
+    function RenderOrderBoxes({orders, todayDateTime, onClick}){
+        //console.log(todayDateTime);
         ReactDOM.render(
             React.createElement(OrderBoxHandler, {
                 orders: orders,
+                todayDateTime: todayDateTime,
                 onClick: (orderID) => onClick(orderID)
             }),
             document.getElementById("AppendOrdersContainer")
         );
     }
 
-    function RenderModal({order, onClickClose, isShowing}){
+    function RenderModal({order, onClickClose,onClickNextStatus, isShowing}){
         ReactDOM.render(
             React.createElement(OrderModalHandle,{
                 order: order,
                 onClickClose: () => onClickClose(),
-                isShowing: isShowing
+                isShowing: isShowing,
+                onClickNextStatus: () => onClickNextStatus()
             }),
             document.getElementById("OrderModalContainer")
         )
@@ -80,13 +85,14 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
     }
 
     class SearchOrderByParams extends React.Component{
+
         constructor(props){
             super(props);
             this.state = {
                 searchParams: {
                     paramSelected: "",
                     statusSelected: "",
-                    startIndex: 0
+                    elementsToFetch: 10
                 },
                 inputsParams: {
                     dateInput: {},
@@ -97,17 +103,18 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                 orders: {},
                 isFirstOrdersLoaded: false,
                 isModalPoppedOut: false,
-                orderInModal: ""
+                orderInModal: "",
+                todayDateTime: {}
             }
         }
 
-        processOrders(isAppendOrders){
+        processOrders(){
            /*  console.log(this.state.searchParams);
             console.log(this.state.inputsParams); */
             getOrders({
                 paramSelected: this.state.searchParams.paramSelected,
                 status: this.state.searchParams.statusSelected,
-                startIndex: this.state.searchParams.startIndex,
+                elementsToFetch: this.state.searchParams.elementsToFetch,
                 params: {
                     dateInput: this.state.inputsParams.dateInput,
                     hourInput: this.state.inputsParams.hourInput,
@@ -116,11 +123,7 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                 }
             }).then(data =>{
                 let orderObj = JSON.parse(data);
-                console.log(orderObj);
-                let newOrdersInState = {};
-                if(Object.keys(this.state.orders).length > 0){
-                    newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
-                }
+                let newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
                 orderObj.map(order =>{
                     let orderID = `${order.idChar}${order.idNumber}`;
                     newOrdersInState[orderID] = {
@@ -158,35 +161,49 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
                         isModalPoppedOut: false
                     });
                 },
+                onClickNextStatus: () => this.processOrders(),
                 isShowing: tempIsShowing
             });
         }
 
-      /*   shouldComponentUpdate(newProps, newState){
-            return (this.state.params !== newState.params);
-        } */
+        getDateTime(){
+            Time.getDateTimeFromServer().then(obj =>{
+                this.setState({
+                    todayDateTime: obj
+                });
+            });
+        }
 
         componentDidMount(){
             let that = this;
             window.addEventListener("scroll", function(){
-            
-                if(document.documentElement.clientHeight + window.pageYOffset > getDocHeight() -100){
+                if(document.documentElement.clientHeight + window.pageYOffset >= getDocHeight() ){
                     let newSearchParams = JSON.parse(JSON.stringify(that.state.searchParams));
-                    newSearchParams["startIndex"] += 10;
+                    newSearchParams["elementsToFetch"] += 10;
                     that.setState({
                         searchParams: newSearchParams
                     });
                 }
             });
+
+            this.getDateTime();
+            setInterval(() =>{
+                this.getDateTime();
+            }, 60000);
+
+            setInterval(() =>{
+                this.processOrders();
+            }, 4000);
         }
 
         componentDidUpdate(prevProps, prevState){
             if(this.state.searchParams !== prevState.searchParams || 
                 this.state.inputsParams !== prevState.inputsParams){
-                this.processOrders(false);
+                this.processOrders();
             }
             RenderOrderBoxes({
                 orders:this.state.orders, 
+                todayDateTime: this.state.todayDateTime,
                 onClick: (orderID) =>{
                     this.setState({
                         isModalPoppedOut: true,
@@ -201,16 +218,19 @@ function($,React, ReactDOM, OrderBoxHandler, OrderParamsSelectorHandler,OrderMod
             //console.log(this.state.orders);
             return  React.createElement(OrderParamsSelectorHandler,{
                 getSearchParams: (params) =>{
-                    let newStartIndex = 0;
-                    if(params.searchParams.paramSelected === this.state.searchParams.paramSelected){
-                        newStartIndex = this.state.searchParams.startIndex;
+                    let newElementsToFetch = 10;
+                    let newOrders = {};
+                    Object.assign(params.searchParams, {elementsToFetch: this.state.searchParams.elementsToFetch});
+                    /* console.log(params.searchParams);
+                    console.log(params.searchParams === this.state.searchParams); */
+                    if(params.searchParams === this.state.searchParams){
+                        newOrders = this.state.orders;
                     }
-                    console.log();
+                    
                     this.setState({
-                        searchParams: Object.assign(params.searchParams, {
-                            startIndex: newStartIndex
-                        }),
-                        inputsParams: params.inputsParams
+                        searchParams: params.searchParams,
+                        inputsParams: params.inputsParams,
+                        orders: newOrders
                     });
                 },
             });
