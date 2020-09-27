@@ -28,6 +28,11 @@ define(["ajaxReq"], function(ajaxReq){
         return await ajaxReq.doAJAX("POST", "./php/updateOrder.php", obj);
     }
 
+    async function updateCustomerAffiliateOrder(jsonString){
+        //params: orderID, customerData
+        return await ajaxReq.doAJAX("PUT", "./php_copia/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
+    }
+
     async function advanceToNextStatus(jsonString){
         //params: orderID (json)
         return await ajaxReq.doAJAX("PUT", "./php_copia/DBOrders/advanceToNextStatus.php", jsonString);
@@ -37,7 +42,8 @@ define(["ajaxReq"], function(ajaxReq){
         submitOrder: submitOrder,
         fetchOrders: fetchOrders,
         updateOrder: updateOrder,
-        advanceToNextStatus:advanceToNextStatus
+        advanceToNextStatus:advanceToNextStatus,
+        updateCustomerAffiliateOrder:updateCustomerAffiliateOrder
     };
 
 });

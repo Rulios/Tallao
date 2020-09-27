@@ -143,8 +143,8 @@ function($,React, ReactDOM){
             renderClientIDHandler(){
                 let ClientIDHandler = require("clientIDHandler");
                 ReactDOM.render(
-                    React.createElement(ClientIDHandler.InputClientID, {
-                        mode: "onOrder",
+                    React.createElement(ClientIDHandler, {
+                        mode: "search",
                         getClientData : (data) =>{
                             this.setState({
                                 customer: data

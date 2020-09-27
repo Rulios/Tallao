@@ -6,8 +6,8 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-if (isset($_POST['inputClientID'])){
-    $inputUserID = $_POST['inputClientID'];
+if (isset($_GET['inputClientID'])){
+    $inputUserID = $_GET['inputClientID'];
 } 
 
 //$inputUserID ="GUQ13";
@@ -15,23 +15,25 @@ $conn = new mysqli($serverName, $userConn, $passwordConn);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    http_response_code(400);
+    die();
 }
 
-$sql = "SELECT name, lastname FROM users WHERE id='$inputUserID'";
+$sql = "SELECT name, surname FROM users WHERE id='$inputUserID'";
 
 mysqli_select_db($conn, $db) or die("Connection Error");
 $result = mysqli_query($conn, $sql);
 
 if(!$result ) {
-    die('Could not get data: ' . mysql_error());
- }  
-
+    http_response_code(400);
+    die();
+}  
 
 $data = [];
 
 $data = mysqli_fetch_array($result);
 
+http_response_code(200);
 echo json_encode($data);
 
 mysqli_close($conn);

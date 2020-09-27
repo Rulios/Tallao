@@ -27,8 +27,22 @@ function(React, OrderModalContainers,  ajaxReqOrders){
                     idChar: this.props.order.idChar,
                     idNumber: this.props.order.idNumber
                 })).then(response =>{
-                    this.props.onClickNextStatus();
+                    this.props.onUpdateOrders();
                 }).catch(err => console.error());
+            }
+        }
+
+        newCustomerNameHandler(customerData){
+            if(customerData.id && customerData.name){
+                ajaxReqOrders.updateCustomerAffiliateOrder(JSON.stringify({
+                    orderID: {
+                        idChar: this.props.order.idChar,
+                        idNumber: this.props.order.idNumber
+                    },
+                    customerID: customerData.id
+                })).then(response=>{
+                    this.props.onUpdateOrders();
+                }).catch(error => console.error(error))
             }
         }
 
@@ -40,7 +54,8 @@ function(React, OrderModalContainers,  ajaxReqOrders){
                 return React.createElement(OrderModalContainers, {
                     orderDetails: this.props.order,
                     onClickClose: () => this.closeModal(),
-                    onClickNextStatus: () => this.advanceToNextStatus()
+                    onClickNextStatus: () => this.advanceToNextStatus(),
+                    newCustomerName: (customerData) => this.newCustomerNameHandler(customerData)
                 });
             }else{
                 return null;

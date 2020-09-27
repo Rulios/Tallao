@@ -14,6 +14,12 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
     //or text related to the clientID. Also, the main caller will be 
     //able to request information about this.
 
+    const textEs = {
+        clientID: "ID del Cliente",
+        notExists: "No existe",
+        client: "Cliente"
+    };
+
     function clientSelector(props){
         return(
             React.createElement("div", {className: "row"},
@@ -21,13 +27,13 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                     className: "col-lg-6"
                 },
                     React.createElement("label", {
-                        className: "bold", htmlFor:"inputClientID"}
-                    , "ID del Cliente"),
+                        className: "bold small-rightMargin", htmlFor:"inputClientID"}
+                    , `${textEs.clientID}:`),
 
                     React.createElement("input", {
                         value: props.clientID,
                         type: "text",
-                        maxLength: "5",
+                        maxLength: "6",
                         id:"inputClientID",
                         onChange: (e)=>{props.onChangeID(e)},
                     })
@@ -39,10 +45,10 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                     React.createElement("span", {
                         className:"bold"
                     }
-                    , "Cliente:"),
+                    , `${textEs.client}:`),
                     React.createElement("span", {
-                        className: `${(props.clientName === "none") ? "redTxt": ""}`
-                    }, `${(props.clientName === "none") ? "No Existe" : props.clientName}`)
+                        className: `${(!props.clientName) ? "redTxt": ""}`
+                    }, `${(!props.clientName) ? textEs.notExists : props.clientName}`)
                 )
             )
         );  
@@ -71,15 +77,20 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                 ajaxReq.clientID({inputClientID: clientData.id}).then(data =>{
                     data = JSON.parse(data);
                     if(data === null){
-                        clientData.name = "none";
+                        clientData.name = null;
                     }else{
-                        clientData.name = `${data.name} ${data.lastname}`;
+                        clientData.name = `${data.name} ${data.surname}`;
                     }
                     that.returnData(clientData);
                     that.setState({
                         client: clientData
                     });
-                }).catch(err => console.error(err));
+                }).catch(err => {
+                    clientData.name = null;
+                    that.setState({
+                        client: clientData
+                    })
+                });
             });
         }
 
@@ -88,8 +99,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
         }
 
         render(){
-            if(this.props.mode === "onOrder"){
-                
+            if(this.props.mode === "search"){
                 return(
                     React.createElement(clientSelector,{
                         clientID: this.state.client.id,
@@ -102,9 +112,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             
     }
 
-    return{
-        InputClientID: InputClientID
-    }
+    return InputClientID;
 });
 
 //example of inputClientID

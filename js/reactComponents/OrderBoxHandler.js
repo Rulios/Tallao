@@ -13,6 +13,15 @@ function(React, ReactDOM,OrderBoxContainers, Time){
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
 
+    function convertDateToDate12h(date24h){
+        //gets the date with the 24h time format
+        //to convert into date with 12h time format
+
+        let [date, time] = date24h.split(" ");
+        let {hours, minutes, cycle} = Time.convert24hTo12h(time);
+        return `${date} ${hours}:${minutes} ${cycle}`;
+    }
+
     class OrderBoxes extends React.Component{
         constructor(props){
             super(props);
@@ -38,8 +47,8 @@ function(React, ReactDOM,OrderBoxContainers, Time){
                     },
                     orderDetails: {
                         customerName: order.customerName,
-                        dateAssign: order.dateAssign,
-                        dateReceive: order.dateReceive,
+                        dateAssign: convertDateToDate12h(order.dateAssign),
+                        dateReceive: convertDateToDate12h(order.dateReceive),
                         hookQuantity: order.hookQuantity,
                         totalPrice: order.totalPrice
                     },

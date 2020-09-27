@@ -63,13 +63,13 @@ function($,React, ReactDOM, OrderBoxHandler,
         );
     }
 
-    function RenderModal({order, onClickClose,onClickNextStatus, isShowing}){
+    function RenderModal({order, onClickClose,onUpdateOrders, isShowing}){
         ReactDOM.render(
             React.createElement(OrderModalHandle,{
                 order: order,
                 onClickClose: () => onClickClose(),
                 isShowing: isShowing,
-                onClickNextStatus: () => onClickNextStatus()
+                onUpdateOrders: () => onUpdateOrders()
             }),
             document.getElementById("OrderModalContainer")
         )
@@ -161,7 +161,7 @@ function($,React, ReactDOM, OrderBoxHandler,
                         isModalPoppedOut: false
                     });
                 },
-                onClickNextStatus: () => this.processOrders(),
+                onUpdateOrders: () => this.processOrders(),
                 isShowing: tempIsShowing
             });
         }

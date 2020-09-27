@@ -2,10 +2,14 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        OrderModalComp: "./reactComponents/OrderModalComp"
+        OrderModalComp: "./reactComponents/OrderModalComp",
+        ClientIDHandler: "./reactComponents/clientIDHandler"
     }
 });
-define(["react","OrderModalComp"], function(React, OrderModalComp){
+define(["react",
+    "OrderModalComp", 
+    "ClientIDHandler"], 
+    function(React, OrderModalComp, ClientIDHandler){
 
     /* This is a middle order component, responsible for translation
     and bundling of low order components */
@@ -25,6 +29,7 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
         dryClean: "Lavado en seco",
         notifsAndChat: "Notificaciones y Chat",
         indications: "Indicaciones",
+        affiliateCustomer: "Afiliar cliente",
         strStatus: {
             all: "Todos los estados", 
             wait: "En espera",
@@ -62,7 +67,7 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
         retired: "#999DA3"
     };
 
-    function OrderModal({orderDetails, onClickClose, onClickNextStatus}){
+    function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerName}){
         //console.log(orderDetails);
         let idComp = `${orderDetails.idChar}${orderDetails.idNumber}`;
         return React.createElement("div", {className:"modalCustom"},
@@ -104,14 +109,20 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
                                     React.createElement("div", {
                                         key: `OrderModalCustomerName4${idComp}`
                                     },
-                                        [
+                                        /* [
                                             React.createElement(OrderModalComp.FieldValue, {
                                             key: `ModalCustomerName4${idComp}`,
                                             id: `ModalCustomerName4${idComp}`,
                                             fieldTxt: `${textEs.customerName}:`,
                                             value: `${orderDetails.customerName}`
                                             }),
-                                        ]
+                                        ] */
+                                        React.createElement(OrderModalCustomerName, {
+                                            idComp: idComp, 
+                                            customerName: orderDetails.customerName,
+                                            newCustomerName: (customerData) => newCustomerName(customerData)
+                                        })
+                                        //OrderModalCustomerName({idComp: idComp, customerName: orderDetails.customerName})
                                     ),
 
                                     React.createElement("div", {
@@ -201,6 +212,44 @@ define(["react","OrderModalComp"], function(React, OrderModalComp){
             `${textEs.order} ${orderID.idChar} ${orderID.idNumber}`)
         );
            
+    }
+
+    function OrderModalCustomerName({idComp, customerName, newCustomerName}){
+        let [isToggleEdit, changeToggleEdit] = React.useState(false);
+        let toggleElement; //conditional UNIT rendering
+        if(customerName !== ""){
+            return  React.createElement(OrderModalComp.FieldValue, {
+                key: `ModalCustomerName4${idComp}`,
+                id: `ModalCustomerName4${idComp}`,
+                fieldTxt: `${textEs.customerName}:`,
+                value: `${customerName}`
+            });
+        }else{
+            if(isToggleEdit){
+                toggleElement = React.createElement(ClientIDHandler, {
+                    key: `ClientIDHandler4${idComp}`,
+                    mode: "search",
+                    getClientData :(data) => newCustomerName(data)
+                });
+            }
+        }
+
+        return React.createElement("div", null, 
+        [
+            React.createElement("span", {
+                key:`ClientName4${idComp}`, 
+                className:"bold small-rightMargin"
+            }, `${textEs.customerName}:`),
+            React.createElement("a", {
+                    key: `AToAddCustomerID4${idComp}`,
+                    style: {
+                        color: "#2E6880",
+                        cursor: "pointer"
+                    },
+                    onClick: () => changeToggleEdit(!isToggleEdit)
+            }, `${textEs.affiliateCustomer}`),
+            toggleElement
+        ]);
     }
 
     function OrderElements({elementsDetails}){

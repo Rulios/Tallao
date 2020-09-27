@@ -47,7 +47,7 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
     };
 
     function OrderBox({orderID, status, orderDetails,dateTimeDifference, onClickOrder}){
-        console.log(dateTimeDifference);
+        //console.log(dateTimeDifference);
         let elementID  = `${orderID.idChar}${orderID.idNumber}`;
         return React.createElement("div", {
             className: "col-lg-4",
@@ -69,7 +69,8 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
                     }),
                     React.createElement(dateTimeDifferenceDiv,{
                         key: `OrderDateTimeDiff${elementID}`,
-                        dateTimeDifference: dateTimeDifference
+                        dateTimeDifference: dateTimeDifference,
+                        orderStatus: status
                     }),
                     React.createElement(OrderBoxComp.HrGrey, {key: `TitleHR${elementID}`}),
                     React.createElement("div", {
@@ -84,16 +85,16 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
                                 value: orderDetails.customerName
                             }),
                             React.createElement(OrderBoxComp.FieldValue,{
-                                key: `OrderDateAssigned${elementID}`,
-                                id: `OrderDateAssigned${elementID}`,
-                                fieldTxt: `${textEs.dateAssign}:`,
-                                value: orderDetails.dateAssign
-                            }),
-                            React.createElement(OrderBoxComp.FieldValue,{
                                 key: `OrderDateWritten${elementID}`,
                                 id: `OrderDateWritten${elementID}`,
                                 fieldTxt: `${textEs.dateReceive}:`,
                                 value: orderDetails.dateReceive
+                            }),
+                            React.createElement(OrderBoxComp.FieldValue,{
+                                key: `OrderDateAssigned${elementID}`,
+                                id: `OrderDateAssigned${elementID}`,
+                                fieldTxt: `${textEs.dateAssign}:`,
+                                value: orderDetails.dateAssign
                             }),
                             React.createElement(OrderBoxComp.FieldValue,{
                                 key: `OrderHookQuantity${elementID}`,
@@ -120,19 +121,24 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
         )
     }
 
-    function dateTimeDifferenceDiv({dateTimeDifference}){
+    function dateTimeDifferenceDiv({dateTimeDifference, orderStatus}){
         let color = "";
         let daysStr = `${dateTimeDifference.days} ${textEs.days}`;
         let hoursStr = `${dateTimeDifference.hours} ${textEs.hours}`;
         let minutesStr = `${dateTimeDifference.minutes} ${textEs.minutes}`;
-        let displayStr = `${textEs.timeLeft} ${daysStr}, ${hoursStr}, ${minutesStr}`;
-    
+        let displayStr = "";
+        if(dateTimeDifference.timeStatus === "future"){
+            displayStr = `${textEs.timeLeft} ${daysStr}, ${hoursStr}, ${minutesStr}`;
+        }else{
+            displayStr= `${textEs.delayed} ${textEs.by} ${daysStr}, ${hoursStr}, ${minutesStr}`;
+        }
+
         switch(true){
-            case (dateTimeDifference.hours > 1):
+            case (dateTimeDifference.hours > 1 && dateTimeDifference.timeStatus === "future"):
                 color = dateDiffColors.early;
             break;
 
-            case (dateTimeDifference.hours < 1 && dateTimeDifference.minutes > 0):
+            case (dateTimeDifference.hours <= 1 && dateTimeDifference.minutes >= 0 && dateTimeDifference.timeStatus === "future"):
                 color = dateDiffColors.near;
             break;
 
@@ -140,13 +146,18 @@ define(["react","OrderBoxComp"], function(React, OrderBoxComp){
                 color = dateDiffColors.late;
             break;  
         }
+
         
-        return React.createElement("div", {
-            className: "bold",
-            style: {
-                color: color
-            }
-        },displayStr);
+        if(orderStatus === "ready" || orderStatus === "retired"){
+            return null;
+        }else{
+            return React.createElement("div", {
+                className: "bold",
+                style: {
+                    color: color
+                }
+            },displayStr);
+        }
     }
     
     return{

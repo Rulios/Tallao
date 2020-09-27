@@ -62,9 +62,9 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
         timeStatus : "" //Two values, past or future.
                         //To determine if a order date assign is on the past or on the future
         };
-        console.log(dateFuture);
+        /* console.log(dateFuture);
         console.log(dateNow);
-        console.log(diffInMilliSeconds);
+        console.log(diffInMilliSeconds); */
         // calculate days
         const days = Math.floor(diffInMilliSeconds / 86400);
         diffInMilliSeconds -= days * 86400;
@@ -111,7 +111,8 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
             minutes: minutes,
             cycle: period
         };
-      }
+    }
+
 
     async function getDateTimeFromServer(){
         //format from server: YYYY/MM/DD
