@@ -16,10 +16,10 @@ require.config({
         ajaxReqSuperUserConfigs: "./requestsModules/ajaxReqSuperUserConfigs",
         ajaxReqCustomMessages: "./requestsModules/ajaxReqCustomMessages",
         LaundryServiceSelector: "./reactComponents/LaundryServiceSelector",
-        clientIDHandler: "./reactComponents/clientIDHandler",
-        writeOrder: "./reactComponents/writeOrder",
-        CustomMessages: "./reactComponents/UseCustomMessagesHandler",
-        time: "./reactComponents/Time"
+        ClientIDHandler: "./reactComponents/clientIDHandler",
+        WriteOrder: "./reactComponents/WriteOrder",
+        UseCustomMessages: "./reactComponents/UseCustomMessagesHandler",
+        Time: "./reactComponents/Time"
     },
     shim: {
         bootstrap: {
@@ -28,8 +28,243 @@ require.config({
     }
 });
 
-require(["jquery", "react", "react-dom", "design", "bootstrap"], 
-function($,React, ReactDOM){
+require(["jquery", "react", "react-dom","WriteOrder", "design", "bootstrap"], 
+function($,React, ReactDOM, WriteOrder){
+
+    function MainApp(){
+        let [todayDateTime, setTodayDateTime] = React.useState(null);
+        let [inputDateTimeForOrder, setInputDateTimeForOrder] = React.useState({date: null, time: null});
+        let [inputClient, setClient] = React.useState({id: null, name: null});
+        let [serviceSelected, setServiceSelected] = React.useState("iron");
+        let [isServiceSelectorLoaded, setServiceSelectorLoaded] = React.useState(false);
+        let [WriteOrderDetails, setWriteOrderDetails] = React.useState({
+            configs: {
+                elementsPrice: null,
+                elementsOnSelectList: {[serviceSelected]: WriteOrder.elements},
+                hookPrice: null,
+                customOrdersIndexes: [], // stores the indexes of created custom elements
+                isFullHookChecked: true
+            },
+            order:{
+                activeElementsOnOrder: {},
+                hookQuantity: null,
+                sumElementsQuantities: 0,
+                totalPrice: 0
+            }
+        });
+        React.useEffect(() =>{
+            try{
+                renderDateTime(setTodayDateTime);
+                renderLaundryName();
+                renderUseCustomMessages();
+                renderClientIDHandler(setClient);
+                renderSubmitButton();
+                if(todayDateTime) renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder);
+                if(isServiceSelectorLoaded &&  WriteOrderDetails.configs.elementsPrice !== null){
+                    renderSelectableElementsOnOrder({
+                        elementsOnSelectList: WriteOrderDetails.configs.elementsOnSelectList, 
+                        serviceOffer: serviceSelected, 
+                        elementsPrice: WriteOrderDetails.configs.elementsPrice
+                    }, (elementID, service) => {
+                        setWriteOrderDetails(WriteOrder.onElementSelectFromList({id: elementID, service:service}, WriteOrderDetails));
+                    });
+
+                    renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails);
+                }
+            }catch(err){
+                console.error(err);
+            }
+        });
+
+
+        //AJAX loads (first time)
+        if(!isServiceSelectorLoaded){
+            require(["LaundryServiceSelector"], () =>{
+                setServiceSelectorLoaded(true);
+                //load the elements price and change the state
+                WriteOrder.fetchElementsPrice(WriteOrder.elements)
+                    .then(priceChart =>{
+                        let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
+                        //assign hookPrice from elementsPrice
+                        newWriteOrderDetails.configs.hookPrice = priceChart.hook;
+                        //delete prop of hookPrice from elementsPrice
+                        delete priceChart.hook;
+                        //assign clean obj with only services from elementsPrice
+                        newWriteOrderDetails.configs.elementsPrice = priceChart;
+                        setWriteOrderDetails(newWriteOrderDetails);
+                    });
+            });
+        }
+
+
+        //the priority for loading is as follows:
+        // LaundryServiceSelector, SelectableElementsOnOrder, ElementsOnOrder
+        return (isServiceSelectorLoaded) ? React.createElement(renderServiceSelector,{
+            setServiceSelected: (selected) => {
+                if(!WriteOrderDetails.configs.elementsOnSelectList.hasOwnProperty(selected)){
+                    let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
+                    newWriteOrderDetails.configs.elementsOnSelectList[selected] = WriteOrder.elements
+                    setWriteOrderDetails(newWriteOrderDetails);
+                }  
+                
+                setServiceSelected(selected)
+            }
+        }) : null;
+        
+    }
+
+    function renderServiceSelector({setServiceSelected}){
+        let ServiceSelector = require("LaundryServiceSelector");
+        return React.createElement(ServiceSelector, {
+            getServiceSelected : (selected) => setServiceSelected(selected)
+        });
+    }
+
+    function renderSelectableElementsOnOrder({elementsOnSelectList, serviceOffer, elementsPrice}, onClick){
+        ReactDOM.render(
+            React.createElement(WriteOrder.renderSelectableElementsOnOrder, {
+                elementsOnSelectList: elementsOnSelectList,
+                serviceOffer: serviceOffer,
+                elementsPrice: elementsPrice,
+                onClick: (elementID, service) => onClick(elementID, service)
+            }), document.getElementById("containerSelectableElements")
+        );
+    }
+
+    function renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails){
+        ReactDOM.render(
+            React.createElement(WriteOrder.renderElementsOnOrder, {
+                activeElementsOnOrder: WriteOrderDetails.order.activeElementsOnOrder,
+                onClickDelete: (elementID, service) => {
+                    setWriteOrderDetails(
+                        WriteOrder.deleteElementFromOnOrder({id:elementID, service:service}, WriteOrderDetails)
+                    );
+                },
+                onUpdateQuantity: (elementID, service, value) =>{
+                    setWriteOrderDetails(
+                        WriteOrder.updateElementQuantity({id:elementID, service:service, value: value}, WriteOrderDetails)
+                    );
+                },
+                onUpdateUnitPrice: (elementID, service, value) =>{
+                    setWriteOrderDetails(
+                        WriteOrder.updateElementUnitPrice({id:elementID, service:service, value: value}, WriteOrderDetails)
+                    );
+                },
+                onUpdateElementNameIfCustom: (elementID, service, value) =>{
+                    setWriteOrderDetails(
+                        WriteOrder.updateCustomElementName({id:elementID, service:service, value: value}, WriteOrderDetails)
+                    );
+                }
+            }), document.getElementById("activeElementsOnOrderContainer")
+        )
+    }
+
+    function renderSubmitButton(){
+        ReactDOM.render(
+            React.createElement("button",{
+                className:  "submitButtonOrder",
+                type: "submit",
+                onClick: (e) =>{}
+            }, "Completar orden"),
+            document.getElementById("containerSubmit")
+        );
+    }
+
+    function renderLaundryName(){
+        require(["ajaxReqUserCreds"],  (ajaxReq) =>{
+            ajaxReq.fetchAccountCreds().then(query =>{
+                let data = JSON.parse(query);
+                document.getElementById("showLaundryName").textContent = data.name;
+            }).catch( () =>{
+                document.getElementById("showLaundryName").textContent = "Error";
+            });
+        });
+    }
+
+    function renderUseCustomMessages(){
+        require(["UseCustomMessages"], (UseCustomMessages) =>{
+            ReactDOM.render(
+                React.createElement(UseCustomMessages, {
+                    targetID: "inputIndications"
+                }),
+                document.getElementById("containerCustomMessages")
+            );
+        });
+    }
+
+    function renderClientIDHandler(setClient){
+        require(["ClientIDHandler"], (ClientIDHandler) =>{
+            ReactDOM.render(
+                React.createElement(ClientIDHandler, {
+                    mode: "search",
+                    getClientData : (data) => setClient(data)
+                }),
+                document.getElementById("containerSelectedClient")
+            );
+        });
+    }
+
+    function renderDateTime(dateTimeHook){
+        require(["Time"], (Time) =>{
+            ReactDOM.render(
+                React.createElement(Time.Timer,{
+                    getTodayDateTime: (today) =>{
+                        //parse date
+                        //to prevent updating
+                        //update if single digit
+                        today.month = (today.month < 10) ? `0${today.month}`: today.month;
+                        today.day = (today.day < 10) ? `0${today.day}`: today.day;
+                        today.hour = (today.hour < 10) ? `0${today.hour}`: today.hour;
+                        today.minutes = (today.minutes < 10) ? `0${today.minutes}`: today.minutes;
+
+                        /* this.state.todayDate = 
+                        `${today.year}-${today.month}-${today.day} ${Timer.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`;
+                        
+                        this.renderDateTimeInputOrder(today); */
+                        dateTimeHook(`${today.year}-${today.month}-${today.day} ${Time.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`);
+                    }   
+                }),
+                document.getElementById("containerDateTime")
+            );
+        });
+    }
+
+    function renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder){
+        let [date, time] = todayDateTime.split(" ");
+        let [year, month, day] = date.split("-");
+
+        //since it has to wait for information
+        //this has to be render after knowing the data
+        //of time
+        //FORMAT for MIN: YYYY-MM-DD
+        let Time = require("Time");
+        ReactDOM.render(
+            [React.createElement("label", {
+                key: "label4Date",
+                htmlFor: "inputDate4Order",
+                className: "bold small-rightMargin"
+            }, "Fecha:"),
+            React.createElement(Time.DateInput, {
+                key: "inputDate4Order",
+                id: "inputDate4Order",
+                getDate: (date) => setInputDateTimeForOrder({date: date, time: inputDateTimeForOrder.time}), 
+                min: `${year}-${month}-${day}`,
+            }),
+
+            React.createElement("label", {
+                key:"label4Time",
+                htmlFor: "inputTime4Order", 
+                className: "bold small-rightMargin"
+            }, "Hora:"),
+            React.createElement(Time.TimeInput, {
+                id: "inputTime4Order",
+                key: "inputTime4Order",
+                getTime: (time) =>setInputDateTimeForOrder({date: inputDateTimeForOrder.date, time: time}),
+                //className: "disableInput"
+            })]
+            , document.getElementById("containerDateTimeInput")
+        );
+    }
 
     //1st session handling
     (function(){
@@ -40,9 +275,7 @@ function($,React, ReactDOM){
                 session.check();
 
                 ReactDOM.render(
-                    React.createElement(Main, {
-
-                    }),
+                    React.createElement(MainApp, {}),
                     document.getElementById("containerServiceSelector")
                 );
 
@@ -86,7 +319,7 @@ function($,React, ReactDOM){
                     modulesStates: {
                         formVerification: false,
                         serviceSelector : false,
-                        writeOrder: false,
+                        WriteOrder: false,
                         CustomMessages: false
                     },
                     allLoaded: false,
@@ -101,7 +334,8 @@ function($,React, ReactDOM){
                     customer:{
                         id:"",
                         name:""
-                    }
+                    },
+                    
                 }
             }
 
@@ -118,6 +352,17 @@ function($,React, ReactDOM){
                 this.setState({timeForOrder: time});
             }
 
+            resetToNewOrder(){
+                console.log("reset");
+                this.setState({
+                    order: {
+                        elementsOnOrder: {},
+                        hookQuantity: 0,
+                        totalPrice: 0
+                    }
+                });
+            }
+            
             renderLaundryName(){
                 require(["ajaxReqUserCreds"],  function(ajaxReq){
                     ajaxReq.fetchAccountCreds().then(query =>{
@@ -157,18 +402,18 @@ function($,React, ReactDOM){
 
             renderWriteOrder(){
                 if(this.state.serviceSelected !== ""){
-                    let WriteOrderPanel = require("writeOrder");
+                    
+                    let WriteOrderPanel = require("WriteOrder");
                     ReactDOM.render(
                         React.createElement(WriteOrderPanel, {
                             serviceOffer: this.state.serviceSelected,
+                            order: this.state.order,
                             idOnActiveOrderElement: "activeElementsOnOrderAppendable",
                             idToTotalPrice: "totalPriceSpanValue",
                             idSelectableElements: "containerSelectableElements" ,
-                            getOrderDetails: (details) =>{ 
-                                this.setState({
-                                    order: details
-                                })
-                            }
+                            getOrderDetails: (details) => {
+                                this.setState({order: details});
+                            },
                         }),
                         document.getElementById("activeElementsOnOrderAppendable")
                     );
@@ -234,6 +479,7 @@ function($,React, ReactDOM){
             }
 
             renderSubmitButton(){
+                let that = this;
                 ReactDOM.render(
                     React.createElement("button",{
                         className:  "submitButtonOrder",
@@ -251,26 +497,24 @@ function($,React, ReactDOM){
                                 totalPrice: totalPrice,
                                 dateTimeAssignedForOrder: `${dateForOrder} ${timeForOrder}:00`,
                                 dateTimeOrderCreated: todayDate,
-                                clientID: customer.id,
-                                clientName: customer.name
+                                customerID: customer.id,
+                                customerName: customer.name
                             });
 
-                            console.log(jsonString);
+                            //console.log(jsonString);
                             try{
                                 require(["ajaxReqOrders"], function(ajaxReq){
                                     let query = ajaxReq.submitOrder(jsonString);
                                     query.then(response =>{
-                                        console.log(response);
-                                        let WriteOrderPanel = require("writeOrder");
+                                        let WriteOrderPanel = require("WriteOrder");
                                         //reset the write order handler
-                                        console.log(WriteOrderPanel.prototype.resetState);
-                                        WriteOrderPanel.prototype.resetState();
+                                        //console.log(WriteOrderPanel.prototype.resetState);
+                                        
+                                        that.resetToNewOrder();
                                         animateSuccess();
 
                                     });
-                                    
                                 });
-                                
                             }catch(err){
                                 console.error(err);
                             }
@@ -292,13 +536,13 @@ function($,React, ReactDOM){
                 if(!isAllLoaded){
                     let that = this;
                     require(["formVerification", "LaundryServiceSelector", 
-                    "clientIDHandler","writeOrder", "CustomMessages", "time"],
+                    "clientIDHandler","WriteOrder", "CustomMessages", "time"],
                     function(){
                         that.setState({
                             modulesStates: {
                                 formVerification : true,
                                 serviceSelector: true,
-                                writeOrder: true,
+                                WriteOrder: true,
                                 CustomMessages: true
                             },
                             allLoaded: true

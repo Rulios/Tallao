@@ -10,10 +10,8 @@ $db = "tallao";
 
 
 if(Classes\Cookies::readCookies()){
-    if (isset($_GET['serviceSelected'])){
 
-        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
-        $serviceSelected = $_GET["serviceSelected"];
+    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
 
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         
@@ -29,7 +27,9 @@ if(Classes\Cookies::readCookies()){
         -washIron
         -dryClean   */
         
-        $sql = "SELECT " . $serviceSelected . ", hook FROM pricechart WHERE laundryInitials='$laundryInitials'";
+        $sql = "SELECT iron, wash, washIron, dryClean, hook FROM pricechart 
+                WHERE laundryInitials='$laundryInitials' 
+                LIMIT 1";
         
         mysqli_select_db($conn, $db) or die("Connection Error");
         $result = mysqli_query($conn, $sql);
@@ -41,21 +41,15 @@ if(Classes\Cookies::readCookies()){
         
         $data = [];
         $data = mysqli_fetch_array($result);
-        
-        if($data[$serviceSelected] == "{}"){
-            $data[$serviceSelected] = "null";
-        }
 
         http_response_code(200);
 
         echo json_encode($data);
         
         mysqli_close($conn);
-    }else{
-        http_response_code(400);
-        die("Error");
-    }
     
-    
+}else{
+    http_response_code(400);
+    die("Error");
 }
 ?>

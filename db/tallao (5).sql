@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-09-2020 a las 07:31:22
+-- Tiempo de generación: 13-10-2020 a las 04:41:18
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -69,7 +69,7 @@ CREATE TABLE `lastorderid` (
 
 INSERT INTO `lastorderid` (`laundryInitials`, `idChar`, `idNumber`) VALUES
 ('CAMINO', 'A', 0),
-('VICNT', 'A', 732);
+('VICNT', 'A', 760);
 
 -- --------------------------------------------------------
 
@@ -694,10 +694,38 @@ INSERT INTO `orders` (`laundryInitials`, `customerID`, `customerName`, `idChar`,
 ('VICNT', '', '', 'A', 726, 'processing', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-21 21:39:00', '2020-09-21 14:43:00', '2.6', ''),
 ('VICNT', '', '', 'A', 727, 'ready', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-21 21:39:00', '2020-09-21 19:48:00', '2.6', ''),
 ('VICNT', '', '', 'A', 728, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-22 22:31:00', '2020-09-22 23:29:00', '1.95', ' Sin pliegue, Camisa bien plancha'),
-('VICNT', '', '', 'A', 729, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-25 21:46:00', '2020-09-25 22:49:00', '3.25', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 729, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-25 21:46:00', '2020-09-25 22:49:00', '3.25', ' Sin pliegue'),
 ('VICNT', '', '', 'A', 730, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-25 21:46:00', '2020-09-25 22:49:00', '3.25', ' Sin pliegue'),
-('VICNT', '', '', 'A', 731, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-26 00:08:00', '2020-09-26 13:11:00', '1.3', ' Sin pliegue'),
-('VICNT', '', '', 'A', 732, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65},\"wash\":{\"quantity\":1,\"price\":1}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-26 00:24:00', '2020-09-26 00:38:00', '2.95', ' Sin pliegue');
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 731, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-26 00:08:00', '2020-09-26 13:11:00', '1.3', ' Sin pliegue'),
+('VICNT', 'XKN78', 'Robert Lu Zheng', 'A', 732, 'ready', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65},\"wash\":{\"quantity\":1,\"price\":1}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-26 00:24:00', '2020-09-26 00:38:00', '2.95', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 733, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-26 20:54:00', '2020-09-26 21:57:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 734, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-26 21:03:00', '2020-09-26 22:09:00', '1.95', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 735, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-26 21:07:00', '2020-09-26 23:16:00', '1.95', ''),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 736, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-27 00:01:00', '2020-09-27 13:06:00', '2.6', ' Sin pliegue'),
+('VICNT', '', '', 'A', 737, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-27 21:41:00', '2020-09-28 22:44:00', '2.6', ' Sin pliegue'),
+('VICNT', '', '', 'A', 738, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:00:00', '2020-09-27 23:03:00', '1.3', ''),
+('VICNT', '', '', 'A', 739, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 2, '2020-09-27 22:01:00', '2020-09-27 23:04:00', '1.95', ' Sin pliegue'),
+('VICNT', '', '', 'A', 740, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:04:00', '2020-09-27 23:08:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 741, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 2, '2020-09-27 22:07:00', '2020-09-27 23:09:00', '1.95', ' Sin pliegue'),
+('VICNT', '', '', 'A', 742, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:09:00', '2020-09-27 23:12:00', '1.3', ''),
+('VICNT', '', '', 'A', 743, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:10:00', '2020-09-27 23:13:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 744, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-27 22:11:00', '2020-09-27 23:15:00', '1.95', ' Sin pliegue Sin pliegue Sin pliegue Sin pliegue'),
+('VICNT', '', '', 'A', 745, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:18:00', '2020-09-27 23:21:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 746, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-27 22:19:00', '2020-09-27 23:22:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 747, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:52:00', '2020-09-28 22:56:00', '1.95', ' Sin pliegue Sin pliegue'),
+('VICNT', '', '', 'A', 748, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:54:00', '2020-09-28 22:57:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 749, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 0, '2020-09-28 21:54:00', '2020-09-28 13:54:00', '2.6', ' Sin pliegue'),
+('VICNT', '', '', 'A', 750, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:55:00', '2020-09-28 22:59:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 751, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:56:00', '2020-09-28 22:00:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 752, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:57:00', '2020-09-28 22:00:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 753, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:58:00', '2020-09-28 22:01:00', '0.65', ' Sin pliegue'),
+('VICNT', '', '', 'A', 754, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:58:00', '2020-09-28 22:02:00', '1.3', ''),
+('VICNT', '', '', 'A', 755, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 21:59:00', '2020-09-28 22:03:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 756, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 0, '2020-09-28 22:04:00', '2020-09-28 23:08:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 757, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 0, '2020-09-28 22:16:00', '2020-09-28 23:19:00', '2.6', ' Sin pliegue'),
+('VICNT', '', '', 'A', 758, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-28 22:26:00', '2020-10-01 23:30:00', '2.6', ''),
+('VICNT', '', '', 'A', 759, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-28 22:28:00', '2020-09-28 23:31:00', '2.6', ' Sin pliegue'),
+('VICNT', '', '', 'A', 760, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-28 22:29:00', '2020-09-28 23:33:00', '1.3', ' Sin pliegue');
 
 -- --------------------------------------------------------
 
@@ -711,7 +739,7 @@ CREATE TABLE `pricechart` (
   `washIron` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`washIron`)),
   `wash` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`wash`)),
   `dryClean` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`dryClean`)),
-  `hook` decimal(10,0) NOT NULL
+  `hook` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the price of each element of a laundry';
 
 --
@@ -719,8 +747,8 @@ CREATE TABLE `pricechart` (
 --
 
 INSERT INTO `pricechart` (`laundryInitials`, `iron`, `washIron`, `wash`, `dryClean`, `hook`) VALUES
-('CAMINO', '{}', '{}', '{}', '{}', '0'),
-('VICNT', '{\"shirt\":0.65,\"pants\":0.65,\"skirt\":0.65,\"coat\":1.3,\"sweater\":0.65,\"pleatedSkirt\":1.3,\"overall\":1.3,\"jumper\":1.5,\"blouse\":1,\"largeSuit\":1.5,\"quilt\":8}', '{}', '{}', '{}', '0');
+('CAMINO', '{}', '{}', '{}', '{}', '0.00'),
+('VICNT', '{\"shirt\":0.65,\"pants\":0.65,\"skirt\":0.65,\"coat\":1.3,\"sweater\":0.65,\"pleatedSkirt\":1.3,\"overall\":1.3,\"jumper\":1.5,\"blouse\":1,\"largeSuit\":1.5,\"quilt\":8}', '{}', '{}', '{}', '0.10');
 
 -- --------------------------------------------------------
 

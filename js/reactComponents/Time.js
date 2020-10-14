@@ -24,6 +24,7 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
                 type:"date",
                 min: props.min,
                 className: props.className,
+                value: props.value,
                 onChange: (e) => {
                     if(inputPrevent.isInputDate(e.target.value)){
                         props.getDate(e.target.value);
@@ -43,6 +44,7 @@ function(React, ReactDOM, ajaxReq, inputPrevent){
                 type:"time",
                 min: props.min,
                 className: props.className,
+                value: props.value,
                 onChange: (e) => {
                     if(inputPrevent.isInputTime(e.target.value)){
                         props.getTime(e.target.value);

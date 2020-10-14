@@ -15,7 +15,8 @@ define(["ajaxReq"], function(ajaxReq){
 
      */
     async function fetchElementsPrice(obj){
-        //params : serviceOffer
+        //fetchs all the prices from the service
+        //params : none
 
         return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchElementsPrice.php", obj);
     }         

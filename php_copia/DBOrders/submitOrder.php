@@ -31,6 +31,8 @@ if(Classes\Cookies::readCookies()){
         $customerID = isset($dataObj->customerID) ? $dataObj->customerID: "";
         $customerName = isset($dataObj ->customerName) ? $dataObj->customerName: "";
 
+        echo $dataObj->customerID;
+
         //default order status
         $status = "wait";
         //if(isset($dataObj->elementsO))
