@@ -3,13 +3,13 @@ require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
         OrderModalComp: "./reactComponents/OrderModalComp",
-        ClientIDHandler: "./reactComponents/clientIDHandler"
+        CustomerIDHandler: "./reactComponents/CustomerIDHandler"
     }
 });
 define(["react",
     "OrderModalComp", 
-    "ClientIDHandler"], 
-    function(React, OrderModalComp, ClientIDHandler){
+    "CustomerIDHandler"], 
+    function(React, OrderModalComp, CustomerIDHandler){
 
     /* This is a middle order component, responsible for translation
     and bundling of low order components */
@@ -226,10 +226,10 @@ define(["react",
             });
         }else{
             if(isToggleEdit){
-                toggleElement = React.createElement(ClientIDHandler, {
-                    key: `ClientIDHandler4${idComp}`,
+                toggleElement = React.createElement(CustomerIDHandler, {
+                    key: `CustomerIDHandler4${idComp}`,
                     mode: "search",
-                    getClientData :(data) => newCustomerName(data)
+                    getCustomerData :(data) => newCustomerName(data)
                 });
             }
         }

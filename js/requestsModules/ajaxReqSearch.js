@@ -8,14 +8,13 @@ define(["ajaxReq"], function(ajaxReq){
     //any needed minor data through the Web App
 
 
-    async function clientID(obj){
-        //params inputClientID (string)
-
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBSearch/searchClientID.php", obj);
+    async function customerByID(obj){
+        //params inputCustomerID (string)
+        return await ajaxReq.doAJAX("GET", "./php_copia/DBSearch/searchCustomerByID.php", obj);
     }
 
     return {
-        clientID: clientID
+        customerByID: customerByID
     };
 });
 

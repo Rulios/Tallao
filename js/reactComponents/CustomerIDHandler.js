@@ -15,27 +15,27 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
     //able to request information about this.
 
     const textEs = {
-        clientID: "ID del Cliente",
+        customerID: "ID del Cliente",
         notExists: "No existe",
-        client: "Cliente"
+        customer: "Cliente"
     };
 
-    function clientSelector(props){
+    function customerSelector({customerID, customerName, onChangeID}){
         return(
             React.createElement("div", {className: "row"},
                 React.createElement("div", {
                     className: "col-lg-6"
                 },
                     React.createElement("label", {
-                        className: "bold small-rightMargin", htmlFor:"inputClientID"}
-                    , `${textEs.clientID}:`),
+                        className: "bold small-rightMargin", htmlFor:"inputCustomerID"}
+                    , `${textEs.customerID}:`),
 
                     React.createElement("input", {
-                        value: props.clientID,
+                        value: customerID,
                         type: "text",
                         maxLength: "6",
-                        id:"inputClientID",
-                        onChange: (e)=>{props.onChangeID(e)},
+                        id:"inputCustomerID",
+                        onChange: (e)=>onChangeID(e.target.value),
                     })
                 ),
 
@@ -45,66 +45,72 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
                     React.createElement("span", {
                         className:"bold"
                     }
-                    , `${textEs.client}:`),
+                    , `${textEs.customer}:`),
                     React.createElement("span", {
-                        className: `${(!props.clientName) ? "redTxt": ""}`
-                    }, `${(!props.clientName) ? textEs.notExists : props.clientName}`)
+                        className: `${(!customerName) ? "redTxt": ""}`
+                    }, `${(!customerName) ? textEs.notExists : customerName}`)
                 )
             )
         );  
     }
 
-    class InputClientID extends React.Component{
+    class InputCustomerID extends React.Component{
         //props: mode (onOrder),
         //idInputClientID (id of container to render)
         constructor(props){
             super(props);
 
             this.state = {
-                client: {
-                    id: "",
-                    name: ""
-                }
+                id: "",
+                name: ""
             };
         }
 
-        searchClientByID(e){ //handler for attaching a client to a order
-            let clientData = JSON.parse(JSON.stringify(this.state.client));
+        searchCustomerByID(id){ //handler for attaching a client to a order
+            let customerData = JSON.parse(JSON.stringify(this.state));
+            
             let that = this; //bind the this to this scope, so it can use setState
-            clientData.id = e.target.value.toUpperCase();
-
+            customerData.id = id.toUpperCase();
             require(["../js/requestsModules/ajaxReqSearch"], function(ajaxReq){
-                ajaxReq.clientID({inputClientID: clientData.id}).then(data =>{
+                ajaxReq.customerByID({inputCustomerID: customerData.id}).then(data =>{
                     data = JSON.parse(data);
                     if(data === null){
-                        clientData.name = null;
+                        customerData.name = null;
                     }else{
-                        clientData.name = `${data.name} ${data.surname}`;
+                        customerData.name = `${data.name} ${data.surname}`;
                     }
-                    that.returnData(clientData);
-                    that.setState({
-                        client: clientData
-                    });
+                    //that.returnData(customerData);
+                    that.setState(customerData);
                 }).catch(err => {
-                    clientData.name = null;
-                    that.setState({
-                        client: clientData
-                    })
+                    customerData.name = null;
+                    that.setState(customerData);
                 });
             });
         }
 
-        returnData(clientData){ //return data when needed by the main component
-            this.props.getClientData(clientData);
+        returnData(customerData){ //return data when needed by the main component
+            this.props.getCustomerData(customerData);
+        }
+
+        shouldComponentUpdate(newProps, newState){
+            this.returnData(newState);
+            return true;
+        }
+
+        componentDidUpdate(prevProps, prevState){
+            //check if reset
+            if(!prevProps.reset && this.props.reset){
+                this.setState({id:"", name:""});
+            }
         }
 
         render(){
             if(this.props.mode === "search"){
                 return(
-                    React.createElement(clientSelector,{
-                        clientID: this.state.client.id,
-                        clientName: this.state.client.name,
-                        onChangeID: (e) =>{this.searchClientByID(e);}
+                    React.createElement(customerSelector,{
+                        customerID: this.state.id,
+                        customerName: this.state.name,
+                        onChangeID: (id) => this.searchCustomerByID(id)
                     })
                 );
             }
@@ -112,7 +118,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             
     }
 
-    return InputClientID;
+    return InputCustomerID;
 });
 
 //example of inputClientID

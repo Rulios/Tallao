@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2020 a las 04:41:18
+-- Tiempo de generación: 18-10-2020 a las 07:31:56
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.2.27
 
@@ -49,6 +49,7 @@ INSERT INTO `custommessages` (`laundryInitials`, `id`, `colorTag`, `tag`, `messa
 ('DADAI', '5f4dc214b98a53.05316358', 'white', 'Sin pliegue / 不折', 'Sin pliegue / 不折', 'blocked'),
 ('DADAI', '5f4dc214b99154.85907104', 'white', 'Sin pliegue / 不折', 'Sin pliegue / 不折', 'blocked'),
 ('VICAT', 'VICAT1', 'white', 'Sin pliegue / 不折', 'Sin pliegue', 'blocked'),
+('VICNT', '6p77y0c4wtn', '#7a3c8b', 'Planchar la basta', 'Planchar la basta del pantalón', ''),
 ('VICNT', 'VICNT2', '#5bc2bc', 'Sin pliegue', 'Sin pliegue', '');
 
 -- --------------------------------------------------------
@@ -69,7 +70,7 @@ CREATE TABLE `lastorderid` (
 
 INSERT INTO `lastorderid` (`laundryInitials`, `idChar`, `idNumber`) VALUES
 ('CAMINO', 'A', 0),
-('VICNT', 'A', 760);
+('VICNT', 'A', 787);
 
 -- --------------------------------------------------------
 
@@ -725,7 +726,31 @@ INSERT INTO `orders` (`laundryInitials`, `customerID`, `customerName`, `idChar`,
 ('VICNT', '', '', 'A', 757, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 0, '2020-09-28 22:16:00', '2020-09-28 23:19:00', '2.6', ' Sin pliegue'),
 ('VICNT', '', '', 'A', 758, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-09-28 22:26:00', '2020-10-01 23:30:00', '2.6', ''),
 ('VICNT', '', '', 'A', 759, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"sweater\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pleatedSkirt\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 3, '2020-09-28 22:28:00', '2020-09-28 23:31:00', '2.6', ' Sin pliegue'),
-('VICNT', '', '', 'A', 760, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-28 22:29:00', '2020-09-28 23:33:00', '1.3', ' Sin pliegue');
+('VICNT', '', '', 'A', 760, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-09-28 22:29:00', '2020-09-28 23:33:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 764, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 22:59:00', '2020-10-17 23:01:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 765, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:00:00', '2020-10-18 00:04:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 766, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:03:00', '2020-10-18 00:04:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 767, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:04:00', '2020-10-18 00:07:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 768, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:05:00', '2020-10-18 00:08:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 769, 'wait', '{\"custom1\":{\"iron\":{\"quantity\":1,\"price\":1,\"name\":{\"dispatchConfig\":null,\"_targetInst\":null,\"_dispatchListeners\":null,\"_dispatchInstances\":null,\"nativeEvent\":null,\"type\":null,\"target\":null,\"eventPhase\":null,\"bubbles\":null,\"cancelable\":null,\"defaultPrevented\":null,\"isTrusted\":null}}},\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-10-17 23:06:00', '2020-10-18 00:03:00', '2.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 770, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 3, '2020-10-17 23:16:00', '2020-10-18 00:19:00', '1.95', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 771, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:24:00', '2020-10-18 00:27:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 772, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:41:00', '2020-10-17 00:44:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 773, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:42:00', '2020-10-18 00:45:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 774, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:42:00', '0000-00-00 00:00:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 775, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:43:00', '2020-10-18 00:46:00', '1.3', ' Sin pliegue'),
+('VICNT', 'GUQ13', 'Robert Lu Zheng', 'A', 776, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:45:00', '2020-10-18 00:48:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 777, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:46:00', '2020-10-18 00:49:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 778, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-17 23:53:00', '2020-10-18 00:55:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 779, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 2, '2020-10-17 23:59:00', '2020-10-18 00:02:00', '1.95', ' Sin pliegue'),
+('VICNT', '', '', 'A', 780, 'wait', '{\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"coat\":{\"iron\":{\"quantity\":1,\"price\":1.3}}}', 2, '2020-10-18 00:01:00', '2020-10-18 01:03:00', '1.95', ' Sin pliegue'),
+('VICNT', '', '', 'A', 781, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-18 00:02:00', '2020-10-18 01:05:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 782, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-18 00:02:00', '2020-10-18 01:08:00', '1.3', ' Sin plieguedadadawdadw Sin pliegue'),
+('VICNT', '', '', 'A', 783, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-18 00:05:00', '2020-10-18 01:12:00', '1.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 784, 'wait', '{\"shirt\":{\"iron\":{\"quantity\":1,\"price\":0.65},\"wash\":{\"quantity\":1,\"price\":1}},\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65},\"wash\":{\"quantity\":1,\"price\":1}}}', 3, '2020-10-18 00:05:00', '2020-10-18 01:11:00', '3.4', ' Sin pliegue Sin pliegue Sin pliegue'),
+('VICNT', '', '', 'A', 785, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65}}}', 2, '2020-10-18 00:27:00', '2020-10-18 01:30:00', '1.3', 'Sin pliegue pantalón'),
+('VICNT', '', '', 'A', 786, 'wait', '{\"pants\":{\"iron\":{\"quantity\":1,\"price\":0.65}},\"skirt\":{\"iron\":{\"quantity\":1,\"price\":0.65},\"wash\":{\"quantity\":1,\"price\":1}},\"shirt\":{\"wash\":{\"quantity\":1,\"price\":1}}}', 4, '2020-10-18 00:28:00', '2020-10-19 01:31:00', '3.3', ' Sin pliegue'),
+('VICNT', '', '', 'A', 787, 'wait', '{\"shirt\":{\"wash\":{\"quantity\":1,\"price\":1},\"washIron\":{\"quantity\":1,\"price\":1}},\"coat\":{\"wash\":{\"quantity\":1,\"price\":1}},\"pants\":{\"washIron\":{\"quantity\":1,\"price\":1}}}', 4, '2020-10-18 00:29:00', '2020-10-18 01:33:00', '4', 'Planchar la basta del pantalón');
 
 -- --------------------------------------------------------
 
