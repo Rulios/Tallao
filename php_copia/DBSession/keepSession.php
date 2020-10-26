@@ -36,6 +36,13 @@
         $data = [];
         $data["status"] = (mysqli_num_rows($result) == 1) ? true : false;
 
+        if(mysqli_num_rows($result) != 1){
+            
+            header("Location: http://localhost/Tallao/login.html");
+        }else{
+            
+        }
+
     }else{
         $data = [];
         $data["status"] = false;

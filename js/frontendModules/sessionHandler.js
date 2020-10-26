@@ -12,11 +12,11 @@ define(["pageRedirection", "ajaxReq"], function(page, ajaxReq){
         let query =  ajaxReq.doAJAX("GET", "./php_copia/DBSession/keepSession.php")
         query.then(dataJSON =>{
             let data = JSON.parse(dataJSON);
-            
-            if(!data.status){
+
+            /* if(!data.status){
                 alert("Vuelve a Iniciar Sesión");
                 page.bounceToLogin();
-            }
+            } */
         })
         .catch(err => console.error(err)) ;
     }

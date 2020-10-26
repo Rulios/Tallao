@@ -114,39 +114,6 @@ function($, formVerification){
     
       return boolean;
     }
-    /* function checkLoginAJAX(userType){
-    
-      let inputEmail = $("#inputEmail").val();
-      let inputPassword = $("#inputPassword").val();
-    
-      //submit button reference is used to toggle the submit button
-      if(formVerification.invokeVerify("submit")){
-        
-        $.ajax({
-          type: "POST",
-          url: "./php/loginProcess.php",
-          data: {
-            inputEmail: inputEmail,
-            inputPassword: inputPassword,
-            userType: userType
-          },
-          dataType: "json",
-      
-          success: function (data) {
-            let status = convertStringToBoolean(data.status);
-            pageRedirection(status, userType);
-          },
-          error: function(jqXHR, status, error){
-      
-            console.log('Status: ' + status);
-            console.log('Error ' + error);
-            alert("Error " + status + error);
-      
-          }
-        });
-    
-      }
-    } */
 
     function checkLoginAJAX(userType){
         let inputEmail = $("#inputEmail").val();
@@ -166,7 +133,9 @@ function($, formVerification){
                 let query =  ajaxReqLogin.login(obj);
                 query.then(dataJSON =>{
                   const id = "inputPassword";
+                  console.log(dataJSON);
                   let data = JSON.parse(dataJSON);
+                 
                   if(convertStringToBoolean(data.status)){
                     page.loginRedirection(data.url);
                   }else{

@@ -2,14 +2,13 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         EditElementsPriceContainers: "./reactComponents/EditElementsPriceContainers",
         ajaxReqSuperUserConfigs: "./requestsModules/ajaxReqSuperUserConfigs",
     }
 });
 
-define(["react", "react-dom", "EditElementsPriceContainers", "ajaxReqSuperUserConfigs"],
-function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
+define(["react", "EditElementsPriceContainers", "ajaxReqSuperUserConfigs"],
+function(React, EditElementsPriceContainers, ajaxReq){
 
     async function getElementsPrice({serviceSelected}){
         try {
@@ -18,16 +17,10 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
         }catch(err){console.error(err);}
     }
 
-    function renderUpdateButton({status, onClick}){ 
-        ReactDOM.render(
-            React.createElement(EditElementsPriceContainers.UpdateElementsPriceButton,{
-                onClick: () =>{onClick();}
-            }),
-            document.getElementById("UpdateElementsPriceButtonContainer")
-        );
-    }
 
     class EditElementsPrice extends React.Component{
+
+        //To do the hook edit element price box
 
         constructor(props){
             super(props);
@@ -53,7 +46,7 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
 
         changePriceHandler(idElement,newPrice){
             let prevPrices = JSON.parse(JSON.stringify(this.state));
-            if(prevPrices.elements.hasOwnProperty(idElement)){
+            if(prevPrices.elements.hasOwnProperty(idElement)){ //search in elements
                 prevPrices.elements[idElement] = newPrice
                 this.setState(prevPrices);
             }else{//search in extras
@@ -101,11 +94,6 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
         }
 
         componentDidMount(){
-            //render update button
-            renderUpdateButton({
-                status: "", 
-                onClick: () => {this.updateElementsPrice();}
-            });
             //fetch data
             if(this.props.serviceSelected !== ""){
                 this.processElementsPrice();
@@ -118,16 +106,39 @@ function(React, ReactDOM, EditElementsPriceContainers, ajaxReq){
             }
         }
 
-
         render(){
-            return Object.keys(this.state.elements).map(element =>{  
-                return React.createElement(EditElementsPriceContainers.EditBox,{
-                    key: `EditElementsPrice4${element}`,
-                    idElement: element,
-                    price: this.state.elements[element],
-                    onChangePrice: (idElement, newPrice) =>{this.changePriceHandler(idElement, newPrice);}
+            let el2Render = [];
+            el2Render.push( //append hook edot price (design exception)
+                React.createElement(EditElementsPriceContainers.EditBox, {
+                    key: "EditElementsPrice4Hook",
+                    idElement: "hook",
+                    price: this.state.extras.hook,
+                    isHook: true,
+                    onChangePrice: (idElement, newPrice) => this.changePriceHandler(idElement, newPrice)
                 })
-            });
+            );      
+
+            //append the edit elements price
+            el2Render.push(
+                Object.keys(this.state.elements).map(element =>{  
+                    return React.createElement(EditElementsPriceContainers.EditBox,{
+                        key: `EditElementsPrice4${element}`,
+                        idElement: element,
+                        price: this.state.elements[element],
+                        onChangePrice: (idElement, newPrice) => this.changePriceHandler(idElement, newPrice)
+                    });
+                })
+            );
+
+            //append update elements price
+            el2Render.push(
+                React.createElement(EditElementsPriceContainers.UpdateElementsPriceButton,{
+                    key: "UpdateElementsPriceBtn",
+                    onClick: () =>this.updateElementsPrice()
+                })
+            );
+
+            return el2Render;
         }
 
     };

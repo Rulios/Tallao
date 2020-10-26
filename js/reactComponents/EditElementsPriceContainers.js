@@ -11,6 +11,7 @@ define(["react", "EditElementsPriceComp"], function(React, EditElementsPriceComp
     and bundling of low order components */
 
     const textEs = {
+        hook: "Gancho",
         shirt: "Camisa",
         pants: "Pantalon",
         skirt: "Falda",
@@ -27,14 +28,18 @@ define(["react", "EditElementsPriceComp"], function(React, EditElementsPriceComp
         pricePerUnit: "Precio por unidad($):"
     };
 
-    function EditElementPriceBox({idElement, price, onChangePrice}){ //price is a obj
+    //Hook is the only exception to this component
+    //When the element is a hook it shouldn´t have col-lg-4 nor floatLeft when rendering its svg
+
+    function EditElementPriceBox({idElement, price,isHook = false, onChangePrice}){ //price is a obj
+       
         return React.createElement("div", {
-            className: "col-lg-4 smallMarginBottom hoverShadow"
+            className: `${(!isHook)? "col-lg-4" : "col-lg-12"} smallMarginBottom hoverShadow`
         },
             [
                 React.createElement(EditElementsPriceComp.elementIMG, {
-                key: `elementIMG4${idElement}`,
-                element: idElement
+                    key: `elementIMG4${idElement}`,
+                    element: idElement,
             }),
                 React.createElement("div", {key:`elementDetails4${idElement}`,className: "text-center"},
                     [
@@ -60,9 +65,9 @@ define(["react", "EditElementsPriceComp"], function(React, EditElementsPriceComp
     }
     
     function UpdateElementsPriceButton ({onClick}){
-        return React.createElement(EditElementsPriceComp.submitButton, {
+        return React.createElement(EditElementsPriceComp.SubmitButton, {
             text: textEs.update,
-            onClick: () =>{onClick();}
+            onClick: () => onClick()
         });
     }
 

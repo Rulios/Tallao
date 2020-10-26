@@ -42,12 +42,12 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
 
     const elementIMG = ({element}) =>{
         return React.createElement("img", {
-            className: "assetStayStatic floatLeft",
+            className: `assetStayStatic floatLeft`,
             src: `./imgs/assets/${element}/${element}.svg`
         });
     };
 
-    const submitButton = ({text,onClick}) =>{
+    const SubmitButton = ({text,onClick}) =>{
         return React.createElement("button", {
             className: "submitButtonActualize",
             onClick: () =>{onClick();}
@@ -57,7 +57,7 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
     return{
         ElementTitle: ElementTitle,
         InputElementPrice: InputElementPrice,
-        submitButton: submitButton,
+        SubmitButton: SubmitButton,
         elementIMG: elementIMG
     };
 

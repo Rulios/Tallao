@@ -29,7 +29,7 @@ define(["react", "inputPrevent"], function(React, inputPrevent){
 
     const UpdateButton = ({text, onClick}) =>{
         return React.createElement("button", {
-            className: "submitButtonLogin",
+            className: "submitButtonActualize2",
             onClick: () => {onClick();}
         }, text);
     }

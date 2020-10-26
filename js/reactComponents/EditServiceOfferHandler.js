@@ -18,15 +18,6 @@ function(React, ReactDOM, ServiceOfferContainers, ajaxReq){
         }catch(err){console.error(err);}
     }
 
-    function renderUpdateButton({status, onClick}){ //just when Schedule is on edit mode
-        ReactDOM.render(
-            React.createElement(ServiceOfferContainers.UpdateServiceOfferButton,{
-                onClick: () =>{onClick();}
-            }),
-            document.getElementById("UpdateServiceOfferButtonContainer")
-        );
-    }
-
     class ServiceOffer extends React.Component{
         constructor(props){
             //props: mode
@@ -49,11 +40,6 @@ function(React, ReactDOM, ServiceOfferContainers, ajaxReq){
         }
 
         componentDidMount(){
-            //render update button
-            renderUpdateButton({
-                status: "", 
-                onClick: () => {this.updateServiceOffer();}
-            });
             //fetch data
             getServiceOffer().then(ServiceStr =>{
                 let serviceOffer = ServiceStr.split(",");
@@ -87,6 +73,14 @@ function(React, ReactDOM, ServiceOfferContainers, ajaxReq){
                     }
                 });
             });
+
+            el2Render.push(
+                React.createElement(ServiceOfferContainers.UpdateServiceOfferButton,{
+                    key: "UpdateServiceOfferBtn",
+                    onClick: () => this.updateServiceOffer()
+                })
+            );
+
             return el2Render;
         }
     }

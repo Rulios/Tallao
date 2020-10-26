@@ -13,8 +13,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="js/design.js"></script>
-    <script src="js/panelInt.js"></script>
+   <!--  <script src="js/design.js"></script>
+    <script src="js/panelInt.js"></script> -->
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -28,25 +28,20 @@
 
     <title id="pageTitle"></title>
 
-
     <body>
         
-        <nav class="navbar navbar-expand-lg navbar-light ">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container ">
                 <a class="navbar-brand text-center" href="index.html">
-    
                     <img  style="width: 60%;"  src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
-    
                 </a>
                 
-    
-                <a href="#" id="myOrders" class="bottomLineLinkAnimation">
+                <a href="#" id="myOrders" class="bottomLineLinkAnimation navBarText">
                     <i class="fa fa-th-list" aria-hidden="true"></i>
                     <b>Mis órdenes</b>
-                
                 </a>
     
-                <a href="myaccount.html"class="bottomLineLinkAnimation" id="myAccount">
+                <a href="myaccount.html"class="bottomLineLinkAnimation navBarText" id="myAccount">
                     <i class="fa fa-user-circle" aria-hidden="true"></i>
                     <b>Mi cuenta</b>
                 </a>
@@ -57,8 +52,8 @@
                 </a>
 
                 <div class="leftSeparation  centerOnXs">
-                    <b>Idioma:</b> 
-                    <select name="" id="">
+                    <label for="a" class="bold">Idioma:</label>
+                    <select name="" id="a">
                         <option value="es">Español</option>
                         <option value="en">English</option>
                         <option value="cn">中文</option>
@@ -67,27 +62,19 @@
                 
                 
             </div>    
-          </nav>
+        </nav>
 
 
           <div style="margin:5em;"></div>
 
           <div class="container">
-
-
             <div class="  karla_font showIDTxt">
-
                 <div class="row bottomBorder ">
-
                     <div id="showID" class="text-center col-lg-12">
-                        
-                    
-
+                        Tu ID es: 
                         <i class="fa fa-question-circle " data-toggle="tooltip" data-placement="left" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
                     </div>
-                    
                 </div>
-
           </div>
 
 

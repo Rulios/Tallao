@@ -19,21 +19,42 @@ function(React, ReactDOM, EditCustomMessagesContainers, ajaxReq){
     }
 
     function renderUpdateButton({status, onClick}){ 
-        ReactDOM.render(
+        return React.createElement("div", { 
+            className: "row small-mediumSeparation"
+        },
             React.createElement(EditCustomMessagesContainers.UpdateElementsPriceButton,{
-                onClick: () =>{onClick();}
-            }),
-            document.getElementById("UpdateCustomMessagesButtonContainer")
+                onClick: () => onClick()
+            })
         );
     }
 
     function renderNewMessageButton({onClick}) {
-        ReactDOM.render(
+        return React.createElement("div", {className: "row"},
             React.createElement(EditCustomMessagesContainers.AddNewMessageButton, {
-                onClick: () =>{onClick();}
-            }),
-            document.getElementById("AddNewMessageButtonContainer")
+                onClick: () => onClick()
+            })
         );
+    }
+
+    function renderCustomMessages({messages, deleteMessage, 
+        onChangeTag, onChangeColorTag, onChangeMessage}){
+
+            return React.createElement("div" ,{
+                className: "row small-mediumSeparation "
+            },
+                Object.keys(messages).map(messageID =>{
+                    return React.createElement(EditCustomMessagesContainers.EditBox, {
+                        key: `EditCustomMessage4${messageID}`,
+                        messageDetails: messages[messageID],
+                        inputHandlers: {
+                            deleteMessage: (id) =>deleteMessage(id),
+                            onChangeTag: (id, value) => onChangeTag(id,value),
+                            onChangeColorTag: (id, value) => onChangeColorTag(id,value),
+                            onChangeMessage: (id, value) => onChangeMessage(id,value)
+                        }
+                    });
+                })
+            );
     }
 
     class EditCustomMessages extends React.Component{
@@ -113,15 +134,6 @@ function(React, ReactDOM, EditCustomMessagesContainers, ajaxReq){
         }
 
         componentDidMount(){
-            //render add new message button
-            renderNewMessageButton({
-                onClick: () => {this.addNewMessage();}
-            })
-            //render update button
-            renderUpdateButton({
-                status: "", 
-                onClick: () => {this.updateCustomMessages();}
-            });
             //fetch data
             getCustomMessages().then(dataJSON =>{
                 
@@ -140,23 +152,37 @@ function(React, ReactDOM, EditCustomMessagesContainers, ajaxReq){
         }
 
         render(){
-          
+            let el2Render = [];
+
+            el2Render.push( //apend the add new custom message btn
+                React.createElement(renderNewMessageButton,{
+                    key: "AddNewCustomMessageBtn",
+                    onClick: () => this.addNewMessage()
+                })
+            );
+                //append the edit custom messages boxes
             if(Object.keys(this.state.messages).length){
-                return Object.keys(this.state.messages).map(messageID =>{
-                    return React.createElement(EditCustomMessagesContainers.EditBox, {
-                        key: `EditCustomMessage4${messageID}`,
-                        messageDetails: this.state.messages[messageID],
-                        inputHandlers: {
-                            deleteMessage: (id) =>{this.deleteMessage(id);},
-                            onChangeTag: (id, value) =>{this.changeTagHandler(id,value);},
-                            onChangeColorTag: (id, value) =>{this.changeColorTagHandler(id,value);},
-                            onChangeMessage: (id, value) =>{this.changeMessageHandler(id,value);}
-                        }
-                    });
-                });
-            }else{
-                return null;
+                el2Render.push(
+                    React.createElement(renderCustomMessages, {
+                        key: "EditCustomMessagesBoxes",
+                        messages: this.state.messages,
+                        deleteMessage: (id) => this.deleteMessage(id),
+                        onChangeTag: (id, value) => this.changeTagHandler(id,value),
+                        onChangeColorTag: (id, value) => this.changeColorTagHandler(id,value),
+                        onChangeMessage: (id, value) => this.changeMessageHandler(id,value)
+                    })
+                );
             }
+
+            el2Render.push( //append the update btn
+                React.createElement(renderUpdateButton, {
+                    key : "UpdateCustomMessagesBtn",
+                    status: "",
+                    onClick: () => this.updateCustomMessages()
+                })
+            ); 
+            
+            return el2Render;
         }
 
     };

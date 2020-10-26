@@ -49,12 +49,17 @@ function(React, AccountFields, ajaxReq){
         }
         componentDidMount(){
             fetchData().then(obj =>{
+                this.returnUserType(obj.userType);
                 this.setState(obj);
             });
         }
+
+        returnUserType(userType){
+            this.props.getUserType(userType);
+        }
+
         render(){
             if(this.state != undefined){
-                console.log(this.state);
                 switch(this.state.userType){
                     case "user":
                         return React.createElement(UserDisplay,{

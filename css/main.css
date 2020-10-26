@@ -314,6 +314,7 @@ footer{
     border:0px;
     background-color: #9CD7FF;
     transition: 0.4s;
+    margin: 0.5em;
 } 
 .submitButtonActualize:hover{
     background-color: #686FCC;
@@ -327,10 +328,26 @@ footer{
     border:0px;
     background-color: #FFB76C;
     transition: 0.4s;
+    margin: 0.5em;
 } 
 .submitButtonActualize1:hover{
     background-color: #FF825E;
 }
+
+.submitButtonActualize2{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #95CCBB;
+    transition: 0.4s;
+    margin: 0.5em;
+} 
+.submitButtonActualize2:hover{
+    background-color: #42997E;
+}
+
 .buttonAddCustomMessage{
     width: 100%;
     font-size: 16px;
@@ -351,6 +368,7 @@ footer{
     border:0px;
     background-color: #7EE838;
     transition: 0.4s;
+    margin: 0.5em;
 } 
 .submitButtonUpdateMessages:hover{
     background-color: #3DFFB1;

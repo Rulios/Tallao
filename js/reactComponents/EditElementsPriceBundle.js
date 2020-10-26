@@ -2,26 +2,43 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         EditElementsPriceHandler: "./reactComponents/EditElementsPriceHandler",
         LaundryServiceSelector: "./reactComponents/LaundryServiceSelector"
     }
 });
 
-define(["react", "react-dom", "EditElementsPriceHandler", "LaundryServiceSelector"],
-function(React, ReactDOM, EditElementsPriceHandler, LaundryServiceSelector){
+define(["react", "EditElementsPriceHandler", "LaundryServiceSelector"],
+function(React, EditElementsPriceHandler, LaundryServiceSelector){
 
     //THIS IS A BUNDLE COMPONENT
     //BUNDLE COMPONENTS: WHEN TWO HANDLER COMPONENTS ARE REQUIRED TO EXCHANGE DATA
 
-    function RenderEditElementsPrice({serviceSelected}){
-        //console.log(serviceSelected);
-        ReactDOM.render(
+
+    function renderServiceSelectorContainer({onChange}){
+        return React.createElement("div", {
+            className: "text-center supTxt-TitleTxt-Separation"
+        },
+            [
+                React.createElement("div", {
+                    key: "LaundryServiceSelectorTag",
+                    className: "karla_font"
+                },"Selecciona el servicio"),
+                React.createElement(LaundryServiceSelector, {
+                    key: "LaundryServiceSelector",
+                    getServiceSelected: (selected) => onChange(selected) 
+                })
+            ]
+        );
+    }
+
+    function renderEditElementsPrice({serviceSelected}){
+        return React.createElement("div", {
+            className: "row supTxt-TitleTxt-Separation  montserrat_font"
+        },
             React.createElement(EditElementsPriceHandler, {
                 serviceSelected: serviceSelected
-            }),
-            document.getElementById("EditElementsPriceContainer")
-        )
+            })
+        );
     }
 
     class RenderEditPriceChart extends React.Component{
@@ -33,22 +50,25 @@ function(React, ReactDOM, EditElementsPriceHandler, LaundryServiceSelector){
             };
         }
 
-        componentDidUpdate(){
-            if(this.state.serviceSelected !== ""){
-                RenderEditElementsPrice({
-                    serviceSelected: this.state.serviceSelected
-                });
-            }
-        }
-
-
         render(){
-            return React.createElement(LaundryServiceSelector, {
-                getServiceSelected: (selected) => {
-                    this.setState({serviceSelected: selected});
-                }
-            });
-            //return null;
+            let el2Render = [];
+
+            el2Render.push(
+                React.createElement(renderServiceSelectorContainer, {
+                    key:"LaundryServiceSelectorContainer",
+                    onChange: (service) => this.setState({serviceSelected: service})
+                })
+            );
+            if(this.state.serviceSelected !== ""){
+                el2Render.push(
+                    React.createElement(renderEditElementsPrice, {
+                        key: "EditElementsPriceContainer",
+                        serviceSelected: this.state.serviceSelected
+                    })
+                );
+            }
+
+            return el2Render;
         }
     }
 

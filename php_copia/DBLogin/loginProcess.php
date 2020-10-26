@@ -1,5 +1,7 @@
 <?php
 
+ob_start();
+
 require_once "../includes/autoload.php";
 
 //Connection param
@@ -17,65 +19,72 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
     $inputEmail = $_POST['inputEmail'];
     $inputPassword = $_POST['inputPassword'];
     $userType = $_POST["userType"];
-}
 
-/* $inputEmail = "wardinpro123@gmail.com";
-$inputPassword = "getrekt123";
-$userType = "superuser"; */
+    /* $inputEmail = "wardinpro123@gmail.com";
+    $inputPassword = "getrekt123";
+    $userType = "superuser"; */
 
-if($userType == "laundry"){
-    $tableName = "laundries";
-}else if($userType == "user"){
-    $tableName = "users";
-}
+    if($userType == "laundry"){
+        $tableName = "laundries";
+    }else if($userType == "user"){
+        $tableName = "users";
+    }
 
-$conn = new mysqli($serverName, $userConn, $passwordConn);
+    
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-//echo "Connected successfully";
+    $conn = new mysqli($serverName, $userConn, $passwordConn);
 
-mysqli_select_db($conn, $db) or die("Connection Error");
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-$sql = "SELECT hashcode, password FROM $tableName WHERE email='$inputEmail' LIMIT 1" ;
+    mysqli_select_db($conn, $db) or die("Connection Error");
 
-$result = mysqli_query($conn, $sql);
+    $sql = "SELECT hashcode, password FROM $tableName WHERE email='$inputEmail' LIMIT 1" ;
 
-$row = mysqli_fetch_array($result);
+    $result = mysqli_query($conn, $sql);
 
-if (mysqli_num_rows($result) == 1){
-   
-    $hashUserCode = $row["hashcode"];
-    $hashPassword = $row["password"];
+    $row = mysqli_fetch_array($result);
 
-    if (password_verify($inputPassword, $hashPassword)){
-        //true
-        $verification["status"] = "true";
-        $verification["url"] = Classes\URL::loginURL($userType);
-        Classes\Cookies::create("usertype", $userType);
-        Classes\Cookies::create("userhash", $hashUserCode);
+    if (mysqli_num_rows($result) == 1){
+    
+        $hashUserCode = $row["hashcode"];
+        $hashPassword = $row["password"];
+
+        if (password_verify($inputPassword, $hashPassword)){
+            //true
+            $verification["status"] = "true";
+            $verification["url"] = Classes\URL::loginURL($userType);
+            Classes\Cookies::create("usertype", $userType);
+            Classes\Cookies::create("userhash", $hashUserCode);
+            
+            // **PREVENTING SESSION HIJACKING**
+            // Prevents javascript XSS attacks aimed to steal the session ID
+            ini_set('session.cookie_httponly', 1);
+
+            // **PREVENTING SESSION FIXATION**
+            // Session ID cannot be passed through URLs
+            ini_set('session.use_only_cookies', 1);
+
+            // Uses a secure connection (HTTPS) if possible
+            ini_set('session.cookie_secure', 1);
+
+        } else {
+            $verification["status"] = "false";
+        }
         
-        // **PREVENTING SESSION HIJACKING**
-        // Prevents javascript XSS attacks aimed to steal the session ID
-        ini_set('session.cookie_httponly', 1);
-
-        // **PREVENTING SESSION FIXATION**
-        // Session ID cannot be passed through URLs
-        ini_set('session.use_only_cookies', 1);
-
-        // Uses a secure connection (HTTPS) if possible
-        ini_set('session.cookie_secure', 1);
-    } else {
+    }else{
+        //echo "Error en realizar la operación";
         $verification["status"] = "false";
     }
-    
-}else{
-    //echo "Error en realizar la operación";
-    $verification["status"] = "false";
+    echo json_encode($verification);
+
+
 }
-echo json_encode($verification);
+
+
+
 
 mysqli_close($conn);
 ?>

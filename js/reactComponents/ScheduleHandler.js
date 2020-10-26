@@ -30,15 +30,6 @@ function(React, ReactDOM,ScheduleBoxContainer, ajaxReq){
         }catch(err){console.error(err);}
     }
     
-    function renderUpdateButton({status, onClick}){ 
-        ReactDOM.render(
-            React.createElement(ScheduleBoxContainer.UpdateScheduleButton,{
-                onClick: () =>{onClick();}
-            }),
-            document.getElementById("UpdateScheduleButtonContainer")
-        );
-    }
-
     class Schedule extends React.Component{
         constructor(props){
             super(props);
@@ -77,11 +68,6 @@ function(React, ReactDOM,ScheduleBoxContainer, ajaxReq){
 
         componentDidMount(){
             if(this.props.mode === "edit"){ 
-                //render update button
-                renderUpdateButton({
-                    status: "", 
-                    onClick: () => {this.updateSchedule();}
-                });
                 //fetch data
                 getSchedule().then(ScheduleJSON =>{
                     let fetchedSchedule = JSON.parse(ScheduleJSON);
@@ -104,10 +90,19 @@ function(React, ReactDOM,ScheduleBoxContainer, ajaxReq){
                         onChangeSchedule: (day, value, cycle) =>{this.onChangeSchedule(day, value, cycle);}
                     });
                 });
+                
+                el2Render.push(//push the update schedule btn
+                    React.createElement(ScheduleBoxContainer.UpdateScheduleButton,{
+                        key: "UpdateScheduleBtn",
+                        status:"",
+                        onClick: () => this.updateSchedule()
+                    })
+                );
+
             }else if(this.props.mode === "use"){
 
             }
-      
+            
             return el2Render;
         }
     }
