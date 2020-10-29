@@ -9,9 +9,9 @@ $passwordConn = "hola1234";
 $db = "tallao";
 
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
-    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
 
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         

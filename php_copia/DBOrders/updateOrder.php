@@ -22,8 +22,8 @@ hookQuantity, dateReceive, dateAssign, totalPrice, indications
 */
 
 
-if(Classes\Cookies::readCookies()){
-    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+if(Classes\Sessions::readSession()){
+    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
     
     //since they're required values, they should be there always
     //then unsetting it to get the variables values

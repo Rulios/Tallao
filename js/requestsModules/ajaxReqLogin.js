@@ -9,10 +9,13 @@ define(["ajaxReq"], function(ajaxReq){
         return await ajaxReq.doAJAX("POST", "./php_copia/DBLogin/loginProcess.php", obj);
     }
 
+    async function logout(){
+        //no parameters
+        return await ajaxReq.doAJAX("DELETE", "./php_copia/DBLogin/logout.php");
+    }
+
     function urlExists(){
         
-        let url = "./php_copia/DBLogin/loginProcess.php";
-        console.log(url);
         $.ajax({
             url:"./php_copia/DBLogin/loginProcess.php",
             type:'HEAD',
@@ -30,6 +33,7 @@ define(["ajaxReq"], function(ajaxReq){
 
     return {
         login: login,
+        logout: logout,
         urlExists: urlExists
     };
 });

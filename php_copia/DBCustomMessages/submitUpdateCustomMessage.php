@@ -8,11 +8,11 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
 
     if(isset($_POST['messageObj'])){
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
     
         //associative array
         $messageAssArr = json_decode($_POST["messageObj"], true);

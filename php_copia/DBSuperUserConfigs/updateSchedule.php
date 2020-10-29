@@ -8,11 +8,11 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
   
     if(file_get_contents("php://input")){
         $schedule = file_get_contents("php://input");
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
 
         if(!strlen($schedule)){
             http_response_code(400); //set error

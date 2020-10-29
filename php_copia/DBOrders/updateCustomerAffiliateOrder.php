@@ -11,8 +11,8 @@ $db = "tallao";
 
 //Use to update customerID and customerName of the order
 
-if(Classes\Cookies::readCookies()){
-    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+if(Classes\Sessions::readSession()){
+    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
     
     $PUTdataJSON = file_get_contents("php://input");
     $dataOBJ = json_decode($PUTdataJSON);

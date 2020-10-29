@@ -4,14 +4,14 @@
 
     $hashUserCode = "adwdadwwvce";
 
-    $cookieUserType = new Classes\Cookies("usertype", $hashUserCode);
+    $cookieUserType = new Classes\Sessions("usertype", $hashUserCode);
     $cookieUserType->setOnCookies();
 
-    $cookieUserHash = new Classes\Cookies("userhash", $hashUserCode);
+    $cookieUserHash = new Classes\Sessions("userhash", $hashUserCode);
     $cookieUserHash->setOnCookies();
 
 
 
-    echo Classes\Cookies::hello();
+    echo Classes\Sessions::hello();
 
 ?>

@@ -19,7 +19,8 @@ require.config({
         CustomerIDHandler: "./reactComponents/CustomerIDHandler",
         WriteOrder: "./reactComponents/WriteOrder",
         UseCustomMessages: "./reactComponents/UseCustomMessagesHandler",
-        Time: "./reactComponents/Time"
+        Time: "./reactComponents/Time",
+        Navbar: "./reactComponents/NavbarHandler"
     },
     shim: {
         bootstrap: {
@@ -38,6 +39,9 @@ function($,React, ReactDOM, WriteOrder){
             
             require(["sessionHandler"], function(session){
                 session.check();
+
+                RenderNavbar();
+
                 ReactDOM.render(
                     React.createElement(MainApp, {}),
                     document.getElementById("containerServiceSelector")
@@ -45,6 +49,23 @@ function($,React, ReactDOM, WriteOrder){
             });         
         });
     })();
+
+    function RenderNavbar(){
+        require(["Navbar"], function(Navbar){
+            ReactDOM.render(
+                React.createElement(Navbar, {
+                    componentList: [
+                        "Logo", 
+                        "WriteOrders",
+                        "AffiliatedOrders",
+                        "MyAccount" ,
+                        "Logout",
+                        "LanguageSelect"
+                    ]
+                }), document.getElementById("NavbarContainer")
+            )
+        });
+    }
 
     function MainApp(){
         let [todayDateTime, setTodayDateTime] = React.useState(null);

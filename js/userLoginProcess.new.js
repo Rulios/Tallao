@@ -92,7 +92,7 @@ function($, formVerification){
     
           window.location.replace("./panel.html");
     
-        }else if (type == "superuser"){
+        }else if (type == "laundry"){
           window.location.replace("./masterpanel.html");
         }
     

@@ -1,4 +1,4 @@
-<?php //File that validates cookies if exists on DB
+<?php //File that validates sessions if exists on DB
       //If exists, it will keep session on frontend
 
     require_once "../includes/autoload.php";
@@ -9,11 +9,11 @@
     $passwordConn = "hola1234";
     $db = "tallao";
 
-    if(Classes\Cookies::readCookies()){
+    if(Classes\Sessions::readSession()){
 
         //data
-        $userHash = Classes\Cookies::getUserHashCookie();
-        $userType = Classes\Cookies::getUserTypeCookie();
+        $userHash = Classes\Sessions::getUserHashCookie();
+        $userType = Classes\Sessions::getUserTypeCookie();
 
         $tableName = $userType . "s";
 
@@ -35,14 +35,6 @@
 
         $data = [];
         $data["status"] = (mysqli_num_rows($result) == 1) ? true : false;
-
-        if(mysqli_num_rows($result) != 1){
-            
-            header("Location: http://localhost/Tallao/login.html");
-        }else{
-            
-        }
-
     }else{
         $data = [];
         $data["status"] = false;

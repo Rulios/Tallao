@@ -8,10 +8,10 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
-    $inputUserHash = Classes\Cookies::getUserHashCookie();
-    $userType = Classes\Cookies::getUserTypeCookie();
+    $inputUserHash = Classes\Sessions::getUserHashCookie();
+    $userType = Classes\Sessions::getUserTypeCookie();
 
     $conn = new mysqli($serverName, $userConn, $passwordConn);
     

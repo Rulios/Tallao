@@ -3,7 +3,7 @@
 require_once "../includes/autoload.php";
 
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
     
 
     //Connection param
@@ -14,8 +14,8 @@ if(Classes\Cookies::readCookies()){
 
 
     if (isset($_GET['paramSelected'], $_GET['params'], $_GET['elementsToFetch'], $_GET['status'])){
-        $userType = Classes\Cookies::getUserTypeCookie();
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $userType = Classes\Sessions::getUserTypeCookie();
+        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
         
 
         $paramSelected = $_GET['paramSelected'];
@@ -153,8 +153,8 @@ function getDateFromRangeDateTime($str){
     return $arr;
 }
  */
- /*  $userType = Classes\Cookies::getUserTypeCookie();
-    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie()); */
+ /*  $userType = Classes\Sessions::getUserTypeCookie();
+    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie()); */
 
     //test with date-assign mode
     /* $paramSelected = "date-assign";

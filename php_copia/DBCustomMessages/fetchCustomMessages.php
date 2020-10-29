@@ -10,9 +10,9 @@ $db = "tallao";
 
 //$initials = "VICNT";
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
-	$initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+	$initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
 	$conn = new mysqli($serverName, $userConn, $passwordConn);
 	
 	// Check connection

@@ -12,9 +12,9 @@ $db = "tallao";
 //since the data is stored as JSON, it doesn't need to
 //echo json_encode, just echo, and the frontend part will decode it
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
-    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
 
     $conn = new mysqli($serverName, $userConn, $passwordConn);
 

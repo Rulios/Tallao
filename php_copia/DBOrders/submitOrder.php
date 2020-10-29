@@ -15,7 +15,7 @@ $db = "tallao";
 //set the constant of the limit
 const limit = 1000;
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     /* $jsonTest = '{"indications":" Sin pliegue","elementsOnOrder":{"shirt":{"iron":{"quantity":4,"price":0.65}},
     "pants":{"iron":{"quantity":4,"price":0.65}}},"hookQuantity":2,"totalPrice":1.3,"dateTimeAssignedForOrder":"2020-08-15 22:39:00",
@@ -27,7 +27,7 @@ if(Classes\Cookies::readCookies()){
         $dataObj = json_decode($dataStream);
         //$dateTimeOrderCreated = $dataObj->elementsOnOrder;
 
-        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
         $customerID = isset($dataObj->customerID) ? $dataObj->customerID: "";
         $customerName = isset($dataObj ->customerName) ? $dataObj->customerName: "";
 

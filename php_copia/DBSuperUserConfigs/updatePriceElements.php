@@ -8,11 +8,11 @@ $userConn = "root";
 $passwordConn = "hola1234";
 $db = "tallao";
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     if(isset($_POST['serviceOffer'],$_POST['elementsPrice'], $_POST["hookPrice"])){
 
-        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
         $serviceSelected = $_POST['serviceOffer'];
         $elementsPriceJSON = $_POST['elementsPrice'];
         $hookPrice = $_POST["hookPrice"];

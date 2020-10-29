@@ -14,10 +14,10 @@ $inputServiceOffer = "";
 
 //$idMessage = "VICNT1"; 
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     if(isset($_POST['idMessage'])){
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
         $idMessage = $_POST['idMessage'];
     }
     

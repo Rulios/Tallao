@@ -20,17 +20,13 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
     $inputPassword = $_POST['inputPassword'];
     $userType = $_POST["userType"];
 
-    /* $inputEmail = "wardinpro123@gmail.com";
-    $inputPassword = "getrekt123";
-    $userType = "superuser"; */
-
     if($userType == "laundry"){
         $tableName = "laundries";
     }else if($userType == "user"){
         $tableName = "users";
     }
 
-    
+
 
     $conn = new mysqli($serverName, $userConn, $passwordConn);
 
@@ -46,7 +42,6 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
     $result = mysqli_query($conn, $sql);
 
     $row = mysqli_fetch_array($result);
-
     if (mysqli_num_rows($result) == 1){
     
         $hashUserCode = $row["hashcode"];
@@ -56,35 +51,19 @@ if(isset($_POST["inputEmail"], $_POST["inputPassword"], $_POST["userType"])){
             //true
             $verification["status"] = "true";
             $verification["url"] = Classes\URL::loginURL($userType);
-            Classes\Cookies::create("usertype", $userType);
-            Classes\Cookies::create("userhash", $hashUserCode);
+            Classes\Sessions::create("usertype", $userType);
+            Classes\Sessions::create("userhash", $hashUserCode);
             
-            // **PREVENTING SESSION HIJACKING**
-            // Prevents javascript XSS attacks aimed to steal the session ID
-            ini_set('session.cookie_httponly', 1);
-
-            // **PREVENTING SESSION FIXATION**
-            // Session ID cannot be passed through URLs
-            ini_set('session.use_only_cookies', 1);
-
-            // Uses a secure connection (HTTPS) if possible
-            ini_set('session.cookie_secure', 1);
-
         } else {
             $verification["status"] = "false";
         }
-        
     }else{
         //echo "Error en realizar la operación";
         $verification["status"] = "false";
     }
+    
     echo json_encode($verification);
-
+    mysqli_close($conn);
 
 }
-
-
-
-
-mysqli_close($conn);
 ?>

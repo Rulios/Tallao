@@ -13,11 +13,11 @@ $inputUserHash = "";
 $inputPassword = "";
 
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     if(isset($_POST['inputPassword'])){
-        $inputUserHash = Classes\Cookies::getUserHashCookie();
-        $userType = Classes\Cookies::getUserTypeCookie();
+        $inputUserHash = Classes\Sessions::getUserHashCookie();
+        $userType = Classes\Sessions::getUserTypeCookie();
         $inputPassword = $_POST['inputPassword'];
     }
     

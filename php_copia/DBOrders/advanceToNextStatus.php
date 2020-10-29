@@ -17,7 +17,7 @@ define("STATUS_LIST", [
 ]);
 
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     $orderIDJSONPUT = file_get_contents("php://input");
  
@@ -25,7 +25,7 @@ if(Classes\Cookies::readCookies()){
     if(isset($orderIDJSONPUT)){
 
         try{
-            $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Cookies::getUserHashCookie());
+            $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHashCookie());
             $orderID = json_decode($orderIDJSONPUT, false);
 
             $conn = new mysqli($serverName, $userConn, $passwordConn);

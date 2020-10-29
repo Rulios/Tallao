@@ -13,10 +13,10 @@ $db = "tallao";
 //every value should compare will a list
 // --pending to do---
 
-if(Classes\Cookies::readCookies()){
+if(Classes\Sessions::readSession()){
 
     if(isset($_POST["serviceOffer"])){
-        $inputUserHash = Classes\Cookies::getUserHashCookie();
+        $inputUserHash = Classes\Sessions::getUserHashCookie();
         $inputServiceOffer = $_POST['serviceOffer'];
 
         $conn = new mysqli($serverName, $userConn, $passwordConn);

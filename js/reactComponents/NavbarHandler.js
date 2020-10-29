@@ -2,10 +2,13 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        "NavbarComp": "./NavbarComp"
+        "NavbarComp": "./reactComponents/NavbarComp",
+        ajaxReqLogin: "../js/requestsModules/ajaxReqLogin",
+        pageRedirection: "../js/frontendModules/pageRedirection"
     }
 });
-define(["react", "NavbarComp"], function(React, NavbarComp){
+define(["react", "NavbarComp", "pageRedirection", "ajaxReqLogin"], 
+function(React, NavbarComp,pageRedirection, ajaxReqLogin){
 
     function Navbar({componentList}){
         //componentList = arr (index order should be same as render order)
@@ -15,7 +18,9 @@ define(["react", "NavbarComp"], function(React, NavbarComp){
 
         let clickHandler = function(componentID){
             if(componentID === "CloseSession"){
-
+                ajaxReqLogin.logout().then(() =>{ //get back to login
+                    pageRedirection.bounceToLogin();
+                })
             }
         };
 
@@ -31,6 +36,7 @@ define(["react", "NavbarComp"], function(React, NavbarComp){
                 React.createElement("div", {className: "container"},
                     componentList.map(component =>{
                         return React.createElement(NavbarComp[component],{
+                            key: `${component}-Navbar`,
                             languages: languages,
                             onClick: (componentID) => clickHandler(componentID),
                             onSelect: (componentID, value) => selectHandler(componentID, value),
@@ -39,9 +45,7 @@ define(["react", "NavbarComp"], function(React, NavbarComp){
                     })
                 )
             )
-
-        )
-
+        );
     }
 
     return Navbar;

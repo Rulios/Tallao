@@ -83,7 +83,7 @@ define(["react"], function(React){
         );
     }
 
-    function CloseSession({onClick}){
+    function Logout({onClick}){
         return (
             React.createElement(NavbarTagFormat,{
                 id: "CloseSession",
@@ -104,7 +104,7 @@ define(["react"], function(React){
                 [   
                     React.createElement("label", {
                         key: "LanguageSelectTag",
-                        className: "bold",
+                        className: "bold small-rightMargin",
                         htmlFor: "LanguageSelectSelect"
                     }, `${textEs.Language}:`),
                     React.createElement("select", {
@@ -135,7 +135,7 @@ define(["react"], function(React){
                 [
                     React.createElement("i", {
                         key: `Icon4${id}`,
-                        className: iconClass,
+                        className: `${iconClass} small-rightMargin`,
                         "aria-hidden": "true"
                     }),
                     React.createElement("span", {
@@ -153,7 +153,7 @@ define(["react"], function(React){
         AffiliatedOrders: AffiliatedOrders,
         MyOrders: MyOrders,
         MyAccount: MyAccount,
-        CloseSession: CloseSession,
+        Logout: Logout,
         LanguageSelect: LanguageSelect
     };
 
