@@ -21,7 +21,7 @@ define(["ajaxReq"], function(ajaxReq){
         //inputName, inputLastname, inputEmail, inputPassword
         try{
 
-            return await ajaxReq.doAJAX("POST", "./php_copia/DBRegister/masterRegister.php", obj);
+            return await ajaxReq.doAJAX("POST", "./php/DBRegister/masterRegister.php", obj);
 
         }catch(err){
             console.error(err);

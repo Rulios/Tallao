@@ -39,7 +39,7 @@ define(["react"], function(React){
         return (
             React.createElement(NavbarTagFormat,{
                 id: "MasterPanelTag",
-                href: "masterpanel.html",
+                href: "laundrypanel.html",
                 className: "bottomLineLinkAnimation navBarText",
                 iconClass: "fa fa-pencil-square-o",
                 text: textEs.WriteOrders
@@ -66,7 +66,7 @@ define(["react"], function(React){
                 href: "myorders.html",
                 className: "bottomLineLinkAnimation navBarText",
                 iconClass: "fa fa-th-list",
-                text: text.MyOrders
+                text: textEs.MyOrders
             })
         );
     }
@@ -87,7 +87,7 @@ define(["react"], function(React){
         return (
             React.createElement(NavbarTagFormat,{
                 id: "CloseSession",
-                href: "",
+                href: "#",
                 className: "bottomLineLinkAnimation redTxt",
                 iconClass: "fa fa-sign-out",
                 text: textEs.CloseSession,
@@ -126,11 +126,12 @@ define(["react"], function(React){
     }
     
 
-    function NavbarTagFormat({id, href, className, iconClass, text}){
+    function NavbarTagFormat({id, href, className, iconClass, text, onClick}){
         return (
             React.createElement("a", {
                 href: href,
-                className: className
+                className: className,
+                onClick: () => onClick()
             },
                 [
                     React.createElement("i", {

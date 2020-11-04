@@ -18,38 +18,38 @@ define(["ajaxReq"], function(ajaxReq){
         //fetchs all the prices from the service
         //params : none
 
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchElementsPrice.php", obj);
+        return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchElementsPrice.php", obj);
     }         
     
     async function updateElementsPrice(obj){
         //params: serviceOFfer(string), priceConfig(string)
         //hookPrice(string)
 
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updatePriceElements.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updatePriceElements.php", obj);
     }
 
     async function fetchSchedule(){
         //params : none, it's on cookies
 
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchSchedule.php");
+        return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchSchedule.php");
     }
 
     async function updateSchedule(str){
         //params: schedule JSON
 
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updateSchedule.php", str);
+        return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updateSchedule.php", str);
     }   
 
     async function fetchServiceOffer(){
         //params: none, it's on cookies
 
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBSuperUserConfigs/fetchServiceOffer.php");
+        return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchServiceOffer.php");
     }
 
     async function updateServiceOffer(obj){
         //params serviceOffer(string)
         
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBSuperUserConfigs/updateServiceOffer.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updateServiceOffer.php", obj);
     }
 
     return {  

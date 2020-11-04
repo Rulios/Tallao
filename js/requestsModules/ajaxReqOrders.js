@@ -11,12 +11,12 @@ define(["ajaxReq"], function(ajaxReq){
         //props formatted as json: indications, elementsOnOrder (contains service, price, quantity), hookQuantity, totalPrice,
         //dateTimeAssignForOrder, dateTimeOrderWritten
   
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBOrders/submitOrder.php", jsonString);
+        return await ajaxReq.doAJAX("POST", "./php/DBOrders/submitOrder.php", jsonString);
     }
 
     async function fetchOrders(obj){
         //params: filterMode, params, startIndex, status(means order status)
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBOrders/fetchOrders.php", obj);
+        return await ajaxReq.doAJAX("GET", "./php/DBOrders/fetchOrders.php", obj);
     }
 
     async function updateOrder(obj){
@@ -30,12 +30,12 @@ define(["ajaxReq"], function(ajaxReq){
 
     async function updateCustomerAffiliateOrder(jsonString){
         //params: orderID, customerData
-        return await ajaxReq.doAJAX("PUT", "./php_copia/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
+        return await ajaxReq.doAJAX("PUT", "./php/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
     }
 
     async function advanceToNextStatus(jsonString){
         //params: orderID (json)
-        return await ajaxReq.doAJAX("PUT", "./php_copia/DBOrders/advanceToNextStatus.php", jsonString);
+        return await ajaxReq.doAJAX("PUT", "./php/DBOrders/advanceToNextStatus.php", jsonString);
     }
 
     return {

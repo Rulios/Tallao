@@ -14,7 +14,7 @@ define(["jquery","ajaxReq"], function($,ajaxReq){
 
         return await $.ajax({
             type:"POST",
-            url:"./php_copia/DBServerTime/fetchDateTimeServer.php"
+            url:"./php/DBServerTime/fetchDateTimeServer.php"
         });
 
     }

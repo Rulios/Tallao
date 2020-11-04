@@ -10,7 +10,7 @@ define(["ajaxReq"], function(ajaxReq){
 
     async function customerByID(obj){
         //params inputCustomerID (string)
-        return await ajaxReq.doAJAX("GET", "./php_copia/DBSearch/searchCustomerByID.php", obj);
+        return await ajaxReq.doAJAX("GET", "./php/DBSearch/searchCustomerByID.php", obj);
     }
 
     return {

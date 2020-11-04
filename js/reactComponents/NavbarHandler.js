@@ -3,12 +3,12 @@ require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
         "NavbarComp": "./reactComponents/NavbarComp",
-        ajaxReqLogin: "../js/requestsModules/ajaxReqLogin",
+        ajaxReqLog: "../js/requestsModules/ajaxReqLog",
         pageRedirection: "../js/frontendModules/pageRedirection"
     }
 });
-define(["react", "NavbarComp", "pageRedirection", "ajaxReqLogin"], 
-function(React, NavbarComp,pageRedirection, ajaxReqLogin){
+define(["react", "NavbarComp", "pageRedirection", "ajaxReqLog"], 
+function(React, NavbarComp,pageRedirection, ajaxReqLog){
 
     function Navbar({componentList}){
         //componentList = arr (index order should be same as render order)
@@ -18,7 +18,7 @@ function(React, NavbarComp,pageRedirection, ajaxReqLogin){
 
         let clickHandler = function(componentID){
             if(componentID === "CloseSession"){
-                ajaxReqLogin.logout().then(() =>{ //get back to login
+                ajaxReqLog.logout().then(() =>{ //get back to login
                     pageRedirection.bounceToLogin();
                 })
             }
@@ -51,3 +51,46 @@ function(React, NavbarComp,pageRedirection, ajaxReqLogin){
     return Navbar;
     
 });
+
+//example of Navbar
+/* 
+<nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container">
+        <a class="navbar-brand text-center" href="index.html">
+
+            <img  style="width: 60%;"  src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+
+        </a>
+        
+
+        <a href="masterpanel.html" id="receiptPanel" class="bottomLineLinkAnimation navBarText">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <b>Escritura de recibos</b>
+        </a>
+
+        <a href="myorders.html" id="myOrders" class="bottomLineLinkAnimation navBarText">
+            <i class="fa fa-th-list" aria-hidden="true"></i>
+            <b>Órdenes afiliadas a mi lavandería</b>
+        </a>
+
+        <a href="myaccount.html"class="bottomLineLinkAnimation navBarText" id="myAccount">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <b>Mi cuenta</b>
+        </a>
+
+        <a href=""class="bottomLineLinkAnimation redTxt" id="signout">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            <b>Cerrar Sesión</b>
+        </a>
+
+        <div class="leftSeparation  centerOnXs">
+            <b>Idioma:</b> 
+            <select name="" id="">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="cn">中文</option>
+            </select>
+        </div>
+    </div>    
+</nav>
+ */

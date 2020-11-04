@@ -15,7 +15,8 @@ require.config({
         ScheduleHandler: "./reactComponents/ScheduleHandler",
         EditServiceOfferHandler: "./reactComponents/EditServiceOfferHandler",
         EditCustomMessagesHandler: "./reactComponents/EditCustomMessagesHandler",
-        EditElementsPriceBundle: "./reactComponents/EditElementsPriceBundle"
+        EditElementsPriceBundle: "./reactComponents/EditElementsPriceBundle",
+        Navbar: "./reactComponents/NavbarHandler"
     },
     shim: {
         bootstrap: {
@@ -47,6 +48,25 @@ function($,React, ReactDOM){
             }
         });
     });
+
+    function RenderNavbar(){
+        require(["Navbar"], function(Navbar){
+            if(userType === "laundry"){
+                ReactDOM.render(
+                    React.createElement(Navbar, {
+                        componentList: [
+                            "Logo", 
+                            "WriteOrders",
+                            "AffiliatedOrders",
+                            "MyAccount" ,
+                            "Logout",
+                            "LanguageSelect"
+                        ]
+                    }), document.getElementById("NavbarContainer")
+                )
+            }
+        });
+    }
 
     function RenderOnPage(){
         ReactDOM.render(
@@ -92,6 +112,7 @@ function($,React, ReactDOM){
                                 //AND TRIGGERS RenderOnPage to render the correspondent userType root
                                 userType = type;
                                 RenderOnPage();
+                                RenderNavbar();
                             }
                         })
                     ),

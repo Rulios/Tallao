@@ -81,28 +81,6 @@ function($, formVerification){
         return re.test(String(email).toLowerCase());
     }
     
-    function pageRedirection(data, type){
-      //type: user, superuser
-    
-      let id = "inputPassword";
-     
-      if(data){
-        formVerification.deleteAppendError(id);
-        if(type == "user"){
-    
-          window.location.replace("./panel.html");
-    
-        }else if (type == "laundry"){
-          window.location.replace("./masterpanel.html");
-        }
-    
-      }else{
-        formVerification.deleteAppendError(id);
-        formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
-      }
-    
-    }
-    
     function convertStringToBoolean(string){
       let boolean = false;
     
@@ -121,8 +99,8 @@ function($, formVerification){
         
         if(formVerification.invokeVerify("submit")){
 
-            require(["./requestsModules/ajaxReqLogin", "./frontendModules/pageRedirection"], 
-            function(ajaxReqLogin, page){
+            require(["./requestsModules/ajaxReqLog", "./frontendModules/pageRedirection"], 
+            function(ajaxReqLog, page){
 
                 let obj = {
                     inputEmail: inputEmail,
@@ -130,7 +108,7 @@ function($, formVerification){
                     userType: userType
                 }
                 
-                let query =  ajaxReqLogin.login(obj);
+                let query =  ajaxReqLog.login(obj);
                 query.then(dataJSON =>{
                   const id = "inputPassword";
                   console.log(dataJSON);
@@ -143,10 +121,7 @@ function($, formVerification){
                     formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
                   }
                   
-                })
-                .catch(err => console.error(err));
-                //ajaxReqLogin.urlExists();
-                                  
+                }).catch(err => console.error(err));
             });
         }
     }

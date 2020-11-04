@@ -9,19 +9,19 @@ define(["ajaxReq"], function(ajaxReq){
 
     async function verifyPassword(obj){
         //params: inputPassword (string, to be convalidate with DB data)
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/verifyPassword.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/verifyPassword.php", obj);
     }
 
     async function newPassword(obj){
         //params: inputPassword(string, must be validated first)
 
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/updateNewPassword.php", obj);
+        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/updateNewPassword.php", obj);
     }
 
     async function fetchAccountCreds(){
         //paarams: none, it's on server side
 
-        return await ajaxReq.doAJAX("POST", "./php_copia/DBUserCreds/fetchAccountCreds.php");
+        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/fetchAccountCreds.php");
     }
 
     return{

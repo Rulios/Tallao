@@ -9,7 +9,7 @@ define(["ajaxReq"], function(ajaxReq){
         //props:  messageObj(json format)
 
         try{    
-            return await ajaxReq.doAJAX("POST", "./php_copia/DBCustomMessages/submitUpdateCustomMessage.php", obj);
+            return await ajaxReq.doAJAX("POST", "./php/DBCustomMessages/submitUpdateCustomMessage.php", obj);
         }catch(err){
             console.error(err);
         }
@@ -18,7 +18,7 @@ define(["ajaxReq"], function(ajaxReq){
     async function fetch(){
         //props: 
         try{
-            return await ajaxReq.doAJAX("GET", "./php_copia/DBCustomMessages/fetchCustomMessages.php");
+            return await ajaxReq.doAJAX("GET", "./php/DBCustomMessages/fetchCustomMessages.php");
         }catch(err){
             console.error(err);
         }

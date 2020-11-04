@@ -14,6 +14,7 @@ require.config({
         OrderModalHandler: "./reactComponents/OrderModalHandler",
         Time: "./reactComponents/Time",
         ajaxReqOrders: "./requestsModules/ajaxReqOrders",
+        Navbar: "./reactComponents/NavbarHandler"
     },
     shim: {
         bootstrap: {
@@ -32,11 +33,30 @@ function($,React, ReactDOM, OrderBoxHandler,
     require(["sessionHandler"], function(session){
         session.check();
 
+        RenderNavbar();
+
         ReactDOM.render(
             React.createElement(SearchOrderByParams, {}),
             document.getElementById("OrderParamsSelectorContainer")
         );
     });
+
+    function RenderNavbar(){
+        require(["Navbar"], function(Navbar){
+            ReactDOM.render(
+                React.createElement(Navbar, {
+                    componentList: [
+                        "Logo", 
+                        "WriteOrders",
+                        "AffiliatedOrders",
+                        "MyAccount" ,
+                        "Logout",
+                        "LanguageSelect"
+                    ]
+                }), document.getElementById("NavbarContainer")
+            )
+        });
+    }
 
     async function getOrders(data){
         try {

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="Lavandería, Planchado, Ropa, Lavado">
+    <meta name="author" content="Talla'o">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="js/design.js"></script>
+    <script src="js/panelInt.js"></script> -->
+    <script defer data-main="js/masterPanel.new" src="js/require.js"></script>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Karla&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    </head>
+
+    <title id="pageTitle"></title>
+
+
+    <body>
+        
+        <div id="NavbarContainer">
+            
+        </div>
+
+        
+
+
+          <div style="margin:5em;"></div>
+
+          <div class="container">
+
+
+            <div class="  karla_font showIDTxt bottomBorder">
+
+                <div class="row">
+                    <div id="showLaundryName" class="text-center col-lg-12">
+                    </div>
+                </div>
+
+                <div class="row">
+                
+                    <div class="text-center col-lg-12 titleTxt">
+                        <span id="containerDateTime"></span>
+                    </div>
+                </div>
+
+            </div>
+            
+           
+            <div id="successAnimation" class="successAnimStyleDiv hide karla_font" >
+                <div class="checkAnim" id="checkAnimation"></div>
+                <br>
+                <div id="successMessage" class="successMessageAnim titleTxt">
+                    ¡ORDEN COMPLETADA!
+                </div> 
+            </div>
+
+             <div class="container-fluid  montserrat_font smallSeparation" id="receiptConfigPanel" >
+
+                    <div class="row "  style="max-height:100%;">
+
+                        <div class="col-lg-8  ">
+
+                            <div class="titleTxt text-center">Detalles de la factura:</div>
+
+                            <div class="container text-center" id="containerSelectedClient">
+                                
+                            </div>
+
+                            <div class="small-mediumSeparation"></div>
+
+                            <div id="activeElementsOnOrderContainer" class="eightyPercentMaxHeight bottomBorder rightBorder scrollY text-center">
+                            </div>
+
+                            <div class="smallSeparation ">
+                                <span id="inputsHookContainer"></span>
+                                <span class="totalPriceSpan">
+                                    <span id="totalPriceSpanTag">Precio Total: $</span>
+                                    <span id="totalPriceSpanValue"></span>
+                                </span>
+                            </div>
+
+                            <div class="supTxt-TitleTxt-Separation">
+                                <b><label for="inputIndications">Observaciones:</label></b>
+                                <br>
+                                <textarea name="inputIndications" id="inputIndications" style="width: 100%;"></textarea>
+                                <br>
+
+                                <div id="containerCustomMessages"></div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="col-lg-4 text-center ">
+
+                            <div class="titleTxt">Elementos</div>
+
+                            <div class="row">
+
+                                <div class="col-lg-12 text-center">
+                
+                                    <span class="karla_font">Selecciona el servicio</span>
+                
+                                </div>
+                            </div>
+                            
+                            <div class="row smallSeparation">
+                                <div class="col-lg-12 text-center" id="containerServiceSelector">
+                                </div>
+                            </div>
+                            
+                            <div id="containerSelectableElements" class="eightyPercentMaxHeight doubleScrollable scrollY">
+                                
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row small-mediumSeparation">
+
+                        <div class="col-lg-12">
+
+                            <div class="container text-center">
+
+                                <div class="row small-mediumSeparation">
+
+                                    <div class="col-lg-12 formRowSeparation ">
+                                        
+                                        <span id="tagDateTimeDiv" class="subTxt">
+                                            <b>Programar la orden</b>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row smallSeparation" >
+                                    <div class="col-lg-12 formRowSeparation" id="containerDateTimeInput">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row supTxt-TitleTxt-Separation">
+                        <div class="col-lg-12 formRowSeparation" id="containerSubmit">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </body>
+
+    <div class="container-fluid sectionSeparation" id="contact" style="margin-bottom: 2em;">
+
+        <div class="row"> 
+    
+            <div class="col-lg-12">
+    
+                <footer id="footer" >
+    
+                        <div class="container centerOnXs" style="padding: 2em; ">
+                            <div class="row">
+    
+                                <div class=" col-lg-6 col-xs-12 separationOnXs">
+                                    <a href="index.html">
+                                    <img  style="width: 40%; " src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+                                    </a>    
+                                </div>
+    
+                                <div class="col-lg-6 col-xs-12 " >
+    
+                                    <div  class="montserrat_font float-right-footer">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        <span>Contacto:<a href="rluzheng@gmail.com"> rluzheng@gmail.com</a> </span>
+    
+                                        <br>
+    
+                                        <i class="fa fa-globe" aria-hidden="true"></i>
+                                        <span>Español</span>
+    
+                                        <br>
+    
+                                        <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                        <span ><a href=""><b>Retroalimentación</b></a></span>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            
+    
+                            <div class="row supTxt-TitleTxt-Separation">
+    
+                                <div class="col-lg-4">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    <span class="montserrat_font">Panamá</span>
+                                </div>
+    
+                                <div class="col-lg-4">
+                                    <span class="montserrat_font">©2020 Talla'o Todos los derechos reservados</span>
+                                </div>
+    
+                                <div class="col-lg-4 ">
+                                    <a href="" class="float-right">
+                                    <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+                                    </a>    
+                                </div>
+                            </div>
+                        </div>
+                </footer>
+    
+            </div>
+    
+        </div>
+    
+    </div>
+
+</html>

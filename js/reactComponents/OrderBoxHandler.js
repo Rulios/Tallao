@@ -2,13 +2,12 @@
 require.config({
     paths: {
         'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
         OrderBoxContainers: "./reactComponents/OrderBoxContainers",
         Time: "./reactComponents/Time"
     }
 });
-define(["react", "react-dom","OrderBoxContainers", "Time"], 
-function(React, ReactDOM,OrderBoxContainers, Time){
+define(["react","OrderBoxContainers", "Time"], 
+function(React,OrderBoxContainers, Time){
 
     /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
