@@ -1,0 +1,43 @@
+{
+  "name": "tallao",
+  "version": "1.0.0",
+  "description": "Talla'o is a app that connects orders of laundry customers with laundries. It simplifies the process of doing it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watchW": "webpack --watch",
+    "watchS": "nodemon ./App.js localhost 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rulios/Tallao.git"
+  },
+  "keywords": [
+    "tallao",
+    "laundry"
+  ],
+  "author": "Robert Lu Zheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rulios/Tallao/issues"
+  },
+  "homepage": "https://github.com/Rulios/Tallao#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "babel-loader": "^8.1.0",
+    "nodemon": "^2.0.6",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "path": "^0.12.7",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}

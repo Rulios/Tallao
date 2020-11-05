@@ -1,0 +1,805 @@
+.karla_font{
+    font-family: 'Karla' ;
+}
+.montserrat_font{
+    font-family: 'Montserrat';
+}
+.hideOnNormal{
+    display:none;
+}
+.hide{
+    display:none;
+}
+.noTxtDecoration{
+    text-decoration: none!important;
+}
+a{
+    text-decoration: none!important;
+}
+html {
+    scroll-behavior: smooth !important;
+    
+}
+.bold{
+    font-weight: bold;
+}
+.topVerticalAlign{
+    vertical-align: super;
+}
+.middleVerticalAlign{
+    vertical-align: top;
+}
+.floatLeft{
+    float:left;
+}
+.floatRight{
+    float:right;
+}
+.blackTxt{
+    color:black;
+}
+.redTxt{
+    color:red;
+}
+.yellowTxt{
+    color:#FFBC47;
+}
+.yellowGreenTxt{
+    color:yellowgreen;
+}
+.greenTxt{
+    color: green;
+}
+.superTitleTxt{
+    font-size: 4em;
+}
+.registrationFormTitleTxt{
+    font-size:3em;
+}
+.showIDTxt{
+    font-size: 3em;
+}
+.registrationFormSubTitleTxt{
+    font-size:25px;
+}
+.titleTxt{
+    font-size: 30px;
+}
+.subTxt{
+    font-size: 18px;
+}
+
+.smallText{
+    font-size: 15px;
+}
+.detailsText{
+    font-size: 12px;
+}
+.congrTxt{
+    font-size: 3em;
+}
+.getFullPercentHeight{
+    height: 100%;
+}
+.float-right-footer{
+    float:right;
+}
+.seeBorder{
+border:1px solid;
+}
+.bottomBorder{
+    border-bottom: 1.5px solid black;
+}
+.bottomGreyBorder{
+    border-bottom: 1px solid #BDBABD;
+}
+.hrGreyBorder{
+    border-top: 1px solid #BEBBB9;
+    width: 80%;
+}
+.hrBlackBorder{
+    border-top: 1px solid black;
+    width: 100%;
+}
+.rightBorder{
+    border-right: 1px solid black;
+}
+.scrollY{
+    overflow-x:hidden;
+    overflow-y: auto;
+    
+}
+.eightyPercentMaxHeight{
+    
+    width: auto;
+    height:70vh;
+    max-height: 70vh;
+}
+.fullWidth{
+    width: 100%;
+}
+.paddText{
+    padding-left: 2em;
+    padding-right:2em;
+}
+.reduce2Icon{
+    max-width: 25%;
+    max-height: auto;
+    height:122px;
+    
+}
+.sectionSeparation{
+    margin-top: 6em;
+}
+.small-rightMargin{
+    margin-right:5px;
+}
+.leftSeparation{
+    margin-left:10px;
+}
+
+.supTxt-TitleTxt-Separation{
+    margin-top: 4em;
+}
+.smallSeparation{
+    margin-top: 0.5em;
+}
+.smallMarginBottom{
+    margin-bottom: 2em;
+}
+.oneEMSeparation{
+    margin-top: 1em;
+}
+.small-mediumSeparation{
+    margin-top: 2em;
+}
+.startTopSeparation{
+    margin-top: 2em;
+}
+.formRowSeparation{
+    margin-top:2em;
+}
+.showWhenSM{
+    display:none;
+}
+.my-image{
+    object-fit: contain;
+}
+.paddingForm{
+    max-width:50%;
+    height:auto;
+    margin:auto;    
+}
+.maxInputMargin{
+    max-width: 50%;
+}
+
+
+.roundBorderButton{
+    text-decoration: none!important;
+    border-radius:6px;
+    border: 2px solid black;
+    padding:10px;
+    color:black;
+    transition-duration:0.4s;
+}
+.roundBorderButton:hover{
+    background-color: black;
+    color:white !important;
+}
+#login{
+    padding:10px;
+    border-radius:6px;
+    transition-duration:0.4s;
+    color:#801EE8;
+}
+#login:hover{
+    background-color: #801EE8;
+    color:white;
+}
+.bottomLineLinkAnimation::after{
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #000;
+    transition: width .3s;
+}
+.bottomLineLinkAnimation:hover::after {
+    width: 100%;
+}
+/* #myOrders{
+    padding:10px;   
+    color:black;
+}
+#myAccount{
+    color:black;
+    padding:10px;
+} */
+.navBarText{
+    color:black;
+    padding:10px;
+}
+.backGEffect1{
+    transition-duration:0.4s;
+}
+.backGEffect1:hover {
+    background-color: #C3B3FF;
+   
+}
+.backGEffect2{
+    transition-duration:0.4s;
+}
+.backGEffect2:hover {
+    background-color: yellow;
+    
+}
+.backGEffect3{
+    transition-duration:0.4s;
+}
+.backGEffect3:hover {
+    background-color: #A6C2FF;
+    
+}
+.backGEffect4{
+    transition:0.4s;
+}
+.backGEffect4:hover{
+    color:white !important;
+}
+footer{
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: none;
+    padding-top: 2em;
+    font-size: 15px;
+   
+}
+.glyphiconSize{
+    font-size: 20px;
+}
+.form-control:focus {
+    border-color: #47EBCE !important;
+    
+}
+.submitButtonRegister{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #FF94E7;
+    transition: 0.4s;
+} 
+.disableButton{
+        cursor: not-allowed;
+        pointer-events: none;
+
+        /*Button disabled - CSS color class*/
+        color: #547A80;
+        background-color: #F3E5EC;
+}
+.disableInput{
+    background-color: #E6E2DC !important;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    
+}
+.submitButtonRegister:hover{
+    background-color: #BB5ECC;
+}
+.submitButtonLogin{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #95CCBB;
+    transition: 0.4s;
+} 
+.submitButtonLogin:hover{
+    background-color: #42997E;
+}
+
+.submitButtonActualize{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #9CD7FF;
+    transition: 0.4s;
+    margin: 0.5em;
+} 
+.submitButtonActualize:hover{
+    background-color: #686FCC;
+}
+
+.submitButtonActualize1{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #FFB76C;
+    transition: 0.4s;
+    margin: 0.5em;
+} 
+.submitButtonActualize1:hover{
+    background-color: #FF825E;
+}
+
+.submitButtonActualize2{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #95CCBB;
+    transition: 0.4s;
+    margin: 0.5em;
+} 
+.submitButtonActualize2:hover{
+    background-color: #42997E;
+}
+
+.buttonAddCustomMessage{
+    width: 100%;
+    font-size: 16px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #C4FFD9;
+    transition: 0.4s;
+}
+.buttonAddCustomMessage:hover{
+    background-color: #EB4D70;
+}
+.submitButtonUpdateMessages{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #7EE838;
+    transition: 0.4s;
+    margin: 0.5em;
+} 
+.submitButtonUpdateMessages:hover{
+    background-color: #3DFFB1;
+}
+.submitButtonLoginSuperUser{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #85EAFF;
+    transition: 0.4s;
+} 
+.submitButtonLoginSuperUser:hover{
+    background-color: #399DB3;
+}
+.submitButtonOrder{
+    width: 100%;
+    font-size: 20px;
+    padding:15px;
+    font-family: 'Montserrat';
+    border:0px;
+    background-color: #399DB3;
+    transition: 0.4s;
+} 
+.submitButtonOrder:hover{
+    background-color: #FF96CC;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 110%;
+}
+  
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+.yellowDot{
+  height: 25px;
+  width: 25px;
+  background-color: #FFD446;
+  border-radius: 50%;
+  display: inline-block;
+}
+.blueDot{
+    height: 25px;
+    width: 25px;
+    background-color: #3D7CB3;
+    border-radius: 50%;
+    display: inline-block;
+}
+.greenDot{
+  height: 25px;
+  width: 25px;
+  background-color: #2BB334;
+  border-radius: 50%;
+  display: inline-block;
+
+}
+input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+}
+/* Master User Schedule */
+.styleTimeInput{
+    width: 30%;
+}
+
+/* Price configuration design style */
+.styleElementBox{
+    border-radius: 12px;
+    border: 0.5px solid #DFDDD7;
+    padding: 20px;
+    
+}
+.styleElementName{
+    width: 50%;
+    float:left;
+}
+.styleElementPrice{
+    width: 70% ;
+}
+.styleSelectServiceType{
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+.elementSelectStyle{
+    padding-bottom: 1em;
+    margin-top: 1em;
+}
+.assetStayStatic{
+    width: auto;
+    height:80px;
+}
+.buttonElementStyle{
+    background-color: transparent;
+    border:0 none;
+    width: 100%;
+    height:auto;
+    transition-duration:0.3s;
+}
+.buttonElementStyle:hover{
+    background-color: #E1E8DF;
+}
+.customElementReceiptStyle{
+    padding-bottom: 1em;
+}
+.inputNumberReceiptStyle{
+    width: 50% !important;
+}
+#inputClientID{
+    width: 40%;
+}
+.closeButtonStyle{
+    font-size: 1em;
+    right:0; 
+    top:0; 
+    position:relative;
+    margin-top: 0.5em; 
+    margin-right: 0.5em; 
+    float:right;
+    border: solid 1px black;
+    background-color: transparent;
+    transition-duration: 0.3s;
+}
+.closeButtonStyle:hover{
+    background-color: #E84DA5;
+}
+.closeMessageButtonStyle{
+    font-size: 0.7em;
+    right:0; 
+    top:0; 
+    margin-top: 0.5em; 
+    margin-right: 0.5em;
+    padding-top:auto;
+    padding-bottom: auto;
+    position:absolute;
+    border-radius: 5px;
+    border: solid 1px black;
+    background-color: transparent;
+    transition-duration: 0.3s;
+}
+.closeMessageButtonStyle:hover{
+    background-color: #FF0409;
+}
+.totalPriceSpan{
+    float:right;
+    font-weight: bold;
+}
+#hookSpan{
+    float: left;
+    font-weight: bold;
+}
+.inputHookQuantity{
+    width: 20% !important;
+}
+.opacityAndDisable{
+    opacity: 0.1;
+    cursor: not-allowed;
+    pointer-events: none;
+    transition:0.2s;
+}
+
+.successAnimStyleDiv{
+    position:fixed;
+    left: 50%;
+    top: 50% ;
+    transition: 0.4s ;
+}
+.checkAnim {
+    border: solid 30px #D074E8;
+    width: 200px;
+    height: 100px;
+    margin: -50px 0 0 -100px;
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+    transform-origin: top left;
+    box-shadow: -5px 5px 0 0 rgba(0,0,0,.5);
+}
+  
+.checkAnim{
+    animation: start 1s ease  both;
+    /* Override default play state paused of codepen iframe */
+    animation-play-state: running!important;
+}
+.successMessageAnim{
+    margin: -10px 0 0 -100px;
+    transition: 0.2s;
+}  
+.hoverShadow{
+    transition-duration: 0.3s;
+    padding:1em;
+}
+.hoverShadow:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.hoverCustomColorShadow{
+    transition-duration: 0.3s;
+    padding:1em;
+}
+.hoverCustomColorShadow:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+@keyframes start {
+    0% {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    50% {
+      opacity: 1;
+      width: 0;
+      height: 100px;
+    }
+    100% {
+      width: 200px;
+    }
+}
+.styleMessageBox{
+    border-radius: 12px;
+    border: 0.5px solid #DFDDD7;
+    padding: 20px;
+}
+.inputMessageTagStyle{
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    float: right;
+}
+.customColorTagStyle{
+    width: auto;
+    height: auto;
+    float:right;
+}
+.customTextAreaStyle{
+    font-size: 14px;
+    width: 70%;
+    height: 50px;
+    float:right;
+
+}
+.instantMsgTagStyle{
+
+    width: auto;
+    border: none;
+    padding-left: 0.5em;
+    margin-right: 0.1em;
+    border-radius: 3px;
+
+}
+.paramBoxStyle{
+    width: 100%;
+}
+.legendTxt{
+    font-size: 11px;
+}
+
+
+.orderListElementStyle{
+    padding-top: 5px;
+    width: 100%;
+    border: solid 1px #D1D0CF;
+    height: auto;
+    background-color: transparent;
+    margin-bottom: 2em;
+    font-size: 1em;
+    transition:0.2s;
+}
+
+.orderListElementStyle:hover{
+    box-shadow: 0 0 50px rgba(33,33,33,.2);
+    transform: scale(1.05);
+}
+.dataOrderStyle{
+    text-align: left;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+/* The Modal (background) */
+.modalCustom {
+    
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 10em;
+  }
+  
+  /* Modal Content/Box */
+  .modal-contentCustom {
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+
+    padding: 2.5em;
+    border: 1px solid #888;
+    width: 75%; /* Could be more or less, depending on screen size */
+    border-radius: 3px;
+  }
+  .modal-headerCustom{
+    text-align: center;
+    font-size: 2em;
+  }
+
+/*   .close {
+    display:absolute;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  } */
+
+
+  .rightBorderModal{
+    border-right: 1px solid black;
+  }
+
+  .modalStateButton{
+      text-align:center;
+      text-decoration: none;
+      border: solid 2px black;
+      padding:1em;
+      margin-top: 2em;
+  }
+  .modalStateButton:hover{
+      background-color: transparent;
+      box-shadow: 0 0 20px rgba(33,33,33,.2); 
+  }
+
+  .modalEditUserLink{
+    color: #4BA3EB !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+  }
+
+@media only screen and (max-width: 768px){
+
+    .hideOnXs{
+        display:none;
+    }
+
+    .hideOnNormal{
+        display:block;
+    }
+
+    .centerOnXs{
+        margin-left:auto;
+        margin-right: auto;
+        text-align: center;
+        display:block;
+        float:none;
+    }
+
+    .float-right-footer{
+        float:none;
+    }
+
+    .stopPadding{
+        padding:0 !important;
+        
+    }
+    div[name="pContainer"]{
+        padding-bottom: 2em;
+    }
+    .separationOnXs{
+        margin-bottom: 1em;
+    }
+    .smallSeparationOnXs{
+        margin-top: 0.5em;
+    }
+    .paddingForm{
+        max-width: 80%;
+    }
+
+    .rightBorder{
+        border-right:0;
+        border-bottom: 1.5px solid black;
+    }
+    .justifyOnXs{
+        text-align: justify;
+    }
+    #totalPriceSpan{
+        float:none;
+    }
+    .modal-contentCustom{
+        width: 90%;
+    }
+    .rightBorderModal{
+        border-right: 0;
+    }
+    .modalCustom{
+        padding-top: 5em;
+    }
+    
+    
+}

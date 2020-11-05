@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="Lavandería, Planchado, Ropa, Lavado">
+    <meta name="author" content="Talla'o">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script defer data-main="js/myOrdersHandler.js" src="js/require.js"></script>
+
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Karla&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    </head>
+
+    <title id="myAccountPageTitle"></title>
+
+    <body>
+        <div id="NavbarContainer"></div>
+       
+        <div style="margin:5em;"></div>
+
+          <div class="container montserrat_font ">
+
+            <div class="row">
+                <div class="col-lg-12 karla_font text-center titleTxt" id="tagTitleOrderPage">
+                    Órdenes afiliadas a tu lavandería
+                </div>
+            </div>  
+
+            <div class="row supTxt-TitleTxt-Separation centerOnXs" id="OrderParamsSelectorContainer">
+                
+
+            </div>
+
+            <!-- <button id ="testBTN">Click ME</button> -->
+
+            <div class="row small-mediumSeparation" id="AppendOrdersContainer">
+
+            </div>
+
+            <div id="OrderModalContainer">
+
+            </div>
+
+            <div id="orderDetailsModal" name="modalCustom" class="modalCustom hide">
+
+                <div class="modal-contentCustom " name="modalContent">
+                    <button class="closeButtonStyle">x</button>
+                    <div class="modal-headerCustom ">
+                        <span name="spnReceiptId" >Orden B-37</span>
+                        <!-- <span class="close">&times;</span> -->
+                        
+                    </div>
+
+                    <hr class="hrBlackBorder">
+                    
+                    <div class="modal-bodyCustom row">
+
+                        <div class="col-lg-6 rightBorderModal">
+
+                            <div name="divReceiptStatus" class="bold">
+                                <span name="spnStatusTag">Estado:</span>
+                                <span name="spnStatusData">Esperando</span>
+                            </div>
+                            
+                            <div name="divReceiptClientName">
+                                <span class="bold" name="spnReceiptClientNameTag">Cliente:</span>
+                                <span name="spnReceiptClientNameData" >Robert Lu Zheng</span>
+                                <span name="inputClientID"></span>
+                            </div>
+                            <div name="divReceiptDateReceive">
+                                <span class="bold" name="spnReceiptDateReceiveTag">Día Recibido:</span>
+                                <span name="spnReceiptDateReceiveData" >2020/05/29 9:59 AM</span>
+                            </div>    
+                            <div class="smallSeparation text-center" name="divReceiptDateAssign">
+                                <span class="bold" name="spnReceiptDateAssignTag">Día Asignado:</span>
+                                <span name="spnReceiptDateAssignData">2020/05/31 1:00 PM</span> 
+                            </div>
+                            <div class="text-center bold" name="divDateDifference">Faltan 2 días y 4 horas</div>
+
+
+                            <div name="divOrderElements" class="smallSeparation">
+                                <div class="bold" name="divElementsTag">Elementos:</div>
+
+                                <span class="bold">
+                                    Planchado:
+                                </span>
+                                <div name="appendReceiptOrderElements">
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
+                                    
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
+                                </div>
+
+                                <span class="bold">
+                                    &ensp;&ensp;Lavado y planchado:
+                                </span>
+                                <div name="appendReceiptOrderElements">
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
+                                    
+                                    <div element="shirt-iron">
+                                        <span class="bold">&ensp;&ensp;&ensp;&ensp;Camisa($0.65) = </span>
+                                        <span class="floatRight">15</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div name="divReceiptHookQuantity" class="smallSeparation smallSeparationOnXs">
+                                <span class="bold" name="spnReceiptHookQuantityTag">Cantidad de Ganchos/Perchas:</span>
+                                <span class="floatRight" name="spnReceiptHookQuantityData">15</span>
+                            </div>
+
+                            <div name="divReceiptPrice" class="oneEMSeparation">
+                                <span class="bold" name="spnReceiptPriceTag">Precio:</span>
+                                <span class="floatRight" name="spnReceiptPriceData">$15.00</span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <form action="">
+
+                                <fieldset class="border p-2">
+
+                                    <legend class="w-auto legendTxt">Notificaciones y Chat</legend>
+
+                                    <div name="divReceiptIndications">
+                                        <span class="bold" name="spnReceiptIndicationsTag">
+                                            Indicaciones:
+                                        </span>
+
+                                        <span name="spnReceiptIndicationsData">Sin pliegue</span>
+                                    </div>
+
+                                </fieldset>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="row oneEMSeparation">
+                        <button class="col-lg-12 modalStateButton" name="modalStateButton">
+                            PLANCHAR
+                        </button>
+                    </div>
+             
+                </div>
+            
+            </div>
+
+    </body>
+
+    <div class="container-fluid sectionSeparation" id="contact" style="margin-bottom: 2em;">
+
+        <div class="row"> 
+    
+            <div class="col-lg-12">
+    
+                <footer id="footer" >
+    
+                        <div class="container centerOnXs" style="padding: 2em; ">
+                            <div class="row">
+    
+                                <div class=" col-lg-6 col-xs-12 separationOnXs">
+                                    <a href="/">
+                                    <img  style="width: 40%; " src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+                                    </a>    
+                                </div>
+    
+                                <div class="col-lg-6 col-xs-12 " >
+    
+                                    <div  class="montserrat_font float-right-footer">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        <span>Contacto:<a href="rluzheng@gmail.com"> rluzheng@gmail.com</a> </span>
+    
+                                        <br>
+    
+                                        <i class="fa fa-globe" aria-hidden="true"></i>
+                                        <span>Español</span>
+    
+                                        <br>
+    
+                                        <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                        <span ><a href=""><b>Retroalimentación</b></a></span>
+                                    </div>
+    
+    
+                                </div>
+    
+                               
+    
+                            </div>
+    
+                            
+    
+                            <div class="row supTxt-TitleTxt-Separation">
+    
+                                <div class="col-lg-4">
+    
+                                    
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    <span class="montserrat_font">Panamá</span>
+                                    
+                                </div>
+    
+                                <div class="col-lg-4">
+    
+                                    <span class="montserrat_font">©2020 Talla'o Todos los derechos reservados</span>
+    
+                                </div>
+    
+                                <div class="col-lg-4 ">
+                                    <a href="" class="float-right">
+    
+                                    <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+                                    
+                                    </a>    
+                                </div>
+    
+                            </div>
+    
+                        </div>
+    
+                </footer>
+    
+            </div>
+    
+        </div>
+    
+    </div>
+
+
+</html>
