@@ -1,16 +1,9 @@
 // main.js
-require.config({
-    // module name mapped to CDN url
-    paths: {
-        // Require.js appends `.js` extension for you
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        inputPrevent: "./frontendModules/inputPrevent"
-    }
-});
-define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPrevent){
 
-    //This handler acts when it needs to be rendered a input field
+const React = require("react");
+const inputPrevent = require("./frontendModules/inputPrevent");
+
+//This handler acts when it needs to be rendered a input field
     //or text related to the clientID. Also, the main caller will be 
     //able to request information about this.
 
@@ -118,8 +111,7 @@ define(['react', 'react-dom', "inputPrevent"], function(React, ReactDOM, inputPr
             
     }
 
-    return InputCustomerID;
-});
+    module.exports = InputCustomerID;
 
 //example of inputClientID
 /* <div class="row">

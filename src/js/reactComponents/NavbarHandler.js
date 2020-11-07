@@ -1,56 +1,49 @@
 "use strict";
-require.config({
-    paths: {
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        "NavbarComp": "./reactComponents/NavbarComp",
-        ajaxReqLog: "../js/requestsModules/ajaxReqLog",
-        pageRedirection: "../js/frontendModules/pageRedirection"
-    }
-});
-define(["react", "NavbarComp", "pageRedirection", "ajaxReqLog"], 
-function(React, NavbarComp,pageRedirection, ajaxReqLog){
 
-    function Navbar({componentList}){
-        //componentList = arr (index order should be same as render order)
-        const languages = ["es", "en", "cn"];
+const React= require("react");
+const NavbarComp = require("./reactComponents/NavbarComp");
+const ajaxReqLog = require("../js/requestsModules/ajaxReqLog");
+const pageRedirection = require("../js/frontendModules/pageRedirection");
 
-        let [selectedLanguage, setSelectedLanguage] = React.useState("es");
+function Navbar({componentList}){
+    //componentList = arr (index order should be same as render order)
+    const languages = ["es", "en", "cn"];
 
-        let clickHandler = function(componentID){
-            if(componentID === "CloseSession"){
-                ajaxReqLog.logout().then(() =>{ //get back to login
-                    pageRedirection.bounceToLogin();
-                })
-            }
-        };
+    let [selectedLanguage, setSelectedLanguage] = React.useState("es");
 
-        let selectHandler = function(componentID, value){
-            if(componentID === "LanguageSelect") setSelectedLanguage(value);
-        };
+    let clickHandler = function(componentID){
+        if(componentID === "CloseSession"){
+            ajaxReqLog.logout().then(() =>{ //get back to login
+                pageRedirection.bounceToLogin();
+            })
+        }
+    };
+
+    let selectHandler = function(componentID, value){
+        if(componentID === "LanguageSelect") setSelectedLanguage(value);
+    };
 
 
-        return (
-            React.createElement("nav" ,{
-                className: "navbar navbar-expand-lg navbar-light"
-            },
-                React.createElement("div", {className: "container"},
-                    componentList.map(component =>{
-                        return React.createElement(NavbarComp[component],{
-                            key: `${component}-Navbar`,
-                            languages: languages,
-                            onClick: (componentID) => clickHandler(componentID),
-                            onSelect: (componentID, value) => selectHandler(componentID, value),
-                            selectedLanguage: selectedLanguage
-                        })
+    return (
+        React.createElement("nav" ,{
+            className: "navbar navbar-expand-lg navbar-light"
+        },
+            React.createElement("div", {className: "container"},
+                componentList.map(component =>{
+                    return React.createElement(NavbarComp[component],{
+                        key: `${component}-Navbar`,
+                        languages: languages,
+                        onClick: (componentID) => clickHandler(componentID),
+                        onSelect: (componentID, value) => selectHandler(componentID, value),
+                        selectedLanguage: selectedLanguage
                     })
-                )
+                })
             )
-        );
-    }
+        )
+    );
+}
 
-    return Navbar;
-    
-});
+return Navbar;
 
 //example of Navbar
 /* 

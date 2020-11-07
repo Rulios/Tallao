@@ -1,51 +1,43 @@
 "use strict";
 
-require.config({
-    paths: {
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        CredsDisplayDiv: "./reactComponents/CredsDisplayDiv"
-    }
-});
+const React = require("react");
+const CredsDisplayDiv = require("./reactComponents/CredsDisplayDiv");
 
-define(["react", "CredsDisplayDiv"], function(React, CredsDisplayDiv){
+const OneFieldDisplay = ({field, value}) =>{
 
-    const OneFieldDisplay = ({field, value}) =>{
+    return(
+        React.createElement("div", {
+            className: "row formRowSeparation"
+        },
+            React.createElement(CredsDisplayDiv.Div12, {
+                field: field,
+                value : value
+            })
+        )
+    );
+};
 
-        return(
-            React.createElement("div", {
-                className: "row formRowSeparation"
-            },
-                React.createElement(CredsDisplayDiv.Div12, {
-                    field: field,
-                    value : value
-                })
-            )
-        );
-    };
+const TwoFieldDisplay = ({field1, value1, field2, value2}) =>{
+    return(
+        React.createElement("div", {
+            className: "row formRowSeparation"
+        },
+            React.createElement(CredsDisplayDiv.Div6, {
+                field: field1,
+                value : value1
+            }),
+            React.createElement(CredsDisplayDiv.Div6, {
+                field: field2,
+                value : value2
+            })
+        )
+    );
+};
 
-    const TwoFieldDisplay = ({field1, value1, field2, value2}) =>{
-        return(
-            React.createElement("div", {
-                className: "row formRowSeparation"
-            },
-                React.createElement(CredsDisplayDiv.Div6, {
-                    field: field1,
-                    value : value1
-                }),
-                React.createElement(CredsDisplayDiv.Div6, {
-                    field: field2,
-                    value : value2
-                })
-            )
-        );
-    };
-
-    return{
-        OneFieldDisplay: OneFieldDisplay,
-        TwoFieldDisplay, TwoFieldDisplay
-    }
-
-});
+module.exports = {
+    OneFieldDisplay: OneFieldDisplay,
+    TwoFieldDisplay, TwoFieldDisplay
+}
 
 //example of two fields display
 /* <div class="row supTxt-TitleTxt-Separation">

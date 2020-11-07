@@ -1,63 +1,55 @@
 "use strict";
-require.config({
-    paths: {
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        ServiceOfferComp: "./reactComponents/EditServiceOfferComp"
-    }
-});
-define(["react", "ServiceOfferComp"], function(React, ServiceOfferComp){
+const React = require("react");
+const ServiceOfferComp = require("./reactComponents/EditServiceOfferComp");
 
-    /* This is a middle order component, responsible for translation
-    and bundling of low order components */
+/* This is a middle order component, responsible for translation
+and bundling of low order components */
 
-    const textEs = {
-        iron: "Planchado",
-        washIron: "Lavado y Planchado",
-        wash: "Lavado",
-        dryClean: "Lavado en seco",
-        updateSuccess: "¡Actualizado la oferta de servicios!",
-        update: "Actualizar oferta de servicios"
-    }
+const textEs = {
+    iron: "Planchado",
+    washIron: "Lavado y Planchado",
+    wash: "Lavado",
+    dryClean: "Lavado en seco",
+    updateSuccess: "¡Actualizado la oferta de servicios!",
+    update: "Actualizar oferta de servicios"
+}
 
-    function EditServiceOfferBox({service,checked, onChecked}){
-        return React.createElement("div", {
-            className: "col-lg-3"
-        }, 
-            [
-                React.createElement(ServiceOfferComp.ServiceCheckBox, {
-                    key: `checkbox4${service}`,
-                    service: service,
-                    checked: checked,
-                    onChecked: (isChecked) =>{onChecked(service, isChecked);}
-                }),
-                React.createElement(ServiceOfferComp.ServiceLabel,{
-                    key: `label4${service}`,
-                    service: service,
-                    serviceTxt: textEs[service]
-                })
-            ]
-        )
-    }
-    
-    function UpdateServiceOfferButton ({onClick}){
-        return React.createElement(ServiceOfferComp.UpdateButton, {
-            text: textEs.update,
-            onClick: () =>{onClick();}
-        });
-    }
+function EditServiceOfferBox({service,checked, onChecked}){
+    return React.createElement("div", {
+        className: "col-lg-3"
+    }, 
+        [
+            React.createElement(ServiceOfferComp.ServiceCheckBox, {
+                key: `checkbox4${service}`,
+                service: service,
+                checked: checked,
+                onChecked: (isChecked) =>{onChecked(service, isChecked);}
+            }),
+            React.createElement(ServiceOfferComp.ServiceLabel,{
+                key: `label4${service}`,
+                service: service,
+                serviceTxt: textEs[service]
+            })
+        ]
+    )
+}
 
-    function SuccessMessage(){
-        alert(textEs.updateSuccess);
-    }
+function UpdateServiceOfferButton ({onClick}){
+    return React.createElement(ServiceOfferComp.UpdateButton, {
+        text: textEs.update,
+        onClick: () =>{onClick();}
+    });
+}
 
-    return{
-        EditBox: EditServiceOfferBox,
-        UpdateServiceOfferButton: UpdateServiceOfferButton,
-        SuccessMessage: SuccessMessage
-    };
+function SuccessMessage(){
+    alert(textEs.updateSuccess);
+}
 
-});
-
+module.exports = {
+    EditBox: EditServiceOfferBox,
+    UpdateServiceOfferButton: UpdateServiceOfferButton,
+    SuccessMessage: SuccessMessage
+};
 //example of EditServiceOfferBoxs
 /*
  <div class="col-lg-3 " >

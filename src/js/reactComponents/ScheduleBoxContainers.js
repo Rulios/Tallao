@@ -1,80 +1,74 @@
 "use strict";
-require.config({
-    paths: {
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        ScheduleBoxComp: "./reactComponents/ScheduleBoxComp"
-    }
-});
-define(["react", "ScheduleBoxComp"], function(React, ScheduleBoxComp){
 
-    /* This is a middle order component, responsible for translation
-    and bundling of low order components */
+const React = require("react");
+const ScheduleBoxComp = require("./reactComponents/ScheduleBoxComp");
 
-    const textEs = {
-        start: "Entrada:",
-        end: "Salida:",
-        update: "Actualizar horario de servicio",
-        updateSuccess: "¡Horario actualizado!",
-        monday: "Lunes",
-        tuesday: "Martes",
-        wednesday: "Miércoles",
-        thursday: "Jueves",
-        friday: "Viernes",
-        saturday: "Sábado",
-        sunday: "Domingo"
-    }
+/* This is a middle order component, responsible for translation
+and bundling of low order components */
 
-    function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
-        return React.createElement("div", {
-            className: "col-lg-4 smallMarginBottom hoverShadow"
-        },
-            [
-                React.createElement(ScheduleBoxComp.DayTitle, {
-                    key: `titleDay${idDay}`,
-                    dayTxt: textEs[idDay]
-                }),
-                React.createElement(ScheduleBoxComp.InputTimeDay,{
-                    key: `startDay${idDay}`,
-                    id: `startDay${idDay}`,
-                    text: textEs.start,
-                    value: time.startHour,
-                    onChange: (value) =>{
-                        onChangeSchedule(idDay, value, "startHour");
-                    }
-                }),
-                React.createElement("br", {key: `id${idDay}`}),
-                React.createElement(ScheduleBoxComp.InputTimeDay,{
-                    key: `endDay${idDay}`,
-                    id: `endDay${idDay}`,
-                    text: textEs.end,
-                    value: time.endHour,
-                    onChange: (value) =>{
-                        onChangeSchedule(idDay, value, "endHour");
-                    }
-                })
-            ]
-        );
+const textEs = {
+    start: "Entrada:",
+    end: "Salida:",
+    update: "Actualizar horario de servicio",
+    updateSuccess: "¡Horario actualizado!",
+    monday: "Lunes",
+    tuesday: "Martes",
+    wednesday: "Miércoles",
+    thursday: "Jueves",
+    friday: "Viernes",
+    saturday: "Sábado",
+    sunday: "Domingo"
+}
 
-    }
-    
-    function UpdateScheduleButton ({onClick}){
-        return React.createElement(ScheduleBoxComp.submitButton, {
-            text: textEs.update,
-            onClick: () =>{onClick();}
-        });
-    }
+function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
+    return React.createElement("div", {
+        className: "col-lg-4 smallMarginBottom hoverShadow"
+    },
+        [
+            React.createElement(ScheduleBoxComp.DayTitle, {
+                key: `titleDay${idDay}`,
+                dayTxt: textEs[idDay]
+            }),
+            React.createElement(ScheduleBoxComp.InputTimeDay,{
+                key: `startDay${idDay}`,
+                id: `startDay${idDay}`,
+                text: textEs.start,
+                value: time.startHour,
+                onChange: (value) =>{
+                    onChangeSchedule(idDay, value, "startHour");
+                }
+            }),
+            React.createElement("br", {key: `id${idDay}`}),
+            React.createElement(ScheduleBoxComp.InputTimeDay,{
+                key: `endDay${idDay}`,
+                id: `endDay${idDay}`,
+                text: textEs.end,
+                value: time.endHour,
+                onChange: (value) =>{
+                    onChangeSchedule(idDay, value, "endHour");
+                }
+            })
+        ]
+    );
 
-    function SuccessMessage(){
-        alert(textEs.updateSuccess);
-    }
+}
 
-    return{
-        EditBox: EditScheduleBox,
-        UpdateScheduleButton: UpdateScheduleButton,
-        SuccessMessage: SuccessMessage
-    };
+function UpdateScheduleButton ({onClick}){
+    return React.createElement(ScheduleBoxComp.submitButton, {
+        text: textEs.update,
+        onClick: () =>{onClick();}
+    });
+}
 
-});
+function SuccessMessage(){
+    alert(textEs.updateSuccess);
+}
+
+module.exports = {
+    EditBox: EditScheduleBox,
+    UpdateScheduleButton: UpdateScheduleButton,
+    SuccessMessage: SuccessMessage
+};
 
 //example of EditScheduleBox
 /*
