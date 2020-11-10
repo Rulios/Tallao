@@ -1,17 +1,22 @@
 'use strict';
 
+require( "core-js/stable");
+require("regenerator-runtime/runtime");
+
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const ajaxCheckExists = require("./requestsModules/ajaxReqCheckExists");
 const ajaxRegister = require("./requestsModules/ajaxReqRegister");
 const passwordHandler = require("./frontendModules/passwordHandler");
+const isEmail = require("validator/lib/isEmail");
+const validator = require("validator");
 
 $(document).ready(function(){
 
     let pathLocation = window.location.pathname;
     if(pathLocation === "/laundryRegister"){
         //needs authentication & authorization mechanism
-        formVerification.setUserType("superuser");
+        formVerification.setUserType("laundry");
     }else if(pathLocation === "/register"){
         formVerification.setUserType("user");
     }    
@@ -26,7 +31,7 @@ $(document).ready(function(){
         if(!$("#submitRegister").hasClass("disableButton")){
             let obj = {
                 inputName : capitalizeFirstLetter($("#inputName").val()),
-                inputLastname : capitalizeFirstLetter($("#inputLastname").val()),
+                inputSurname : capitalizeFirstLetter($("#inputSurname").val()),
                 inputEmail : $("#inputEmail").val(),
                 inputPassword : $("#inputPassword").val(),
                 inputTargetMarket : $("#inputTargetMarket").val()
@@ -51,12 +56,12 @@ $(document).ready(function(){
                 inputLaundryName : $("#inputLaundryName").val(),
                 inputLocation : $("#inputLocation").val(),
                 inputName : capitalizeFirstLetter($("#inputName").val()),
-                inputLastname : capitalizeFirstLetter($("#inputLastname").val()),
+                inputSurname : capitalizeFirstLetter($("#inputSurname").val()),
                 inputEmail : $("#inputEmail").val(),
                 inputPassword : $("#inputPassword").val()
             };
             
-            let query =  ajaxRegister.registerSuperUser(obj);
+            let query =  ajaxRegister.registerLaundry(obj);
             query.then(data =>{
                 console.log(data);
                 /* $("#frmMasterUserRegister").toggleClass("hide");
@@ -83,13 +88,13 @@ $(document).ready(function(){
     });
 
 
-    $('#inputLastname').change(function(e){
-        let id = "inputLastname";
-        let lastName = $('#inputLastname').val();
+    $('#inputSurname').change(function(e){
+        let id = "inputSurname";
+        let surName = $('#inputSurname').val();
         let msg = "Escribe un apellido correcto";
     
         formVerification.deleteAppendError(id);
-        if((lastName === "") || (lastName.length < 2)){
+        if((surName === "") || (surName.length < 2)){
           formVerification.formAppendError(id, msg, "red");
           formVerification.invokeVerify(id, false);
         }else{
@@ -102,8 +107,8 @@ $(document).ready(function(){
     $('#inputEmail').change(function(e){
         let email = $("#inputEmail").val();
         let id = "inputEmail";
-    
-        if(!validateEmail(email)){
+
+        if(!isEmail(email)){
           formVerification.deleteAppendError(id);
           formVerification.formAppendError(id, "¡Escribe un correo válido!" ,"red");
           formVerification.invokeVerify(id, false);
@@ -113,18 +118,17 @@ $(document).ready(function(){
                 inputEmail: $("#inputEmail").val(),
                 userType: formVerification.getUserType()
             });
-            query.then(dataJSON =>{
-                let data = JSON.parse(dataJSON);
+            query.then(data =>{
                 //convert to integer to evaluate on if
-                data["length"] = parseInt(data["length"]);
-            
-                if(data["length"]){
+                if(data.exists){
                     formVerification.deleteAppendError(id);
                     formVerification.formAppendError(id, "¡El correo existe!" , "red");
                     formVerification.invokeVerify(id, false);
                 }else{
                     formVerification.deleteAppendError(id);
+                    formVerification.formAppendError(id, "¡Correo válido!", "green");
                     formVerification.invokeVerify(id, true);
+
                 }
             }).catch(err => console.error(err));
         }
@@ -148,7 +152,7 @@ $(document).ready(function(){
         let id = "inputRePassword";
         let inputPassword = $("#inputPassword").val();
         let inputRePassword = $("#inputRePassword").val();
-        passwordHandle.rePasswordVerify(id,inputPassword,inputRePassword);
+        passwordHandler.rePasswordVerify(id,inputPassword,inputRePassword);
     });
 
 
@@ -227,12 +231,9 @@ $(document).ready(function(){
             let query = ajaxCheckExists.laundryInitials({
                 inputInitials: $("#inputInitials").val()
             });
-            query.then(dataJSON =>{
-                let data = JSON.parse(dataJSON);
-                //convert to integer to evaluate on if
-                data["length"] = parseInt(data["length"]);
+            query.then(data =>{
             
-                if(data["length"]){
+                if(data.exists){
                     formVerification.deleteAppendError(id);
                     formVerification.formAppendError(id, msg.msg1 , "red");
                     formVerification.invokeVerify(id, false);
@@ -241,7 +242,9 @@ $(document).ready(function(){
                     formVerification.formAppendError(id, msg.msg2 , "green");
                     formVerification.invokeVerify(id, true);
                 }
-            }).catch(err => console.error(err));
+            }).catch(err => {
+                
+            });
 
         }else{ //when it doesn't has any input value
             formVerification.deleteAppendError(id);
@@ -263,12 +266,6 @@ function capitalizeFirstLetter(string) {
         result += arr[i][0].toUpperCase() + value.slice(1) + " ";
     });
     return result;
-}
-
-
-function validateEmail(email) {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
 }
 
 

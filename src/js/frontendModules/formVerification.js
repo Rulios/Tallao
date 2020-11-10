@@ -13,13 +13,13 @@ function setUserType(type){
   //data validation and set the fields to verify
   switch(type){
 
-    case "superuser":
+    case "laundry":
 
       fieldVerification = {
         inputLaundryName: false,
         inputLocation: false,
         inputName: false,
-        inputLastname : false,
+        inputSurname : false,
         inputEmail: false,
         inputPassword: false,
         inputRePassword: false
@@ -31,7 +31,7 @@ function setUserType(type){
 
       fieldVerification = {
         inputName: false,
-        inputLastname : false,
+        inputSurname : false,
         inputEmail: false,
         inputPassword: false,
         inputRePassword: false,
@@ -119,7 +119,6 @@ function verify(field, status){
       return (!Object.values(fieldVerification).includes(false)) ? true: false;
 
   }else{
-      //console.log(fieldVerification);
       if(!Object.values(fieldVerification).includes(false)){
         toggleSubmitButton(true);
       }else{

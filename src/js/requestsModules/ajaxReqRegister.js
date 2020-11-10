@@ -2,7 +2,7 @@
 const ajaxReq = require("./ajaxReq");
 
 async function registerUser(obj = {}){
-    //props: id, inputName, inputLastname, inputEmail, inputPassword
+    //props: id, inputName, inputSurname, inputEmail, inputPassword
     //      inputTargetMarket
 
     try{
@@ -14,10 +14,10 @@ async function registerUser(obj = {}){
 
 async function registerLaundry(obj= {}){
     //props: inputInitials, inputLaundryName, inputLocation
-    //inputName, inputLastname, inputEmail, inputPassword
+    //inputName, inputSurname, inputEmail, inputPassword
     try{
 
-        return await ajaxReq.doAJAX("POST", "./php/DBRegister/masterRegister.php", obj);
+        return await ajaxReq.doAJAX("POST", "/register/laundryRegister", obj);
 
     }catch(err){
         console.error(err);

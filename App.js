@@ -1,16 +1,21 @@
-require('dotenv').config();
+"use strict";
+
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const port= 8080;
+const ControllerHandler = require("./controllers/Handler.js");
 
 let app = express();
-// create application/json parser
-let jsonParser = bodyParser.json();
 
 const server = app.listen(port);
 
 
-//app.use(jsonParser);
+//use json bodyParser
+app.use(bodyParser.json());
+//use urlencoded bodyParser
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 
 app.get("/", function(req,res){
@@ -29,4 +34,6 @@ app.get("/laundryRegister", function(req,res){
     res.sendFile(__dirname + "/public/laundryRegister.html");
 });
 
+//pass express app to the ControllerHandlers
+ControllerHandler.set(app);
 
