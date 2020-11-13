@@ -6,7 +6,7 @@ async function registerUser(obj = {}){
     //      inputTargetMarket
 
     try{
-        return await ajaxReq.doAJAX("POST", "./php/register.php", obj);
+        return await ajaxReq.doAJAX("POST", "./register/userRegister", obj);
     }catch(err){
         console.error(err);
     };

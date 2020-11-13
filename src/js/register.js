@@ -63,9 +63,9 @@ $(document).ready(function(){
             
             let query =  ajaxRegister.registerLaundry(obj);
             query.then(data =>{
-                console.log(data);
-                /* $("#frmMasterUserRegister").toggleClass("hide");
-                $("#congrSection").toggleClass("hide"); */
+                if(data.status == "OK")
+                    $("#frmMasterUserRegister").toggleClass("hide");
+                    $("#congrSection").toggleClass("hide");
             })
             .catch(err => console.error(err));
         }

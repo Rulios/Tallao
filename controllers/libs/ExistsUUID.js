@@ -4,8 +4,6 @@ const validator = require("validator");
 const userTypeRanges = ["laundry", "user"];
 
 module.exports = async function(uuid, userType){
-    //check if param is uuid
-    if(!validator.isUUID(uuid)) throw Error("NOT_UUID");
     //check if userType falls in range
     if(!validator.isIn(userType, userTypeRanges)) throw Error("USERTYPE_NOT_IN_RANGE");
 

@@ -1,7 +1,7 @@
 "use strict";
 const client = require("../libs/DBConnect");
 const validator = require("validator");
-const { reset } = require("nodemon");
+const ExistsPublicID = require("../libs/ExistsPublicID");
 
 const userTypeRange = ["laundry", "user"];
 
@@ -63,12 +63,9 @@ module.exports.set = function(app){
             if(!validator.isUppercase(inputInitials)) return res.status(400).json({error: "NOT_UPPERCASE", field: "laundryInitials"});
             //check if falls into the range of 4-6 characters 
             if(!validator.isByteLength(inputInitials, {min: 4, max:6})) return res.status(400).json({error: "NOT_IN_RANGE", min: 4, max:6});
-            
-            let query = "SELECT 1 FROM laundries WHERE initials = $1 LIMIT 1";
-            let values = [inputInitials];
-
-            client.query(query,values)
-            .then(result =>{
+     
+            //query
+            ExistsPublicID(inputInitials, "laundry").then(result =>{
                 if(result.rowCount){
                     return res.json({exists: true});
                 } else{
