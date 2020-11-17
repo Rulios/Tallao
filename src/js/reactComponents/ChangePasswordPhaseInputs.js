@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const ChangePasswordComp = require("./reactComponents/ChangePasswordComp");
+const ChangePasswordComp = require("./ChangePasswordComp");
 
 /* This file contains middle level components, and the higher level container
 which handles all the operations and requests to change password */

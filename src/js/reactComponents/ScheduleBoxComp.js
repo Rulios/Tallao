@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const inputPrevent = require( "./frontendModules/inputPrevent");
+const inputPrevent = require( "../frontendModules/inputPrevent");
 
 //All the low components, in charge of just displaying single components
 

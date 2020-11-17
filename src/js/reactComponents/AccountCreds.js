@@ -1,8 +1,8 @@
 "use strict";
 
 const React = require("react");
-const AccountFields = require("./reactComponents/AccountFields");
-const ajaxReqUserCreds = require("./requestsModules/ajaxReqUserCreds");
+const AccountFields = require("./AccountFields");
+const ajaxReqUserCreds = require("../requestsModules/ajaxReqUserCreds");
 
 function UserDisplay({name, surname, email}){
     return [

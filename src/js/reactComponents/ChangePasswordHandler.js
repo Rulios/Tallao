@@ -1,10 +1,10 @@
 "use strict";
 
 const React= require("react");
-const ChangePasswordPhaseInputs= require("./reactComponents/ChangePasswordPhaseInputs");
-const ChangePasswordComp= require("./reactComponents/ChangePasswordComp");
-const passwordLengthHandler= require("./frontendModules/passwordLengthHandler");
-const ajaxReqUserCreds= require("./requestsModules/ajaxReqUserCreds");
+const ChangePasswordPhaseInputs= require("./ChangePasswordPhaseInputs");
+const ChangePasswordComp= require("./ChangePasswordComp");
+const passwordLengthHandler= require("../frontendModules/passwordLengthHandler");
+const ajaxReqUserCreds= require("../requestsModules/ajaxReqUserCreds");
 
 function ChangePasswordLink({onClick}){
     return(
@@ -195,4 +195,4 @@ class ChangePassword extends React.Component{
     }
 }
 
-return ChangePassword;
+module.exports = ChangePassword;

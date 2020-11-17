@@ -1,8 +1,8 @@
 "use strict";
 
 const React = require("react");
-const ScheduleBoxContainer = require("./reactComponents/ScheduleBoxContainers");
-const ajaxReqSuperUserConfigs = require("./requestsModules/ajaxReqSuperUserConfigs");
+const ScheduleBoxContainer = require("./ScheduleBoxContainers");
+const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */
@@ -19,7 +19,7 @@ const daysEs = {
 
 async function getSchedule(){
     try {
-        let query = await ajaxReqSuperUserConfigs.fetchSchedule();
+        let query = await ajaxReqLaundryConfigs.fetchSchedule();
         return query;
     }catch(err){console.error(err);}
 }
@@ -50,7 +50,7 @@ class Schedule extends React.Component{
     }
 
     updateSchedule(){
-        ajaxReqSuperUserConfigs.updateSchedule(JSON.stringify(this.state.days))
+        ajaxReqLaundryConfigs.updateSchedule(JSON.stringify(this.state.days))
         .then(response =>{
             if(response === "OK"){
                 ScheduleBoxContainer.SuccessMessage();

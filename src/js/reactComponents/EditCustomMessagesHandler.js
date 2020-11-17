@@ -2,8 +2,8 @@
 
 const React = require("react");
 const ReactDOM = require("react-dom");
-const EditCustomMessagesContainers = require("./reactComponents/EditCustomMessagesContainers");
-const ajaxReqCustomMessages = require("./requestsModules/ajaxReqCustomMessages");
+const EditCustomMessagesContainers = require("./EditCustomMessagesContainers");
+const ajaxReqCustomMessages = require("../requestsModules/ajaxReqCustomMessages");
 
 async function getCustomMessages(){
     try {

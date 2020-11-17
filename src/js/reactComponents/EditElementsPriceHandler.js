@@ -1,12 +1,12 @@
 "use strict";
 
 const React = require("react");
-const EditElementsPriceContainers = require( "./reactComponents/EditElementsPriceContainers");
-const ajaxReqSuperUserConfigs = require("./requestsModules/ajaxReqSuperUserConfigs");
+const EditElementsPriceContainers = require( "./EditElementsPriceContainers");
+const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
 async function getElementsPrice({serviceSelected}){
     try {
-        let query = await ajaxReqSuperUserConfigs.fetchElementsPrice({serviceSelected: serviceSelected});
+        let query = await ajaxReqLaundryConfigs.fetchElementsPrice({serviceSelected: serviceSelected});
         return query;
     }catch(err){console.error(err);}
 }
@@ -52,7 +52,7 @@ class EditElementsPrice extends React.Component{
     }
 
     updateElementsPrice(){
-        ajaxReqSuperUserConfigs.updateElementsPrice({
+        ajaxReqLaundryConfigs.updateElementsPrice({
             serviceSelected: this.props.service,
             elementsPrice: JSON.stringify(this.state.elements),
             hookPrice: this.state.extras.hook

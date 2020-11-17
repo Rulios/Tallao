@@ -1,6 +1,6 @@
 "use strict";
 const React = require("react");
-const ServiceOfferComp = require("./reactComponents/EditServiceOfferComp");
+const ServiceOfferComp = require("./EditServiceOfferComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

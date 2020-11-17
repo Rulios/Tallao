@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const EditElementsPriceComp = require("./reactComponents/EditElementsPriceComp");
+const EditElementsPriceComp = require("./EditElementsPriceComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

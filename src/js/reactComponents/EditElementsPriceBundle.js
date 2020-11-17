@@ -1,8 +1,8 @@
 "use strict";
 
 const React = require("react");
-const EditElementsPriceHandler = require("./reactComponents/EditElementsPriceHandler");
-const LaundryServiceSelector = require("./reactComponents/LaundryServiceSelector");
+const EditElementsPriceHandler = require("./EditElementsPriceHandler");
+const LaundryServiceSelector = require("./LaundryServiceSelector");
 
 //THIS IS A BUNDLE COMPONENT
 //BUNDLE COMPONENTS: WHEN TWO HANDLER COMPONENTS ARE REQUIRED TO EXCHANGE DATA

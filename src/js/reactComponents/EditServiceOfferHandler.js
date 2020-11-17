@@ -1,7 +1,7 @@
 "use strict";
 const React= require("react");
-const ServiceOfferContainers = require("./reactComponents/EditServiceOfferContainers");
-const ajaxReqSuperUserConfigs = require("./requestsModules/ajaxReqSuperUserConfigs");
+const ServiceOfferContainers = require("./EditServiceOfferContainers");
+const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
 async function getServiceOffer(){
     try {
@@ -21,7 +21,7 @@ class ServiceOffer extends React.Component{
     }
 
     updateServiceOffer(){
-        ajaxReqSuperUserConfigs.updateServiceOffer({serviceOffer: this.state.availableServices.join(",")})
+        ajaxReqLaundryConfigs.updateServiceOffer({serviceOffer: this.state.availableServices.join(",")})
         .then(response =>{
             if(response === "OK"){
                 ServiceOfferContainers.SuccessMessage();

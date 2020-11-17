@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const FieldDisplayDiv = require("./reactComponents/FieldDisplayDiv");
+const FieldDisplayDiv = require("./FieldDisplayDiv");
 
 function UserNameSurnameContainer({name, lastName}){
     return(

@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const ScheduleBoxComp = require("./reactComponents/ScheduleBoxComp");
+const ScheduleBoxComp = require("./ScheduleBoxComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

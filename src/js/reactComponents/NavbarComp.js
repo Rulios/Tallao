@@ -71,7 +71,7 @@ function MyAccount(){
     return (
         React.createElement(NavbarTagFormat,{
             id: "MyAccount",
-            href: "myaccount.html",
+            href: "myaccount",
             className: "bottomLineLinkAnimation navBarText",
             iconClass: "fa fa-user-circle",
             text: textEs.MyAccount

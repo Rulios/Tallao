@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const EditCustomMessagesComp = require("./reactComponents/EditCustomMessagesComp");
+const EditCustomMessagesComp = require("./EditCustomMessagesComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

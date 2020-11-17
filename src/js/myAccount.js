@@ -1,11 +1,13 @@
 "use strict";
 
+require( "core-js/stable");
+require("regenerator-runtime/runtime");
+
 const React = require("react");
 const ReactDOM = require("react-dom");
 
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
-const sessionHandler = require("./frontendModules/sessionHandler");
 const AccountCreds = require("./reactComponents/AccountCreds");
 const ChangePasswordHandler	= require("./reactComponents/ChangePasswordHandler");
 const ScheduleHandler = require("./reactComponents/ScheduleHandler");
@@ -18,7 +20,6 @@ let userType = null;
 
 $(document).ready(() =>{
 
-    sessionHandler.check();
 
     try{
         RenderOnPage();

@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const CredsDisplayDiv = require("./reactComponents/CredsDisplayDiv");
+const CredsDisplayDiv = require("./CredsDisplayDiv");
 
 const OneFieldDisplay = ({field, value}) =>{
 
