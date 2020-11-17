@@ -1,33 +1,27 @@
-require.config({
-    paths:{
-        ajaxReq: "./requestsModules/ajaxReq"
-    }
-});
-define(["ajaxReq"], function(ajaxReq){
-    //This module has functions that involves all the AJAX requests 
-    //within the limits of User Credentials.
+const ajaxReq = require("./ajaxReq");
 
-    async function verifyPassword(obj){
-        //params: inputPassword (string, to be convalidate with DB data)
-        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/verifyPassword.php", obj);
-    }
+ //This module has functions that involves all the AJAX requests 
+//within the limits of User Credentials.
 
-    async function newPassword(obj){
-        //params: inputPassword(string, must be validated first)
+async function verifyPassword(obj){
+    //params: inputPassword (string, to be convalidate with DB data)
+    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/verifyPassword.php", obj);
+}
 
-        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/updateNewPassword.php", obj);
-    }
+async function newPassword(obj){
+    //params: inputPassword(string, must be validated first)
 
-    async function fetchAccountCreds(){
-        //paarams: none, it's on server side
+    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/updateNewPassword.php", obj);
+}
 
-        return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/fetchAccountCreds.php");
-    }
+async function fetchAccountCreds(){
+    //paarams: none, it's on server side
 
-    return{
-        verifyPassword: verifyPassword,
-        newPassword: newPassword,
-        fetchAccountCreds: fetchAccountCreds
-    };
+    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/fetchAccountCreds.php");
+}
 
-});
+module.exports = {
+    verifyPassword: verifyPassword,
+    newPassword: newPassword,
+    fetchAccountCreds: fetchAccountCreds
+};

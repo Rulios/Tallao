@@ -8,6 +8,7 @@ module.exports = {
         design: path.resolve(__dirname, './src/js/design.js'),
         register: path.resolve(__dirname, './src/js/register.js'),
         login: path.resolve(__dirname, './src/js/login.js'),
+        laundryPanel: path.resolve(__dirname, "./src/js/laundryPanel.js")
         
     },
     output: {

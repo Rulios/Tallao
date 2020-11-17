@@ -34,8 +34,7 @@ module.exports = async function(laundryInitials){
     let rowCountCustomMessageID = 1;
     do{
         firstCustomMessage.id = uniqid(`${laundryInitials}-`);
-        let queryCountCustomMessageID = await ExistsCustomMessageID([firstCustomMessage.id]);
-        rowCountCustomMessageID = queryCountCustomMessageID.rowCount;
+        rowCountCustomMessageID = await ExistsCustomMessageID([firstCustomMessage.id]);
     }while(rowCountCustomMessageID);
 
     let firstCustomMessageQuery = `

@@ -15,5 +15,5 @@ module.exports = async function(uuid, userType){
         query = "SELECT 1 FROM laundries WHERE hashcode = $1 LIMIT 1";
     }
 
-    return await client.query(query, values);
+    return (await client.query(query, values)).rowCount;
 }

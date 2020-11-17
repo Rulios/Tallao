@@ -5,6 +5,6 @@ let ErrorCodes = {
     NOT_UPPERCASE: "Campo requerido en mayúsculas",
     NOT_IN_RANGE: "Campo no dentro de los rangos",
     NOT_EMAIL: "El campo no es un correo válido",
-    NOT_NAMING_LAUNDRY: "El nombre debe iniciar con Lavandería"
-
+    NOT_NAMING_LAUNDRY: "El nombre debe iniciar con Lavandería",
+    WRONG_CREDENTIALS: "El correo o la contraseña no coinciden"
 };

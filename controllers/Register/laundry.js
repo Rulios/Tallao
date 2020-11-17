@@ -60,8 +60,7 @@ module.exports.set = function(app){
                     do{
                         hashcode = uuidv4();
 
-                        let queryCountUUID = await ExistsUUID(hashcode, "laundry");
-                        rowCountUUID = queryCountUUID.rowCount;
+                        rowCountUUID = await ExistsUUID(hashcode, "laundry");
                     }while(rowCountUUID);
                 }catch(err){
                     throw new Error();

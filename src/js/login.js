@@ -1,5 +1,8 @@
 'use strict';
 
+require( "core-js/stable");
+require("regenerator-runtime/runtime");
+
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const page = require("./frontendModules/pageRedirection");
@@ -30,7 +33,7 @@ $(document).ready(function(){
         e.preventDefault();
     });
 
-    $("#submitLoginSuperUser").click(function(e){
+    $("#submitLoginLaundry").click(function(e){
         checkLoginAJAX("laundry");
     });
 
@@ -78,7 +81,7 @@ function convertStringToBoolean(string){
 function checkLoginAJAX(userType){
     let inputEmail = $("#inputEmail").val();
     let inputPassword = $("#inputPassword").val();
-    
+    console.log("Login");
     if(formVerification.invokeVerify("submit")){
         let obj = {
             inputEmail: inputEmail,
@@ -87,17 +90,13 @@ function checkLoginAJAX(userType){
         };
         
         let query =  ajaxReqLog.login(obj);
-        query.then(dataJSON =>{
+        query.then(data =>{
+            page.redirectToPanel(data.userType);
+        }).catch(err => {
+            console.log(err);
             const id = "inputPassword";
-            console.log(dataJSON);
-            let data = JSON.parse(dataJSON);
-         
-            if(convertStringToBoolean(data.status)){
-                page.loginRedirection(data.url);
-            }else{
-                formVerification.deleteAppendError(id);
-                formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
-            }
-        }).catch(err => console.error(err));
+            formVerification.deleteAppendError(id);
+            formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
+        });
     }
 }

@@ -1,8 +1,7 @@
 "use strict";
-const client = require("../libs/DBConnect");
 const validator = require("validator");
 const ExistsPublicID = require("../libs/ExistsPublicID");
-
+const ExistsEmail = require("../libs/ExistsEmail");
 const userTypeRange = ["laundry", "user"];
 
 module.exports.set = function(app){
@@ -27,18 +26,8 @@ module.exports.set = function(app){
             userType = validator.escape(userType);
 
 
-            let query = "";
-            let values = [inputEmail];
-            //set tablename depending on the userType
-            if(userType === "user"){
-                query = "SELECT 1 FROM users WHERE email = $1 LIMIT 1";
-            }else if (userType === "laundry"){
-                query = "SELECT 1 FROM laundries WHERE email = $1 LIMIT 1";
-            }
-            
-            client.query(query,values)
-            .then(result =>{
-                if(result.rowCount){
+            ExistsEmail(inputEmail, userType).then(result =>{
+                if(result){
                     return res.json({exists: true});
                 } else{
                     return res.json({exists: false});
@@ -66,7 +55,7 @@ module.exports.set = function(app){
      
             //query
             ExistsPublicID(inputInitials, "laundry").then(result =>{
-                if(result.rowCount){
+                if(result){
                     return res.json({exists: true});
                 } else{
                     return res.json({exists: false});

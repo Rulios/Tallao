@@ -6,10 +6,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const port= 8080;
 const ControllerHandler = require("./controllers/Handler.js");
+const session = require("express-session");
+const laundryRouter = require("./controllers/Laundry/Controllers");
 
 let app = express();
 
+
 const server = app.listen(port);
+
 
 
 //use json bodyParser
@@ -18,11 +22,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 
+//sessions
+app.use(session({
+    secret: "tallao",
+    resave: false,
+    saveUninitialized: true,
+}));
+
+//main page serving
+
 app.get("/", function(req,res){
     res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/login", function(req,res){
+app.get("/loginPage", function(req,res){
     res.sendFile(__dirname + "/public/login.html");
 });
 
@@ -34,6 +47,7 @@ app.get("/laundryRegister", function(req,res){
     res.sendFile(__dirname + "/public/laundryRegister.html");
 });
 
+app.use("/laundry", laundryRouter);
+
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);
-

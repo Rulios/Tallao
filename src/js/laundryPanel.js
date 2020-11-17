@@ -1,11 +1,14 @@
 'use strict';
 
+require( "core-js/stable");
+require("regenerator-runtime/runtime");
+
+
 const React = require("react");
 const ReactDOM = require("react-dom");
 
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
-const sessionHandler = require("./frontendModules/sessionHandler");
 const ajaxReqUserCreds = require("./requestsModules/ajaxReqUserCreds");
 const ajaxReqOrders = require("./requestsModules/ajaxReqOrders");
 const LaundryServiceSelector = require("./reactComponents/laundryServiceSelector");
@@ -14,13 +17,12 @@ const WriteOrder = require("./reactComponents/WriteOrder");
 const UseCustomMessages = require("./reactComponents/UseCustomMessagesHandler");
 const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
-
+console.log("DAWD");
 //1st session handling
 (function(){
         
     $(document).ready(function(){
         
-        sessionHandler.check();
 
         RenderNavbar();
 

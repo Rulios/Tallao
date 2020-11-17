@@ -59,8 +59,7 @@ module.exports.set = function(app){
                     do{
                         publicID = generatePublicID();
                         //check if public ID exists
-                        let queryCountPublicID = await ExistsPublicID(publicID, "user"); 
-                        rowCountPublicID = queryCountPublicID.rowCount;
+                        rowCountPublicID = await ExistsPublicID(publicID, "user"); 
                     }while(rowCountPublicID);
                 }catch(err){
                     console.log(err);

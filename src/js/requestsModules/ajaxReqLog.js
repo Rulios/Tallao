@@ -2,7 +2,7 @@ const ajaxReq = require("./ajaxReq");
 
 async function login(obj = {}){
     //params: inputEmail, inputPassword, userType
-    return await ajaxReq.doAJAX("POST", "./php/DBLog/loginProcess.php", obj);
+    return await ajaxReq.doAJAX("POST", "/login", obj);
 }
 
 async function logout(){
@@ -13,7 +13,7 @@ async function logout(){
 function urlExists(){
     
     $.ajax({
-        url:"./php/DBLogin/loginProcess.php",
+        url:"./php/DBLogin/loginPageProcess.php",
         type:'HEAD',
         error: function()
         {
