@@ -2,8 +2,8 @@
 
 const React = require("react");
 const $ = require("jquery");
-const WriteOrderContainers = require("./reactComponents/WriteOrderContainers");
-const ajaxReqSuperUserConfigs = require("../js/requestsModules/ajaxReqSuperUserConfigs");
+const WriteOrderContainers = require("./WriteOrderContainers");
+const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
 /* This module serves as a function repository. 
 In which any component that handles related features can and should
@@ -98,7 +98,7 @@ async function fetchElementsPrice(elements){
     //fetchs the elements price (all)
     //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
     try{
-        let data = await ajaxReqSuperUserConfigs.fetchElementsPrice();
+        let data = await ajaxReqLaundryConfigs.fetchElementsPrice();
         let priceObj = JSON.parse(data);
         let newElementsPrice = returnNewElementsPrice(priceObj, elements);
         return newElementsPrice;

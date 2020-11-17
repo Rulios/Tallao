@@ -2,8 +2,7 @@
 // main.js
 
 const React = require("react");
-const ReactDOM = require("react-dom");
-const ajaxReqSuperUserConfigs = require("../js/requestsModules/ajaxReqSuperUserConfigs");
+const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
 const serviceOfferString = {
     iron: "Planchado",
@@ -36,7 +35,7 @@ class ServiceSelector extends React.Component{
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
-            ajaxReqSuperUserConfigs.fetchServiceOffer().then(ServiceStr =>{
+            ajaxReqLaundryConfigs.fetchServiceOffer().then(ServiceStr =>{
                 let services = ServiceStr.trim().split(",");
                 this.returnData(services[0]);
                 that.setState({

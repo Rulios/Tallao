@@ -1,7 +1,7 @@
 
 const React = require("react");
-const UseCustomMessagesContainers = require("./reactComponents/UseCustomMessagesContainers");
-const ajaxReqCustomMessages = require("../js/requestsModules/ajaxReqCustomMessages");
+const UseCustomMessagesContainers = require("./UseCustomMessagesContainers");
+const ajaxReqCustomMessages = require("../requestsModules/ajaxReqCustomMessages");
 
 
 class UseCustomMessages extends React.Component{

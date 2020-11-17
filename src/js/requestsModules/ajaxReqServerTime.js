@@ -1,25 +1,9 @@
-require.config({
+const ajaxReq = require("./ajaxReq");
 
-    paths:{
-        jquery: [
-            "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
-            "../Tallao/js/lib/jquery"],
-        ajaxReq: "./requestsModules/ajaxReq"
-    }
-});
+async function fetchDateTimeServer(){
+    return await ajaxReq.doAJAX("GET", "");
+}
 
-define(["jquery","ajaxReq"], function($,ajaxReq){
-
-    async function fetchDateTimeServer(){
-
-        return await $.ajax({
-            type:"POST",
-            url:"./php/DBServerTime/fetchDateTimeServer.php"
-        });
-
-    }
-    return {
-        fetchDateTimeServer: fetchDateTimeServer
-    };
-
-});
+module.exports = {
+    fetchDateTimeServer: fetchDateTimeServer
+};

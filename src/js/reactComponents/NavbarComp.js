@@ -20,11 +20,11 @@ function Logo(){
     return (
         React.createElement("a", {
             className: "navbar-brand text-center",
-            href: "index.html"
+            href: "/"
         },
             React.createElement("img", {
                 style:{width:"60%"},
-                src: "imgs/Tallao-Complete-es.svg",
+                src: "/imgs/Tallao-Complete-es.svg",
                 alt: "Talla'o"
             })
         )
@@ -35,7 +35,7 @@ function WriteOrders(){
     return (
         React.createElement(NavbarTagFormat,{
             id: "MasterPanelTag",
-            href: "laundrypanel.html",
+            href: "/laundry/panel",
             className: "bottomLineLinkAnimation navBarText",
             iconClass: "fa fa-pencil-square-o",
             text: textEs.WriteOrders
@@ -47,7 +47,7 @@ function AffiliatedOrders(){
     return (
         React.createElement(NavbarTagFormat,{
             id: "AffiliatedOrders",
-            href: "myorders.html",
+            href: "/laundry/myorders",
             className: "bottomLineLinkAnimation navBarText",
             iconClass: "fa fa-th-list",
             text: textEs.AffiliatedOrders
@@ -59,7 +59,7 @@ function MyOrders(){
     return (
         React.createElement(NavbarTagFormat,{
             id: "MyOrders",
-            href: "myorders.html",
+            href: "/user/myorders",
             className: "bottomLineLinkAnimation navBarText",
             iconClass: "fa fa-th-list",
             text: textEs.MyOrders

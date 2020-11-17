@@ -1,6 +1,6 @@
 
 const React = require("react");
-const inputPrevent = require("./frontendModules/inputPrevent");
+const inputPrevent = require("../frontendModules/inputPrevent");
 
 //Middle component, this doesn't has lower components
 

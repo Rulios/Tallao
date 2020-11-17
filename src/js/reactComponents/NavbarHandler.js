@@ -1,9 +1,9 @@
 "use strict";
 
 const React= require("react");
-const NavbarComp = require("./reactComponents/NavbarComp");
-const ajaxReqLog = require("../js/requestsModules/ajaxReqLog");
-const pageRedirection = require("../js/frontendModules/pageRedirection");
+const NavbarComp = require("./NavbarComp");
+const ajaxReqLog = require("../requestsModules/ajaxReqLog");
+const pageRedirection = require("../frontendModules/pageRedirection");
 
 function Navbar({componentList}){
     //componentList = arr (index order should be same as render order)
@@ -43,7 +43,7 @@ function Navbar({componentList}){
     );
 }
 
-return Navbar;
+module.exports = Navbar;
 
 //example of Navbar
 /* 
@@ -51,7 +51,7 @@ return Navbar;
     <div class="container">
         <a class="navbar-brand text-center" href="index.html">
 
-            <img  style="width: 60%;"  src="imgs/Tallao-Complete-es.svg" alt="Talla'o">
+            <img  style="width: 60%;"  src="/imgs/Tallao-Complete-es.svg" alt="Talla'o">
 
         </a>
         

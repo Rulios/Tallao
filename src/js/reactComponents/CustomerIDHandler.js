@@ -1,7 +1,9 @@
 // main.js
 
 const React = require("react");
-const inputPrevent = require("./frontendModules/inputPrevent");
+const inputPrevent = require("../frontendModules/inputPrevent");
+const ajaxReqSearch = require("../requestsModules/ajaxReqSearch");
+
 
 //This handler acts when it needs to be rendered a input field
 //or text related to the clientID. Also, the main caller will be 
@@ -64,20 +66,18 @@ class InputCustomerID extends React.Component{
         
         let that = this; //bind the this to this scope, so it can use setState
         customerData.id = id.toUpperCase();
-        require(["../js/requestsModules/ajaxReqSearch"], function(ajaxReq){
-            ajaxReq.customerByID({inputCustomerID: customerData.id}).then(data =>{
-                data = JSON.parse(data);
-                if(data === null){
-                    customerData.name = null;
-                }else{
-                    customerData.name = `${data.name} ${data.surname}`;
-                }
-                //that.returnData(customerData);
-                that.setState(customerData);
-            }).catch(err => {
+        ajaxReqSearch.customerByID({inputCustomerID: customerData.id}).then(data =>{
+            data = JSON.parse(data);
+            if(data === null){
                 customerData.name = null;
-                that.setState(customerData);
-            });
+            }else{
+                customerData.name = `${data.name} ${data.surname}`;
+            }
+            //that.returnData(customerData);
+            that.setState(customerData);
+        }).catch(err => {
+            customerData.name = null;
+            that.setState(customerData);
         });
     }
 

@@ -5,30 +5,9 @@ const ValidateSchema = require("./ValidateSchema");
 const inputs = require("../libs/Inputs");
 const userTypeRange = ["laundry", "user"];
 
-
-
 module.exports.set = function(app){
 
     app.post("/login", async function(req,res){
-
-        /* passport.authenticate("login", async(err, hashcode,userType, info) =>{
-            try{
-                if(err || !hashcode) throw new Error();
-            }catch(err){
-                console.log(err);
-                return res.status(500).send({error: "WRONG_CREDENTIALS"});
-            }
-
-            req.login(hashcode, {session:false}, async (err) =>{
-                if(err) return next(err);
-
-                const body = {hashcode: hashcode, userType: userType};
-                console.log(body);
-                const token = jwt.sign({user: body}, "top_secret");
-                console.log(token);
-                return res.status(200).json({token});
-            });
-        })(req,res,next); */
         try{
             let {inputEmail, inputPassword, userType} = req.body;
             let Inputs = {

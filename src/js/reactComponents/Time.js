@@ -2,8 +2,8 @@
 "use strict";
 
 const React = require("react");
-const inputPrevent = require("./frontendModules/inputPrevent");
-const ajaxReqTime = require("../js/requestsModules/ajaxReqServerTime");
+const inputPrevent = require("../frontendModules/inputPrevent");
+const ajaxReqTime = require("../requestsModules/ajaxReqServerTime");
 
 function DateInput(props){
     //props: 
