@@ -7,9 +7,9 @@ and bundling of low order components */
 
 const textEs = {
     iron: "Planchado",
-    washIron: "Lavado y Planchado",
+    wash_iron: "Lavado y Planchado",
     wash: "Lavado",
-    dryClean: "Lavado en seco",
+    dry_clean: "Lavado en seco",
     updateSuccess: "¡Actualizado la oferta de servicios!",
     update: "Actualizar oferta de servicios"
 }

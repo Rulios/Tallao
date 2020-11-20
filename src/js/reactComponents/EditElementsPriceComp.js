@@ -39,7 +39,7 @@ const InputElementPrice = ({id, text, value, onChange}) => {
 const elementIMG = ({element}) =>{
     return React.createElement("img", {
         className: `assetStayStatic floatLeft`,
-        src: `./imgs/assets/${element}/${element}.svg`
+        src: `/imgs/assets/${element}/${element}.svg`
     });
 };
 

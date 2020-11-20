@@ -4,12 +4,13 @@ const React = require("react");
 const EditElementsPriceContainers = require( "./EditElementsPriceContainers");
 const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
 
-async function getElementsPrice({serviceSelected}){
+async function getElementsPrice(){
     try {
-        let query = await ajaxReqLaundryConfigs.fetchElementsPrice({serviceSelected: serviceSelected});
+        let query = await ajaxReqLaundryConfigs.fetchElementsPrice();
         return query;
     }catch(err){console.error(err);}
 }
+
 
 
 class EditElementsPrice extends React.Component{
@@ -19,19 +20,6 @@ class EditElementsPrice extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            elements: {
-                shirt: 0,
-                pants: 0,
-                skirt: 0,
-                coat: 0,
-                sweater: 0,
-                pleatedSkirt: 0,
-                overall: 0,
-                jumper: 0,
-                blouse: 0,
-                largeSuit: 0,
-                quilt: 0,
-            },
             extras: {
                 hook: 0
             }
@@ -39,10 +27,11 @@ class EditElementsPrice extends React.Component{
     }
 
     changePriceHandler(idElement,newPrice){
+        console.log(newPrice);
         let prevPrices = JSON.parse(JSON.stringify(this.state));
-        if(prevPrices.elements.hasOwnProperty(idElement)){ //search in elements
-            prevPrices.elements[idElement] = newPrice
-            this.setState(prevPrices);
+        if(prevPrices[this.props.serviceSelected].hasOwnProperty(idElement)){ //search in elements
+            prevPrices[idElement] = newPrice
+            this.setState({[this.props.serviceSelected]: prevPrices});
         }else{//search in extras
             if(prevPrices.extras.hasOwnProperty(idElement)){
                 prevPrices.extras[idElement] = newPrice
@@ -53,9 +42,7 @@ class EditElementsPrice extends React.Component{
 
     updateElementsPrice(){
         ajaxReqLaundryConfigs.updateElementsPrice({
-            serviceSelected: this.props.service,
-            elementsPrice: JSON.stringify(this.state.elements),
-            hookPrice: this.state.extras.hook
+            elementsPrice: this.state,
         }).then(response =>{
             EditElementsPriceContainers.SuccessMessage();
         }).catch(err =>{
@@ -63,28 +50,10 @@ class EditElementsPrice extends React.Component{
         })
     }
 
-    processElementsPrice(){
-        getElementsPrice({serviceSelected:this.props.serviceSelected}).then(dataJSON =>{
-            let obj = JSON.parse(dataJSON);
-            if(obj[this.props.serviceSelected] !== "null" && obj[this.props.serviceSelected] !== ""){
-                let fetchedElementsPrice = JSON.parse(obj[this.props.serviceSelected]);
-                let newState = JSON.parse(JSON.stringify(this.state));
-                newState.elements = fetchedElementsPrice;
-                newState.extras.hook = obj.hook;
-                this.setState(newState);    
-            }else{ 
-                //run through all the elements and set them to 0
-                //except for hook price
-                let newElements = JSON.parse(JSON.stringify(this.state.elements));
-                Object.keys(newElements).map(element =>{
-                    newElements[element] = 0;
-                });
-                this.setState({
-                    elements: newElements
-                });
-
-            }
-        });
+    async processElementsPrice(){
+        let elementsPrice = await getElementsPrice();
+        
+        this.setState(elementsPrice);
     }
 
     componentDidMount(){
@@ -101,6 +70,7 @@ class EditElementsPrice extends React.Component{
     }
 
     render(){
+        console.log(this.state);
         let el2Render = [];
         el2Render.push( //append hook edot price (design exception)
             React.createElement(EditElementsPriceContainers.EditBox, {
@@ -111,18 +81,21 @@ class EditElementsPrice extends React.Component{
                 onChangePrice: (idElement, newPrice) => this.changePriceHandler(idElement, newPrice)
             })
         );      
-
         //append the edit elements price
-        el2Render.push(
-            Object.keys(this.state.elements).map(element =>{  
-                return React.createElement(EditElementsPriceContainers.EditBox,{
-                    key: `EditElementsPrice4${element}`,
-                    idElement: element,
-                    price: this.state.elements[element],
-                    onChangePrice: (idElement, newPrice) => this.changePriceHandler(idElement, newPrice)
-                });
-            })
-        );
+        if(this.state.hasOwnProperty(this.props.serviceSelected)){
+            el2Render.push(
+                Object.keys(this.state[this.props.serviceSelected]).map(element =>{ 
+                     
+                    return React.createElement(EditElementsPriceContainers.EditBox,{
+                        key: `EditElementsPrice4${element}`,
+                        idElement: element,
+                        price: this.state[this.props.serviceSelected][element],
+                        onChangePrice: (idElement, newPrice) => this.changePriceHandler(idElement, newPrice)
+                    });
+                })
+            );
+        }
+        
 
         //append update elements price
         el2Render.push(
@@ -133,6 +106,7 @@ class EditElementsPrice extends React.Component{
         );
 
         return el2Render;
+
     }
 
 };

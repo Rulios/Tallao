@@ -5,19 +5,19 @@ const ajaxReq = require("./ajaxReq");
 
 async function verifyPassword(obj){
     //params: inputPassword (string, to be convalidate with DB data)
-    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/verifyPassword.php", obj);
+    return await ajaxReq.doAJAX("POST", "/account/credentials/verifyPassword", obj);
 }
 
 async function newPassword(obj){
     //params: inputPassword(string, must be validated first)
 
-    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/updateNewPassword.php", obj);
+    return await ajaxReq.doAJAX("POST", "/account/credentials/updateNewPassword", obj);
 }
 
 async function fetchAccountCreds(){
     //paarams: none, it's on server side
 
-    return await ajaxReq.doAJAX("POST", "./php/DBUserCreds/fetchAccountCreds.php");
+    return await ajaxReq.doAJAX("GET", "/account/credentials/fetch");
 }
 
 module.exports = {

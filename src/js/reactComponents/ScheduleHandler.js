@@ -19,8 +19,8 @@ const daysEs = {
 
 async function getSchedule(){
     try {
-        let query = await ajaxReqLaundryConfigs.fetchSchedule();
-        return query;
+        let scheduleObj = await ajaxReqLaundryConfigs.fetchSchedule();
+        return scheduleObj;
     }catch(err){console.error(err);}
 }
 
@@ -38,6 +38,7 @@ class Schedule extends React.Component{
                 sunday: {startHour: "", endHour: ""},
             }
         };  
+
     }
 
     onChangeSchedule(day, value, cycle){
@@ -50,7 +51,7 @@ class Schedule extends React.Component{
     }
 
     updateSchedule(){
-        ajaxReqLaundryConfigs.updateSchedule(JSON.stringify(this.state.days))
+        ajaxReqLaundryConfigs.updateSchedule(this.state.days)
         .then(response =>{
             if(response === "OK"){
                 ScheduleBoxContainer.SuccessMessage();
@@ -63,17 +64,15 @@ class Schedule extends React.Component{
     componentDidMount(){
         if(this.props.mode === "edit"){ 
             //fetch data
-            getSchedule().then(ScheduleJSON =>{
-                let fetchedSchedule = JSON.parse(ScheduleJSON);
+            getSchedule().then(({schedule}) =>{
                 this.setState({
-                    days: fetchedSchedule
+                    days: schedule
                 });
             });
         }
     }
 
     render(){
-        let that = this;
         let el2Render = [];
         if(this.props.mode === "edit"){
             el2Render = Object.keys(this.state.days).map(day =>{

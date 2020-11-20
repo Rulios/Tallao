@@ -8,7 +8,7 @@ const port= 8080;
 const ControllerHandler = require("./controllers/Handler.js");
 const session = require("express-session");
 const laundryRouter = require("./controllers/Laundry/Controllers");
-
+const accountRouter = require("./controllers/Account/Controllers");
 let app = express();
 
 
@@ -48,6 +48,7 @@ app.get("/laundryRegister", function(req,res){
 });
 
 app.use("/laundry", laundryRouter);
+app.use("/account", accountRouter);
 
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);

@@ -3,7 +3,7 @@
 const laundry = require("express").Router();
 const Auth = require("../libs/Auth");
 const path = require("path");
-
+const configsRouter = require("./Configs/Controllers");
 
 //middleware for authorization
 laundry.use("/",async function(req, res, next){ 
@@ -23,6 +23,8 @@ laundry.get("/panel", function(req, res){
 laundry.get("/myaccount", function(req,res){
     return res.status(200).sendFile(path.resolve("public/myaccount.html"));
 });
+
+laundry.use("/configs", configsRouter);
 
 module.exports = laundry;
 

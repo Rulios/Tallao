@@ -19,8 +19,6 @@ const Navbar = require("./reactComponents/NavbarHandler");
 let userType = null;
 
 $(document).ready(() =>{
-
-
     try{
         RenderOnPage();
     }catch{

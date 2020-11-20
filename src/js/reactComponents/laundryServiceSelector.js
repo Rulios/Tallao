@@ -6,9 +6,9 @@ const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs"
 
 const serviceOfferString = {
     iron: "Planchado",
-    washIron: "Lavado y planchado",
+    wash_iron: "Lavado y planchado",
     wash: "Lavado",
-    dryClean: "Lavado en seco"
+    dry_clean: "Lavado en seco"
 };
 
 class ServiceSelector extends React.Component{
@@ -35,12 +35,11 @@ class ServiceSelector extends React.Component{
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
-            ajaxReqLaundryConfigs.fetchServiceOffer().then(ServiceStr =>{
-                let services = ServiceStr.trim().split(",");
-                this.returnData(services[0]);
+            ajaxReqLaundryConfigs.fetchServiceOffer().then(({serviceoffer}) =>{
+                this.returnData(serviceoffer[0]);
                 that.setState({
-                    selected: services[0],
-                    services: services,
+                    selected: serviceoffer[0],
+                    services: serviceoffer,
                     ajaxLoaded: true
                 });
             });

@@ -31,9 +31,8 @@ function LaundryDisplay({laundryInitials,laundryName, reprName, reprSurname, ema
 
 async function fetchData(){
     try{
-        let query = await ajaxReqUserCreds.fetchAccountCreds();
-        let obj = JSON.parse(query);
-        return obj;
+        let data = await ajaxReqUserCreds.fetchAccountCreds();
+        return data;
     }catch(err){console.error(err);}
 }
 

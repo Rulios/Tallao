@@ -28,7 +28,6 @@ const textEs = {
 //When the element is a hook it shouldn´t have col-lg-4 nor floatLeft when rendering its svg
 
 function EditElementPriceBox({idElement, price,isHook = false, onChangePrice}){ //price is a obj
-    
     return React.createElement("div", {
         className: `${(!isHook)? "col-lg-4" : "col-lg-12"} smallMarginBottom hoverShadow`
     },

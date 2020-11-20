@@ -14,38 +14,37 @@ async function fetchElementsPrice(obj){
     //fetchs all the prices from the service
     //params : none
 
-    return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchElementsPrice.php", obj);
+    return await ajaxReq.doAJAX("GET", "/laundry/configs/elementsPrice/fetch", obj);
 }         
 
 async function updateElementsPrice(obj){
-    //params: serviceOFfer(string), priceConfig(string)
-    //hookPrice(string)
+    //params: elementsPrice(obj)
 
-    return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updatePriceElements.php", obj);
+    return await ajaxReq.doAJAX("PUT", "/laundry/configs/elementsPrice/update", obj);
 }
 
 async function fetchSchedule(){
     //params : none, it's on cookies
 
-    return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchSchedule.php");
+    return await ajaxReq.doAJAX("GET", "/laundry/configs/schedule/fetch");
 }
 
 async function updateSchedule(str){
     //params: schedule JSON
 
-    return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updateSchedule.php", str);
+    return await ajaxReq.doAJAX("PUT", "/laundry/configs/schedule/update", str);
 }   
 
 async function fetchServiceOffer(){
     //params: none, it's on cookies
 
-    return await ajaxReq.doAJAX("GET", "./php/DBSuperUserConfigs/fetchServiceOffer.php");
+    return await ajaxReq.doAJAX("GET", "/laundry/configs/serviceOffer/fetch");
 }
 
 async function updateServiceOffer(obj){
     //params serviceOffer(string)
     
-    return await ajaxReq.doAJAX("POST", "./php/DBSuperUserConfigs/updateServiceOffer.php", obj);
+    return await ajaxReq.doAJAX("PUT", "/laundry/configs/serviceOffer/update", obj);
 }
 
 module.exports = {  
