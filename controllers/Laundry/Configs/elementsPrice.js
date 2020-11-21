@@ -36,7 +36,6 @@ elementsPrice.put("/update", async function(req,res){
         let {hashcode, userType} = req.session;
         let {elementsPrice} = req.body;
         let laundry_initials = await GetLaundryInitials(hashcode);
-        //console.log(elementsPrice);
 
         validateElementsPrice(elementsPrice);
 
@@ -60,13 +59,12 @@ elementsPrice.put("/update", async function(req,res){
         ];
 
         let result = await client.query(query, values);
-        console.log(result);
+        if(!result.rowCount) return res.status(500).end();
 
-
-        res.end();
+        return res.status(200).json({message: "OK"});
     }catch(err){
         console.log(err);
-        res.status(400).end();
+        return res.status(400).end();
     }
 });
 
@@ -80,6 +78,8 @@ function validateElementsPrice(elementsPrice){
             //check if element exists in the CONSTANT unless it's hook
             console.log(element);
             if((element !== "hook" && !validator.isIn(element, ELEMENTS)) && !validator.isIn(element, EXTRAS_ELEMENTS)) throw new Error("Element not in range");
+            //check if the price is negative
+            if(elementsPrice[service][element] < 0) throw new Error("Prices cannot be negative");
             //check if the price is decimal
             if(!validator.isDecimal(elementsPrice[service][element])) throw new Error("Price not decimal");
         });

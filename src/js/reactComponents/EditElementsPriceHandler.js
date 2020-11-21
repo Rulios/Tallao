@@ -3,6 +3,7 @@
 const React = require("react");
 const EditElementsPriceContainers = require( "./EditElementsPriceContainers");
 const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
+const { ElementTitle } = require("./EditElementsPriceComp");
 
 async function getElementsPrice(){
     try {
@@ -27,11 +28,11 @@ class EditElementsPrice extends React.Component{
     }
 
     changePriceHandler(idElement,newPrice){
-        console.log(newPrice);
+  
         let prevPrices = JSON.parse(JSON.stringify(this.state));
         if(prevPrices[this.props.serviceSelected].hasOwnProperty(idElement)){ //search in elements
-            prevPrices[idElement] = newPrice
-            this.setState({[this.props.serviceSelected]: prevPrices});
+            prevPrices[this.props.serviceSelected][idElement] = newPrice
+            this.setState(prevPrices);
         }else{//search in extras
             if(prevPrices.extras.hasOwnProperty(idElement)){
                 prevPrices.extras[idElement] = newPrice
@@ -52,8 +53,15 @@ class EditElementsPrice extends React.Component{
 
     async processElementsPrice(){
         let elementsPrice = await getElementsPrice();
-        
-        this.setState(elementsPrice);
+        let parsedElementsPrice = {};
+        //parse every value to decimal
+        Object.keys(elementsPrice).map(service =>{
+            parsedElementsPrice[service] = {};
+            Object.keys(elementsPrice[service]).map(element =>{
+                parsedElementsPrice[service][element] = Number(parseFloat(elementsPrice[service][element]).toFixed(2));
+            });
+        });
+        this.setState(parsedElementsPrice);
     }
 
     componentDidMount(){
@@ -63,16 +71,10 @@ class EditElementsPrice extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps){
-        if(prevProps.serviceSelected !== this.props.serviceSelected){
-            this.processElementsPrice();
-        }
-    }
-
     render(){
         console.log(this.state);
         let el2Render = [];
-        el2Render.push( //append hook edot price (design exception)
+        el2Render.push( //append hook price (design exception)
             React.createElement(EditElementsPriceContainers.EditBox, {
                 key: "EditElementsPrice4Hook",
                 idElement: "hook",
