@@ -69,7 +69,7 @@ class EditCustomMessages extends React.Component{
         let newMessages = JSON.parse(JSON.stringify(this.state.messages));
         newMessages[id] = {
             id: id,
-            colorTag: "#000000",
+            color_tag: "#000000",
             tag: "",
             message: ""
         };
@@ -88,7 +88,8 @@ class EditCustomMessages extends React.Component{
 
     changeColorTagHandler(id, value){    
         let newMessages = JSON.parse(JSON.stringify(this.state.messages));
-        newMessages[id]["colorTag"] = value;
+        console.log(newMessages);
+        newMessages[id]["color_tag"] = value;
         this.setState({
             messages: newMessages
         });
@@ -110,14 +111,16 @@ class EditCustomMessages extends React.Component{
                 newMessages[value] = messages[value];
             }
         });
-        this.setState({messages:newMessages});
 
-        ajaxReqCustomMessages.deleteMessage({idMessage:id})
+        ajaxReqCustomMessages.deleteMessage({messageID:id})
+        .then(response => {
+            this.setState({messages:newMessages});
+        })
         .catch(err => EditCustomMessagesContainers.ErrorMessage())
     }
 
     updateCustomMessages(){
-        ajaxReqCustomMessages.update({messageObj: JSON.stringify(this.state.messages)})
+        ajaxReqCustomMessages.update({messages: JSON.stringify(this.state.messages)})
         .then(response =>{
             if(response === "OK"){
                 EditCustomMessagesContainers.SuccessMessage();
@@ -129,19 +132,18 @@ class EditCustomMessages extends React.Component{
 
     componentDidMount(){
         //fetch data
-        getCustomMessages().then(dataJSON =>{
-            
-            let ArrObj = JSON.parse(dataJSON);
-            let newMessages = {}
-            
-            if(ArrObj !== "null") {
-                ArrObj.map(message =>{
-                    newMessages[message.id] = message;
-                });
-                this.setState({
-                    messages : newMessages
-                });
-            }
+        getCustomMessages().then(messages =>{
+            let messageObjWID = {};
+            //iterate for every message
+            messages.map(message =>{
+                //get the id of the message
+                let {id} = message;
+                //assign it as the prop name
+                messageObjWID[id] = Object.assign({}, message);
+            })
+            this.setState({
+                messages : messageObjWID
+            });
         });
     }
 

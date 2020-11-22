@@ -4,6 +4,7 @@ const laundry = require("express").Router();
 const Auth = require("../libs/Auth");
 const path = require("path");
 const configsRouter = require("./Configs/Controllers");
+const customMessagesRouter = require("./CustomMessages/Controllers");
 
 //middleware for authorization
 laundry.use("/",async function(req, res, next){ 
@@ -25,6 +26,8 @@ laundry.get("/myaccount", function(req,res){
 });
 
 laundry.use("/configs", configsRouter);
+
+laundry.use("/customMessages", customMessagesRouter);
 
 module.exports = laundry;
 

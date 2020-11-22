@@ -76,20 +76,14 @@ function renderSelectableElementsOnOrder({
 function returnNewElementsPrice(priceObj, elements){ 
     //traverse thru the services of the priceObj
     Object.keys(priceObj).map(service =>{
-        if(!isNaN(parseInt(service))){
-            //delete the number indexes
-            delete priceObj[service];
-        }else{
-            priceObj[service] = JSON.parse(priceObj[service]);
-            //match the elements of the laundry with the priceObj
-            elements.map(element =>{
-                //if the element of the laundry do not exists in the price
-                //create a prop with the element price with value 0
-                if(!priceObj[service].hasOwnProperty(element) && service !== "hook"){
-                    priceObj[service] = Object.assign(priceObj[service], {[element] : 0});
-                }
-            });
-        }
+        //match the elements of the laundry with the priceObj
+        elements.map(element =>{
+            //if the element of the laundry do not exists in the price
+            //create a prop with the element price with value 0
+            if(!priceObj[service].hasOwnProperty(element) && service !== "hook"){
+                priceObj[service] = Object.assign(priceObj[service], {[element] : 0});
+            }
+        });
     });
     return priceObj;
 }
@@ -98,11 +92,11 @@ async function fetchElementsPrice(elements){
     //fetchs the elements price (all)
     //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
     try{
-        let data = await ajaxReqLaundryConfigs.fetchElementsPrice();
-        let priceObj = JSON.parse(data);
+        let priceObj = await ajaxReqLaundryConfigs.fetchElementsPrice();
         let newElementsPrice = returnNewElementsPrice(priceObj, elements);
         return newElementsPrice;
     }catch(err){
+        console.log("UEEE");
         console.log(err);
     }
 }

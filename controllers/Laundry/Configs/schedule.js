@@ -4,15 +4,8 @@ const schedule = require("express").Router();
 const client = require("../../libs/DBConnect");
 const GetLaundryInitials = require("../../libs/GetLaundryInitials");
 const validator = require("validator");
+const {DAYS, NAME_RANGE_HOURS} = require("../../libs/CONSTANTS");
 
-const DAYS = [
-    "monday", "tuesday", "wednesday", "thursday",
-    "friday", "saturday", "sunday"
-];
-
-const NAME_RANGE_HOURS = [
-    "startHour", "endHour"
-];
 
 schedule.get("/fetch", async function(req,res){
     let {hashcode, userType} = req.session;

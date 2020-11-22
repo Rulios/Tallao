@@ -27,8 +27,8 @@ module.exports = async function(laundryInitials){
     const firstCustomMessage = {
         id: "",
         color_tag: "#E6D1DC",
-        tag: "Sin pliegue / 不折",
-        message: "Sin pliegue / 不折"
+        tag: "Sin pliegue | 不折",
+        message: "Sin pliegue | 不折"
     };
     //generate and check if the custom message id exists
     let rowCountCustomMessageID = 1;

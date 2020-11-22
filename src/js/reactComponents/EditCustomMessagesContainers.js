@@ -38,14 +38,14 @@ function AddNewMessageButton({onClick}) {
 
 //this function uses hooks
 function EditCustomMessageBox({messageDetails, inputHandlers}){
-    //messageObj contains tag, colorTag, message, status (not in use right now)
+    //messageObj contains tag, color_tag, message, status (not in use right now)
     const [isHover, setHover] = React.useState(false);
     return React.createElement("div", {
         className: "col-lg-4 smallMarginBottom ",
         style: {
             padding: "1em",
             transitionDuration: "0.3s",
-            boxShadow: (isHover) ? `0 1px 4px ${messageDetails.colorTag}, 0 0 30px 2px ${messageDetails.colorTag} `: ""
+            boxShadow: (isHover) ? `0 1px 4px ${messageDetails.color_tag}, 0 0 30px 2px ${messageDetails.color_tag} `: ""
         },
         onMouseOver: () =>{
             setHover(true);
@@ -65,7 +65,7 @@ function EditCustomMessageBox({messageDetails, inputHandlers}){
             }),
             React.createElement(EditCustomMessagesComp.ColorDiv, {
                 key: `ColorDiv4${messageDetails.id}`,
-                color: messageDetails.colorTag
+                color: messageDetails.color_tag
             }),
             [
                 MessageDetailsDiv({
@@ -105,7 +105,7 @@ function MessageDetailsDiv({messageDetails, inputHandlers}){
                 React.createElement(EditCustomMessagesComp.ColorInput, {
                     key: `inputColor${messageDetails.id}`,
                     id: `inputColor${messageDetails.id}`,
-                    value: messageDetails.colorTag,
+                    value: messageDetails.color_tag,
                     onChange: (value)  =>{inputHandlers.onChangeColorTag(messageDetails.id,value);}
                 }),
                 React.createElement("br", {key: `BrColor${messageDetails.id}`}),
