@@ -67,7 +67,7 @@ class InputCustomerID extends React.Component{
         let that = this; //bind the this to this scope, so it can use setState
         customerData.id = id.toUpperCase();
         ajaxReqSearch.customerByID({inputCustomerID: customerData.id}).then(data =>{
-            data = JSON.parse(data);
+            console.log(data);
             if(data === null){
                 customerData.name = null;
             }else{

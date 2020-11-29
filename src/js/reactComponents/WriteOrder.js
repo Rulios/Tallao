@@ -73,27 +73,24 @@ function renderSelectableElementsOnOrder({
     );
 }
 
-function returnNewElementsPrice(priceObj, elements){ 
-    //traverse thru the services of the priceObj
-    Object.keys(priceObj).map(service =>{
-        //match the elements of the laundry with the priceObj
-        elements.map(element =>{
-            //if the element of the laundry do not exists in the price
-            //create a prop with the element price with value 0
-            if(!priceObj[service].hasOwnProperty(element) && service !== "hook"){
-                priceObj[service] = Object.assign(priceObj[service], {[element] : 0});
-            }
+function processElementsPrice(elementsPrice){ 
+    let parsedElementsPrice = {};
+    //parse every value to decimal
+    Object.keys(elementsPrice).map(service =>{
+        parsedElementsPrice[service] = {};
+        Object.keys(elementsPrice[service]).map(element =>{
+            parsedElementsPrice[service][element] = Number(parseFloat(elementsPrice[service][element]).toFixed(2));
         });
     });
-    return priceObj;
+    return parsedElementsPrice;
 }
 
-async function fetchElementsPrice(elements){
+async function fetchElementsPrice(){
     //fetchs the elements price (all)
     //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
     try{
-        let priceObj = await ajaxReqLaundryConfigs.fetchElementsPrice();
-        let newElementsPrice = returnNewElementsPrice(priceObj, elements);
+        let elementsPrice = await ajaxReqLaundryConfigs.fetchElementsPrice();
+        let newElementsPrice = processElementsPrice(elementsPrice);
         return newElementsPrice;
     }catch(err){
         console.log("UEEE");

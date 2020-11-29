@@ -5,7 +5,7 @@ const ajaxReq = require("./ajaxReq");
 
 async function customerByID(obj){
     //params inputCustomerID (string)
-    return await ajaxReq.doAJAX("GET", "./php/DBSearch/searchCustomerByID.php", obj);
+    return await ajaxReq.doAJAX("GET", "/search/customerByID", obj);
 }
 
 module.exports =  {

@@ -44,7 +44,7 @@ function selectableElementToOrder(props){
                     React.createElement("div", {className:"col-lg-4"},
                         React.createElement("img", {
                             className:"assetStayStatic",
-                            src: `./imgs/assets/${props.id}/${props.id}.svg`
+                            src: `/imgs/assets/${props.id}/${props.id}.svg`
                         })
                     ),
                     React.createElement("div", {className:"col-lg-8"},
@@ -91,7 +91,7 @@ function elementOnOrder(props){
                 },
                     React.createElement("img",{
                         className: "assetStayStatic",
-                        src: `./imgs/assets/${idAsset}/${idAsset}.svg`
+                        src: `/imgs/assets/${idAsset}/${idAsset}.svg`
                     })
                 ),
 

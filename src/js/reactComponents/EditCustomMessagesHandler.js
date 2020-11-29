@@ -65,11 +65,10 @@ class EditCustomMessages extends React.Component{
         //the temp id is produced having the difference of data in ms
         //from jan 1 1970
         let id = Math.random().toString(36).substr(2, 20);
-        console.log(id);
         let newMessages = JSON.parse(JSON.stringify(this.state.messages));
         newMessages[id] = {
             id: id,
-            color_tag: "#000000",
+            color_tag: "#FFFFFF",
             tag: "",
             message: ""
         };
@@ -88,7 +87,6 @@ class EditCustomMessages extends React.Component{
 
     changeColorTagHandler(id, value){    
         let newMessages = JSON.parse(JSON.stringify(this.state.messages));
-        console.log(newMessages);
         newMessages[id]["color_tag"] = value;
         this.setState({
             messages: newMessages
@@ -115,16 +113,13 @@ class EditCustomMessages extends React.Component{
         ajaxReqCustomMessages.deleteMessage({messageID:id})
         .then(response => {
             this.setState({messages:newMessages});
-        })
-        .catch(err => EditCustomMessagesContainers.ErrorMessage())
+        }).catch(err => EditCustomMessagesContainers.ErrorMessage())
     }
 
     updateCustomMessages(){
         ajaxReqCustomMessages.update({messages: JSON.stringify(this.state.messages)})
         .then(response =>{
-            if(response === "OK"){
-                EditCustomMessagesContainers.SuccessMessage();
-            }
+            EditCustomMessagesContainers.SuccessMessage();
         }).catch(err =>{
             EditCustomMessagesContainers.ErrorMessage();
         });

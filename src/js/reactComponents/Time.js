@@ -4,6 +4,7 @@
 const React = require("react");
 const inputPrevent = require("../frontendModules/inputPrevent");
 const ajaxReqTime = require("../requestsModules/ajaxReqServerTime");
+const dayjs = require("dayjs");
 
 function DateInput(props){
     //props: 
@@ -110,22 +111,20 @@ const convert24hTo12h = (time24) => {
 async function getDateTimeFromServer(){
     //format from server: YYYY/MM/DD
     try{
-        let query = await ajaxReqTime.fetchDateTimeServer();
-        let dateTime = JSON.parse(query);
-        let newObj = {};
-        //convert NaN to uppecase, and numbers char to number
-        Object.keys(dateTime).map(timeProp =>{
-            if(!isNaN(dateTime[timeProp])){
-                newObj[timeProp] = parseInt(dateTime[timeProp]);
-            }else{
-                newObj[timeProp] = dateTime[timeProp].toUpperCase();
-            }
-        });
-        return newObj;
+        let {dateTime} = await ajaxReqTime.fetchDateTimeServer();
+        return dayjs(dateTime);
     }catch(err){console.error(err);}
 }
 
-function splitDate(dateString){
+function getMonthString(month){
+    const months = [
+        "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+    return months[month -1];
+}
+
+/* function splitDate(dateString){
     //returns a object with day, month, monthString, year
     //from string format YYYY/MM/DD
     const months = [
@@ -139,7 +138,7 @@ function splitDate(dateString){
         day: parseInt(arr[2]),
         monthString: months[parseInt(arr[1]) -1],
     };
-}
+} */
 
 class Timer extends React.Component{
 
@@ -155,17 +154,29 @@ class Timer extends React.Component{
             day: this.state.day,
             month: this.state.month,
             year: this.state.year,
-            hour: this.state.hour12,
+            hour: this.state.hour,
             minutes: this.state.minutes,
-            cycle: this.state.cycle
+            cycle: this.state.cycle,
+            dateTime: this.state.dateTime
         });
     }
 
     processDateTime(){
-        getDateTimeFromServer().then(obj =>{
-            Object.assign(obj, {ajaxLoaded: true});
-            Object.assign(obj, splitDate(obj.date));
-            this.setState(obj);
+        getDateTimeFromServer().then(dateTime =>{
+        
+            let newState = {
+                day: dayjs(dateTime).date(),
+                month: dayjs(dateTime).month(),
+                monthString: getMonthString(dayjs(dateTime.month())),
+                year: dayjs(dateTime).year(),
+                hour: dayjs(dateTime).hour(),
+                minutes: dayjs(dateTime).minute(),
+                cycle: dayjs(dateTime).format("A"),
+                dateTime : dayjs(dateTime).toDate()
+            };
+          
+            Object.assign(newState, {ajaxLoaded: true});
+            this.setState(newState);
         }).then(() =>{
             //return data to main component
             this.returnTodayDateTime();
@@ -184,7 +195,7 @@ class Timer extends React.Component{
             //return to the main component
             let stringDate = `${this.state.day} de ${this.state.monthString} de ${this.state.year}`;
             stringDate += " | ";
-            stringDate +=  `${this.state.hour12}:${(this.state.minutes / 10 < 1) ? `0${this.state.minutes}`:this.state.minutes}${this.state.cycle}`;
+            stringDate +=  `${this.state.hour}:${(this.state.minutes / 10 < 1) ? `0${this.state.minutes}`:this.state.minutes}${this.state.cycle}`;
             return(
                 React.createElement("span", null,stringDate)
             );
@@ -201,6 +212,5 @@ module.exports = {
     convert12hTo24h:convert12hTo24h,
     convert24hTo12h:convert24hTo12h,
     getDateTimeFromServer:getDateTimeFromServer,
-    splitDate:splitDate,
     calcTimeDifference:calcTimeDifference,
 };

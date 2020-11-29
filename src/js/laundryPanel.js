@@ -17,7 +17,7 @@ const WriteOrder = require("./reactComponents/WriteOrder");
 const UseCustomMessages = require("./reactComponents/UseCustomMessagesHandler");
 const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
-console.log("DAWD");
+const dayjs = require("dayjs");
 //1st session handling
 (function(){
         
@@ -70,7 +70,7 @@ function MainApp(){
             totalPrice: 0
         }
     });
-
+    console.log(inputDateTimeForOrder);
     //Every component that has setComponentReset as a parameter
     //is a reseteable component. It means that it has its own state
     //and data flow is bidirectional.
@@ -126,7 +126,7 @@ function MainApp(){
     if(!isServiceSelectorLoaded){
         setServiceSelectorLoaded(true);
             //load the elements price and change the state
-            WriteOrder.fetchElementsPrice(WriteOrder.elements)
+            WriteOrder.fetchElementsPrice()
                 .then(priceChart =>{
                     let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
                     //assign hookPrice from elementsPrice
@@ -301,8 +301,7 @@ function renderSubmitButton(onSubmit){
 }
 
 function renderLaundryName(){
-    ajaxReqUserCreds.fetchAccountCreds().then(query =>{
-        let data = JSON.parse(query);
+    ajaxReqUserCreds.fetchAccountCreds().then(data =>{
         document.getElementById("showLaundryName").textContent = data.name;
     }).catch( () =>{
         document.getElementById("showLaundryName").textContent = "Error";
@@ -347,11 +346,13 @@ function renderDateTime(dateTimeHook){
                 //parse date
                 //to prevent updating
                 //update if single digit
-                today.month = (today.month < 10) ? `0${today.month}`: today.month;
+                //console.log(today);
+                dateTimeHook(today);
+                /* today.month = (today.month < 10) ? `0${today.month}`: today.month;
                 today.day = (today.day < 10) ? `0${today.day}`: today.day;
                 today.hour = (today.hour < 10) ? `0${today.hour}`: today.hour;
                 today.minutes = (today.minutes < 10) ? `0${today.minutes}`: today.minutes;
-                dateTimeHook(`${today.year}-${today.month}-${today.day} ${Time.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`);
+                dateTimeHook(`${today.year}-${today.month}-${today.day} ${Time.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`); */
             }   
         }),
         document.getElementById("containerDateTime")
@@ -359,7 +360,7 @@ function renderDateTime(dateTimeHook){
 }
 
 function renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder){
-    const [date, time] = todayDateTime.split(" ");
+    const date = dayjs(todayDateTime.dateTime).format("YYYY-MM-DD");
     const {date: inputDate, time: inputTime} = inputDateTimeForOrder;
     //let [year, month, day] = date.split("-");
     //since it has to wait for information

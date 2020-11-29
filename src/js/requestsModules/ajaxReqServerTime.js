@@ -1,7 +1,7 @@
 const ajaxReq = require("./ajaxReq");
 
 async function fetchDateTimeServer(){
-    return await ajaxReq.doAJAX("GET", "");
+    return await ajaxReq.doAJAX("GET", "/time/fetch");
 }
 
 module.exports = {

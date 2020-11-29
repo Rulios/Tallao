@@ -26,10 +26,10 @@ class UseCustomMessages extends React.Component{
             ajaxReqCustomMessages.fetch().then(data =>{
                 //start parsing JSON string and storing it
                 let messages = {};
-                JSON.parse(data).map(value =>{
-                    let {id, colorTag, tag, message} = value;
+                data.map(value =>{
+                    let {id, color_tag, tag, message} = value;
                     messages[id] = {};
-                    messages[id]["colorTag"] = colorTag;
+                    messages[id]["color_tag"] = color_tag;
                     messages[id]["tag"] = tag;
                     messages[id]["message"] = message;
                 })
@@ -46,12 +46,12 @@ class UseCustomMessages extends React.Component{
         if(this.state.ajaxLoaded){
             return(
                 Object.keys(this.state.messages).map(messageID =>{
-                    let {colorTag, tag, message} = this.state.messages[messageID];
+                    let {color_tag, tag, message} = this.state.messages[messageID];
                     let txt = "";
                     return React.createElement(UseCustomMessagesContainers.InstantMsgTag, {
                         key:messageID,
                         id: messageID,
-                        colorTag: colorTag,
+                        color_tag: color_tag,
                         text: tag,
                         onClick: (messageID) => this.appendMessageToText(messageID)
                     });

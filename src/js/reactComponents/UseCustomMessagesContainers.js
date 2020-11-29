@@ -6,11 +6,11 @@ const React = require("react");
 and bundling of low order components */
 
 
-const InstantMsgTag = ({id, colorTag, text, onClick}) =>{
+const InstantMsgTag = ({id, color_tag, text, onClick}) =>{
     return(
         React.createElement("button", {
             className:"instantMsgTagStyle bottomLineLinkAnimation",
-            style: {backgroundColor : colorTag},
+            style: {backgroundColor : color_tag},
             onClick: () => { onClick(id);}
         }, text)
     );

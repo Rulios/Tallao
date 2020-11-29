@@ -9,6 +9,8 @@ const ControllerHandler = require("./controllers/Handler.js");
 const session = require("express-session");
 const laundryRouter = require("./controllers/Laundry/Controllers");
 const accountRouter = require("./controllers/Account/Controllers");
+const timeRouter = require("./controllers/ServerTime/Controllers");
+const searchRouter = require("./controllers/Search/Controllers");
 let app = express();
 
 
@@ -49,6 +51,7 @@ app.get("/laundryRegister", function(req,res){
 
 app.use("/laundry", laundryRouter);
 app.use("/account", accountRouter);
-
+app.use("/time", timeRouter);
+app.use("/search", searchRouter);
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);
