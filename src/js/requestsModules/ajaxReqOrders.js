@@ -4,11 +4,11 @@ const ajaxReq = require("./ajaxReq");
 //this module includes all the AJAX fetches that involves on the
 //submitting, fetching, and updating orders created by the superuser
 
-async function submitOrder(jsonString){
+async function submitOrder(obj){
     //props formatted as json: indications, elementsOnOrder (contains service, price, quantity), hookQuantity, totalPrice,
     //dateTimeAssignForOrder, dateTimeOrderWritten
 
-    return await ajaxReq.doAJAX("POST", "./php/DBOrders/submitOrder.php", jsonString);
+    return await ajaxReq.doAJAX("POST", "/orders/submit", obj);
 }
 
 async function fetchOrders(obj){

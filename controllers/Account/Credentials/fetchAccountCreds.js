@@ -2,11 +2,14 @@
 
 const client = require("../../libs/DBConnect");
 
+
+
 module.exports.set = function(credentials){
     credentials.get("/fetch", async function(req,res){
 
         try{
             let {hashcode, userType} = req.session;
+            if(!hashcode || !userType) throw new Error();
             let query = "";
             let results = {};
             if(userType === "user"){
@@ -24,10 +27,11 @@ module.exports.set = function(credentials){
                 `;
             }
             results = await client.query(query, [hashcode]);
-        
+         
+            //console.log(results);
             return res.json(Object.assign(results.rows[0], {userType: userType}));
         }catch(err){
-            console.error(err);
+            //console.error(err);
             res.status(500).end();
         }
 

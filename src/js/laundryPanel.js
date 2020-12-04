@@ -70,7 +70,7 @@ function MainApp(){
             totalPrice: 0
         }
     });
-    console.log(inputDateTimeForOrder);
+    //console.log(inputDateTimeForOrder);
     //Every component that has setComponentReset as a parameter
     //is a reseteable component. It means that it has its own state
     //and data flow is bidirectional.
@@ -78,7 +78,7 @@ function MainApp(){
         CustomerIDHandler : false,
     });
     const onSubmitOrder = () => {
-        SubmitOrder(WriteOrderDetails, inputCustomer, todayDateTime, inputDateTimeForOrder, resetOrder);
+        SubmitOrder(WriteOrderDetails, inputCustomer, inputDateTimeForOrder, resetOrder);
     };
 
     const resetOrder = () => {
@@ -157,14 +157,24 @@ function MainApp(){
 }
 
 function SubmitOrder(WriteOrderDetails, inputCustomer, 
-    todayDateTime, inputDateTime, resetOrder){
+    inputDateTime, resetOrder){
     const {id: customerID, name: customerName} = inputCustomer;
     const orderIndications = document.getElementById("inputIndications").value;
     const {order:{activeElementsOnOrder, hookQuantity, totalPrice}} = WriteOrderDetails;
     const {date: dateForOrder, time: timeForOrder} = inputDateTime;
-    const dateTimeAssignedForOrder = `${dateForOrder} ${timeForOrder}:00`;
-      
-    let jsonString = JSON.stringify({
+    const dateTimeAssigned = `${dateForOrder} ${timeForOrder}:00`;
+    
+    const order = {
+        indications: orderIndications,
+        elementsOnOrder: activeElementsOnOrder,
+        hookQuantity: hookQuantity,
+        totalPrice: totalPrice,
+        dateTimeAssigned: dateTimeAssigned,
+        customerID: customerID,
+        customerName: customerName
+    }
+
+   /*  let jsonString = JSON.stringify({
         indications: orderIndications,
         elementsOnOrder: activeElementsOnOrder,
         hookQuantity: hookQuantity,
@@ -173,17 +183,16 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         dateTimeOrderCreated: todayDateTime,
         customerID: customerID,
         customerName: customerName
-    });
-    console.log(inputCustomer);
-    try{
-        ajaxReqOrders.submitOrder(jsonString).then(response =>{
-            //trigger the resetOrder
-            console.log(response);
-            resetOrder();
-        });
-    }catch(err){
+    }); */
+   
+
+    ajaxReqOrders.submitOrder({order: order}).then(response =>{
+        //trigger the resetOrder
+        console.log(response);
+        resetOrder();
+    }).catch(err =>{
         console.error(err);
-    }
+    });
   
 }
 

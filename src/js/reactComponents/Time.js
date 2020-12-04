@@ -121,7 +121,7 @@ function getMonthString(month){
         "enero", "febrero", "marzo", "abril", "mayo", "junio",
         "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
     ];
-    return months[month -1];
+    return months[month];
 }
 
 /* function splitDate(dateString){
@@ -167,7 +167,7 @@ class Timer extends React.Component{
             let newState = {
                 day: dayjs(dateTime).date(),
                 month: dayjs(dateTime).month(),
-                monthString: getMonthString(dayjs(dateTime.month())),
+                monthString: getMonthString(dayjs(dateTime).month()),
                 year: dayjs(dateTime).year(),
                 hour: dayjs(dateTime).hour(),
                 minutes: dayjs(dateTime).minute(),
