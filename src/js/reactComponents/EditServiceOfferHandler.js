@@ -5,8 +5,8 @@ const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs"
 
 async function getServiceOffer(){
     try {
-        let query = await ajaxReqLaundryConfigs.fetchServiceOffer();
-        return query;
+        let {data:{serviceoffer}} = await ajaxReqLaundryConfigs.fetchServiceOffer();
+        return serviceoffer;
     }catch(err){console.error(err);}
 }
 
@@ -22,8 +22,8 @@ class ServiceOffer extends React.Component{
 
     updateServiceOffer(){
         ajaxReqLaundryConfigs.updateServiceOffer({serviceOffer: this.state.availableServices})
-        .then(response =>{
-            if(response === "OK"){
+        .then(({status}) =>{
+            if(status === 200){
                 ServiceOfferContainers.SuccessMessage();
             }
         }).catch(err =>{
@@ -33,9 +33,9 @@ class ServiceOffer extends React.Component{
 
     componentDidMount(){
         //fetch data
-        getServiceOffer().then(({serviceoffer}) =>{
+        getServiceOffer().then(serviceOffer =>{
             this.setState({
-                availableServices: serviceoffer
+                availableServices: serviceOffer
             });
         });
     }

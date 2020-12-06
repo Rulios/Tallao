@@ -3,12 +3,11 @@
 const React = require("react");
 const EditElementsPriceContainers = require( "./EditElementsPriceContainers");
 const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
-const { ElementTitle } = require("./EditElementsPriceComp");
 
 async function getElementsPrice(){
     try {
-        let query = await ajaxReqLaundryConfigs.fetchElementsPrice();
-        return query;
+        let {data: elementsPrice} = await ajaxReqLaundryConfigs.fetchElementsPrice();
+        return elementsPrice;
     }catch(err){console.error(err);}
 }
 
@@ -44,8 +43,13 @@ class EditElementsPrice extends React.Component{
     updateElementsPrice(){
         ajaxReqLaundryConfigs.updateElementsPrice({
             elementsPrice: this.state,
-        }).then(response =>{
-            EditElementsPriceContainers.SuccessMessage();
+        }).then(({status}) =>{
+            if(status === 200){
+                EditElementsPriceContainers.SuccessMessage();
+            }else{
+                throw new Error("can't update elements price");
+            }
+            
         }).catch(err =>{
             console.error(err);
         })

@@ -1,6 +1,5 @@
 const ajaxReq = require("./ajaxReq");
 
-
 //this module includes all the AJAX fetches that involves on the
 //submitting, fetching, and updating orders created by the superuser
 
@@ -8,12 +7,12 @@ async function submitOrder(obj){
     //props formatted as json: indications, elementsOnOrder (contains service, price, quantity), hookQuantity, totalPrice,
     //dateTimeAssignForOrder, dateTimeOrderWritten
 
-    return await ajaxReq.doAJAX("POST", "/orders/submit", obj);
+    return await ajaxReq.post("/orders/submit", obj);
 }
 
 async function fetchOrders(obj){
-    //params: filterMode, params, startIndex, status(means order status)
-    return await ajaxReq.doAJAX("GET", "./php/DBOrders/fetchOrders.php", obj);
+    console.log("Fethc");
+    return await ajaxReq.get("/orders/fetch", obj);
 }
 
 async function updateOrder(obj){
@@ -22,17 +21,17 @@ async function updateOrder(obj){
     /* parameters = customerName, status, elementQuantity, elementsPrice,
                 hookQuantity, dateReceive, dateAssign, totalPrice, indications */
     
-    return await ajaxReq.doAJAX("POST", "./php/updateOrder.php", obj);
+    return await ajaxReq.post("./php/updateOrder.php", obj);
 }
 
 async function updateCustomerAffiliateOrder(jsonString){
     //params: orderID, customerData
-    return await ajaxReq.doAJAX("PUT", "./php/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
+    return await ajaxReq.put("./php/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
 }
 
 async function advanceToNextStatus(jsonString){
     //params: orderID (json)
-    return await ajaxReq.doAJAX("PUT", "./php/DBOrders/advanceToNextStatus.php", jsonString);
+    return await ajaxReq.put("./php/DBOrders/advanceToNextStatus.php", jsonString);
 }
 
 module.exports =  {

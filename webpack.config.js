@@ -9,8 +9,8 @@ module.exports = {
         register: path.resolve(__dirname, './src/js/register.js'),
         login: path.resolve(__dirname, './src/js/login.js'),
         laundryPanel: path.resolve(__dirname, "./src/js/laundryPanel.js"),
-        myAccount: path.resolve(__dirname, "./src/js/myAccount.js")
-        
+        myAccount: path.resolve(__dirname, "./src/js/myAccount.js"),
+        myOrders: path.resolve(__dirname, "./src/js/myOrders.js")
     },
     output: {
         filename: "[name].js",

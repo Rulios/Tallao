@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const OrderBoxComp = require("./reactComponents/OrderBoxComp");
+const OrderBoxComp = require("./OrderBoxComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

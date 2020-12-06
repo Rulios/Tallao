@@ -1,8 +1,8 @@
 "use strict";
 
 const React = require("react");
-const OrderModalContainers = require("./reactComponents/OrderModalContainers");
-const ajaxReqOrders = require("./requestsModules/ajaxReqOrders");
+const OrderModalContainers = require("./OrderModalContainers");
+const ajaxReqOrders = require("../requestsModules/ajaxReqOrders");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */

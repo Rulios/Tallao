@@ -23,7 +23,7 @@ class UseCustomMessages extends React.Component{
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
-            ajaxReqCustomMessages.fetch().then(data =>{
+            ajaxReqCustomMessages.fetch().then(({data}) =>{
                 //start parsing JSON string and storing it
                 let messages = {};
                 data.map(value =>{

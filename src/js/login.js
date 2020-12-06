@@ -66,17 +66,6 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-function convertStringToBoolean(string){
-  let boolean = false;
-
-  if(string === "true"){
-    boolean = true;
-  }else if(string === "false"){
-    boolean = false;
-  }
-
-  return boolean;
-}
 
 function checkLoginAJAX(userType){
     let inputEmail = $("#inputEmail").val();
@@ -90,8 +79,13 @@ function checkLoginAJAX(userType){
         };
         
         let query =  ajaxReqLog.login(obj);
-        query.then(data =>{
-            page.redirectToPanel(data.userType);
+        query.then(({data, status}) =>{
+            if(status === 200){
+                page.redirectToPanel(data.userType);
+            }else{
+                throw new Error("Can't login");
+            }
+            
         }).catch(err => {
             console.log(err);
             const id = "inputPassword";

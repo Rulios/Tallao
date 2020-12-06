@@ -1,14 +1,13 @@
 "use strict";
 
 const React = require("react");
-const OrderParamsSelectorContainers = require("./reactComponents/OrderParamsSelectorContainers");
-const Time = require("./reactComponents/Time");
+const OrderParamsSelectorContainers = require("./OrderParamsSelectorContainers");
+const Time = require("./Time");
 
 /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */
      
 class SearchOrderSection extends React.Component{
-    _todayDate;
 
     constructor(props){
         super(props);
@@ -24,8 +23,8 @@ class SearchOrderSection extends React.Component{
             ],
             txtInput: "",
             dateInput: {
-                startDate: "",
-                endDate: ""
+                start: "",
+                end: ""
             },
             hourInput: {
                 startHour: "00:00",
@@ -51,25 +50,24 @@ class SearchOrderSection extends React.Component{
     dateInputHandler(field, value){
         let newDate = JSON.parse(JSON.stringify(this.state.dateInput));
         newDate[field] = value;
-        this.setState({dateInput: newDate});
+        this.setState({date: newDate});
     }
 
     hourInputHandler(field, value){
         let newHour = JSON.parse(JSON.stringify(this.state.hourInput));
         newHour[field] = value;
-        this.setState({hourInput: newHour});
+        this.setState({hour: newHour});
     }
 
     txtInputHandler(value) {
-        this.setState({txtInput: value});
+        this.setState({txt: value});
     }
 
     orderInputHandler(field, value){
         let newOrderParam = JSON.parse(JSON.stringify(this.state.orderInput));
-        if(field === "char")
-            value = value.toUpperCase();
+        if(field === "char") value = value.toUpperCase();
         newOrderParam[field] = value;
-        this.setState({orderInput: newOrderParam});
+        this.setState({order: newOrderParam});
     }
 
     returnData(newState){
@@ -79,10 +77,10 @@ class SearchOrderSection extends React.Component{
                 statusSelected: newState.statusSelected,
             },
             inputsParams: {
-                txtInput: newState.txtInput,
-                dateInput: newState.dateInput,
-                hourInput: newState.hourInput,
-                orderInput: newState.orderInput
+                txt: newState.txtInput,
+                date: newState.dateInput,
+                hour: newState.hourInput,
+                order: newState.orderInput
             }
         });
     }
@@ -90,8 +88,8 @@ class SearchOrderSection extends React.Component{
     componentDidMount(){
         Time.getDateTimeFromServer().then(timeObj =>{
             let newDate = JSON.parse(JSON.stringify(this.state.dateInput));
-            newDate["startDate"] = timeObj.date;
-            newDate["endDate"] = timeObj.date;
+            newDate["start"] = timeObj.date;
+            newDate["end"] = timeObj.date;
             this.setState({dateInput: newDate});
         });
     }

@@ -19,8 +19,8 @@ const daysEs = {
 
 async function getSchedule(){
     try {
-        let scheduleObj = await ajaxReqLaundryConfigs.fetchSchedule();
-        return scheduleObj;
+        let {data: {schedule}} = await ajaxReqLaundryConfigs.fetchSchedule();
+        return schedule;
     }catch(err){console.error(err);}
 }
 
@@ -52,8 +52,8 @@ class Schedule extends React.Component{
 
     updateSchedule(){
         ajaxReqLaundryConfigs.updateSchedule(this.state.days)
-        .then(response =>{
-            if(response === "OK"){
+        .then(({status}) =>{
+            if(status === 200){
                 ScheduleBoxContainer.SuccessMessage();
             }
         }).catch(err =>{
@@ -64,7 +64,7 @@ class Schedule extends React.Component{
     componentDidMount(){
         if(this.props.mode === "edit"){ 
             //fetch data
-            getSchedule().then(({schedule}) =>{
+            getSchedule().then((schedule) =>{
                 this.setState({
                     days: schedule
                 });

@@ -7,8 +7,8 @@ const ajaxReqCustomMessages = require("../requestsModules/ajaxReqCustomMessages"
 
 async function getCustomMessages(){
     try {
-        let query = await ajaxReqCustomMessages.fetch();
-        return query;
+        let {data:messages} = await ajaxReqCustomMessages.fetch();
+        return messages;
     }catch(err){console.error(err);}
 }
 
@@ -128,6 +128,7 @@ class EditCustomMessages extends React.Component{
     componentDidMount(){
         //fetch data
         getCustomMessages().then(messages =>{
+            console.log(messages);
             let messageObjWID = {};
             //iterate for every message
             messages.map(message =>{

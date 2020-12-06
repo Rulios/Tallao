@@ -6,7 +6,7 @@ const client = require("../../libs/DBConnect");
 const GetLaundryInitials = require("../../libs/GetLaundryInitials");
 
 const SERVICEOFFER_STRINGS = [
-    "iron", "washIron", "wash", "dryClean"
+    "iron", "wash_iron", "wash", "dry_clean"
 ];
 
 serviceOffer.get("/fetch", async function(req, res){
@@ -30,8 +30,11 @@ serviceOffer.get("/fetch", async function(req, res){
 serviceOffer.put("/update", async function(req,res){
     try{
         let {hashcode, userType} = req.session;
-        let serviceOffer = req.body;
-        if(!validator.isIn(serviceOffer, SERVICEOFFER_STRINGS)) return res.status(400).end();
+        let {serviceOffer} = req.body; //array
+
+        serviceOffer.map(service => {
+            if(!validator.isIn(service, SERVICEOFFER_STRINGS)) throw new Error(`${service} not in available services`);
+        });
 
         let query = `
             UPDATE  laundries 
@@ -39,7 +42,7 @@ serviceOffer.put("/update", async function(req,res){
             WHERE hashcode = $2
         `;
 
-        await client.query(query, [JSON.stringify(serviceOffer), hashcode]);
+        await client.query(query, [`{${serviceOffer.join(",")}}`, hashcode]);
         return res.status(200).json({message: "OK"});
 
 

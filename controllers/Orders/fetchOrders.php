@@ -5,7 +5,7 @@ require_once "../includes/autoload.php";
 
 if(Classes\Sessions::readSession()){
     
-
+    
     //Connection param
     $serverName = "localhost";
     $userConn = "root";
@@ -84,7 +84,7 @@ if(Classes\Sessions::readSession()){
                                 WHERE laundryInitials = '$initials' 
                                 AND status='$status' 
                                 AND dateAssign 
-                                BETWEEN '$startDate' 
+1                                BETWEEN '$startDate' 
                                 AND '$endDate' 
                                 ORDER BY dateAssign DESC LIMIT $elementsToFetch";
                     }

@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const OrderParamsSelectorComp = require("./reactComponents/OrderParamsSelectorComp");
+const OrderParamsSelectorComp = require("./OrderParamsSelectorComp");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
@@ -46,8 +46,8 @@ function MainContainer({
                         time: inputsValues.hourInput.endHour
                     },
                     changeHandler: {
-                        onDateChange: (value) => changeHandler.onDateChange("endDate", value),
-                        onHourChange: (value) => changeHandler.onHourChange("endHour", value)
+                        onDateChange: (value) => changeHandler.onDateChange("end", value),
+                        onHourChange: (value) => changeHandler.onHourChange("end", value)
                     }
                 })
             );
@@ -65,8 +65,8 @@ function MainContainer({
                         time: inputsValues.hourInput.startHour
                     },
                     changeHandler: {
-                        onDateChange: (value) => changeHandler.onDateChange("startDate", value),
-                        onHourChange: (value) => changeHandler.onHourChange("startHour", value)
+                        onDateChange: (value) => changeHandler.onDateChange("start", value),
+                        onHourChange: (value) => changeHandler.onHourChange("start", value)
                     }
                 }),
                 React.createElement(DateTimeInput, {
@@ -79,8 +79,8 @@ function MainContainer({
                         time: inputsValues.hourInput.endHour
                     },
                     changeHandler: {
-                        onDateChange: (value) => changeHandler.onDateChange("endDate", value),
-                        onHourChange: (value) => changeHandler.onHourChange("endHour", value)
+                        onDateChange: (value) => changeHandler.onDateChange("end", value),
+                        onHourChange: (value) => changeHandler.onHourChange("end", value)
                     }
                 }),
             ); 

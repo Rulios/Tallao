@@ -1,6 +1,6 @@
 "use strict";
 const React = require("react");
-const inputPrevent = require("./frontendModules/inputPrevent");
+const inputPrevent = require("../frontendModules/inputPrevent");
 
 //All the low components, in charge of just displaying single components
 const Label4Input = ({id, text}) =>{
@@ -20,7 +20,7 @@ const InputDate = ({id, value,onChange}) =>{
     return React.createElement("input", {
         id: id,
         type: "date",
-        value : value,
+        //value : value,
         onChange: (e) =>{
             if(inputPrevent.isInputDate(e.target.value)){
                 onChange(e.target.value);

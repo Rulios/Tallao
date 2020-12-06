@@ -174,22 +174,13 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-   /*  let jsonString = JSON.stringify({
-        indications: orderIndications,
-        elementsOnOrder: activeElementsOnOrder,
-        hookQuantity: hookQuantity,
-        totalPrice: totalPrice,
-        dateTimeAssignedForOrder: dateTimeAssignedForOrder,
-        dateTimeOrderCreated: todayDateTime,
-        customerID: customerID,
-        customerName: customerName
-    }); */
-   
-
-    ajaxReqOrders.submitOrder({order: order}).then(response =>{
+    ajaxReqOrders.submitOrder({order: order}).then(({status}) =>{
         //trigger the resetOrder
-        console.log(response);
-        resetOrder();
+        if(status === 200){
+            resetOrder();
+        }else{
+            throw new Error("Can't submit order");
+        }
     }).catch(err =>{
         console.error(err);
     });
@@ -310,7 +301,7 @@ function renderSubmitButton(onSubmit){
 }
 
 function renderLaundryName(){
-    ajaxReqUserCreds.fetchAccountCreds().then(data =>{
+    ajaxReqUserCreds.fetchAccountCreds().then(({data}) =>{
         document.getElementById("showLaundryName").textContent = data.name;
     }).catch( () =>{
         document.getElementById("showLaundryName").textContent = "Error";

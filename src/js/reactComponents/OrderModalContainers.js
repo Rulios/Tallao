@@ -1,9 +1,8 @@
 "use strict";
 
 const React = require("react");
-const OrderModalComp = require("./reactComponents/OrderModalComp");
-const CustomerIDHandler = require("./reactComponents/CustomerIDHandler");
-const { ModuleFilenameHelpers } = require("webpack");
+const OrderModalComp = require("./OrderModalComp");
+const CustomerIDHandler = require("./CustomerIDHandler");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

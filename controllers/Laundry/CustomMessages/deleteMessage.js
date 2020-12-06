@@ -5,6 +5,7 @@ module.exports = function(customMessages){
     customMessages.delete("/delete", async function(req,res){
         try{
             let id = req.body.messageID;
+            console.log(id);
             let query = "";
             if(await ExistsCustomMessageID(id)){
                 query =`

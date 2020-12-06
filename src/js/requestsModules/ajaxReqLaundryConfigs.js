@@ -14,37 +14,37 @@ async function fetchElementsPrice(obj){
     //fetchs all the prices from the service
     //params : none
 
-    return await ajaxReq.doAJAX("GET", "/laundry/configs/elementsPrice/fetch", obj);
+    return await ajaxReq.get("/laundry/configs/elementsPrice/fetch", obj);
 }         
 
 async function updateElementsPrice(obj){
     //params: elementsPrice(obj)
 
-    return await ajaxReq.doAJAX("PUT", "/laundry/configs/elementsPrice/update", obj);
+    return await ajaxReq.put("/laundry/configs/elementsPrice/update", obj);
 }
 
 async function fetchSchedule(){
     //params : none, it's on cookies
 
-    return await ajaxReq.doAJAX("GET", "/laundry/configs/schedule/fetch");
+    return await ajaxReq.get("/laundry/configs/schedule/fetch");
 }
 
 async function updateSchedule(str){
     //params: schedule JSON
 
-    return await ajaxReq.doAJAX("PUT", "/laundry/configs/schedule/update", str);
+    return await ajaxReq.put("/laundry/configs/schedule/update", str);
 }   
 
 async function fetchServiceOffer(){
     //params: none, it's on cookies
 
-    return await ajaxReq.doAJAX("GET", "/laundry/configs/serviceOffer/fetch");
+    return await ajaxReq.get("/laundry/configs/serviceOffer/fetch");
 }
 
 async function updateServiceOffer(obj){
     //params serviceOffer(string)
     
-    return await ajaxReq.doAJAX("PUT", "/laundry/configs/serviceOffer/update", obj);
+    return await ajaxReq.put("/laundry/configs/serviceOffer/update", obj);
 }
 
 module.exports = {  

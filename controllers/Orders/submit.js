@@ -124,7 +124,7 @@ function isValidElementsOnOrder(elementsOnOrder){
             Object.keys(elementsOnOrder[element]).map(service =>{
                 let {quantity, price} = elementsOnOrder[element][service];
                 //check if the quantity is an integer type
-                if(!validator.isInt(quantity)) throw new Error(`${element} quantity is not a integer type`);
+                if(!validator.isInt(quantity.toString())) throw new Error(`${element} quantity is not a integer type`);
                 //check if the quantity & the price are positive
                 if(quantity <= 0 || price <= 0) throw new Error(`${element} quantity or price are negative`);
             });

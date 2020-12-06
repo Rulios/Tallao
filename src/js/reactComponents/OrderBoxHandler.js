@@ -1,9 +1,8 @@
 "use strict";
 
 const React = require("react");
-const { ModuleFilenameHelpers } = require("webpack");
-const OrderBoxContainers = require("./reactComponents/OrderBoxContainers");
-const Time = require("./reactComponents/Time");
+const OrderBoxContainers = require("./OrderBoxContainers");
+const Time = require("./Time");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */

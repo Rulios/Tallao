@@ -11,9 +11,10 @@ module.exports = function(search){
 
             let result = await client.query(query,[inputCustomerID]);
 
-            //if(!result.rowCount) return res.status(204).json(null);
-            if(!result.rowCount) throw new Error();
+            if(typeof result.rows[0] === "undefined") return res.status(200).json(null);
             
+            //if(!result.rowCount) return res.status(404).end();
+
             return res.status(200).json(result.rows[0]);
 
         }catch(err){

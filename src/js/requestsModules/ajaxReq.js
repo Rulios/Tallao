@@ -1,14 +1,26 @@
-const $ = require("jquery");
+const axios = require("axios");
 
-async function doAJAX(type, url, obj){
-    return await $.ajax({
-        type: type,
-        url: url,
-        dataType: "json",
-        data: obj
-    });
+async function get(url, data){
+    return await axios.get(url, {params: data});
+}
+
+async function post(url,data){
+    return await axios.post(url, data);
+}
+ 
+async function put(url, data){
+    return await axios.put(url, data);
+}
+
+async function deleteQ(url, data){ //delete is reserved
+    console.log(data);
+    return await axios.delete(url, {data: data});
 }
 
 module.exports = {
-    doAJAX: doAJAX
+    get: get,
+    post: post,
+    put: put,
+    delete: deleteQ
 };
+

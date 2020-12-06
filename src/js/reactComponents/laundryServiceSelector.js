@@ -35,7 +35,7 @@ class ServiceSelector extends React.Component{
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
-            ajaxReqLaundryConfigs.fetchServiceOffer().then(({serviceoffer}) =>{
+            ajaxReqLaundryConfigs.fetchServiceOffer().then(({data:{serviceoffer}}) =>{
                 this.returnData(serviceoffer[0]);
                 that.setState({
                     selected: serviceoffer[0],

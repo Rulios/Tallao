@@ -2,11 +2,10 @@
 
 const ajaxReq = require("./ajaxReq");
 
-
 async function email(obj){
     //props: inputEmail, userType
     try{
-        return await ajaxReq.doAJAX("GET", "/CheckExists/Email", obj);
+        return await ajaxReq.get("/CheckExists/Email", obj);
     }catch(err){}
     
 }
@@ -14,7 +13,7 @@ async function email(obj){
 async function laundryInitials(obj){
     //props: inputInitials
     try{
-        return await ajaxReq.doAJAX("GET", "./CheckExists/LaundryInitials", obj);
+        return await ajaxReq.get("./CheckExists/LaundryInitials", obj);
     }catch(err){}
 }
 

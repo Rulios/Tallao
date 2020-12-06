@@ -25,6 +25,10 @@ laundry.get("/myaccount", function(req,res){
     return res.status(200).sendFile(path.resolve("public/myaccount.html"));
 });
 
+laundry.get("/myorders", function(req,res){
+    return res.status(200).sendFile(path.resolve("public/myorders.html"));
+});
+
 laundry.use("/configs", configsRouter);
 
 laundry.use("/customMessages", customMessagesRouter);

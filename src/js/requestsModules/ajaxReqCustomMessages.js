@@ -4,7 +4,7 @@ async function update(obj){
     //props:  messageObj(json format)
 
     try{    
-        return await ajaxReq.doAJAX("PUT", "/Laundry/customMessages/update", obj);
+        return await ajaxReq.put("/Laundry/customMessages/update", obj);
     }catch(err){
         console.error(err);
     }
@@ -13,7 +13,7 @@ async function update(obj){
 async function fetch(){
     //props: 
     try{
-        return await ajaxReq.doAJAX("GET", "/Laundry/customMessages/fetch");
+        return await ajaxReq.get("/Laundry/customMessages/fetch");
     }catch(err){
         console.error(err);
     }
@@ -23,7 +23,7 @@ async function fetch(){
 async function deleteMessage(obj){
     //props: idMessage
     try{
-        return await ajaxReq.doAJAX("DELETE", "/Laundry/customMessages/delete", obj);
+        return await ajaxReq.delete("/Laundry/customMessages/delete", obj);
     }catch(err){
         console.log(err);
     }

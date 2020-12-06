@@ -89,7 +89,7 @@ async function fetchElementsPrice(){
     //fetchs the elements price (all)
     //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
     try{
-        let elementsPrice = await ajaxReqLaundryConfigs.fetchElementsPrice();
+        let {data: elementsPrice} = await ajaxReqLaundryConfigs.fetchElementsPrice();
         let newElementsPrice = processElementsPrice(elementsPrice);
         return newElementsPrice;
     }catch(err){
