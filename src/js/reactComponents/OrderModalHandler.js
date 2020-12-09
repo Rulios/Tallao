@@ -18,25 +18,26 @@ class OrderModal extends React.Component{
 
     advanceToNextStatus(){
         if(this.props.order.status !== "retired"){
-            ajaxReqOrders.advanceToNextStatus(JSON.stringify({
-                idChar: this.props.order.idChar,
-                idNumber: this.props.order.idNumber
-            })).then(response =>{
-                this.props.onUpdateOrders();
+            ajaxReqOrders.advanceToNextStatus({
+                id_char: this.props.order.id_char,
+                id_number: this.props.order.id_number
+            }).then(({status}) =>{
+                if(status === 200)this.props.onUpdateOrders();
             }).catch(err => console.error());
         }
     }
 
     newCustomerNameHandler(customerData){
         if(customerData.id && customerData.name){
-            ajaxReqOrders.updateCustomerAffiliateOrder(JSON.stringify({
+            ajaxReqOrders.updateCustomerAffiliateOrder({
                 orderID: {
-                    idChar: this.props.order.idChar,
-                    idNumber: this.props.order.idNumber
+                    id_char: this.props.order.id_char,
+                    id_number: this.props.order.id_number
                 },
                 customerID: customerData.id
-            })).then(response=>{
-                this.props.onUpdateOrders();
+            }).then(({status})=>{
+                if(status === 200) this.props.onUpdateOrders();
+                
             }).catch(error => console.error(error))
         }
     }

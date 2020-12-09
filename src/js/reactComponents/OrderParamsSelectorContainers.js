@@ -42,8 +42,8 @@ function MainContainer({
                     key: paramsObj.paramSelected,
                     id: paramsObj.paramSelected,
                     values: {
-                        date: inputsValues.dateInput.endDate,
-                        time: inputsValues.hourInput.endHour
+                        date: inputsValues.date.end,
+                        time: inputsValues.hour.end
                     },
                     changeHandler: {
                         onDateChange: (value) => changeHandler.onDateChange("end", value),
@@ -61,8 +61,8 @@ function MainContainer({
                     isDateRange: true,
                     rangeType: "startDate",
                     values: {
-                        date: inputsValues.dateInput.startDate,
-                        time: inputsValues.hourInput.startHour
+                        date: inputsValues.date.start,
+                        time: inputsValues.hour.start
                     },
                     changeHandler: {
                         onDateChange: (value) => changeHandler.onDateChange("start", value),
@@ -75,8 +75,8 @@ function MainContainer({
                     isDateRange: true,
                     rangeType: "endDate",
                     values: {
-                        date: inputsValues.dateInput.endDate,
-                        time: inputsValues.hourInput.endHour
+                        date: inputsValues.date.end,
+                        time: inputsValues.hour.end
                     },
                     changeHandler: {
                         onDateChange: (value) => changeHandler.onDateChange("end", value),
@@ -91,7 +91,7 @@ function MainContainer({
                 React.createElement(OrderInput,{
                     key:"orderIDInput",
                     id: "orderIDInput",
-                    values: inputsValues.orderInput,
+                    values: inputsValues.order,
                     onChange: {
                         orderChar:(value) => changeHandler.onOrderChange("char",value),
                         orderNumber:(value) => changeHandler.onOrderChange("number",value),
@@ -105,9 +105,9 @@ function MainContainer({
                 React.createElement(TextInput,{
                     key: "customerIDInput",
                     id: "customerIDInput",
-                    value: inputsValues.txtInput,
+                    value: inputsValues.txt,
                     txtType: "customerID",
-                    onChange: (value) => changeHandler.onTxtChange(value)
+                    onChange: (value) => changeHandler.onTxtChange("customerID",value)
                 })
             );
         break;

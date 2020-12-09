@@ -11,7 +11,6 @@ async function submitOrder(obj){
 }
 
 async function fetchOrders(obj){
-    console.log("Fethc");
     return await ajaxReq.get("/orders/fetch", obj);
 }
 
@@ -26,12 +25,12 @@ async function updateOrder(obj){
 
 async function updateCustomerAffiliateOrder(jsonString){
     //params: orderID, customerData
-    return await ajaxReq.put("./php/DBOrders/updateCustomerAffiliateOrder.php", jsonString);
+    return await ajaxReq.put("/orders/updateCustomerAffiliate", jsonString);
 }
 
 async function advanceToNextStatus(jsonString){
     //params: orderID (json)
-    return await ajaxReq.put("./php/DBOrders/advanceToNextStatus.php", jsonString);
+    return await ajaxReq.put("/orders/nextStatus", jsonString);
 }
 
 module.exports =  {

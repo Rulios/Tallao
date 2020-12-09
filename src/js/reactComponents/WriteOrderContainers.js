@@ -21,9 +21,9 @@ const elementsString = {
 
 const serviceOfferString = {
     iron: "Planchado",
-    washIron: "Lavado y planchado",
+    wash_iron: "Lavado y planchado",
     wash: "Lavado",
-    dryClean: "Lavado en seco"
+    dry_clean: "Lavado en seco"
 };
 
 //button that contains info of the order
@@ -71,7 +71,13 @@ function elementOnOrder(props){
         inputElementChangeOnCustom = React.createElement("input",{
             type: "text",
             placeholder: "Nombre del elemento",
-            onChange: (e) =>{props.onUpdateElementNameIfCustom(props.id,props.service, e);}
+            onChange: (e) =>{
+                props.onUpdateElementNameIfCustom({
+                    elementID: props.id, 
+                    service: props.service, 
+                    value: e.target.value
+                });
+            }
         });
     }else{
         idAsset = props.id;

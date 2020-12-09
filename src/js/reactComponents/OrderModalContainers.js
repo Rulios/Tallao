@@ -3,6 +3,7 @@
 const React = require("react");
 const OrderModalComp = require("./OrderModalComp");
 const CustomerIDHandler = require("./CustomerIDHandler");
+const dayjs = require("dayjs");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
@@ -11,15 +12,15 @@ const textEs= {
     order: "Orden",
     status: "Estado",
     elements: "Elementos",
-    dateAssign: "Fecha asignada",
-    dateReceive: "Fecha recibida",
-    customerName: "Nombre del cliente",
-    hookQuantity: "Cantidad de ganchos",
-    totalPrice: "Precio total",
+    date_assign: "Fecha asignada",
+    date_receive: "Fecha recibida",
+    customer_name: "Nombre del cliente",
+    hook_quantity: "Cantidad de ganchos",
+    total_price: "Precio total",
     iron: "Planchado",
-    washIron: "Lavado y planchado",
+    wash_iron: "Lavado y planchado",
     wash: "Lavado",
-    dryClean: "Lavado en seco",
+    dry_clean: "Lavado en seco",
     notifsAndChat: "Notificaciones y Chat",
     indications: "Indicaciones",
     affiliateCustomer: "Afiliar cliente",
@@ -62,7 +63,7 @@ const statusColors = {
 
 function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerName}){
     //console.log(orderDetails);
-    let idComp = `${orderDetails.idChar}${orderDetails.idNumber}`;
+    let idComp = `${orderDetails.id_char}${orderDetails.id_number}`;
     return React.createElement("div", {className:"modalCustom"},
         React.createElement("div", {className:"modal-contentCustom"},
             [   
@@ -73,8 +74,8 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                 React.createElement(OrderModalTitle,{
                     key : `OrderModalTitle4${idComp}`,
                     orderID: {
-                        idChar: orderDetails.idChar,    
-                        idNumber:  orderDetails.idNumber
+                        id_char: orderDetails.id_char,    
+                        id_number:  orderDetails.id_number
                     }
                 }),
                 React.createElement("hr", {
@@ -106,16 +107,16 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                                         React.createElement(OrderModalComp.FieldValue, {
                                         key: `ModalCustomerName4${idComp}`,
                                         id: `ModalCustomerName4${idComp}`,
-                                        fieldTxt: `${textEs.customerName}:`,
-                                        value: `${orderDetails.customerName}`
+                                        fieldTxt: `${textEs.customer_name}:`,
+                                        value: `${orderDetails.customer_name}`
                                         }),
                                     ] */
                                     React.createElement(OrderModalCustomerName, {
                                         idComp: idComp, 
-                                        customerName: orderDetails.customerName,
+                                        customer_name: orderDetails.customer_name,
                                         newCustomerName: (customerData) => newCustomerName(customerData)
                                     })
-                                    //OrderModalCustomerName({idComp: idComp, customerName: orderDetails.customerName})
+                                    //OrderModalCustomerName({idComp: idComp, customer_name: orderDetails.customer_name})
                                 ),
 
                                 React.createElement("div", {
@@ -123,8 +124,8 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalReceiveDate4${idComp}`,
-                                        fieldTxt: `${textEs.dateReceive}:`,
-                                        value: `${orderDetails.dateReceive}`
+                                        fieldTxt: `${textEs.date_receive}:`,
+                                        value: `${dayjs(orderDetails.date_receive).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
                                 React.createElement("div", {
@@ -132,8 +133,8 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalAssignDate4${idComp}`,
-                                        fieldTxt: `${textEs.dateAssign}:`,
-                                        value: `${orderDetails.dateAssign}`
+                                        fieldTxt: `${textEs.date_assign}:`,
+                                        value: `${dayjs(orderDetails.date_assign).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
                                 React.createElement(OrderModalComp.CenterBoldDiv,{
@@ -154,7 +155,7 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                                         }),
                                         React.createElement(OrderElements,{
                                             key: `OrderModalElements4${idComp}`,
-                                            elementsDetails: orderElementsByService(orderDetails.elementsDetails)
+                                            elements_details: orderElementsByService(orderDetails.elements_details)
                                         })
                                     ]
                                     
@@ -162,14 +163,14 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalHookQuantity4${idComp}`,
                                     id: `OrderModalHookQuantity4${idComp}`,
-                                    fieldTxt: `${textEs.hookQuantity}:`,
-                                    value: `${orderDetails.hookQuantity}`
+                                    fieldTxt: `${textEs.hook_quantity}:`,
+                                    value: `${orderDetails.hook_quantity}`
                                 }),
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalTotalPrice4${idComp}`,
                                     id: `OrderModalTotalPrice4${idComp}`,
-                                    fieldTxt: `${textEs.totalPrice}`,
-                                    value: `${orderDetails.totalPrice}`
+                                    fieldTxt: `${textEs.total_price}`,
+                                    value: `${orderDetails.total_price}`
                                 })
                             ]
                         ),
@@ -180,8 +181,8 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                         },
                             React.createElement(NotificationsAndChat,{
                                 orderID: {
-                                    idChar: orderDetails.idChar,    
-                                    idNumber:  orderDetails.idNumber
+                                    id_char: orderDetails.id_char,    
+                                    id_number:  orderDetails.id_number
                                 },
                                 indications: orderDetails.indications
                             })
@@ -199,23 +200,23 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
 }
 
 function OrderModalTitle({orderID}){
-    let strOrderID = `${orderID.idChar}${orderID.idNumber}`;
+    let strOrderID = `${orderID.id_char}${orderID.id_number}`;
     return  React.createElement("div", {className:"modal-headerCustom"},
         React.createElement("span", {key: `SpanShowModalTitle4${strOrderID}`}, 
-        `${textEs.order} ${orderID.idChar} ${orderID.idNumber}`)
+        `${textEs.order} ${orderID.id_char} ${orderID.id_number}`)
     );
         
 }
 
-function OrderModalCustomerName({idComp, customerName, newCustomerName}){
+function OrderModalCustomerName({idComp, customer_name, newCustomerName}){
     let [isToggleEdit, changeToggleEdit] = React.useState(false);
     let toggleElement; //conditional UNIT rendering
-    if(customerName !== ""){
+    if(customer_name){
         return  React.createElement(OrderModalComp.FieldValue, {
             key: `ModalCustomerName4${idComp}`,
             id: `ModalCustomerName4${idComp}`,
-            fieldTxt: `${textEs.customerName}:`,
-            value: `${customerName}`
+            fieldTxt: `${textEs.customer_name}:`,
+            value: `${customer_name}`
         });
     }else{
         if(isToggleEdit){
@@ -232,7 +233,7 @@ function OrderModalCustomerName({idComp, customerName, newCustomerName}){
         React.createElement("span", {
             key:`ClientName4${idComp}`, 
             className:"bold small-rightMargin"
-        }, `${textEs.customerName}:`),
+        }, `${textEs.customer_name}:`),
         React.createElement("a", {
                 key: `AToAddCustomerID4${idComp}`,
                 style: {
@@ -245,8 +246,8 @@ function OrderModalCustomerName({idComp, customerName, newCustomerName}){
     ]);
 }
 
-function OrderElements({elementsDetails}){
-    return Object.keys(elementsDetails).map(service =>{
+function OrderElements({elements_details}){
+    return Object.keys(elements_details).map(service =>{
         let components = [];
         
         components.push(
@@ -258,12 +259,24 @@ function OrderElements({elementsDetails}){
                 tabSpaces: 1
             })
         );
-        Object.keys(elementsDetails[service]).map(element =>{
+        Object.keys(elements_details[service]).map(element =>{
+            let elementName = "";
+
+            /* Minor display adjustments */
+            if(element.includes("custom")){ //the element is custom
+                if(typeof elements_details[service][element]["name"] === "undefined"){
+                    elementName = textEs.elementsStr["custom"];
+                }else{
+                    elementName = elements_details[service][element]["name"];
+                }
+            }else{
+                elementName = textEs.elementsStr[element];
+            }
             components.push( React.createElement(OrderModalComp.FieldRightValue,{
                 key: `ElementsOfOrderOnModal${element}-${service}`,
                 id:`ElementsOfOrderOnModal${element}-${service}`,
-                fieldTxt: `${elementsDetails[service][element]["quantity"]} x ${textEs.elementsStr[element]} ($${elementsDetails[service][element]["price"]}) =`,
-                value: `${elementsDetails[service][element]["price"] * elementsDetails[service][element]["quantity"]}`,
+                fieldTxt: `${elements_details[service][element]["quantity"]} x ${elementName} ($${elements_details[service][element]["price"]}) =`,
+                value: `${elements_details[service][element]["price"] * elements_details[service][element]["quantity"]}`,
                 tabSpaces: 2
             }));
         });
@@ -273,7 +286,7 @@ function OrderElements({elementsDetails}){
 
 //right side of the modal
 function NotificationsAndChat({orderID, indications}){
-    let idComp = `${orderID.idChar}${orderID.idNumber}`;
+    let idComp = `${orderID.id_char}${orderID.id_number}`;
     return React.createElement("form", null,
         React.createElement("fieldset",{
             className: "border p-2"
@@ -298,32 +311,32 @@ module.exports = OrderModal;
 
 //////////////////////////////////////////////////////////////////////
 
-function orderElementsByService(elementsDetails){
+function orderElementsByService(elements_details){
 
-    //The elementsDetails obj is having as primary props the elements name and then 
+    //The elements_details obj is having as primary props the elements name and then 
     //the service.
 
     //This function swaps the primary props to service.
     /* 
     (example)
-        elementsDetails = {
+        elements_details = {
             pants: {iron:{quantity: 1, price: 0.66}};
         };
 
         TO 
 
-        elementsDetails = {
+        elements_details = {
             iron: {pants:{quantity: 1, price: 0.66}};
     }; */
 
     let returnObj = {};
-    Object.keys(elementsDetails).map(element =>{
-        Object.keys(elementsDetails[element]).map(service =>{
-            //console.log(typeof elementsDetails[element][service] === "object");
+    Object.keys(elements_details).map(element =>{
+        Object.keys(elements_details[element]).map(service =>{
+            //console.log(typeof elements_details[element][service] === "object");
             if(typeof returnObj[service] !== "object"){
                 returnObj[service] = {};
             }
-            returnObj[service][element] = elementsDetails[element][service];
+            returnObj[service][element] = elements_details[element][service];
         })
     });
     return returnObj;

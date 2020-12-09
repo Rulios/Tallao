@@ -62,8 +62,8 @@ $(document).ready(function(){
             };
             
             let query =  ajaxRegister.registerLaundry(obj);
-            query.then(data =>{
-                if(data.status == "OK")
+            query.then(({status}) =>{
+                if(status == 200)
                     $("#frmMasterUserRegister").toggleClass("hide");
                     $("#congrSection").toggleClass("hide");
             })

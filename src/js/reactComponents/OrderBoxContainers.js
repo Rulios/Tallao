@@ -13,11 +13,11 @@ const textEs = {
     retired: "Retirado",
     status: "Estado",
     customer: "Cliente",
-    dateAssign: "Fecha Asignada",
-    dateReceive: "Fecha Recibida",
-    hookQuantity: "Cantidad de Ganchos",
+    date_assign: "Fecha Asignada",
+    date_receive: "Fecha Recibida",
+    hook_quantity: "Cantidad de Ganchos",
     touchForDetails: "Toca para más detalles",
-    totalPrice: "Precio Total",
+    total_price: "Precio Total",
     timeLeft: "Faltan",
     days: "días",
     hours: "horas",
@@ -42,21 +42,21 @@ const dateDiffColors = {
     late: "#DB4438"
 };
 
-function OrderBox({orderID, status, orderDetails,dateTimeDifference, onClickOrder}){
+function OrderBox({orderID, status, orderDetails , dateTimeDifference, onClickOrder}){
     //console.log(dateTimeDifference);
-    let elementID  = `${orderID.idChar}${orderID.idNumber}`;
+    let elementID  = `${orderID.id_char}${orderID.id_number}`;
     return React.createElement("div", {
         className: "col-lg-4",
         
     },
         React.createElement("button", {
             className: "orderListElementStyle",
-            onClick: () => onClickOrder(`${orderID.idChar}${orderID.idNumber}`)
+            onClick: () => onClickOrder(`${orderID.id_char}${orderID.id_number}`)
         },
             [
                 React.createElement(OrderBoxComp.H3, {
                     key: `OrderID${elementID}`,
-                    text : `${orderID.idChar} ${orderID.idNumber}`
+                    text : `${orderID.id_char} ${orderID.id_number}`
                 }),
                 React.createElement(OrderBoxComp.CenterBoldDiv, {
                     key: `OrderStatusTag${elementID}`,
@@ -75,28 +75,28 @@ function OrderBox({orderID, status, orderDetails,dateTimeDifference, onClickOrde
                 },
                     [
                         React.createElement(OrderBoxComp.FieldValue,{
-                            key: `OrderCustomerName${elementID}`,
-                            id: `OrderCustomerName${elementID}`,
+                            key: `Ordercustomer_name${elementID}`,
+                            id: `Ordercustomer_name${elementID}`,
                             fieldTxt: `${textEs.customer}:`,
-                            value: orderDetails.customerName
+                            value: orderDetails.customer_name
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `OrderDateWritten${elementID}`,
                             id: `OrderDateWritten${elementID}`,
-                            fieldTxt: `${textEs.dateReceive}:`,
-                            value: orderDetails.dateReceive
+                            fieldTxt: `${textEs.date_receive}:`,
+                            value: orderDetails.date_receive
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
-                            key: `OrderDateAssigned${elementID}`,
-                            id: `OrderDateAssigned${elementID}`,
-                            fieldTxt: `${textEs.dateAssign}:`,
-                            value: orderDetails.dateAssign
+                            key: `Orderdate_assigned${elementID}`,
+                            id: `Orderdate_assigned${elementID}`,
+                            fieldTxt: `${textEs.date_assign}:`,
+                            value: orderDetails.date_assign
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
-                            key: `OrderHookQuantity${elementID}`,
-                            id: `OrderHookQuantity${elementID}`,
-                            fieldTxt: `${textEs.hookQuantity}:`,
-                            value: orderDetails.hookQuantity
+                            key: `Orderhook_quantity${elementID}`,
+                            id: `Orderhook_quantity${elementID}`,
+                            fieldTxt: `${textEs.hook_quantity}:`,
+                            value: orderDetails.hook_quantity
                         })
                     ]                    
                 ),
@@ -104,7 +104,7 @@ function OrderBox({orderID, status, orderDetails,dateTimeDifference, onClickOrde
                     React.createElement(OrderBoxComp.HrGrey, {key:`PriceHR${elementID}`}),
                     React.createElement(OrderBoxComp.CenterBoldDiv,{
                         key: `OrderPriceTag${elementID}`,
-                        text: `${textEs.totalPrice}: ${orderDetails.totalPrice}`
+                        text: `${textEs.total_price}: ${orderDetails.total_price}`
                     }),
                     React.createElement(OrderBoxComp.CenterBoldDiv, {
                         key: `Touch4Details${elementID}`,
@@ -170,13 +170,13 @@ module.exports = {
         <div class="dataOrderStyle">
 
             <label for="" class="bold">Cliente:</label>
-            <div name="customerNameTag" ><span class="bold"> Cliente:</span> <span>Robert Lu Zheng</span></div>
+            <div name="customer_nameTag" ><span class="bold"> Cliente:</span> <span>Robert Lu Zheng</span></div>
             <div>
                 <span class="bold">Día Asignado:</span> <span style="float:right">10/10/2020</span>
             </div>
-            <div name="dateAssignTag">Día asignado:</div>  <div style="float:right">10/10/2020</div>
-            <div name="dateReceiveTag">Día recibido: 10/10/2020</div>
-            <div name="hookQuantityTag">Cantidad de Ganchos: 2</div>
+            <div name="date_assignTag">Día asignado:</div>  <div style="float:right">10/10/2020</div>
+            <div name="date_receiveTag">Día recibido: 10/10/2020</div>
+            <div name="hook_quantityTag">Cantidad de Ganchos: 2</div>
 
             
         </div>  

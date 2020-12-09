@@ -3,18 +3,10 @@
 const React = require("react");
 const OrderBoxContainers = require("./OrderBoxContainers");
 const Time = require("./Time");
+const dayjs = require("dayjs");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */
-
-function convertDateToDate12h(date24h){
-    //gets the date with the 24h time format
-    //to convert into date with 12h time format
-
-    let [date, time] = date24h.split(" ");
-    let {hours, minutes, cycle} = Time.convert24hTo12h(time);
-    return `${date} ${hours}:${minutes} ${cycle}`;
-}
 
 class OrderBoxes extends React.Component{
     constructor(props){
@@ -30,23 +22,22 @@ class OrderBoxes extends React.Component{
     }
 
     render(){
-        let {date, hour12, hour24, minutes, cycle} = this.props.todayDateTime
         return Object.values(this.props.orders).map(order =>{
             return React.createElement(OrderBoxContainers.OrderBox, {
-                key: `${order.idChar}${order.idNumber}`,
+                key: `${order.id_char}${order.id_number}`,
                 status: order.status,
                 orderID: {
-                    idChar: order.idChar,
-                    idNumber: order.idNumber
+                    id_char: order.id_char,
+                    id_number: order.id_number
                 },
                 orderDetails: {
-                    customerName: order.customerName,
-                    dateAssign: convertDateToDate12h(order.dateAssign),
-                    dateReceive: convertDateToDate12h(order.dateReceive),
-                    hookQuantity: order.hookQuantity,
-                    totalPrice: order.totalPrice
+                    customer_name: order.customer_name,
+                    date_assign: dayjs(order.date_assign).format("YYYY-MM-DD hh:mm A"),
+                    date_receive: dayjs(order.date_receive).format("YYYY-MM-DD hh:mm A"),
+                    hook_quantity: order.hook_quantity,
+                    total_price: order.total_price
                 },
-                dateTimeDifference: Time.calcTimeDifference(new Date(order.dateAssign), new Date(`${date} ${hour24}:${minutes}`)),
+                dateTimeDifference: Time.calcTimeDifference(order.date_assign, this.props.todayDateTime),
                 onClickOrder: (orderID) => this.returnDataOnClick(orderID)
             })
         });

@@ -20,7 +20,7 @@ const InputDate = ({id, value,onChange}) =>{
     return React.createElement("input", {
         id: id,
         type: "date",
-        //value : value,
+        value : value,
         onChange: (e) =>{
             if(inputPrevent.isInputDate(e.target.value)){
                 onChange(e.target.value);
@@ -43,6 +43,7 @@ const InputTime = ({id, value,onChange}) =>{
 };
 
 const InputText = ({id, isCharInput, value, onChange}) =>{
+    console.log(value); 
     return React.createElement("input", {
         id: id,
         type: "text",
@@ -53,9 +54,6 @@ const InputText = ({id, isCharInput, value, onChange}) =>{
         },  
         onChange : (e) =>{
             onChange(e.target.value);
-        },
-        onKeyPress : (e) =>{
-            e.target.value = e.target.value.toUpperCase();
         }
     });
 }

@@ -48,33 +48,31 @@ function TimeInput(props){
 
 function calcTimeDifference(dateFuture, dateNow){
     //returns a obj with the time difference in days, months and years
-    let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
     let objDiff  = {
-    days: 0,
-    hours : 0,
-    minutes: 0,
-    timeStatus : "" //Two values, past or future.
-                    //To determine if a order date assign is on the past or on the future
+        days: 0,
+        hours : 0,
+        minutes: 0,
+        timeStatus : "" //Two values, past or future.
+                        //To determine if a order date assign is on the past or on the future
     };
-    /* console.log(dateFuture);
-    console.log(dateNow);
-    console.log(diffInMilliSeconds); */
+
+    let diffInMilliSeconds = dayjs(dateFuture).diff(dayjs(dateNow)) / 1000; 
+    //set event context
+    objDiff.timeStatus = (diffInMilliSeconds < 0) ? "past": "future";
+
+    //transform it to absolute value
+    diffInMilliSeconds = Math.abs(diffInMilliSeconds);
     // calculate days
     const days = Math.floor(diffInMilliSeconds / 86400);
     diffInMilliSeconds -= days * 86400;
-   // console.log('calculated days', days);
 
     // calculate hours
     const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
     diffInMilliSeconds -= hours * 3600;
-   // console.log('calculated hours', hours);
 
     // calculate minutes
     const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
     diffInMilliSeconds -= minutes * 60;
-    //console.log('minutes', minutes);
-
-    objDiff.timeStatus = ((dateFuture - dateNow) < 0) ? "past": "future";
 
     objDiff.days = days;
     objDiff.hours = hours;
@@ -124,22 +122,6 @@ function getMonthString(month){
     return months[month];
 }
 
-/* function splitDate(dateString){
-    //returns a object with day, month, monthString, year
-    //from string format YYYY/MM/DD
-    const months = [
-        "enero", "febrero", "marzo", "abril", "mayo", "junio",
-        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-    ];
-    let arr = dateString.split("-");
-    return{
-        year: parseInt(arr[0]),
-        month: parseInt(arr[1]),
-        day: parseInt(arr[2]),
-        monthString: months[parseInt(arr[1]) -1],
-    };
-} */
-
 class Timer extends React.Component{
 
     constructor(props){
@@ -169,7 +151,7 @@ class Timer extends React.Component{
                 month: dayjs(dateTime).month(),
                 monthString: getMonthString(dayjs(dateTime).month()),
                 year: dayjs(dateTime).year(),
-                hour: dayjs(dateTime).hour(),
+                hour: dayjs(dateTime).format("hh"),
                 minutes: dayjs(dateTime).minute(),
                 cycle: dayjs(dateTime).format("A"),
                 dateTime : dayjs(dateTime).toDate()
@@ -213,4 +195,4 @@ module.exports = {
     convert24hTo12h:convert24hTo12h,
     getDateTimeFromServer:getDateTimeFromServer,
     calcTimeDifference:calcTimeDifference,
-};
+};;

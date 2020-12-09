@@ -12,7 +12,7 @@ const textEs = {
     messageTxt: "Texto:",
     messageTxtPlaceholder: "texto...",
     addNewMessage: "+ Añadir un nuevo mensaje personalizado",
-    updateSuccess: "¡Precios actualizados!",
+    updateSuccess: "¡Mensajes actualizados!",
     update: "Actualizar Mensajes Personalizados",
     updateError: "ERROR AL ACTUALIZAR MENSAJES"
 };

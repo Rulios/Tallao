@@ -49,7 +49,7 @@ function renderElementsOnOrder({activeElementsOnOrder, onClickDelete,
                     onClickDelete: (elementID,service) =>onClickDelete(elementID,service),
                     onUpdateQuantity: (elementID,service, value) => onUpdateQuantity(elementID,service, value),
                     onUpdateUnitPrice: (elementID,service, value) =>onUpdateUnitPrice(elementID,service,value),
-                    onUpdateElementNameIfCustom: (elementID,service, value) =>onUpdateElementNameIfCustom(elementID,service, value)
+                    onUpdateElementNameIfCustom: (properties) =>onUpdateElementNameIfCustom(properties)
                 });
             });
         })
@@ -132,8 +132,14 @@ function onElementSelectFromList({id, service}, WriteOrderDetails){
     //element initialization with values (quantity and price)
     activeElementsOnOrder[id][service] = {};
     activeElementsOnOrder[id][service]["quantity"] = 1;
-    //special case: when clicked the custom element, it should start as 1.
-    activeElementsOnOrder[id][service]["price"] = (id.indexOf("custom") !== -1) ? 1 : elementsPrice[service][id];
+    //special case: 
+    //        when clicked the custom element, it should start as 1.
+    //         Or when if the laundry hasn´t configured a price to the element yet
+    if(elementsPrice[service][id] === 0 || id.indexOf("custom") !== -1){
+        activeElementsOnOrder[id][service]["price"] = 1;
+    }else{
+        activeElementsOnOrder[id][service]["price"] = elementsPrice[service][id];
+    }
 
     //delete the element from the select list 
     if(id.indexOf("custom") === -1) elementsOnSelectList[service].splice(elementsOnSelectList[service].indexOf(id), 1);
@@ -233,10 +239,11 @@ function updateElementUnitPrice({id, service, value}, WriteOrderDetails){
     return NewWriteOrderDetails;
 }
 
-function updateCustomElementName({id, service, value}, WriteOrderDetails){
+function updateCustomElementName({elementID, service, value}, WriteOrderDetails){
+    console.log(value);
     let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
     let {activeElementsOnOrder} = NewWriteOrderDetails.order;
-    activeElementsOnOrder[id][service]["name"] = value;
+    activeElementsOnOrder[elementID][service]["name"] = value;
     return NewWriteOrderDetails;
 }
 

@@ -3,6 +3,7 @@ const validator = require("validator");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 const GetLaundryInitials = require("../libs/GetLaundryInitials");
 const dayjs = require("dayjs");
+const elementsPrice = require("../Laundry/Configs/elementsPrice");
 
 
 
@@ -23,10 +24,13 @@ const AVAILABLE_INPUTS = [ //determines available inputs
 
 module.exports = function(orders){
     orders.get("/fetch", async function(req,res){
-        console.log("sup");
         try{
             const {userType, hashcode} = req.session;
-            let {paramsProps, inputs} = req.body;
+            let {paramsProps, inputs} = req.query;
+            //parse the input to obj
+            paramsProps = JSON.parse(paramsProps);
+            inputs = JSON.parse(inputs);
+
             let laundryInitials = await GetLaundryInitials(hashcode);
             //validate input
             validateInput(paramsProps, inputs);
@@ -35,13 +39,15 @@ module.exports = function(orders){
             let statusArr = getStatusArr(paramsProps.statusSelected);
             let query = buildQuery(paramsProps.paramSelected, statusArr);
             let values = buildValues(laundryInitials, paramsProps, inputs, statusArr);
-
+            /* console.log(query);
+            console.log(values); */
             let result = await client.query(query, values);
-
-            return res.status(200).json(result.rows)
+            //console.log(result);
+            //console.log(result);
+            return res.status(200).json(result.rows);
         }catch(err){
             console.log(err);
-            return res.status(400).end();
+            return res.status(400).json({error: "BAD REQUEST"});
         }
 
 
@@ -74,11 +80,14 @@ function getStatusArr(statusSelected){
 function buildQuery(paramSelected, statusArr){
     let variableParams = []; //stores $4, $5, $6...
     let query = "";
-    let iValues = 3; //states the last param. $3
+    let iValues = 3; //states the next param after last static param. $3
 
-    for(; iValues <= statusArr.length; iValues++){
+    //console.log(statusArr);
+
+    for(let i = 0; i < statusArr.length; i++){
         //builds the params indication depending on the statusArr.length
-        variableParams.push(`$${iValues}`);
+        iValues++;
+        variableParams.push(`$${iValues}::text`);
     }
 
     switch(paramSelected){
@@ -88,7 +97,7 @@ function buildQuery(paramSelected, statusArr){
                 WHERE laundry_initials = $1
                     AND (date_assign 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
-                    AND status IN (${statusArr.join(",")})
+                    AND status IN (${variableParams.join(",")})
                 ORDER BY date_assign ASC
                 LIMIT $${iValues+1};
             `;
@@ -100,7 +109,7 @@ function buildQuery(paramSelected, statusArr){
                 WHERE laundry_initials = $1
                     AND (date_receive 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
-                    AND status IN (${statusArr.join(",")})
+                    AND status IN (${variableParams.join(",")})
                 ORDER BY date_receive ASC
                 LIMIT $${iValues+1}::int;
             `;
@@ -112,7 +121,7 @@ function buildQuery(paramSelected, statusArr){
                 WHERE laundry_initials = $1
                     AND (date_assign 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
-                    AND status IN (${statusArr.join(",")})
+                    AND status IN (${variableParams.join(",")})
                 ORDER BY date_assign DESC
                 LIMIT $${iValues+1};
             `;         
@@ -131,9 +140,8 @@ function buildQuery(paramSelected, statusArr){
         case "customerID":
             query = `
                 SELECT * FROM orders
-                WHERE customer_id = $1::varchar,
-                ORDER BY date_assign ASC
-                LIMIT $2::int;
+                WHERE customer_id = $1::varchar
+                ORDER BY date_assign ASC;
             `;
         break;
     }
@@ -141,7 +149,7 @@ function buildQuery(paramSelected, statusArr){
 }
 
 function buildValues(laundryInitials, paramsProps, inputs, statusArr){
-    let {paramSelected, elementsSelected} = paramsProps;
+    let {paramSelected, elementsToFetch} = paramsProps;
     let values = [];
 
     const DATE_CASES = ["dateAssign", "dateReceive", "dateRange"];
@@ -169,16 +177,16 @@ function buildValues(laundryInitials, paramsProps, inputs, statusArr){
                 startDateTime, //start dateTime relative to endDateTime
                 endDateTime, //dateTime selected by  the user
                 ...statusArr, //variable array
-                elementsSelected //determines the amount of elements to fetch
+                elementsToFetch //determines the amount of elements to fetch
             ];
         break;
         
-        case "orderID": //FETCH BY ORDER (SEARCH ORDER)
+        case (paramSelected === "orderID"): //FETCH BY ORDER (SEARCH ORDER)
             let {order: {char, number}} = inputs;
             //check if char inputted is uppercase and alpha
             if(!validator.isUppercase(char) || !validator.isAlpha(char)) throw new Error("Not valid order id char");
             //check if the number is int and positive
-            if(!validator.isInt(number) || number < 0) throw new Error("Not valid number id");
+            if(!validator.isInt(number.toString()) || number < 0) throw new Error("Not valid number id");
 
             values = [
                 laundryInitials,
@@ -187,15 +195,17 @@ function buildValues(laundryInitials, paramsProps, inputs, statusArr){
             ];
         break;
 
-        case "customerID": //fetch by customerID
+        case (paramSelected ==="customerID"): //fetch by customerID
             let {txt} = inputs;
             //check if the customerID falls in range & uppercase
             if(!validator.isLength(txt, 5,6) || !validator.isUppercase(txt)) throw new Error("Not valid customerID");
 
+            txt = txt.trim();
+
             values = [
-                laundryInitials,
                 txt
             ];
         break;
     }
+    return values;
 }

@@ -45,7 +45,7 @@ class SearchOrderByParams extends React.Component{
                     end: ""
                 },
                 order: {
-                    char: "",
+                    char: "A",
                     number: 0
                 },
                 txt: ""
@@ -59,35 +59,40 @@ class SearchOrderByParams extends React.Component{
     }
 
     processOrders(){
+
         /* console.log(this.state.searchParams);
         console.log(this.state.inputsParams);  */
         getOrders({
             searchParams: this.state.searchParams,
             inputs: this.state.inputsParams
-        }).then(data =>{
-            console.log(data);
-            /* let orderObj = JSON.parse(data);
-            let newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
-            orderObj.map(order =>{
-                let orderID = `${order.idChar}${order.idNumber}`;
-                newOrdersInState[orderID] = {
-                    idChar: order.idChar,
-                    idNumber: order.idNumber,
-                    customerID: order.customerID,
-                    customerName: order.customerName,
-                    dateAssign: order.dateAssign,
-                    dateReceive: order.dateReceive,
-                    indications: order.indications,
-                    elementsDetails: JSON.parse(order.elementsDetails),
-                    status: order.status,
-                    hookQuantity: order.hookQuantity,
-                    totalPrice: order.totalPrice
-                };
-            });
-            this.setState({
-                isFirstOrdersLoaded: true,
-                orders: newOrdersInState
-            }); */
+        }).then((response) =>{
+            if(typeof response !== "undefined"){
+                if(response.status === 200){
+                    let {data: orders} = response;  
+                    let newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
+                    orders.map(order =>{
+                        let orderID = `${order.id_char}${order.id_number}`;
+                        newOrdersInState[orderID] = {
+                            id_char: order.id_char,
+                            id_number: order.id_number,
+                            customer_id: order.customer_iD,
+                            customer_name: order.customer_name,
+                            date_assign: order.date_assign,
+                            date_receive: order.date_receive,
+                            indications: order.indications,
+                            elements_details: order.elements_details,
+                            status: order.status,
+                            hook_quantity: order.hook_quantity,
+                            total_price: order.total_price
+                        };
+                    });
+                    this.setState({
+                        isFirstOrdersLoaded: true,
+                        orders: newOrdersInState
+                    });
+                }
+            }
+            
         }).catch(err => console.error(err));
     }
 
@@ -136,7 +141,7 @@ class SearchOrderByParams extends React.Component{
 
         setInterval(() =>{
             this.processOrders();
-        }, 4000);
+        }, 5000);
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -195,17 +200,13 @@ function RenderNavbar(){
 }
 
 async function getOrders({searchParams, inputs}){
-    /* console.log(searchParams);
-    console.log(inputs); */
     try {
         let query = await ajaxReqOrders.fetchOrders({
             paramsProps: searchParams,
             inputs: inputs
         });
-        console.log(query);
         return query;
     }catch(err){
-        console.log("cant get oders");
         console.error(err);
     }
 }

@@ -10,6 +10,7 @@ const ELEMENTS =  require("../libs/ELEMENTS");
 const GetNextChar = require("../libs/GetNextChar");
 const GetLaundryInitials = require("../libs/GetLaundryInitials");
 const GetLastOrderID = require("../libs/GetLastOrderID");
+const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
 const UpdateLastOrderID = require("./UpdateLastOrderID");
 const FIRST_STATUS = "wait";
 
@@ -21,6 +22,7 @@ module.exports = function(orders){
             let laundryInitials = await GetLaundryInitials(hashcode);
             let {id_char : lastIDChar, id_number: lastIDNumber} = await GetLastOrderID(laundryInitials);
             let order = req.body.order;
+            console.log(order);
             let  TODAY_DATE_TIME = dayjs().format("YYYY-MM-DD HH:mm"); //get server date time
             let query = "";
             let values = [];
@@ -35,8 +37,6 @@ module.exports = function(orders){
             if(!dayjs(order.dateTimeAssigned, "YYYY-MM-DD HH:MM").isValid()) throw new Error("not valid date time format");
             //check if customerID is not empty
             if(!validator.isEmpty(order.customerID)){
-                //check if the customerName is not empty too
-                if(validator.isEmpty(order.customerName)) throw new Error("customerID ok but customerName not");
                 //check for the correspondant range of customerID
                 if(!validator.isLength(order.customerID,5,6)) throw new Error("customerID not in range");
             }
@@ -58,9 +58,10 @@ module.exports = function(orders){
                 totalPrice,
                 dateTimeAssigned,
                 customerID,
-                customerName,
                 indications
             } = order;
+            let customerName = await GetCustomerNameByID(customerID);
+            if(!customerName) customerID = ""; //clear the customerID
 
             query = `
                 INSERT INTO orders (laundry_initials, customer_id, 
@@ -71,7 +72,6 @@ module.exports = function(orders){
                 LIMIT 1;
             `;
           
-
             values = [
                 laundryInitials,
                 customerID,

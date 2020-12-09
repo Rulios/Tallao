@@ -26,8 +26,8 @@ module.exports.set = function(app){
             } = req.body;
 
             let Inputs = {
-                inputName: inputName,
-                inputSurname: inputSurname,
+                inputName: inputName.trim(),
+                inputSurname: inputSurname.trim(),
                 inputEmail: inputEmail,
                 inputPassword: inputPassword,
                 inputTargetMarket: inputTargetMarket

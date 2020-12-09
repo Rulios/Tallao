@@ -76,12 +76,12 @@ function validateElementsPrice(elementsPrice){
         //iterate for every element
         Object.keys(elementsPrice[service]).map(element =>{
             //check if element exists in the CONSTANT unless it's hook
-            console.log(element);
+            //console.log(element);
             if((element !== "hook" && !validator.isIn(element, ELEMENTS)) && !validator.isIn(element, EXTRAS_ELEMENTS)) throw new Error("Element not in range");
             //check if the price is negative
             if(elementsPrice[service][element] < 0) throw new Error("Prices cannot be negative");
             //check if the price is decimal
-            if(!validator.isDecimal(elementsPrice[service][element])) throw new Error("Price not decimal");
+            if(!validator.isDecimal(elementsPrice[service][element].toString())) throw new Error("Price not decimal");
         });
     });
     return true;

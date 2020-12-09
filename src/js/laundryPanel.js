@@ -160,11 +160,11 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
     inputDateTime, resetOrder){
     const {id: customerID, name: customerName} = inputCustomer;
     const orderIndications = document.getElementById("inputIndications").value;
-    const {order:{activeElementsOnOrder, hookQuantity, totalPrice}} = WriteOrderDetails;
+    const {activeElementsOnOrder, hookQuantity, totalPrice} = WriteOrderDetails.order;
     const {date: dateForOrder, time: timeForOrder} = inputDateTime;
     const dateTimeAssigned = `${dateForOrder} ${timeForOrder}:00`;
     
-    const order = {
+    const orderObj = {
         indications: orderIndications,
         elementsOnOrder: activeElementsOnOrder,
         hookQuantity: hookQuantity,
@@ -174,7 +174,9 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-    ajaxReqOrders.submitOrder({order: order}).then(({status}) =>{
+    console.log(orderObj);
+    ajaxReqOrders.submitOrder({order: orderObj})
+    .then(({status}) =>{
         //trigger the resetOrder
         if(status === 200){
             resetOrder();
@@ -261,9 +263,9 @@ function renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails){
                     WriteOrder.updateElementUnitPrice({id:elementID, service:service, value: value}, WriteOrderDetails)
                 );
             },
-            onUpdateElementNameIfCustom: (elementID, service, value) =>{
+            onUpdateElementNameIfCustom: (properties) =>{
                 setWriteOrderDetails(
-                    WriteOrder.updateCustomElementName({id:elementID, service:service, value: value}, WriteOrderDetails)
+                    WriteOrder.updateCustomElementName(properties, WriteOrderDetails)
                 );
             }
         }), document.getElementById("activeElementsOnOrderContainer")

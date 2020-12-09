@@ -22,8 +22,8 @@ module.exports.set = function(app){
                 inputInitials: inputInitials,
                 inputLaundryName: inputLaundryName,
                 inputLocation: inputLocation,
-                inputName: inputName,
-                inputSurname: inputSurname,
+                inputName: inputName.trim(),
+                inputSurname: inputSurname.trim(),
                 inputEmail: inputEmail,
                 inputPassword: inputPassword
             }
