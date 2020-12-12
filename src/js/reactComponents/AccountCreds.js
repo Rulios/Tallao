@@ -15,7 +15,8 @@ function UserDisplay({name, surname, email}){
     ];
 }
 
-function LaundryDisplay({laundryInitials,laundryName, reprName, reprSurname, email, location}){
+function LaundryDisplay({laundryInitials,laundryName, reprName, 
+    reprSurname, email, location}){
     return [
         React.createElement(AccountFields.LaundryInitials, {key:"LaundryInitialsDisplay", initials: laundryInitials}),
         React.createElement(AccountFields.LaundryName, {key:"LaundryNameDisplay", name: laundryName}),
@@ -66,8 +67,8 @@ class AccountCreds extends React.Component{
                     return React.createElement(LaundryDisplay,{
                         laundryInitials: this.state.initials,
                         laundryName: this.state.name,
-                        reprName: this.state.legalReprName,
-                        reprSurname: this.state.legalReprSurname,
+                        reprName: this.state.legalreprname,
+                        reprSurname: this.state.legalreprsurname,
                         email: this.state.email,
                         location: this.state.location
                     });

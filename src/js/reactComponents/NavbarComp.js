@@ -87,7 +87,8 @@ function Logout({onClick}){
             className: "bottomLineLinkAnimation redTxt",
             iconClass: "fa fa-sign-out",
             text: textEs.CloseSession,
-            onClick: () => onClick("CloseSession")
+            onClick: (e) => onClick("CloseSession")
+            
         })
     );
 }

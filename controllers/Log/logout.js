@@ -1,8 +1,9 @@
 "use strict";
 
-const validator = require("validator");
-const client = require("../libs/DBConnect");
-
 module.exports.set = function(app){
-
+    app.post("/logout", function(req,res){
+        req.session.destroy(() =>{
+            res.status(200).end();
+        });
+    });
 };

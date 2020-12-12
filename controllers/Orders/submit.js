@@ -11,6 +11,7 @@ const GetNextChar = require("../libs/GetNextChar");
 const GetLaundryInitials = require("../libs/GetLaundryInitials");
 const GetLastOrderID = require("../libs/GetLastOrderID");
 const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
+const AdvanceToNextOrderID = require("../libs/AdvanceToNextOrderID");
 const UpdateLastOrderID = require("./UpdateLastOrderID");
 const FIRST_STATUS = "wait";
 
@@ -50,7 +51,7 @@ module.exports = function(orders){
             if(dayjs(order.dateTimeAssigned).diff(TODAY_DATE_TIME) < 0) throw new Error("Date assigned is past");
 
             //advance to the next order ID
-            let orderID = advanceToNextOrderID(lastIDChar, lastIDNumber);
+            let orderID = AdvanceToNextOrderID(lastIDChar, lastIDNumber);
             //////QUERY///////////
             let {
                 elementsOnOrder,
@@ -76,7 +77,7 @@ module.exports = function(orders){
                 laundryInitials,
                 customerID,
                 customerName,
-                `${orderID.idChar}${orderID.idNumber}`,
+                `${laundryInitials}-${orderID.idChar}${orderID.idNumber}`,
                 orderID.idChar,
                 orderID.idNumber,
                 FIRST_STATUS,
@@ -97,7 +98,7 @@ module.exports = function(orders){
             //END TRANSACTION
             await client.query("COMMIT;");
 
-            return res.status(200).json({status:"OK"});
+            return res.status(200).json(orderID);
 
         }catch(err){
             console.log(err);
@@ -135,16 +136,4 @@ function isValidElementsOnOrder(elementsOnOrder){
     }
     
     return true;
-}
-
-function advanceToNextOrderID(idChar, idNumber){
-    const LIMIT = 10000;
-
-    if(idNumber === LIMIT){
-        //advances to the next ASCII character
-        return {idChar: GetNextChar(idChar), idNumber: 0};
-    }else{
-        //just increments the id_number
-        return {idChar: idChar, idNumber: Number(idNumber+1)};
-    }
 }

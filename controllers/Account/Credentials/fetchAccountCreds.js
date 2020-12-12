@@ -21,7 +21,7 @@ module.exports.set = function(credentials){
 
             }else if(userType === "laundry"){
                 query = `
-                    SELECT initials,name, location,schedule, serviceOffer, legalReprName, legalReprSurname, email 
+                    SELECT initials,name, location,schedule, serviceoffer, legalreprname, legalreprsurname, email 
                     FROM laundries 
                     WHERE hashcode= $1
                 `;

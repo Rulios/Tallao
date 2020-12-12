@@ -7,7 +7,7 @@ async function login(obj = {}){
 
 async function logout(){
     //no parameters
-    return await ajaxReq.delete("./php/DBLog/logout.php");
+    return await ajaxReq.post("/logout");
 }
 
 module.exports = {

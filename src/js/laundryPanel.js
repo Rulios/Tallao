@@ -18,6 +18,11 @@ const UseCustomMessages = require("./reactComponents/UseCustomMessagesHandler");
 const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
 const dayjs = require("dayjs");
+const ajaxReqLaundryConfigs = require("./requestsModules/ajaxReqLaundryConfigs");
+
+const STRINGS = {
+    orderID: "ID de la Orden"
+};
 //1st session handling
 (function(){
         
@@ -98,6 +103,7 @@ function MainApp(){
         try{
             renderDateTime(setTodayDateTime);
             renderLaundryName();
+            renderCurrentOrderID();
             renderUseCustomMessages();
             renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponentReset);
             renderSubmitButton(onSubmitOrder);
@@ -174,11 +180,11 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-    console.log(orderObj);
     ajaxReqOrders.submitOrder({order: orderObj})
-    .then(({status}) =>{
+    .then(({status, data: {idChar, idNumber}}) =>{
         //trigger the resetOrder
         if(status === 200){
+            alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
             resetOrder();
         }else{
             throw new Error("Can't submit order");
@@ -319,6 +325,15 @@ function renderUseCustomMessages(){
     );
 }
 
+function renderCurrentOrderID(){
+    
+    ajaxReqLaundryConfigs.fetchCurrentOrderID().then(({data: {idChar, idNumber}}) => {
+        document.getElementById("containerCurrentOrderID").textContent = `${STRINGS.orderID}: ${idChar} ${idNumber}`;
+    }).catch(() =>{
+        document.getElementById("containerCurrentOrderID").textContent = "Error";
+    })
+}
+
 function renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponentReset){
     
     ReactDOM.render(
@@ -359,7 +374,7 @@ function renderDateTime(dateTimeHook){
         }),
         document.getElementById("containerDateTime")
     );
-}
+};
 
 function renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder){
     const date = dayjs(todayDateTime.dateTime).format("YYYY-MM-DD");

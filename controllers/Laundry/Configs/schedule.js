@@ -74,9 +74,11 @@ function validateScheduleFormat(scheduleObj){
 
 function checkIfTime(time){
     try{
-        const [hours, minutes] = time.split(":");
-        if(!validator.isInt(hours)) throw new Error("not int hours");
-        if(!validator.isInt(minutes)) throw new Error("not int minutes");
+        if(time){ //it doesn't matter if time is empty
+            const [hours, minutes] = time.split(":");
+            if(!validator.isInt(hours.toString())) throw new Error(`${hours} not int hours`);
+            if(!validator.isInt(minutes.toString())) throw new Error("not int minutes");
+        }
         return true;
     }catch(err){
         console.log(err);

@@ -128,7 +128,6 @@ class EditCustomMessages extends React.Component{
     componentDidMount(){
         //fetch data
         getCustomMessages().then(messages =>{
-            console.log(messages);
             let messageObjWID = {};
             //iterate for every message
             messages.map(message =>{

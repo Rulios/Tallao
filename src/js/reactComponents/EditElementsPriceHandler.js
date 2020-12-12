@@ -76,7 +76,6 @@ class EditElementsPrice extends React.Component{
     }
 
     render(){
-        console.log(this.state);
         let el2Render = [];
         el2Render.push( //append hook price (design exception)
             React.createElement(EditElementsPriceContainers.EditBox, {

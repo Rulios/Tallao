@@ -1,3 +1,4 @@
+const { ajax } = require("jquery");
 const ajaxReq = require("./ajaxReq");
 
 //this module includes all the condiguration that the superuser
@@ -10,6 +11,11 @@ const ajaxReq = require("./ajaxReq");
     serviceOffer (what services do the laundry offers)
 
 */
+
+async function fetchCurrentOrderID(){
+    return await ajaxReq.get("/laundry/configs/currentOrderID");
+}
+
 async function fetchElementsPrice(obj){
     //fetchs all the prices from the service
     //params : none
@@ -48,6 +54,7 @@ async function updateServiceOffer(obj){
 }
 
 module.exports = {  
+    fetchCurrentOrderID:fetchCurrentOrderID,
     fetchElementsPrice: fetchElementsPrice,
     updateElementsPrice: updateElementsPrice,
     fetchSchedule: fetchSchedule,

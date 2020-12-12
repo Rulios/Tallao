@@ -14,7 +14,7 @@ function Navbar({componentList}){
     let clickHandler = function(componentID){
         if(componentID === "CloseSession"){
             ajaxReqLog.logout().then(() =>{ //get back to login
-                pageRedirection.bounceToLogin();
+                window.location = "/loginPage";
             })
         }
     };

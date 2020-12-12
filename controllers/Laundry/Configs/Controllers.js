@@ -5,6 +5,8 @@ const schedule = require("./schedule");
 const serviceOffer = require("./serviceOffer");
 const elementsPrice = require("./elementsPrice");
 
+require("./currentOrderID")(configs);
+
 configs.use("/schedule", schedule);
 configs.use("/serviceOffer", serviceOffer);
 configs.use("/elementsPrice", elementsPrice);

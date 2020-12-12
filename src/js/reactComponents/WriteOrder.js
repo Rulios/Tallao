@@ -93,7 +93,6 @@ async function fetchElementsPrice(){
         let newElementsPrice = processElementsPrice(elementsPrice);
         return newElementsPrice;
     }catch(err){
-        console.log("UEEE");
         console.log(err);
     }
 }
@@ -240,7 +239,6 @@ function updateElementUnitPrice({id, service, value}, WriteOrderDetails){
 }
 
 function updateCustomElementName({elementID, service, value}, WriteOrderDetails){
-    console.log(value);
     let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
     let {activeElementsOnOrder} = NewWriteOrderDetails.order;
     activeElementsOnOrder[elementID][service]["name"] = value;

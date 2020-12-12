@@ -7,5 +7,4 @@ module.exports.set = function(app){
 
     login.set(app);
     logout.set(app);
-
 };
