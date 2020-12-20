@@ -8,7 +8,7 @@
     //Every input this will take will be from cookies
     class MinimalCreds{
 
-        public static function getLaundryInitials($userhash){
+        public static function GetPublicID($userhash){
             
             //Connection param
             $serverName = "localhost";

@@ -25,7 +25,7 @@ if(Classes\Sessions::readSession()){
     if(isset($orderIDJSONPUT)){
 
         try{
-            $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+            $laundryInitials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
             $orderID = json_decode($orderIDJSONPUT, false);
 
             $conn = new mysqli($serverName, $userConn, $passwordConn);

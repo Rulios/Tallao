@@ -23,7 +23,7 @@ hookQuantity, dateReceive, dateAssign, totalPrice, indications
 
 
 if(Classes\Sessions::readSession()){
-    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+    $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
     
     //since they're required values, they should be there always
     //then unsetting it to get the variables values

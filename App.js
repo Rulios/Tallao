@@ -12,6 +12,7 @@ const accountRouter = require("./controllers/Account/Controllers");
 const timeRouter = require("./controllers/ServerTime/Controllers");
 const searchRouter = require("./controllers/Search/Controllers");
 const ordersRouter = require("./controllers/Orders/Controllers");
+const userRouter = require("./controllers/User/Controllers");
 
 let app = express();
 
@@ -51,10 +52,14 @@ app.get("/laundryRegister", function(req,res){
     res.sendFile(__dirname + "/public/laundryRegister.html");
 });
 
+
+//DEFINITIONS OF EXPRESS ROUTERS
+
 app.use("/laundry", laundryRouter);
 app.use("/account", accountRouter);
 app.use("/time", timeRouter);
 app.use("/search", searchRouter);
 app.use("/orders", ordersRouter);
+app.use("/user", userRouter);
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);

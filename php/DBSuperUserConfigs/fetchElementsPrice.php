@@ -13,7 +13,7 @@ if(Classes\Sessions::readSession()){
 
     
 
-    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+    $laundryInitials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
 
         $conn = new mysqli($serverName, $userConn, $passwordConn);
         

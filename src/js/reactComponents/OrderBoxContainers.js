@@ -42,21 +42,24 @@ const dateDiffColors = {
     late: "#DB4438"
 };
 
-function OrderBox({orderID, status, orderDetails , dateTimeDifference, onClickOrder}){
-    //console.log(dateTimeDifference);
+function OrderBox({showLaundryName, orderID,columnType, status, orderDetails , 
+    dateTimeDifference, onClickOrder}){
     let elementID  = `${orderID.id_char}${orderID.id_number}`;
     return React.createElement("div", {
-        className: "col-lg-4",
+        className: columnType,
         
     },
         React.createElement("button", {
             className: "orderListElementStyle",
-            onClick: () => onClickOrder(`${orderID.id_char}${orderID.id_number}`)
+            onClick: () => onClickOrder()
         },
             [
-                React.createElement(OrderBoxComp.H3, {
-                    key: `OrderID${elementID}`,
-                    text : `${orderID.id_char} ${orderID.id_number}`
+                React.createElement(Title, {
+                    key: `Title4${orderID.id}`,
+                    showLaundryName: showLaundryName,
+                    laundryName: orderDetails.laundry_name,
+                    idChar: orderID.id_char,
+                    idNumber: orderID.id_number
                 }),
                 React.createElement(OrderBoxComp.CenterBoldDiv, {
                     key: `OrderStatusTag${elementID}`,
@@ -117,6 +120,19 @@ function OrderBox({orderID, status, orderDetails , dateTimeDifference, onClickOr
     )
 }
 
+function Title({showLaundryName, laundryName = "", idChar, idNumber}){
+    let components = [];
+    if(showLaundryName){
+        components.push(
+            <h3 key={`LaundryName4${idChar}${idNumber}`} className="bold">{laundryName}</h3>
+        );
+    }
+    components.push(
+        <h3 key={`IDTag4${idChar}${idNumber}`}className="bold">{`${idChar} ${idNumber}`}</h3>
+    )
+    return components;
+}
+
 function dateTimeDifferenceDiv({dateTimeDifference, orderStatus}){
     let color = "";
     let daysStr = `${dateTimeDifference.days} ${textEs.days}`;
@@ -156,9 +172,7 @@ function dateTimeDifferenceDiv({dateTimeDifference, orderStatus}){
     }
 }
 
-module.exports = {
-    OrderBox:OrderBox
-};
+module.exports = OrderBox;
 // example order box
 /* <div class="col-lg-4">
     <button class="orderListElementStyle ">

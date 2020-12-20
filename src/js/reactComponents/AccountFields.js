@@ -3,13 +3,13 @@
 const React = require("react");
 const FieldDisplayDiv = require("./FieldDisplayDiv");
 
-function UserNameSurnameContainer({name, lastName}){
+function UserNameSurnameContainer({name, surname}){
     return(
         React.createElement(FieldDisplayDiv.TwoFieldDisplay,{
             field1: "Nombre",
             value1: name,
             field2: "Apellido",
-            value2: lastName
+            value2: surname
         })
     );
 }

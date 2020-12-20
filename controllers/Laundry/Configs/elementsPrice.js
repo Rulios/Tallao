@@ -2,7 +2,7 @@
 
 const elementsPrice = require("express").Router();
 const client = require("../../libs/DBConnect");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 const validator = require("validator");
 const {SERVICES, ELEMENTS, EXTRAS_ELEMENTS} = require("../../libs/CONSTANTS");
 
@@ -18,7 +18,7 @@ elementsPrice.get("/fetch", async function(req,res){
         `;
 
         if(userType === "laundry"){
-            laundryInitials = await GetLaundryInitials(hashcode);
+            laundryInitials = await GetPublicID(userType, hashcode);
         }else if (userType === "user"){
             laundryInitials = req.body.laundryInitials;
         }
@@ -35,7 +35,7 @@ elementsPrice.put("/update", async function(req,res){
     try{
         let {hashcode, userType} = req.session;
         let {elementsPrice} = req.body;
-        let laundry_initials = await GetLaundryInitials(hashcode);
+        let laundry_initials = await GetPublicID(userType, hashcode);
 
         validateElementsPrice(elementsPrice);
 

@@ -1,5 +1,5 @@
 const client = require("../../libs/DBConnect");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 const GenerateCustomMessageID = require("../../libs/GenerateCustomMessageID");
 const ExistsCustomMessageID = require("../../libs/ExistsCustomMessageID");
 const validator = require("validator");
@@ -8,7 +8,7 @@ module.exports = function(customMessages){
     customMessages.put("/update", async function(req,res){
         try{
             const {hashcode, userType} = req.session;
-            const laundryInitials = await GetLaundryInitials(hashcode);
+            const laundryInitials = await GetPublicID(userType, hashcode);
             let messages = JSON.parse(req.body.messages);
 
             Object.values(messages).map(async (messageProps) =>{

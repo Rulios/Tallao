@@ -3,7 +3,7 @@
 const serviceOffer = require("express").Router();
 const { default: validator } = require("validator");
 const client = require("../../libs/DBConnect");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 
 const SERVICEOFFER_STRINGS = [
     "iron", "wash_iron", "wash", "dry_clean"
@@ -19,7 +19,7 @@ serviceOffer.get("/fetch", async function(req, res){
     `;
 
     if(userType === "laundry"){
-        laundryInitials = await GetLaundryInitials(hashcode);
+        laundryInitials = await GetPublicID(userType, hashcode);
     }else if (userType === "user"){
         laundryInitials = req.body.laundryInitials;
     }

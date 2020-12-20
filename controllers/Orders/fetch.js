@@ -1,10 +1,10 @@
+"use strict";
+
 const client = require("../libs/DBConnect");
 const validator = require("validator");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
-const GetLaundryInitials = require("../libs/GetLaundryInitials");
+const GetPublicID = require("../libs/GetPublicID");
 const dayjs = require("dayjs");
-const elementsPrice = require("../Laundry/Configs/elementsPrice");
-
 
 
 
@@ -27,23 +27,23 @@ module.exports = function(orders){
         try{
             const {userType, hashcode} = req.session;
             let {paramsProps, inputs} = req.query;
+
             //parse the input to obj
             paramsProps = JSON.parse(paramsProps);
             inputs = JSON.parse(inputs);
 
-            let laundryInitials = await GetLaundryInitials(hashcode);
+            let publicID = await GetPublicID(userType, hashcode);
             //validate input
-            validateInput(paramsProps, inputs);
+            validateInput(paramsProps, inputs, userType);
 
             /////QUERY
             let statusArr = getStatusArr(paramsProps.statusSelected);
-            let query = buildQuery(paramsProps.paramSelected, statusArr);
-            let values = buildValues(laundryInitials, paramsProps, inputs, statusArr);
+            let query = buildQuery(paramsProps.paramSelected, statusArr, userType);
+            let values = buildValues(publicID,userType, paramsProps, inputs, statusArr);
             /* console.log(query);
             console.log(values); */
             let result = await client.query(query, values);
-            //console.log(result);
-            //console.log(result);
+       
             return res.status(200).json(result.rows);
         }catch(err){
             console.log(err);
@@ -54,15 +54,29 @@ module.exports = function(orders){
     });
 }
 
-function validateInput(paramsProps, inputs){
+function validateInput(paramsProps, inputs, userType){
     //check if every paramsProps matches whitelist
     Object.keys(paramsProps).map(prop =>{
         if(!validator.isIn(prop, PARAMS_PROPS)) throw new Error(`Missing Params prop : ${prop}`);
     });
+
+    /* //prevent the user to search another user
+    if(userType === "user" && paramsProps.paramSelected === "customerID") throw new Error("Customer shouldn't search for another customer"); */
     //check if the paramSelected matches available search params
     if(!validator.isIn(paramsProps.paramSelected, SEARCH_PARAMS)) throw new Error(`Search param selecteed not in whitelist`);
-    //check if statusSelected is in ORDER_STATUS and is not "all"
-    if(!validator.isIn(paramsProps.statusSelected, ORDER_STATUS) && paramsProps.statusSelected !== "all") throw new Error(`${paramsProps.statusSelected} not in order status`);
+
+    //check if statusSelected is an array.
+    //if it's an array, iterate for every status contained
+    if(Array.isArray(paramsProps.statusSelected)){
+        paramsProps.statusSelected.map(status =>{
+            if(!validator.isIn(status, ORDER_STATUS)) throw new Error (`${status} not in order status`);
+        });
+    }else{
+        //check if statusSelected is in ORDER_STATUS and is not "all"
+        if(!validator.isIn(paramsProps.statusSelected, ORDER_STATUS) && paramsProps.statusSelected !== "all") throw new Error(`${paramsProps.statusSelected} not in order status`);
+    }
+
+    
     //check if every inputs sent, matches whitelist
     Object.keys(inputs).map(inputType =>{
         if(!validator.isIn(inputType, AVAILABLE_INPUTS)) throw new Error(`${inputType} not in input whitelist`);
@@ -70,85 +84,131 @@ function validateInput(paramsProps, inputs){
 }
 
 function getStatusArr(statusSelected){
-    if(statusSelected === "all"){ //return all the status
+    //check if is an array
+
+    if(Array.isArray(statusSelected)){ //returns the ones selected
+        return statusSelected;
+    }else if(statusSelected === "all"){ //return all the status
         return ORDER_STATUS;
     }else{
         return [statusSelected]; //return the selected one
     }
 }
 
-function buildQuery(paramSelected, statusArr){
+function buildQuery(paramSelected, statusArr, userType){
     let variableParams = []; //stores $4, $5, $6...
     let query = "";
-    let iValues = 3; //states the next param after last static param. $3
+    let initVariableParamIndex = 0; //states the next param after last static param.
 
-    //console.log(statusArr);
-
-    for(let i = 0; i < statusArr.length; i++){
-        //builds the params indication depending on the statusArr.length
-        iValues++;
-        variableParams.push(`$${iValues}::text`);
+    //set the public id field for the query
+    let PUBLIC_ID_FIELD = "";
+    if(userType === "laundry"){
+        PUBLIC_ID_FIELD = "laundry_initials";
+    }else if(userType === "user"){
+        PUBLIC_ID_FIELD = "customer_id";
     }
+
+    const preCalculateVariableParams = (initVariableIndex) =>{
+        //let the value be available in the scope of the parent  function
+        initVariableParamIndex = initVariableIndex;
+        for(let i = 0; i < statusArr.length; i++){
+            //builds the params indication depending on the statusArr.length
+            initVariableParamIndex++;
+            variableParams.push(`$${initVariableParamIndex}::text`);
+        }
+    }
+
+    //describes all the fields needed in the query
+    const FIELDS_QUERY = ` 
+        SELECT  orders.laundry_initials, orders.customer_id,
+                orders.customer_name, orders.id,
+                orders.id_char, orders.id_number, orders.status, 
+                orders.elements_details, orders.hook_quantity,
+                orders.date_receive, orders.date_assign, 
+                orders.total_price, orders.indications, 
+                laundries.name as laundry_name
+        FROM orders, laundries
+        WHERE orders.laundry_initials = laundries.initials
+    `;
 
     switch(paramSelected){
         case "dateAssign":
+            preCalculateVariableParams(3);
             query = `
-                SELECT * FROM orders
-                WHERE laundry_initials = $1
+                ${FIELDS_QUERY}
+                    AND ${PUBLIC_ID_FIELD} = $1
                     AND (date_assign 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
                     AND status IN (${variableParams.join(",")})
                 ORDER BY date_assign ASC
-                LIMIT $${iValues+1};
+                LIMIT $${initVariableParamIndex+1};
             `;
         break;
 
         case "dateReceive":
+            preCalculateVariableParams(3);
             query = `
-                SELECT * FROM orders
-                WHERE laundry_initials = $1
+                ${FIELDS_QUERY}
+                    AND${PUBLIC_ID_FIELD} = $1
                     AND (date_receive 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
                     AND status IN (${variableParams.join(",")})
                 ORDER BY date_receive ASC
-                LIMIT $${iValues+1}::int;
+                LIMIT $${initVariableParamIndex+1}::int;
             `;
         break;
 
         case "dateRange":
+            preCalculateVariableParams(3);
             query = `
-                SELECT * FROM orders
-                WHERE laundry_initials = $1
+                ${FIELDS_QUERY}
+                    AND ${PUBLIC_ID_FIELD} = $1
                     AND (date_assign 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
                     AND status IN (${variableParams.join(",")})
                 ORDER BY date_assign DESC
-                LIMIT $${iValues+1};
+                LIMIT $${initVariableParamIndex+1};
             `;         
         break;
 
         case "orderID":
             query = `
-                SELECT * FROM orders
-                WHERE laundry_initials = $1
-                AND id_char = $2::varchar
-                AND id_number = $3::int
+                ${FIELDS_QUERY}
+                    AND ${PUBLIC_ID_FIELD} = $1
+                    AND id_char = $2::varchar
+                    AND id_number = $3::int
                 LIMIT 1;
             `;
         break;
 
         case "customerID":
-            query = `
-                SELECT * FROM orders
-                WHERE customer_id = $1::varchar
-                ORDER BY date_assign ASC;
-            `;
+            if(userType === "laundry"){
+                preCalculateVariableParams(2);
+                query = `
+                    ${FIELDS_QUERY}
+                        AND laundry_initials = $1::varchar
+                        AND customer_id = $2::varchar
+                        AND status IN (${variableParams.join(",")})
+                    ORDER BY date_assign ASC
+                    LIMIT $${initVariableParamIndex+1};
+                `;
+            }else if(userType === "user"){
+                preCalculateVariableParams(1);
+                query = `
+                    ${FIELDS_QUERY}
+                        AND customer_id = $1::varchar
+                        AND status IN (${variableParams.join(",")})
+                    ORDER BY date_assign ASC
+                    LIMIT $${initVariableParamIndex+1};
+                `;
+            }
+            
         break;
     }
     return query;
 }
 
-function buildValues(laundryInitials, paramsProps, inputs, statusArr){
+function buildValues(publicID, userType,paramsProps, inputs, statusArr){
     let {paramSelected, elementsToFetch} = paramsProps;
     let values = [];
 
@@ -173,7 +233,7 @@ function buildValues(laundryInitials, paramsProps, inputs, statusArr){
             if(!dayjs(endDateTime).isValid()) throw new Error("Not valid date time format");
 
             values = [
-                laundryInitials,
+                publicID,
                 startDateTime, //start dateTime relative to endDateTime
                 endDateTime, //dateTime selected by  the user
                 ...statusArr, //variable array
@@ -189,22 +249,34 @@ function buildValues(laundryInitials, paramsProps, inputs, statusArr){
             if(!validator.isInt(number.toString()) || number < 0) throw new Error("Not valid number id");
 
             values = [
-                laundryInitials,
+                publicID,
                 char,
                 number
             ];
         break;
 
         case (paramSelected ==="customerID"): //fetch by customerID
-            let {txt} = inputs;
-            //check if the customerID falls in range & uppercase
-            if(!validator.isLength(txt, 5,6) || !validator.isUppercase(txt)) throw new Error("Not valid customerID");
 
-            txt = txt.trim();
+            if(userType === "laundry"){
+                let {txt} = inputs;
+                //check if the customerID falls in range & uppercase
+                if(!validator.isLength(txt, 5,6) || !validator.isUppercase(txt)) throw new Error("Not valid customerID");
+                txt = txt.trim();
+                values = [
+                    publicID,
+                    txt,
+                    ...statusArr,
+                    elementsToFetch
+                ];
+            }else if(userType === "user"){
+                values = [
+                    publicID,
+                    ...statusArr,
+                    elementsToFetch
+                ];
+            }
 
-            values = [
-                txt
-            ];
+            
         break;
     }
     return values;

@@ -11,18 +11,31 @@ const OrderParamsSelectorHandler = require("./reactComponents/OrderParamsSelecto
 const OrderModalHandler = require("./reactComponents/OrderModalHandler");
 const Time =  require("./reactComponents/Time");
 const ajaxReqOrders =  require("./requestsModules/ajaxReqOrders");
+const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
 const Navbar =  require("./reactComponents/NavbarHandler");
+const convertArrToObj = require("./frontendModules/convertArrToObj");
+
 
 //this file acts like a bundle, since all the components here
 //needs to be connected to a only true source of data
 
-window.onload = function(){
-    RenderNavbar();
 
-    ReactDOM.render(
-        React.createElement(SearchOrderByParams, {}),
-        document.getElementById("OrderParamsSelectorContainer")
-    );
+window.onload = function(){
+    
+
+    //get the userType first, so it can render the component depending on that
+    getUserType().then(({data : userType}) =>{
+        RenderNavbar(userType);
+        ReactDOM.render(
+            React.createElement(SearchOrderByParams, {
+                userType:  userType
+            }),
+            document.getElementById("OrderParamsSelectorContainer")
+        );
+    }).catch(err =>{
+        console.err(err);
+    })
+
 }
 
 class SearchOrderByParams extends React.Component{
@@ -59,36 +72,18 @@ class SearchOrderByParams extends React.Component{
     }
 
     processOrders(){
-
-        /* console.log(this.state.searchParams);
-        console.log(this.state.inputsParams);  */
         getOrders({
-            searchParams: this.state.searchParams,
+            paramsProps: this.state.searchParams,
             inputs: this.state.inputsParams
         }).then((response) =>{
             if(typeof response !== "undefined"){
                 if(response.status === 200){
                     let {data: orders} = response;  
-                    let newOrdersInState = JSON.parse(JSON.stringify(this.state.orders));
-                    orders.map(order =>{
-                        let orderID = `${order.id_char}${order.id_number}`;
-                        newOrdersInState[orderID] = {
-                            id_char: order.id_char,
-                            id_number: order.id_number,
-                            customer_id: order.customer_iD,
-                            customer_name: order.customer_name,
-                            date_assign: order.date_assign,
-                            date_receive: order.date_receive,
-                            indications: order.indications,
-                            elements_details: order.elements_details,
-                            status: order.status,
-                            hook_quantity: order.hook_quantity,
-                            total_price: order.total_price
-                        };
-                    });
+                    let newOrders = JSON.parse(JSON.stringify(this.state.orders));
+                    newOrders = Object.assign(newOrders, convertArrToObj(orders));
                     this.setState({
                         isFirstOrdersLoaded: true,
-                        orders: newOrdersInState
+                        orders: newOrders
                     });
                 }
             }
@@ -104,6 +99,7 @@ class SearchOrderByParams extends React.Component{
         let tempIsShowing = this.state.isModalPoppedOut;
         RenderModal({
             order: this.state.orders[this.state.orderInModal],
+            userType: this.props.userType,
             onClickClose: () => {
                 tempIsShowing = false;
                 this.setState({
@@ -152,6 +148,8 @@ class SearchOrderByParams extends React.Component{
         RenderOrderBoxes({
             orders:this.state.orders, 
             todayDateTime: this.state.todayDateTime,
+            showLaundryName: false,
+            userType: this.props.userType,
             onClick: (orderID) =>{
                 this.setState({
                     isModalPoppedOut: true,
@@ -165,8 +163,8 @@ class SearchOrderByParams extends React.Component{
     render(){
         //console.log(this.state.orders);
         return  React.createElement(OrderParamsSelectorHandler,{
+            userType: this.props.userType,
             getSearchParams: (params) =>{
-                let newElementsToFetch = 10;
                 let newOrders = {};
                 Object.assign(params.searchParams, {elementsToFetch: this.state.searchParams.elementsToFetch});
 
@@ -184,25 +182,18 @@ class SearchOrderByParams extends React.Component{
     }
 }
 
-function RenderNavbar(){
+function RenderNavbar(userType){
     ReactDOM.render(
         React.createElement(Navbar, {
-            componentList: [
-                "Logo", 
-                "WriteOrders",
-                "AffiliatedOrders",
-                "MyAccount" ,
-                "Logout",
-                "LanguageSelect"
-            ]
+            userType: userType
         }), document.getElementById("NavbarContainer")
     );
 }
 
-async function getOrders({searchParams, inputs}){
+async function getOrders({paramsProps, inputs}){
     try {
         let query = await ajaxReqOrders.fetchOrders({
-            paramsProps: searchParams,
+            paramsProps: paramsProps,
             inputs: inputs
         });
         return query;
@@ -211,25 +202,28 @@ async function getOrders({searchParams, inputs}){
     }
 }
 
-function RenderOrderBoxes({orders, todayDateTime, onClick}){
+function RenderOrderBoxes({orders, todayDateTime, onClick, userType}){
     //console.log(todayDateTime);
     ReactDOM.render(
         React.createElement(OrderBoxHandler, {
             orders: orders,
             todayDateTime: todayDateTime,
+            columnType: "col-lg-4",
+            showLaundryName: (userType === "laundry") ? false : true,
             onClick: (orderID) => onClick(orderID)
         }),
         document.getElementById("AppendOrdersContainer")
     );
 }
 
-function RenderModal({order, onClickClose,onUpdateOrders, isShowing}){
+function RenderModal({order, onClickClose,onUpdateOrders, isShowing, userType}){
     ReactDOM.render(
         React.createElement(OrderModalHandler,{
             order: order,
-            onClickClose: () => onClickClose(),
             isShowing: isShowing,
-            onUpdateOrders: () => onUpdateOrders()
+            showNextStatusBtn: (userType === "laundry") ? true: false,
+            onClickClose: () => onClickClose(),
+            onUpdateOrders: () => onUpdateOrders(),
         }),
         document.getElementById("OrderModalContainer")
     )

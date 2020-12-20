@@ -12,7 +12,7 @@ if(Classes\Sessions::readSession()){
 
 
     if(isset($_POST['messageObj'])){
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
     
         //associative array
         $messageAssArr = json_decode($_POST["messageObj"], true);

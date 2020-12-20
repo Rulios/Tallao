@@ -1,11 +1,11 @@
 const client = require("../../libs/DBConnect");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 
 module.exports = function(customMessages){
     customMessages.get("/fetch", async function(req,res){
         try{
             const {hashcode, userType} = req.session;
-            const laundryInitials = await GetLaundryInitials(hashcode);
+            const laundryInitials = await GetPublicID(userType, hashcode);
 
             let query = `
                 SELECT id, color_tag, tag, message FROM custom_messages

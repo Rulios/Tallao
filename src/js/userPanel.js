@@ -1,58 +1,166 @@
 'use strict';
 
-require.config({
-    paths:{
-        jquery: [
-            "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min",
-            "./lib/jquery"],
-        design: "design",
-        bootstrap: ["./lib/bootstrap.bundle.min"],
-        'react': 'https://unpkg.com/react@16/umd/react.development',
-        'react-dom': 'https://unpkg.com/react-dom@16/umd/react-dom.development',
-        sessionHandler: "frontendModules/sessionHandler",
-        ajaxReqUserCreds : "./requestsModules/ajaxReqUserCreds",
-        ajaxReqOrders: "./requestsModules/ajaxReqOrders",
-        Time: "./reactComponents/Time",
-        Navbar: "./reactComponents/NavbarHandler"
-    },
-    shim: {
-        bootstrap: {
-            deps: ["jquery"]
-        },
+require( "core-js/stable");
+require("regenerator-runtime/runtime");
+
+const React = require("react");
+const ReactDOM = require("react-dom");
+const dayjs = require("dayjs");
+
+const OrderBoxHandler = require("./reactComponents/OrderBoxHandler");
+const OrderModalHandler = require("./reactComponents/OrderModalHandler");
+const {fetchOrders} = require("./requestsModules/ajaxReqOrders");
+const {getDateTimeFromServer} = require("./reactComponents/Time");
+const {fetchAccountCreds, getUserType} = require("./requestsModules/ajaxReqUserCreds");
+const Navbar = require("./reactComponents/NavbarHandler");
+const convertArrToObj = require("./frontendModules/convertArrToObj");
+
+const textEs = {
+    yourPublicIDIs: "Tu ID público es"
+}
+
+window.onload = function(){
+    try{
+        getUserType().then(({data : userType}) =>{
+            RenderNavbar(userType);
+            RenderPublicID();
+            RenderOrders();
+        });
+    }catch{
+        alert("Error al cargar datos");
     }
-});
-require(["jquery", "react", "react-dom", "design", "bootstrap"], 
-function($,React, ReactDOM){
+}
 
-    require(["sessionHandler"], function(session){
-        session.check();
+function RenderNavbar(userType){
+    ReactDOM.render(
+        React.createElement(Navbar, {
+            userType: userType
+        }), document.getElementById("NavbarContainer")
+    );
+}
 
-        RenderNavbar();
-        /* ReactDOM.render(
-            React.createElement(Main, {}),
-            document.getElementById("root")
-        ); */
+function RenderOrders(){
+    ReactDOM.render(
+        <Orders></Orders>,
+        document.getElementById("container4Orders")
+    );
+}
+
+function RenderPublicID(){
+    fetchAccountCreds()
+    .then(({data: {public_id}}) =>{
+        document.getElementById("showID").textContent = `${textEs.yourPublicIDIs}: ${public_id}`;
+    })
+    .catch(err =>{
+        document.getElementById("showID").textContent = `${textEs.yourPublicIDIs}: ERROR`;
+    })    
+}
+
+function Orders(){
+    //CONSTANT QUERY, THIS QUERY ISN'T CUSTOMIZABLE BY THE USER
+    const paramSelected = "customerID";
+    const statusSelected = ["wait", "processing", "ready"];
+
+    let [todayDateTime, setTodayDateTime] = React.useState({});
+    let [orders, setOrders] = React.useState({});
+    let [paramProps, setParamProps] = React.useState({
+        paramSelected: paramSelected,
+        statusSelected: statusSelected,
+        elementsToFetch: 10
     });
-
-
-    function Main(){
-        return null;
-    }
-
-    function RenderNavbar(){
-        require(["Navbar"], function(Navbar){
-            ReactDOM.render(
-                React.createElement(Navbar, {
-                    componentList: [
-                        "Logo", 
-                        "MyOrders",
-                        "MyAccount",
-                        "Logout",
-                        "LanguageSelect"
-                    ]
-                }), document.getElementById("NavbarContainer")
-            );
+    let [isScrollBottomAttached, setScrollBottomAttached] = React.useState(false);
+    let [ModalStates, setModalStates] = React.useState({
+        isModalPoppedOut : false,
+        orderInModal: ""
+    });
+    
+    const onClickOrderHandler = () =>{ //Render order modal
+        RenderOrderModal({
+            order: orders[ModalStates.orderInModal],
+            onClickClose: () => setModalStates({isModalPoppedOut: false, orderInModal: ""}),
+            onUpdateOrders: () => console.log("updating"),
+            isShowing: ModalStates.isModalPoppedOut
         });
     }
 
-});
+    const processOrders = () =>{ //fetch orders and insert at the React state
+        fetchOrders({
+            paramsProps: paramProps,
+            inputs: {}
+        }).then(({data: fetchedOrders}) =>{
+            let newOrders = JSON.parse(JSON.stringify(orders));
+            newOrders = Object.assign(newOrders, convertArrToObj(fetchedOrders));
+            setOrders(newOrders);
+        }).catch(err =>{
+
+        });
+    }
+    React.useEffect(() =>{
+        if(!isScrollBottomAttached){
+            window.addEventListener("scroll", function(){
+                if(document.documentElement.clientHeight + window.pageYOffset >= getDocHeight() ){
+                    let newParamProps = JSON.parse(JSON.stringify(paramProps));
+                    newParamProps["elementsToFetch"] += 10;
+                    setParamProps(newParamProps);
+                }
+            });
+            setScrollBottomAttached(true);
+        }
+
+        getDateTimeFromServer().then(dateTime =>{
+            //fetch from server time
+            setTodayDateTime(dateTime);
+        }).catch(err =>{
+            //fetch from local system
+            console.log("Error in fetching date time from server");
+            setTodayDateTime(dayjs());
+        })
+        
+        processOrders();
+
+        onClickOrderHandler();
+    }, [paramProps, ModalStates]);
+
+    if(dayjs(todayDateTime).isValid()){
+        return (
+            <OrderBoxHandler 
+                orders={orders} 
+                todayDateTime={todayDateTime}
+                columnType="col-lg-12" 
+                showLaundryName = {true}
+                onClick={(orderID =>{
+                    setModalStates({
+                        isModalPoppedOut: true,
+                        orderInModal: orderID
+                    });
+                })}
+            ></OrderBoxHandler>
+        );
+    }else{
+        return null;
+    }
+
+    
+}
+
+function RenderOrderModal({order, onClickClose,onUpdateOrders, isShowing}){
+    ReactDOM.render(
+        <OrderModalHandler 
+            order={order}
+            isShowing={isShowing}
+            onClickClose = {() => onClickClose()}
+            onUpdateOrders = {()=> onUpdateOrders()}
+            showNextStatusBtn = {false}
+            ></OrderModalHandler>,
+        document.getElementById("OrderModalContainer")
+    )
+}
+
+function getDocHeight() {
+    var D = document;
+    return Math.max(
+        D.body.scrollHeight, D.documentElement.scrollHeight,
+        D.body.offsetHeight, D.documentElement.offsetHeight,
+        D.body.clientHeight, D.documentElement.clientHeight
+    );
+}

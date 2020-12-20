@@ -6,6 +6,7 @@ function redirectToPanel(userType){
         window.location = "/laundry/panel";
     }else if(userType === "user"){
         //window.location.replace("#");
+        window.location = "/user/panel";
     }
 }
 

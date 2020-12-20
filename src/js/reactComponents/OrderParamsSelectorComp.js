@@ -43,7 +43,6 @@ const InputTime = ({id, value,onChange}) =>{
 };
 
 const InputText = ({id, isCharInput, value, onChange}) =>{
-    console.log(value); 
     return React.createElement("input", {
         id: id,
         type: "text",

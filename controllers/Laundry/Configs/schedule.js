@@ -2,7 +2,7 @@
 
 const schedule = require("express").Router();
 const client = require("../../libs/DBConnect");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 const validator = require("validator");
 const {DAYS, NAME_RANGE_HOURS} = require("../../libs/CONSTANTS");
 
@@ -17,7 +17,7 @@ schedule.get("/fetch", async function(req,res){
     `;
 
     if(userType === "laundry"){
-        laundryInitials = await GetLaundryInitials(hashcode);
+        laundryInitials = await GetPublicID(userType, hashcode);
     }else if (userType === "user"){
         laundryInitials = req.body.laundryInitials;
     }

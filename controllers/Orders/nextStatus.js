@@ -1,5 +1,5 @@
 const client = require("../libs/DBConnect");
-const GetLaundryInitials = require("../libs/GetLaundryInitials");
+const GetPublicID = require("../libs/GetPublicID");
 const isOrderNotation = require("../libs/isOrderNotation");
 
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
@@ -11,7 +11,7 @@ module.exports = function(orders){
         try{
             let {hashcode, userType} = req.session;
             if(userType !== "laundry") throw new Error("Not usertype");
-            let laundryInitials = await GetLaundryInitials(hashcode);
+            let laundryInitials = await GetPublicID(userType, hashcode);
             let {id_char, id_number} = req.body;
 
             if(!isOrderNotation(id_char, id_number)) return res.status(400).json({error: "NOT_ORDER_NOTATION"});

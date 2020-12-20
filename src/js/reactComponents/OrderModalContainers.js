@@ -61,8 +61,8 @@ const statusColors = {
     retired: "#999DA3"
 };
 
-function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerName}){
-    //console.log(orderDetails);
+function OrderModal({orderDetails, onClickClose, 
+    onClickNextStatus, newCustomerName, showNextStatusBtn}){
     let idComp = `${orderDetails.id_char}${orderDetails.id_number}`;
     return React.createElement("div", {className:"modalCustom"},
         React.createElement("div", {className:"modal-contentCustom"},
@@ -189,11 +189,11 @@ function OrderModal({orderDetails, onClickClose, onClickNextStatus, newCustomerN
                         )
                     ]
                 ),
-                React.createElement(OrderModalComp.ModalStateButton,{
+                showNextStatusBtn ? React.createElement(OrderModalComp.ModalStateButton,{
                     key: `ModalStateButton4${idComp}`,
                     text: `${textEs.nextStatus[orderDetails.status]}`,
                     onClick: () => onClickNextStatus()
-                })
+                }) : null
             ]
         )
     );

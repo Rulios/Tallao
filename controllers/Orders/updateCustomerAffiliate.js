@@ -2,7 +2,7 @@ const client = require("../libs/DBConnect");
 const {isLength} = require("validator");
 const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
 const isOrderNotation = require("../libs/isOrderNotation");
-const GetLaundryInitials = require("../libs/GetLaundryInitials");
+const GetPublicID = require("../libs/GetPublicID");
 module.exports = function(orders){
     orders.put("/updateCustomerAffiliate", async function(req,res){
         
@@ -10,7 +10,7 @@ module.exports = function(orders){
             const {userType, hashcode} = req.session;
             let {orderID: {id_char, id_number}, customerID} = req.body;
             if(userType !== "laundry") return res.status(403).end();
-            let laundry_initials = await GetLaundryInitials(hashcode);
+            let laundry_initials = await GetPublicID(userType, hashcode);
             let customerName = "";
             //check for correct order notation
             if(!isOrderNotation(id_char, id_number)) return res.status(400).json({error : "NOT_ORDER_NOTATION"});

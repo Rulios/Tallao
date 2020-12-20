@@ -45,10 +45,9 @@ class OrderModal extends React.Component{
 
     render(){
         if(this.props.isShowing && typeof this.props.order !== "undefined"){
-            let {dateAssign, dateReceive} = this.props.order;
-            //console.log(Time.calcTimeDifference(new Date(dateAssign), new Date()));
             return React.createElement(OrderModalContainers, {
                 orderDetails: this.props.order,
+                showNextStatusBtn: this.props.showNextStatusBtn,
                 onClickClose: () => this.closeModal(),
                 onClickNextStatus: () => this.advanceToNextStatus(),
                 newCustomerName: (customerData) => this.newCustomerNameHandler(customerData)

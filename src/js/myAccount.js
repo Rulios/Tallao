@@ -6,7 +6,6 @@ require("regenerator-runtime/runtime");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
-const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const AccountCreds = require("./reactComponents/AccountCreds");
 const ChangePasswordHandler	= require("./reactComponents/ChangePasswordHandler");
@@ -15,42 +14,36 @@ const EditServiceOfferHandler = require("./reactComponents/EditServiceOfferHandl
 const EditCustomMessagesHandler = require("./reactComponents/EditCustomMessagesHandler");
 const EditElementsPriceBundle = require("./reactComponents/EditElementsPriceBundle");
 const Navbar = require("./reactComponents/NavbarHandler");
+const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
 
-let userType = null;
 
-$(document).ready(() =>{
+window.onload = function(){
     try{
-        RenderOnPage();
+        getUserType().then(({data : userType}) =>{
+            RenderNavbar(userType);
+            RenderOnPage(userType);
+        });
     }catch{
         alert("Error al cargar datos");
     }
-});
+};
 
-function RenderNavbar(){
-    if(userType === "laundry"){
-        ReactDOM.render(
-            React.createElement(Navbar, {
-                componentList: [
-                    "Logo", 
-                    "WriteOrders",
-                    "AffiliatedOrders",
-                    "MyAccount" ,
-                    "Logout",
-                    "LanguageSelect"
-                ]
-            }), document.getElementById("NavbarContainer")
-        )
-    }
+function RenderNavbar(userType){
+    ReactDOM.render(
+        React.createElement(Navbar, {
+            userType: userType
+        }), document.getElementById("NavbarContainer")
+    );
 }
 
-function RenderOnPage(){
+function RenderOnPage(userType){
     ReactDOM.render(
-        React.createElement(El2Render),
+        React.createElement(El2Render, {userType: userType}),
         document.getElementById("root")
     );
 }
 
-function El2Render(){
+function El2Render({userType}){
     let el2Render = [];
     el2Render.push( //render the static header (this goes always)
         React.createElement(StaticHeader, {key: "StaticHeader"})
@@ -77,18 +70,7 @@ function StaticHeader(){
                 ),
                 React.createElement("div", {
                     key: "AccountCredsContainer", className: "supTxt-TitleTxt-Separation"
-                }, React.createElement(AccountCreds, {
-                        getUserType: (type) => { 
-                            //THIS IS CRITICAL
-                            //TO RENDER THE MISSING ROOT IT FIRSTS NEEDS TO DETERMINE
-                            //THE USERTYPE. THEN IT MODIFIES THE GLOBAL VARIABLE 
-                            //AND TRIGGERS RenderOnPage to render the correspondent userType root
-                            userType = type;
-                            RenderOnPage();
-                            RenderNavbar();
-                        }
-                    })
-                ),
+                }, React.createElement(AccountCreds)),
                 React.createElement("div", {
                     key: "ChangePasswordContainer", className: "formRowSeparation"
                 }, React.createElement(ChangePasswordHandler))
@@ -107,7 +89,6 @@ function LaundryRoot(){
                 React.createElement(ElementsPriceContainer, {key: "EditElementsPriceContainer"}),
                 React.createElement(CustomMessagesContainer, {key: "EditCustomMesagesContainer"})
             ]
-        
         )
     );
 }

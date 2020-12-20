@@ -11,13 +11,24 @@ const dayjs = require("dayjs");
 class SearchOrderSection extends React.Component{
 
     constructor(props){
+
+        /* 
+            This component receives as props userType(string)
+            and getSearchParams(params)
+        */
+
         super(props);
+
+        const PARAM_LIST = {
+            laundry: ["dateAssign", "dateReceive",
+                        "dateRange", "orderID", "customerID"],
+            user: ["dateAssign", "dateReceive",
+                "dateRange", "orderID"]
+        };  
+
         this.state = {
             paramSelected : "dateAssign",
-            paramList: [
-                "dateAssign", "dateReceive",
-                "dateRange", "orderID", "customerID"
-            ],
+            paramList: PARAM_LIST[this.props.userType],
             statusSelected:"all",
             statusList: [
                 "all", "wait", "processing", "ready", "retired"
@@ -99,8 +110,7 @@ class SearchOrderSection extends React.Component{
     }
 
     shouldComponentUpdate(newProps, newState){
-        /*  console.log(this.state !== newState);
-        console.log(this.props !== newProps); */
+
         if(this.state !== newState){
             this.returnData(newState);
             return true;

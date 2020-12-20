@@ -10,7 +10,7 @@
     <meta name="author" content="Talla'o">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script defer data-main="js/userPanel" src="js/require.js"></script>
+    <script defer src="/builds/userPanel.js"></script>
 
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -26,131 +26,57 @@
 
     <body>
         <div id="NavbarContainer"></div>
-        <!-- <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container ">
-                <a class="navbar-brand text-center" href="/">
-                    <img  style="width: 60%;"  src="/imgs/Tallao-Complete-es.svg" alt="Talla'o">
-                </a>
-                
-                <a href="#" id="myOrders" class="bottomLineLinkAnimation navBarText">
-                    <i class="fa fa-th-list" aria-hidden="true"></i>
-                    <b>Mis órdenes</b>
-                </a>
-    
-                <a href="myaccount.html"class="bottomLineLinkAnimation navBarText" id="myAccount">
-                    <i class="fa fa-user-circle" aria-hidden="true"></i>
-                    <b>Mi cuenta</b>
-                </a>
-    
-                <a href=""class="bottomLineLinkAnimation redTxt" id="signout">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i>
-                    <b>Cerrar Sesión</b>
-                </a>
 
-                <div class="leftSeparation  centerOnXs">
-                    <label for="a" class="bold">Idioma:</label>
-                    <select name="" id="a">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="cn">中文</option>
-                    </select>
+        <div style="margin:5em;"></div>
+
+        <div class="container">
+        <div class="  karla_font showIDTxt">
+            <div class="row bottomBorder ">
+                <div id="showID" class="text-center col-lg-12">
+                    <span >Tu ID Público es: </span>
+                    
                 </div>
-                
-                
-            </div>    
-        </nav> -->
+            </div>
+        </div>
 
 
-          <div style="margin:5em;"></div>
+        <div class="container  montserrat_font smallSeparation">
 
-          <div class="container">
-            <div class="  karla_font showIDTxt">
-                <div class="row bottomBorder ">
-                    <div id="showID" class="text-center col-lg-12">
-                        Tu ID es: 
-                        <i class="fa fa-question-circle " data-toggle="tooltip" data-placement="left" title="Este ID es el que le vas a proveer a la Lavandería donde entregas tu orden." aria-hidden="true"></i>
-                    </div>
-                </div>
-          </div>
+                <div class="row "  style="max-height:100%;">
+
+                    <div class="col-lg-8 text-center  ">
+
+                        <div class="titleTxt">Órdenes que no has recogido aún</div>
 
 
-          <div class="container  montserrat_font smallSeparation">
-
-                    <div class="row "  style="max-height:100%;">
-
-                        <div class="col-lg-8 text-center  ">
-
-                            <div class="titleTxt">Órdenes pendientes</div>
-
-                            <div class="container-fluid  dotIndicators smallText smallSeparation justifyOnXs" >
-
-                                <div class="row">
-                                
-                                <div class="col-lg-4">
-                                <span class="yellowDot "></span>
-                                <span class="topVerticalAlign">Recibido</span>
-                                </div>
-                                <div class="col-lg-4">
-                                <span class="blueDot "></span>
-                                <span class="topVerticalAlign">Procesando</span>
-                                </div>
-
-                                <div class="col-lg-4">
-                                <span class="greenDot "></span>
-                                <span class="topVerticalAlign">Listo para recoger</span>
-                                </div>
-
-                                </div>
-                            </div>
+                        <div class="small-mediumSeparation"></div>
 
 
-                            <!-- <div class="container-fluid dotIndicators smallText smallSeparation ">
-
-                                <div class="row">
-                                
-                                <div class=></div>
-                                <span class="yellowDot "></span>
-                                <span class="topVerticalAlign">Recibido</span>
-
-                                <span class="blueDot "></span>
-                                <span class="topVerticalAlign">Procesando</span>
-
-                                <span class="greenDot "></span>
-                                <span class="topVerticalAlign">Listo para recoger</span>
-
-                                </div>
-                            </div> -->
-
-                            <div class="small-mediumSeparation"></div>
-
-
-                            <div id="divOrdersAppendable" class="eightyPercentMaxHeight rightBorder scrollY">
-                                
-                            </div>
-
+                        <div class="eightyPercentMaxHeight rightBorder scrollY container">
+                            <div id="container4Orders" class="row"></div>
                         </div>
-                        
 
-                        <div class="col-lg-4 text-center ">
+                    </div>
+                    
 
-                            <div class="titleTxt">Notificaciones</div>
+                    <div class="col-lg-4 text-center ">
 
-                            <div class="small-mediumSeparation"></div>
+                        <div class="titleTxt">Notificaciones</div>
 
-                            <div id="divNotificationsAppendable" class="eightyPercentMaxHeight  scrollY">
-                                
-                            </div>
+                        <div class="small-mediumSeparation"></div>
 
+                        <div id="divNotificationsAppendable" class="eightyPercentMaxHeight  scrollY">
+                            
                         </div>
 
                     </div>
 
-
-
                 </div>
+            </div>
 
           </div>
 
+          <div id="OrderModalContainer"></div>
 
     </body>
 

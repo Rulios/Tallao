@@ -12,7 +12,7 @@ $db = "tallao";
 
 if(Classes\Sessions::readSession()){
 
-	$initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+	$initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
 	$conn = new mysqli($serverName, $userConn, $passwordConn);
 	
 	// Check connection

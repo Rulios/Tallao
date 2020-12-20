@@ -8,6 +8,7 @@ const textEs = {
     MyAccount: "Mi cuenta",
     MyOrders: "Mis órdenes",
     CloseSession: "Cerrar sesión",
+    Main: "Principal",
     Language: "Idioma",
     Languages: {
         es: "Español",
@@ -51,6 +52,18 @@ function AffiliatedOrders(){
             className: "bottomLineLinkAnimation navBarText",
             iconClass: "fa fa-th-list",
             text: textEs.AffiliatedOrders
+        })
+    );
+}
+
+function MyMain(){
+    return (
+        React.createElement(NavbarTagFormat,{
+            id: "MyOrders",
+            href: "/user/panel",
+            className: "bottomLineLinkAnimation navBarText",
+            iconClass: "fa fa-home",
+            text: textEs.Main
         })
     );
 }
@@ -149,6 +162,7 @@ module.exports =  {
     Logo: Logo,
     WriteOrders: WriteOrders,
     AffiliatedOrders: AffiliatedOrders,
+    MyMain:MyMain,
     MyOrders: MyOrders,
     MyAccount: MyAccount,
     Logout: Logout,

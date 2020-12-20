@@ -18,8 +18,13 @@ async function fetchAccountCreds(){
     return await ajaxReq.get("/account/credentials/fetch");
 }
 
+async function getUserType(){
+    return await ajaxReq.get("/account/credentials/getUsertype");
+}
+
 module.exports = {
     verifyPassword: verifyPassword,
     newPassword: newPassword,
-    fetchAccountCreds: fetchAccountCreds
+    fetchAccountCreds: fetchAccountCreds,
+    getUserType:getUserType
 };

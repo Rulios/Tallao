@@ -27,7 +27,7 @@ if(Classes\Sessions::readSession()){
         $dataObj = json_decode($dataStream);
         //$dateTimeOrderCreated = $dataObj->elementsOnOrder;
 
-        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $laundryInitials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
         $customerID = isset($dataObj->customerID) ? $dataObj->customerID: "";
         $customerName = isset($dataObj ->customerName) ? $dataObj->customerName: "";
 

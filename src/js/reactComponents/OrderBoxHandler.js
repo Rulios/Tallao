@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const OrderBoxContainers = require("./OrderBoxContainers");
+const OrderBox = require("./OrderBoxContainers");
 const Time = require("./Time");
 const dayjs = require("dayjs");
 
@@ -23,14 +23,18 @@ class OrderBoxes extends React.Component{
 
     render(){
         return Object.values(this.props.orders).map(order =>{
-            return React.createElement(OrderBoxContainers.OrderBox, {
-                key: `${order.id_char}${order.id_number}`,
+            return React.createElement(OrderBox, {
+                key: `${order.id}`,
                 status: order.status,
+                columnType: this.props.columnType,
+                showLaundryName: this.props.showLaundryName,
                 orderID: {
+                    id: order.id,
                     id_char: order.id_char,
                     id_number: order.id_number
                 },
                 orderDetails: {
+                    laundry_name: order.laundry_name,
                     customer_name: order.customer_name,
                     date_assign: dayjs(order.date_assign).format("YYYY-MM-DD hh:mm A"),
                     date_receive: dayjs(order.date_receive).format("YYYY-MM-DD hh:mm A"),
@@ -38,7 +42,7 @@ class OrderBoxes extends React.Component{
                     total_price: order.total_price
                 },
                 dateTimeDifference: Time.calcTimeDifference(order.date_assign, this.props.todayDateTime),
-                onClickOrder: (orderID) => this.returnDataOnClick(orderID)
+                onClickOrder: () => this.returnDataOnClick(order.id)
             })
         });
     }

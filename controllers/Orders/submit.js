@@ -8,7 +8,7 @@ const Inputs = require("../libs/Inputs");
 const ELEMENTS =  require("../libs/ELEMENTS");
 
 const GetNextChar = require("../libs/GetNextChar");
-const GetLaundryInitials = require("../libs/GetLaundryInitials");
+const GetPublicID = require("../libs/GetPublicID");
 const GetLastOrderID = require("../libs/GetLastOrderID");
 const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
 const AdvanceToNextOrderID = require("../libs/AdvanceToNextOrderID");
@@ -20,7 +20,7 @@ module.exports = function(orders){
         try{
             const {hashcode, userType} = req.session;
             if(userType !== "laundry") return res.status(401);
-            let laundryInitials = await GetLaundryInitials(hashcode);
+            let laundryInitials = await GetPublicID(userType, hashcode);
             let {id_char : lastIDChar, id_number: lastIDNumber} = await GetLastOrderID(laundryInitials);
             let order = req.body.order;
             console.log(order);

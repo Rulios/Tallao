@@ -15,7 +15,7 @@ if(Classes\Sessions::readSession()){
 
     if (isset($_GET['paramSelected'], $_GET['params'], $_GET['elementsToFetch'], $_GET['status'])){
         $userType = Classes\Sessions::getUserType();
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
         
 
         $paramSelected = $_GET['paramSelected'];
@@ -156,7 +156,7 @@ function getDateFromRangeDateTime($str){
 }
  */
  /*  $userType = Classes\Sessions::getUserType();
-    $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash()); */
+    $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash()); */
 
     //test with date-assign mode
     /* $paramSelected = "date-assign";

@@ -12,7 +12,7 @@ $db = "tallao";
 //Use to update customerID and customerName of the order
 
 if(Classes\Sessions::readSession()){
-    $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+    $laundryInitials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
     
     $PUTdataJSON = file_get_contents("php://input");
     $dataOBJ = json_decode($PUTdataJSON);

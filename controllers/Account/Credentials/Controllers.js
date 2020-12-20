@@ -3,6 +3,8 @@
 const credentials = require("express").Router();
 
 require("./fetchAccountCreds").set(credentials);
+require("./getUserType")(credentials);
+
 
 
 credentials.post("/updateNewPassword", function(req,res){

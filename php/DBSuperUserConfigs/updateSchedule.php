@@ -12,7 +12,7 @@ if(Classes\Sessions::readSession()){
   
     if(file_get_contents("php://input")){
         $schedule = file_get_contents("php://input");
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
 
         if(!strlen($schedule)){
             http_response_code(400); //set error

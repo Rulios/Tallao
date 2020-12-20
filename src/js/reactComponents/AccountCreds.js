@@ -2,9 +2,10 @@
 
 const React = require("react");
 const AccountFields = require("./AccountFields");
-const ajaxReqUserCreds = require("../requestsModules/ajaxReqUserCreds");
+const {fetchAccountCreds} = require("../requestsModules/ajaxReqUserCreds");
 
 function UserDisplay({name, surname, email}){
+    console.log(surname);
     return [
         React.createElement(AccountFields.UserNameSurname, {
             key:"UserCredsDisplay",
@@ -32,7 +33,7 @@ function LaundryDisplay({laundryInitials,laundryName, reprName,
 
 async function fetchData(){
     try{
-        let {data} = await ajaxReqUserCreds.fetchAccountCreds();
+        let {data} = await fetchAccountCreds();
         return data;
     }catch(err){console.error(err);}
 }
@@ -43,20 +44,16 @@ class AccountCreds extends React.Component{
     }
     componentDidMount(){
         fetchData().then(obj =>{
-            this.returnUserType(obj.userType);
             this.setState(obj);
         });
     }
 
-    returnUserType(userType){
-        this.props.getUserType(userType);
-    }
-
     render(){
+        let Component;
         if(this.state != undefined){
             switch(this.state.userType){
                 case "user":
-                    return React.createElement(UserDisplay,{
+                    Component =  React.createElement(UserDisplay,{
                         name: this.state.name,
                         surname: this.state.surname,
                         email: this.state.email
@@ -64,7 +61,7 @@ class AccountCreds extends React.Component{
                 break;
 
                 case "laundry":
-                    return React.createElement(LaundryDisplay,{
+                    Component =  React.createElement(LaundryDisplay,{
                         laundryInitials: this.state.initials,
                         laundryName: this.state.name,
                         reprName: this.state.legalreprname,
@@ -77,6 +74,7 @@ class AccountCreds extends React.Component{
         }else{
             return null;
         }
+        return Component;
     }
 }
 

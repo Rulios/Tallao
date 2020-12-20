@@ -1,7 +1,7 @@
 "use strict";
 
 const GetLastOrderID = require("../../libs/GetLastOrderID");
-const GetLaundryInitials = require("../../libs/GetLaundryInitials");
+const GetPublicID = require("../../libs/GetPublicID");
 const AdvanceToNextOrderID = require("../../libs/AdvanceToNextOrderID");
 
 module.exports = function(configs){
@@ -11,7 +11,7 @@ module.exports = function(configs){
             let {userType, hashcode} = req.session;
             if(userType !== "laundry") return res.status(403).end();
 
-            const LAUNDRY_INITIALS = await GetLaundryInitials(hashcode);
+            const LAUNDRY_INITIALS = await GetPublicID(userType, hashcode);
             let {id_char, id_number}  = await GetLastOrderID(LAUNDRY_INITIALS);
             let currentOrderID = AdvanceToNextOrderID(id_char, id_number);
 

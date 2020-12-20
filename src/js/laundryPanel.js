@@ -7,7 +7,6 @@ require("regenerator-runtime/runtime");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
-const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const ajaxReqUserCreds = require("./requestsModules/ajaxReqUserCreds");
 const ajaxReqOrders = require("./requestsModules/ajaxReqOrders");
@@ -19,37 +18,32 @@ const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
 const dayjs = require("dayjs");
 const ajaxReqLaundryConfigs = require("./requestsModules/ajaxReqLaundryConfigs");
+const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
+
 
 const STRINGS = {
     orderID: "ID de la Orden"
 };
 //1st session handling
-(function(){
-        
-    $(document).ready(function(){
-        
-
-        RenderNavbar();
+window.onload = function(){
+    try{
+        getUserType().then(({data : userType}) =>{
+            RenderNavbar(userType);
+        });
 
         ReactDOM.render(
             React.createElement(MainApp, {}),
             document.getElementById("containerServiceSelector")
         );
-               
-    });
-})();
+    }catch{
+        alert("Error al cargar datos");
+    }
+};
 
-function RenderNavbar(){
+function RenderNavbar(userType){
     ReactDOM.render(
         React.createElement(Navbar, {
-            componentList: [
-                "Logo", 
-                "WriteOrders",
-                "AffiliatedOrders",
-                "MyAccount" ,
-                "Logout",
-                "LanguageSelect"
-            ]
+            userType: userType
         }), document.getElementById("NavbarContainer")
     );
 }

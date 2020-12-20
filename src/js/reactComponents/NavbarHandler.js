@@ -4,10 +4,30 @@ const React= require("react");
 const NavbarComp = require("./NavbarComp");
 const ajaxReqLog = require("../requestsModules/ajaxReqLog");
 const pageRedirection = require("../frontendModules/pageRedirection");
+const LANGUAGES = require("../../../meta/LANGUAGES");
 
-function Navbar({componentList}){
+function Navbar({userType}){
     //componentList = arr (index order should be same as render order)
-    const languages = ["es", "en", "cn"];
+
+    const COMPONENTS_LIST = {
+        laundry: [
+            "Logo", 
+            "WriteOrders",
+            "AffiliatedOrders",
+            "MyAccount" ,
+            "Logout",
+            "LanguageSelect"
+        ],
+        user: [
+            "Logo",
+            "MyMain",
+            "MyOrders",
+            "MyAccount",
+            "Logout",
+            "LanguageSelect"
+        ]
+    };
+    console.log(userType);
 
     let [selectedLanguage, setSelectedLanguage] = React.useState("es");
 
@@ -29,10 +49,10 @@ function Navbar({componentList}){
             className: "navbar navbar-expand-lg navbar-light"
         },
             React.createElement("div", {className: "container"},
-                componentList.map(component =>{
+                COMPONENTS_LIST[userType].map(component =>{
                     return React.createElement(NavbarComp[component],{
                         key: `${component}-Navbar`,
-                        languages: languages,
+                        languages: LANGUAGES,
                         onClick: (componentID) => clickHandler(componentID),
                         onSelect: (componentID, value) => selectHandler(componentID, value),
                         selectedLanguage: selectedLanguage

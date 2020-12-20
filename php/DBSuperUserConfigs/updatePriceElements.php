@@ -12,7 +12,7 @@ if(Classes\Sessions::readSession()){
 
     if(isset($_POST['serviceOffer'],$_POST['elementsPrice'], $_POST["hookPrice"])){
 
-        $laundryInitials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $laundryInitials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
         $serviceSelected = $_POST['serviceOffer'];
         $elementsPriceJSON = $_POST['elementsPrice'];
         $hookPrice = $_POST["hookPrice"];

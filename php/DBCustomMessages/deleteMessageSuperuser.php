@@ -17,7 +17,7 @@ $inputServiceOffer = "";
 if(Classes\Sessions::readSession()){
 
     if(isset($_POST['idMessage'])){
-        $initials = Classes\MinimalCreds::getLaundryInitials(Classes\Sessions::getUserHash());
+        $initials = Classes\MinimalCreds::GetPublicID(Classes\Sessions::getUserHash());
         $idMessage = $_POST['idMessage'];
     }
     
