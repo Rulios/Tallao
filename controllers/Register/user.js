@@ -8,7 +8,7 @@ const ExistsUUID = require("../libs/ExistsUUID");
 const ExistsPublicID = require("../libs/ExistsPublicID");
 const inputs = require("../libs/Inputs");
 
-const saltRounds = 10;
+const SALT_ROUNDS = require("../libs/SALT_ROUNDS");
 
 const targetMarketRange = [
     "none","social-media", "internet-advertisement",
@@ -44,7 +44,7 @@ module.exports.set = function(app){
             //escape all the inputs
             inputs.escapeAll(Inputs);
 
-            bcrypt.hash(Inputs.inputPassword, saltRounds, async function(err, passwordWHash){
+            bcrypt.hash(Inputs.inputPassword, SALT_ROUNDS, async function(err, passwordWHash){
                 let {
                     inputName: escName, inputSurname: escSurname,
                     inputEmail: escEmail, inputTargetMarket: escTargetMarket 

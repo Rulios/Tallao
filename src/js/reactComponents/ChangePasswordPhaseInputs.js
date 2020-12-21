@@ -8,7 +8,7 @@ which handles all the operations and requests to change password */
 
 //middle level components 
 
-function FirstInputChangePassword({value, onChange, disabled}){ //renders the input container for actual password
+function FirstInputChangePassword({value, onChange,onBlur, disabled}){ //renders the input container for actual password
     return(
         React.createElement("div", {className: "form-row formRowSeparation"},
             React.createElement("div", {className: "col-lg-12"},
@@ -24,6 +24,7 @@ function FirstInputChangePassword({value, onChange, disabled}){ //renders the in
                         placeholder:"Contraseña actual",
                         value: value,
                         disabled: disabled,
+                        onBlur: (e) => onBlur(),
                         onChange: (password) =>{
                             onChange(password, "actualPassword");
                         }
@@ -91,13 +92,14 @@ passes a function called inputHandler that requires the text value
 and the passwordPhase, which will explain from what origin it's coming. */
 
 function InputChangePasswordsPhases({
-    actualPassword, newPassword, rePassword, phase, inputHandler}){ //renders the three phases
+    actualPassword, newPassword, rePassword, phase, inputHandler, onBlurFirstInput}){ //renders the three phases
     return(
         [
             React.createElement(FirstInputChangePassword,{
                 key: "FirstInputChangePassword",
                 value: actualPassword,
                 disabled: phase.actualPassword,
+                onBlur: () =>onBlurFirstInput(),
                 onChange: (value, passwordPhase) =>{inputHandler(value, passwordPhase);}
             }, null),
             React.createElement(SecondInputChangePassword, {

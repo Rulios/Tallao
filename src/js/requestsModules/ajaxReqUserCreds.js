@@ -10,7 +10,7 @@ async function verifyPassword(obj){
 
 async function newPassword(obj){
     //params: inputPassword(string, must be validated first)
-    return await ajaxReq.post("/account/credentials/updateNewPassword", obj);
+    return await ajaxReq.post("/account/credentials/updatePassword", obj);
 }
 
 async function fetchAccountCreds(){

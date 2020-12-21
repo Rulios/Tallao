@@ -2,7 +2,7 @@
 
 const client = require("../../libs/DBConnect");
 
-module.exports.set = function(credentials){
+module.exports = function(credentials){
     credentials.get("/fetch", async function(req,res){
 
         try{

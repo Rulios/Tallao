@@ -4,13 +4,14 @@ const React = require("react");
 
 /* This file contains the components used at the change password feature
 at the lowest level.  */
-const PasswordInput = ({id, placeholder, value, onChange, disabled}) =>{
+const PasswordInput = ({id, placeholder, value, onChange, onBlur, disabled}) =>{
     return React.createElement("input", {
         id: id,
         type:"password",
         className: `form-control ${(disabled) ? "disableInput" : ""}`,
         placeholder: placeholder,
         value: value,
+        onBlur: () => onBlur(),
         onChange: (e) =>{
             onChange(e.target.value);
         }

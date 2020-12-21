@@ -27,7 +27,6 @@ function Navbar({userType}){
             "LanguageSelect"
         ]
     };
-    console.log(userType);
 
     let [selectedLanguage, setSelectedLanguage] = React.useState("es");
 

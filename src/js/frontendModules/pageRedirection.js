@@ -11,7 +11,7 @@ function redirectToPanel(userType){
 }
 
 function bounceToLogin(){
-    window.location.replace("/login");
+    window.location.replace("/loginPage");
 }
 
 module.exports = {

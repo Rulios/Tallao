@@ -4,7 +4,8 @@ const React= require("react");
 const ChangePasswordPhaseInputs= require("./ChangePasswordPhaseInputs");
 const ChangePasswordComp= require("./ChangePasswordComp");
 const passwordLengthHandler= require("../frontendModules/passwordLengthHandler");
-const ajaxReqUserCreds= require("../requestsModules/ajaxReqUserCreds");
+const {verifyPassword, newPassword}= require("../requestsModules/ajaxReqUserCreds");
+const {bounceToLogin} = require("../frontendModules/pageRedirection");
 
 function ChangePasswordLink({onClick}){
     return(
@@ -52,22 +53,21 @@ class ChangePassword extends React.Component{
     }
 
     //enables or disables the second phase (new password)
-    async checkActualPassword(password){
-        let query = await ajaxReq.verifyPassword({inputPassword:password});
-        let isSame = false;
-        if(query === "true"){
-            isSame = false;
-        }else{
-            isSame = true;
+    async checkActualPassword(){
+        try{
+            let {data: isSame} = await verifyPassword({inputPassword:this.state.actualPassword});
+            this.setState({
+                newPassword: "",
+                disabled: {
+                    actualPassword: false,
+                    newPassword: !isSame,
+                    rePassword: true
+                }
+            });
+        }catch(err){
+            console.error(err);
         }
-        this.setState({
-            newPassword: "",
-            disabled: {
-                actualPassword: false,
-                newPassword: isSame,
-                rePassword: true
-            }
-        });
+        
     }
 
     //enables or disables the third phase (repeat password)
@@ -107,9 +107,7 @@ class ChangePassword extends React.Component{
     inputHandlerPasswordPhase(value, passwordPhase){
         switch(passwordPhase){
             case "actualPassword":
-                this.checkActualPassword(value);
-                this.setState({
-                    actualPassword: value});
+                this.setState({actualPassword: value});
             break;
 
             case "newPassword":
@@ -131,11 +129,13 @@ class ChangePassword extends React.Component{
 
     updatePassword(){
         let that = this;
-        ajaxReqUserCreds.newPassword({inputPassword: that.state.rePassword})
-            .then(response =>{
-                if(response === "true"){
-                    passwordLengthHandler("changePasswordLink", undefined, "passwordUpdateSuccess");
-                    that.resetComponentState();
+        newPassword({inputPassword: that.state.rePassword})
+            .then(({status}) =>{
+                if(status === 200){
+                    alert("CONTRASEÑA CAMBIADA CON ÉXITO");
+                    bounceToLogin();
+                    /* passwordLengthHandler("changePasswordLink", undefined, "passwordUpdateSuccess");
+                    that.resetComponentState(); */
                 }
             }).catch(err =>{
                 console.error(err);
@@ -175,6 +175,7 @@ class ChangePassword extends React.Component{
                     newPassword: this.state.newPassword,
                     rePassword: this.state.rePassword,
                     phase: this.state.disabled,
+                    onBlurFirstInput: () => this.checkActualPassword(),
                     inputHandler: (value, passwordPhase) =>{
                         this.inputHandlerPasswordPhase(value, passwordPhase);
                     }
