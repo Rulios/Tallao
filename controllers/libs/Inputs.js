@@ -20,7 +20,14 @@ function checkIfEmpty(obj){
     return {exists: true};
 }
 
+function trimAllExceptPassword(inputs){
+    Object.keys(inputs).map(input =>{
+        if(input !== "password") inputs[input] = inputs[input].trim();
+    });
+}
+
 module.exports = {
     escapeAll: escapeAll,
-    checkIfEmpty: checkIfEmpty
+    checkIfEmpty: checkIfEmpty,
+    trimAllExceptPassword:trimAllExceptPassword
 };

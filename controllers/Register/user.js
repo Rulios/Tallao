@@ -3,14 +3,13 @@
 const client = require("../libs/DBConnect");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const {v4 : uuidv4} = require("uuid");
-const ExistsUUID = require("../libs/ExistsUUID");
+const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
 const ExistsPublicID = require("../libs/ExistsPublicID");
-const inputs = require("../libs/Inputs");
+const {checkIfEmpty, escapeAll, trimAllExceptPassword} = require("../libs/Inputs");
 
 const SALT_ROUNDS = require("../libs/SALT_ROUNDS");
 
-const targetMarketRange = [
+const TARGET_MARKET_RANGE = [
     "none","social-media", "internet-advertisement",
     "real-advertisement", "people-recommendation",
     "hear-someone"
@@ -18,94 +17,46 @@ const targetMarketRange = [
 
 
 module.exports.set = function(app){
-    app.post("/register/userRegister", function(req,res){
+    app.post("/register/user", async function(req,res){
         try{
-            let {
-                inputName, inputSurname,
-                inputEmail, inputPassword, inputTargetMarket
-            } = req.body;
 
-            let Inputs = {
-                inputName: inputName.trim(),
-                inputSurname: inputSurname.trim(),
-                inputEmail: inputEmail,
-                inputPassword: inputPassword,
-                inputTargetMarket: inputTargetMarket
-            };
-          
-            //check if exists the inputs
-            let {exists, field} = inputs.checkIfEmpty(Inputs);
+            let inputs = req.body;
+
+            let {exists, field} = checkIfEmpty(inputs);
             if(!exists) return res.status(400).json({error:"MISSING_FIELD", field:field});
-            //check if inputEmail is email
-            if(!validator.isEmail(Inputs.inputEmail)) return res.status(400).json({error: "NOT_EMAIL", field:"inputEmail"});
-            //check if target market falls in the range
-            if(!validator.isIn(inputTargetMarket, targetMarketRange)) return res.status(400).json({error: "NOT_IN_RANGE", field: "inputTargetMarket"});
 
-            //escape all the inputs
-            inputs.escapeAll(Inputs);
+            if(!validator.isEmail(inputs.email)) return res.status(400).json({error: "NOT_EMAIL", field:"email"});
+            if(!validator.isIn(inputs.targetMarket, TARGET_MARKET_RANGE)) return res.status(400).json({error: "NOT_IN_RANGE", field: "targetMarket"});
 
-            bcrypt.hash(Inputs.inputPassword, SALT_ROUNDS, async function(err, passwordWHash){
-                let {
-                    inputName: escName, inputSurname: escSurname,
-                    inputEmail: escEmail, inputTargetMarket: escTargetMarket 
-                } = Inputs;
+            trimAllExceptPassword(inputs);
+            escapeAll(inputs);
 
-                //generate random id
-                let publicID = "";
-                //check for publicId collisions
-                //generate for every collision
-                try{
-                    let rowCountPublicID = 1;
-                    do{
-                        publicID = generatePublicID();
-                        //check if public ID exists
-                        rowCountPublicID = await ExistsPublicID(publicID, "user"); 
-                    }while(rowCountPublicID);
-                }catch(err){
-                    console.log(err);
-                    throw new Error();
-                }
+            let hashedPassword = await bcrypt.hash(inputs.password, SALT_ROUNDS); 
 
-                //generate uuid to hashcode
-                let hashcode = "";
-                //check for uuid collisions
-                //generate for every collision
-                try{
-                    let rowCountUUID = 1;
-                    do{
-                        hashcode = uuidv4();
+            let {
+                name, surname, email, targetMarket
+            } = inputs;
 
-                        let queryCountUUID = await ExistsUUID(hashcode, "user"); //check if exists the uuid
-                        rowCountUUID = queryCountUUID.rowCount;
-                    }while(rowCountUUID);
-                }catch(err){
-                    throw new Error();
-                }
-                
+            //generate random id
+            let publicID = await generateUniquePublicID();
 
-                let query = `
-                    INSERT INTO users(public_id, hashcode, name, surname, email, password)
-                    VALUES($1, $2, $3, $4, $5, $6)
-                    LIMIT 1;
+            //generate uuid to hashcode
+            let hashcode = await GenerateUniqueUUID("user");
 
-                    
-                `;
-                let values = [
-                    publicID, hashcode,
-                    escName, escSurname, escEmail, passwordWHash
-                ];
-                //can't insert multiple queries in a prepared statement
-                let query2 = `
-                    INSERT INTO target_market(reason)
-                    VALUES($1)
-                    LIMIT 1;
-                `;
-                let values2 = [escTargetMarket];
+            let query = `
+                INSERT INTO users(public_id, hashcode, name, surname, email, password)
+                VALUES($1, $2, $3, $4, $5, $6)
+                LIMIT 1;
+            `;
+            let values = [
+                publicID, hashcode,
+                name, surname, email, hashedPassword
+            ];
 
-                await client.query(query,values); //first query
-                await client.query(query2, values2); //second query
-                return res.status(200).json({status:"OK"});
-            }); 
+            await client.query(query,values); 
+            await insertTargetMarket(targetMarket); 
+            
+            return res.status(200).json({status:"OK"});
 
         }catch(err){
             console.log(err);
@@ -115,13 +66,30 @@ module.exports.set = function(app){
     });
 }
 
-function generatePublicID(){
-    const idLength = 5;
-    var text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    for (var i = 0; i < idLength; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+async function generateUniquePublicID(){
+    let rowCountPublicID = 1;
+    const POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const ID_LENGTH = 5;
+    let publicID = "";
 
-    return text;
+    do{
+        for (let i = 0; i < ID_LENGTH; i++)
+            publicID += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
+
+        rowCountPublicID = await ExistsPublicID(publicID, "user");
+    }while(rowCountPublicID);
+    
+    return publicID;
+}
+
+
+
+async function insertTargetMarket(targetMarket){
+    let query = `
+        INSERT INTO target_market(reason)
+        VALUES($1)
+        LIMIT 1;
+    `;
+    await client.query(query, [targetMarket]);
 }

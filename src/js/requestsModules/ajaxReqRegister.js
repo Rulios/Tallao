@@ -6,7 +6,7 @@ async function registerUser(obj = {}){
     //      inputTargetMarket
 
     try{
-        return await ajaxReq.post( "./register/userRegister", obj);
+        return await ajaxReq.post( "./register/user", obj);
     }catch(err){
         console.error(err);
     };
@@ -17,7 +17,7 @@ async function registerLaundry(obj= {}){
     //inputName, inputSurname, inputEmail, inputPassword
     try{
 
-        return await ajaxReq.post("/register/laundryRegister", obj);
+        return await ajaxReq.post("/register/laundry", obj);
 
     }catch(err){
         console.error(err);

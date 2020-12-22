@@ -30,11 +30,11 @@ $(document).ready(function(){
         
         if(!$("#submitRegister").hasClass("disableButton")){
             let obj = {
-                inputName : capitalizeFirstLetter($("#inputName").val()),
-                inputSurname : capitalizeFirstLetter($("#inputSurname").val()),
-                inputEmail : $("#inputEmail").val(),
-                inputPassword : $("#inputPassword").val(),
-                inputTargetMarket : $("#inputTargetMarket").val()
+                name : capitalizeFirstLetter($("#inputName").val()),
+                surname : capitalizeFirstLetter($("#inputSurname").val()),
+                email : $("#inputEmail").val(),
+                password : $("#inputPassword").val(),
+                targetMarket : $("#inputTargetMarket").val()
             };
             
             let query =  ajaxRegister.registerUser(obj);
@@ -52,13 +52,13 @@ $(document).ready(function(){
 
         if(!$("#submitRegister").hasClass("disableButton")){
             let obj = {
-                inputInitials : $("#inputInitials").val(),
-                inputLaundryName : $("#inputLaundryName").val(),
-                inputLocation : $("#inputLocation").val(),
-                inputName : capitalizeFirstLetter($("#inputName").val()),
-                inputSurname : capitalizeFirstLetter($("#inputSurname").val()),
-                inputEmail : $("#inputEmail").val(),
-                inputPassword : $("#inputPassword").val()
+                initials : $("#inputInitials").val(),
+                laundryName : $("#inputLaundryName").val(),
+                location : $("#inputLocation").val(),
+                name : capitalizeFirstLetter($("#inputName").val()),
+                surname : capitalizeFirstLetter($("#inputSurname").val()),
+                email : $("#inputEmail").val(),
+                password : $("#inputPassword").val()
             };
             
             let query =  ajaxRegister.registerLaundry(obj);
