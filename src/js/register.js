@@ -9,7 +9,7 @@ const ajaxCheckExists = require("./requestsModules/ajaxReqCheckExists");
 const ajaxRegister = require("./requestsModules/ajaxReqRegister");
 const passwordHandler = require("./frontendModules/passwordHandler");
 const isEmail = require("validator/lib/isEmail");
-const validator = require("validator");
+
 
 $(document).ready(function(){
 
@@ -114,13 +114,11 @@ $(document).ready(function(){
           formVerification.invokeVerify(id, false);
         }else{
 
-            let query = ajaxCheckExists.email({
+            ajaxCheckExists.email({
                 inputEmail: $("#inputEmail").val(),
                 userType: formVerification.getUserType()
-            });
-            query.then(data =>{
-                //convert to integer to evaluate on if
-                if(data.exists){
+            }).then(({data: {exists}}) =>{
+                if(exists){
                     formVerification.deleteAppendError(id);
                     formVerification.formAppendError(id, "¡El correo existe!" , "red");
                     formVerification.invokeVerify(id, false);

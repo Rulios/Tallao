@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
 const ExistsPublicID = require("../libs/ExistsPublicID");
 const {checkIfEmpty, escapeAll, trimAllExceptPassword} = require("../libs/Inputs");
+const createAndSaveToken = require("../libs/emailVerification/createAndSaveToken");
+const sendEmailVerification = require("../libs/emailVerification/sendEmailVerification");
 
 const SALT_ROUNDS = require("../libs/SALT_ROUNDS");
 
@@ -53,13 +55,22 @@ module.exports.set = function(app){
                 name, surname, email, hashedPassword
             ];
 
+            //transaction
+            await client.query("BEGIN");
+
             await client.query(query,values); 
             await insertTargetMarket(targetMarket); 
+
+              
+            await sendEmailVerification(req.headers.host ,email, await createAndSaveToken(hashcode));
+
+            await client.query("COMMIT;");
             
             return res.status(200).json({status:"OK"});
 
         }catch(err){
             console.log(err);
+            if(err.response) console.log(err.response.body); //for email verification
             return res.status(500).send({error: "THERES_A_PROBLEM"});
         }
   
