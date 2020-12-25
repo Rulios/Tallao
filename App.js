@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const port= 8080;
+const port= (process.env.PORT||8080);
 const ControllerHandler = require("./controllers/Handler.js");
 const session = require("express-session");
 const laundryRouter = require("./controllers/Laundry/Controllers");
