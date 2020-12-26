@@ -70,7 +70,7 @@ module.exports = Navbar;
     <div class="container">
         <a class="navbar-brand text-center" href="index.html">
 
-            <img  style="width: 60%;"  src="/imgs/Tallao-Complete-es.svg" alt="Talla'o">
+            <img  style="width: 60%;"  src="/imgs/tallao-logo-complete-es.svg" alt="Talla'o">
 
         </a>
         

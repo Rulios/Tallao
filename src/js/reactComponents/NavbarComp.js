@@ -25,7 +25,7 @@ function Logo(){
         },
             React.createElement("img", {
                 style:{width:"60%"},
-                src: "/imgs/Tallao-Complete-es.svg",
+                src: "/imgs/tallao-logo-complete-es.svg",
                 alt: "Talla'o"
             })
         )
