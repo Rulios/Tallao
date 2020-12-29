@@ -7,7 +7,10 @@ module.exports = function(credentials){
 
         try{
             const  {hashcode, userType} = req.session;
-            if(!hashcode || !userType) throw new Error();
+            if(!hashcode || !userType) {
+                console.log(`${hashcode} | ${userType}`);
+                throw new Error("No hashcode or usertype");
+            }
             let query = "";
             let results = {};
             if(userType === "user"){

@@ -6,8 +6,6 @@ const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 const GetPublicID = require("../libs/GetPublicID");
 const dayjs = require("dayjs");
 
-
-
 const PARAMS_PROPS = [
     "paramSelected", "statusSelected", "elementsToFetch"
 ];
@@ -23,7 +21,9 @@ const AVAILABLE_INPUTS = [ //determines available inputs
 
 
 module.exports = function(orders){
+
     orders.get("/fetch", async function(req,res){
+
         try{
             const {userType, hashcode} = req.session;
             let {paramsProps, inputs} = req.query;

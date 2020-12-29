@@ -3,7 +3,7 @@ const path = require('path');
 
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     entry:{
         design: path.resolve(__dirname, './src/js/design.js'),
         register: path.resolve(__dirname, './src/js/register.js'),

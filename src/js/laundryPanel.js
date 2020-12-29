@@ -7,6 +7,7 @@ require("regenerator-runtime/runtime");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
+const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const ajaxReqUserCreds = require("./requestsModules/ajaxReqUserCreds");
 const ajaxReqOrders = require("./requestsModules/ajaxReqOrders");
@@ -20,11 +21,17 @@ const dayjs = require("dayjs");
 const ajaxReqLaundryConfigs = require("./requestsModules/ajaxReqLaundryConfigs");
 const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
 
+const io = require("socket.io-client");
+const laundrySocket = io.connect("/laundry");
+
+laundrySocket.on("connect", () =>{
+    console.log("connected");
+})
 
 const STRINGS = {
     orderID: "ID de la Orden"
 };
-//1st session handling
+
 window.onload = function(){
     try{
         getUserType().then(({data : userType}) =>{
@@ -163,8 +170,9 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
     const {activeElementsOnOrder, hookQuantity, totalPrice} = WriteOrderDetails.order;
     const {date: dateForOrder, time: timeForOrder} = inputDateTime;
     const dateTimeAssigned = `${dateForOrder} ${timeForOrder}:00`;
-    
-    const orderObj = {
+    console.log("Submit");
+
+    const order = {
         indications: orderIndications,
         elementsOnOrder: activeElementsOnOrder,
         hookQuantity: hookQuantity,
@@ -174,23 +182,23 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-    ajaxReqOrders.submitOrder({order: orderObj})
-    .then(({status, data: {idChar, idNumber}}) =>{
-        //trigger the resetOrder
-        if(status === 200){
-            alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
-            resetOrder();
-        }else{
-            throw new Error("Can't submit order");
-        }
-    }).catch(err =>{
-        console.error(err);
+
+    laundrySocket.emit("submit-order", order);
+
+    laundrySocket.on("submit-order-success", ({idChar, idNumber}) =>{
+        alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
+        resetOrder();
     });
-  
+
+    laundrySocket.on("submit-order-error", () =>{
+        throw new Error("Can't submit order");
+    })
+
+
 }
 
 function resetWriteOrderDetails(WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
 
     //set isFullHookChecked to true
     NewWriteOrderDetails.configs.isFullHookChecked = true;
@@ -215,13 +223,13 @@ function resetWriteOrderDetails(WriteOrderDetails){
 
 function resetInputCustomer(shouldComponentReset, setComponentReset){
     //set the reset state of CustomerIDHandler to true
-    let NewComponentReset = $.extend({}, shouldComponentReset);
+    let NewComponentReset = JSON.parse(JSON.stringify(shouldComponentReset));
     NewComponentReset.CustomerIDHandler = true;
     setComponentReset(NewComponentReset);
 }
 
 function resetInputDateTimeForOrder(inputDateTimeForOrder){
-    let NewInputDateTimeForOrder = $.extend({}, inputDateTimeForOrder);
+    let NewInputDateTimeForOrder = JSON.parse(JSON.stringify(inputDateTimeForOrder));
     NewInputDateTimeForOrder = {date: null, time: null};
     return NewInputDateTimeForOrder;
 }
@@ -339,7 +347,7 @@ function renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponent
                 //set the reset state to false when
                 //id & name are null and the reset state is true
                 if(!id && !name && shouldComponentReset.CustomerIDHandler){
-                    let NewComponentReset = $.extend({}, shouldComponentReset);
+                    let NewComponentReset = JSON.parse(JSON.stringify(shouldComponentReset));
                     NewComponentReset.CustomerIDHandler = false;
                     setComponentReset(NewComponentReset);
                 }
@@ -357,13 +365,7 @@ function renderDateTime(dateTimeHook){
                 //parse date
                 //to prevent updating
                 //update if single digit
-                //console.log(today);
                 dateTimeHook(today);
-                /* today.month = (today.month < 10) ? `0${today.month}`: today.month;
-                today.day = (today.day < 10) ? `0${today.day}`: today.day;
-                today.hour = (today.hour < 10) ? `0${today.hour}`: today.hour;
-                today.minutes = (today.minutes < 10) ? `0${today.minutes}`: today.minutes;
-                dateTimeHook(`${today.year}-${today.month}-${today.day} ${Time.convert12hTo24h(`${today.hour}:${today.minutes} ${today.cycle}`)}`); */
             }   
         }),
         document.getElementById("containerDateTime")

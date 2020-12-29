@@ -15,6 +15,10 @@ const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
 const Navbar =  require("./reactComponents/NavbarHandler");
 const convertArrToObj = require("./frontendModules/convertArrToObj");
 
+const io = require("socket.io-client");
+
+let socket;
+
 
 //this file acts like a bundle, since all the components here
 //needs to be connected to a only true source of data
@@ -25,6 +29,18 @@ window.onload = function(){
 
     //get the userType first, so it can render the component depending on that
     getUserType().then(({data : userType}) =>{
+
+        if(userType === "laundry"){
+            socket = io.connect("/laundry");
+        }else if(userType === "user"){
+            socket = io.connect("/user");
+        }
+
+        socket.on("connect", () =>{
+            console.log("socket connected");
+        })
+
+
         RenderNavbar(userType);
         ReactDOM.render(
             React.createElement(SearchOrderByParams, {
@@ -34,7 +50,9 @@ window.onload = function(){
         );
     }).catch(err =>{
         console.err(err);
-    })
+    });
+
+    
 
 }
 
@@ -71,6 +89,7 @@ class SearchOrderByParams extends React.Component{
         }
     }
 
+  
     processOrders(){
         getOrders({
             paramsProps: this.state.searchParams,
@@ -135,9 +154,11 @@ class SearchOrderByParams extends React.Component{
             this.getDateTime();
         }, 60000);
 
-        setInterval(() =>{
+   
+        socket.on("update-orders", () =>{
             this.processOrders();
-        }, 5000);
+        })
+
     }
 
     componentDidUpdate(prevProps, prevState){

@@ -4,9 +4,14 @@ require("dotenv").config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const port= (process.env.PORT||8080);
 const ControllerHandler = require("./controllers/Handler.js");
 const session = require("express-session");
+
+const app = express();
+const server = require("http").createServer(app);
+
 const laundryRouter = require("./controllers/Laundry/Controllers");
 const accountRouter = require("./controllers/Account/Controllers");
 const emailVerificationRouter = require("./controllers/EmailVerification/Controllers");
@@ -15,11 +20,16 @@ const searchRouter = require("./controllers/Search/Controllers");
 const ordersRouter = require("./controllers/Orders/Controllers");
 const userRouter = require("./controllers/User/Controllers");
 
-let app = express();
+const io = require("socket.io")(server);
 
+const sessionMiddleware = session({
+    secret: "tallao",
+    resave: false,
+    saveUninitialized: true,
+});
 
-const server = app.listen(port);
-
+const socketioNamespaces = require("./controllers/libs/socketio/namespaces");
+socketioNamespaces(io, [sessionMiddleware]);
 
 
 //use json bodyParser
@@ -29,11 +39,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 
 //sessions
-app.use(session({
-    secret: "tallao",
-    resave: false,
-    saveUninitialized: true,
-}));
+app.use(sessionMiddleware);
+
 
 //main page serving
 
@@ -65,3 +72,6 @@ app.use("/orders", ordersRouter);
 app.use("/user", userRouter);
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);
+
+server.listen(port);
+

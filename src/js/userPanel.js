@@ -73,12 +73,11 @@ function Orders(){
         isModalPoppedOut : false,
         orderInModal: ""
     });
-    
+
     const onClickOrderHandler = () =>{ //Render order modal
         RenderOrderModal({
             order: orders[ModalStates.orderInModal],
             onClickClose: () => setModalStates({isModalPoppedOut: false, orderInModal: ""}),
-            onUpdateOrders: () => console.log("updating"),
             isShowing: ModalStates.isModalPoppedOut
         });
     }
@@ -92,9 +91,10 @@ function Orders(){
             newOrders = Object.assign(newOrders, convertArrToObj(fetchedOrders));
             setOrders(newOrders);
         }).catch(err =>{
-
+            console.error(err);
         });
     }
+
     React.useEffect(() =>{
         if(!isScrollBottomAttached){
             window.addEventListener("scroll", function(){
@@ -114,9 +114,11 @@ function Orders(){
             //fetch from local system
             console.log("Error in fetching date time from server");
             setTodayDateTime(dayjs());
-        })
-        
+        });
+
         processOrders();
+
+        
 
         onClickOrderHandler();
     }, [paramProps, ModalStates]);
