@@ -174,6 +174,18 @@ border:1px solid;
     max-width: 50%;
 }
 
+.raisedButton1{
+    border-radius:6px;
+    color: black;
+    text-decoration: none !important;
+    margin:5px;
+    border: 1px solid black;
+    transition-duration: 0.4s;
+}
+
+.raisedButton1:hover{
+    transform: scale(1.05)
+}
 
 .roundBorderButton{
     text-decoration: none!important;
@@ -208,14 +220,7 @@ border:1px solid;
 .bottomLineLinkAnimation:hover::after {
     width: 100%;
 }
-/* #myOrders{
-    padding:10px;   
-    color:black;
-}
-#myAccount{
-    color:black;
-    padding:10px;
-} */
+
 .navBarText{
     color:black;
     padding:10px;
@@ -430,28 +435,7 @@ footer{
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
-.yellowDot{
-  height: 25px;
-  width: 25px;
-  background-color: #FFD446;
-  border-radius: 50%;
-  display: inline-block;
-}
-.blueDot{
-    height: 25px;
-    width: 25px;
-    background-color: #3D7CB3;
-    border-radius: 50%;
-    display: inline-block;
-}
-.greenDot{
-  height: 25px;
-  width: 25px;
-  background-color: #2BB334;
-  border-radius: 50%;
-  display: inline-block;
 
-}
 input[type='checkbox']{
     width: 20px;
     height: 20px;

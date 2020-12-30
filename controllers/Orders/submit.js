@@ -40,11 +40,12 @@ module.exports = function(orders, io){
             //check if dateTimeAssigned complies with the format 
             if(!dayjs(order.dateTimeAssigned, "YYYY-MM-DD HH:MM").isValid()) throw new Error("not valid date time format");
             //check if customerID is not empty
-            if(!validator.isEmpty(order.customerID)){
-                //check for the correspondant range of customerID
-                if(!validator.isLength(order.customerID,5,6)) throw new Error("customerID not in range");
+            if(order.customerID){
+                if(!validator.isEmpty(order.customerID) && !validator.isLength(order.customerID,5,6)){
+                    throw new Error("customerID not in range");
+                }
             }
-            
+
             //remove whitespace
             order.indications = order.indications.trim();
             //escape indications 

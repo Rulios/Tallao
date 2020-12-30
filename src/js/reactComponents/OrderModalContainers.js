@@ -62,7 +62,8 @@ const statusColors = {
 };
 
 function OrderModal({orderDetails, onClickClose, 
-    onClickNextStatus, newCustomerName, showNextStatusBtn}){
+    onClickNextStatus, onClickAffiliateNewCustomerName,
+     getNewAffiliateCustomer, showNextStatusBtn}){
     let idComp = `${orderDetails.id_char}${orderDetails.id_number}`;
     return React.createElement("div", {className:"modalCustom"},
         React.createElement("div", {className:"modal-contentCustom"},
@@ -114,7 +115,8 @@ function OrderModal({orderDetails, onClickClose,
                                     React.createElement(OrderModalCustomerName, {
                                         idComp: idComp, 
                                         customer_name: orderDetails.customer_name,
-                                        newCustomerName: (customerData) => newCustomerName(customerData)
+                                        getNewAffiliateCustomer: (customer) => getNewAffiliateCustomer(customer),
+                                        onClickAffiliateNewCustomerName: () => onClickAffiliateNewCustomerName()
                                     })
                                     //OrderModalCustomerName({idComp: idComp, customer_name: orderDetails.customer_name})
                                 ),
@@ -208,7 +210,7 @@ function OrderModalTitle({orderID}){
         
 }
 
-function OrderModalCustomerName({idComp, customer_name, newCustomerName}){
+function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer, onClickAffiliateNewCustomerName}){
     let [isToggleEdit, changeToggleEdit] = React.useState(false);
     let toggleElement; //conditional UNIT rendering
     if(customer_name){
@@ -220,11 +222,20 @@ function OrderModalCustomerName({idComp, customer_name, newCustomerName}){
         });
     }else{
         if(isToggleEdit){
-            toggleElement = React.createElement(CustomerIDHandler, {
-                key: `CustomerIDHandler4${idComp}`,
-                mode: "search",
-                getCustomerData :(data) => newCustomerName(data)
-            });
+
+            toggleElement = [
+                React.createElement(CustomerIDHandler, {
+                    key: `CustomerIDHandler4${idComp}`,
+                    mode: "search",
+                    getCustomerData :(customer) => getNewAffiliateCustomer(customer)
+                }),
+                React.createElement("button", {
+                    key: `BtnAffiliateCustomer4${idComp}`,
+                    className: "raisedButton1",
+                    onClick :() => onClickAffiliateNewCustomerName()
+                }, "Afiliar cliente")
+            ];
+
         }
     }
 

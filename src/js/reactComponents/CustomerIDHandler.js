@@ -1,7 +1,6 @@
 // main.js
 
 const React = require("react");
-const inputPrevent = require("../frontendModules/inputPrevent");
 const ajaxReqSearch = require("../requestsModules/ajaxReqSearch");
 
 
@@ -67,12 +66,11 @@ class InputCustomerID extends React.Component{
         let that = this; //bind the this to this scope, so it can use setState
         customerData.id = id.toUpperCase();
         ajaxReqSearch.customerByID({inputCustomerID: customerData.id}).then(({data}) =>{
-            if(data === null){
-                customerData.name = null;
-            }else{
+            if(data){
                 customerData.name = `${data.name} ${data.surname}`;
+            }else{
+                customerData.name = null;
             }
-            //that.returnData(customerData);
             that.setState(customerData);
         }).catch(err => {
             customerData.name = null;
@@ -80,11 +78,12 @@ class InputCustomerID extends React.Component{
         });
     }
 
-    returnData(customerData){ //return data when needed by the main component
-        this.props.getCustomerData(customerData);
+    returnData(customer){ //return data when needed by the main component
+        this.props.getCustomerData(customer);
     }
 
     shouldComponentUpdate(newProps, newState){
+        if(newProps !== this.props) return false;
         this.returnData(newState);
         return true;
     }

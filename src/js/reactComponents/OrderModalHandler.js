@@ -10,6 +10,9 @@ Controls all the outputs */
 class OrderModal extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            newCustomer: {id: null, name: null}
+        }
     }
 
     closeModal(){
@@ -27,14 +30,21 @@ class OrderModal extends React.Component{
         }
     }
 
-    newCustomerNameHandler(customerData){
-        if(customerData.id && customerData.name){
+    getNewAffiliateCustomer(customer){
+        //console.log(customer);
+        this.setState({newCustomer : customer});
+    }
+
+    updateAffiliateCustomerForOrder(){
+        let {id, name} = this.state.newCustomer;
+
+        if(id && name){
             ajaxReqOrders.updateCustomerAffiliateOrder({
                 orderID: {
                     id_char: this.props.order.id_char,
                     id_number: this.props.order.id_number
                 },
-                customerID: customerData.id
+                customerID: id
             }).then(({status})=>{
                 if(status === 200) this.props.onUpdateOrders();
                 
@@ -50,7 +60,8 @@ class OrderModal extends React.Component{
                 showNextStatusBtn: this.props.showNextStatusBtn,
                 onClickClose: () => this.closeModal(),
                 onClickNextStatus: () => this.advanceToNextStatus(),
-                newCustomerName: (customerData) => this.newCustomerNameHandler(customerData)
+                onClickAffiliateNewCustomerName: () => this.updateAffiliateCustomerForOrder(),
+                getNewAffiliateCustomer: (customer) => this.getNewAffiliateCustomer(customer)
             });
         }else{
             return null;

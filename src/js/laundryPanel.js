@@ -336,6 +336,7 @@ function renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponent
             reset: shouldComponentReset.CustomerIDHandler,
             getCustomerData : (data) => {
                 let {id, name} = data;
+                
                 //set the reset state to false when
                 //id & name are null and the reset state is true
                 if(!id && !name && shouldComponentReset.CustomerIDHandler){
