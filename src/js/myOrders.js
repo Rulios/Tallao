@@ -182,7 +182,6 @@ class SearchOrderByParams extends React.Component{
     }
 
     render(){
-        //console.log(this.state.orders);
         return  React.createElement(OrderParamsSelectorHandler,{
             userType: this.props.userType,
             getSearchParams: (params) =>{

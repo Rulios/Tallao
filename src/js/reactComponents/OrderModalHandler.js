@@ -23,7 +23,7 @@ class OrderModal extends React.Component{
                 id_number: this.props.order.id_number
             }).then(({status}) =>{
                 if(status === 200)this.props.onUpdateOrders();
-            }).catch(err => console.error());
+            }).catch(err => console.error(err));
         }
     }
 

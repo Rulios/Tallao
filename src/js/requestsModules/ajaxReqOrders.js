@@ -3,6 +3,14 @@ const ajaxReq = require("./ajaxReq");
 //this module includes all the AJAX fetches that involves on the
 //submitting, fetching, and updating orders created by the superuser
 
+async function submitOrder(obj){
+    //props formatted as json: indications, elementsOnOrder (contains service, price, quantity), hookQuantity, totalPrice,
+    //dateTimeAssignForOrder, dateTimeOrderWritten
+
+    return await ajaxReq.post("/orders/submit", obj);
+}
+
+
 async function fetchOrders(params){
     return await ajaxReq.get("/orders/fetch", params);
 }
@@ -28,6 +36,7 @@ async function advanceToNextStatus(jsonString){
 
 module.exports =  {
     fetchOrders: fetchOrders,
+    submitOrder:submitOrder,
     updateOrder: updateOrder,
     advanceToNextStatus:advanceToNextStatus,
     updateCustomerAffiliateOrder:updateCustomerAffiliateOrder

@@ -21,12 +21,6 @@ const dayjs = require("dayjs");
 const ajaxReqLaundryConfigs = require("./requestsModules/ajaxReqLaundryConfigs");
 const {getUserType} = require("./requestsModules/ajaxReqUserCreds");
 
-const io = require("socket.io-client");
-const laundrySocket = io.connect("/laundry");
-
-laundrySocket.on("connect", () =>{
-    console.log("connected");
-})
 
 const STRINGS = {
     orderID: "ID de la Orden"
@@ -76,7 +70,7 @@ function MainApp(){
             totalPrice: 0
         }
     });
-    //console.log(inputDateTimeForOrder);
+
     //Every component that has setComponentReset as a parameter
     //is a reseteable component. It means that it has its own state
     //and data flow is bidirectional.
@@ -170,7 +164,6 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
     const {activeElementsOnOrder, hookQuantity, totalPrice} = WriteOrderDetails.order;
     const {date: dateForOrder, time: timeForOrder} = inputDateTime;
     const dateTimeAssigned = `${dateForOrder} ${timeForOrder}:00`;
-    console.log("Submit");
 
     const order = {
         indications: orderIndications,
@@ -182,19 +175,18 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-
-    laundrySocket.emit("submit-order", order);
-
-    laundrySocket.on("submit-order-success", ({idChar, idNumber}) =>{
-        alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
-        resetOrder();
+    ajaxReqOrders.submitOrder(order)
+    .then(({status, data: {idChar, idNumber}}) =>{
+        //trigger the resetOrder
+        if(status === 200){
+            alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
+            resetOrder();
+        }else{
+            throw new Error("Can't submit order");
+        }
+    }).catch(err =>{
+        console.error(err);
     });
-
-    laundrySocket.on("submit-order-error", () =>{
-        throw new Error("Can't submit order");
-    })
-
-
 }
 
 function resetWriteOrderDetails(WriteOrderDetails){

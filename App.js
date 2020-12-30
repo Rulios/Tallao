@@ -12,6 +12,8 @@ const session = require("express-session");
 const app = express();
 const server = require("http").createServer(app);
 
+const io = require("socket.io")(server);
+
 const laundryRouter = require("./controllers/Laundry/Controllers");
 const accountRouter = require("./controllers/Account/Controllers");
 const emailVerificationRouter = require("./controllers/EmailVerification/Controllers");
@@ -20,8 +22,6 @@ const searchRouter = require("./controllers/Search/Controllers");
 const ordersRouter = require("./controllers/Orders/Controllers");
 const userRouter = require("./controllers/User/Controllers");
 
-const io = require("socket.io")(server);
-
 const sessionMiddleware = session({
     secret: "tallao",
     resave: false,
@@ -29,7 +29,7 @@ const sessionMiddleware = session({
 });
 
 const socketioNamespaces = require("./controllers/libs/socketio/namespaces");
-socketioNamespaces(io, [sessionMiddleware]);
+socketioNamespaces(io, [sessionMiddleware]); //for initial handshakes
 
 
 //use json bodyParser
@@ -68,7 +68,7 @@ app.use("/account", accountRouter);
 app.use("/emailVerification", emailVerificationRouter);
 app.use("/time", timeRouter);
 app.use("/search", searchRouter);
-app.use("/orders", ordersRouter);
+app.use("/orders", ordersRouter(io));
 app.use("/user", userRouter);
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);

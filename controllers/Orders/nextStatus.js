@@ -4,7 +4,11 @@ const isOrderNotation = require("../libs/isOrderNotation");
 
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 
-module.exports = function(orders){
+const GetCustomerIDByOrder = require("../libs/GetCustomerIDByOrder");
+const {emitUpdateOrders} = require("../libs/socketio/events");
+const { emit } = require("nodemon");
+
+module.exports = function(orders, io){
 
     orders.put("/nextStatus", async function(req,res){
 
@@ -20,7 +24,6 @@ module.exports = function(orders){
             let nextStatus = goToNextStatus(currentStatus);
 
             if(!nextStatus) return res.status(200).json({message: "ALREADY_IN_LAST_STATUS"});
-            //query
 
             let query = `
                 UPDATE orders 
@@ -31,6 +34,17 @@ module.exports = function(orders){
             `;
 
             await client.query(query, [nextStatus, laundryInitials, id_char, id_number]);
+
+
+            emitUpdateOrders(io, "laundry", laundryInitials);
+
+            const ORDER_CUSTOMER_ID  = await GetCustomerIDByOrder({
+                laundryInitials: laundryInitials,
+                id_char: id_char,
+                id_number: id_number
+            });
+            if(ORDER_CUSTOMER_ID) emitUpdateOrders(io, "user", ORDER_CUSTOMER_ID);
+                
             return res.status(200).end();
 
         }catch(err){
@@ -61,3 +75,4 @@ function goToNextStatus(currentStatus){
     //go to the next status
     return ORDER_STATUS[currentStatusIndex + 1];
 }
+

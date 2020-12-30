@@ -19,6 +19,15 @@ const textEs = {
     yourPublicIDIs: "Tu ID público es"
 }
 
+const io = require("socket.io-client");
+
+const userSocket = io.connect("/user");
+
+userSocket.on("connect", () =>{
+    console.log("socket connected");
+}) 
+
+
 window.onload = function(){
     try{
         getUserType().then(({data : userType}) =>{
@@ -96,6 +105,13 @@ function Orders(){
     }
 
     React.useEffect(() =>{
+        processOrders();
+        userSocket.on("update-orders", () =>{
+            processOrders();
+        });
+    }, []);
+
+    React.useEffect(() =>{
         if(!isScrollBottomAttached){
             window.addEventListener("scroll", function(){
                 if(document.documentElement.clientHeight + window.pageYOffset >= getDocHeight() ){
@@ -115,10 +131,6 @@ function Orders(){
             console.log("Error in fetching date time from server");
             setTodayDateTime(dayjs());
         });
-
-        processOrders();
-
-        
 
         onClickOrderHandler();
     }, [paramProps, ModalStates]);
