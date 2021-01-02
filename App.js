@@ -2,12 +2,16 @@
 
 require("dotenv").config();
 
+const path = require("path");
+
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser')
 
 const port= (process.env.PORT||8080);
 const ControllerHandler = require("./controllers/Handler.js");
 const session = require("express-session");
+const csurf = require("csurf");
 
 const app = express();
 const server = require("http").createServer(app);
@@ -28,48 +32,54 @@ const sessionMiddleware = session({
     saveUninitialized: true,
 });
 
+const csrfProtectionMiddleware = csurf({cookie : true});
+
 const socketioNamespaces = require("./controllers/libs/socketio/namespaces");
 socketioNamespaces(io, [sessionMiddleware]); //for initial handshakes
 
-
-//use json bodyParser
+app.use(cookieParser());
 app.use(bodyParser.json());
-//use urlencoded bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')); //for static files serving
+
+app.set("views", path.join(__dirname + "/public/views"));
+app.set("view engine", "ejs");
 
 //sessions
 app.use(sessionMiddleware);
 
 
+
 //main page serving
 
+
 app.get("/", function(req,res){
-    res.sendFile(__dirname + "/public/index.html");
+    res.render("pages/index");
 });
 
 app.get("/loginPage", function(req,res){
-    res.sendFile(__dirname + "/public/login.html");
+    res.render("pages/login");
 });
 
 app.get("/register", function(req,res){
-    res.sendFile(__dirname + "/public/register.html");
+    res.render("pages/register");
 });
 
 app.get("/laundryRegister", function(req,res){
-    res.sendFile(__dirname + "/public/laundryRegister.html");
+    res.render("pages/laundryRegister");
 });
 
 
 //DEFINITIONS OF EXPRESS ROUTERS
 
-app.use("/laundry", laundryRouter);
-app.use("/account", accountRouter);
-app.use("/emailVerification", emailVerificationRouter);
+app.use("/laundry",csrfProtectionMiddleware, laundryRouter);
+app.use("/account", csrfProtectionMiddleware, accountRouter);
+app.use("/emailVerification",csrfProtectionMiddleware, emailVerificationRouter);
 app.use("/time", timeRouter);
-app.use("/search", searchRouter);
-app.use("/orders", ordersRouter(io));
-app.use("/user", userRouter);
+app.use("/search",csrfProtectionMiddleware, searchRouter);
+app.use("/orders",csrfProtectionMiddleware, ordersRouter(io));
+app.use("/user", csrfProtectionMiddleware, userRouter);
+
 //pass express app to the ControllerHandlers
 ControllerHandler.set(app);
 

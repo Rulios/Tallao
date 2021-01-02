@@ -1,5 +1,3 @@
-const { email } = require("../../src/js/requestsModules/ajaxReqCheckExists");
-
 const emailVerification = require("express").Router();
 
 

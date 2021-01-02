@@ -18,15 +18,15 @@ laundry.use("/",async function(req, res, next){
 });
 
 laundry.get("/panel", function(req, res){
-    return res.status(200).sendFile(path.resolve("public/laundryPanel.html"));
+    return res.render("pages/laundryPanel");
 });
 
 laundry.get("/myaccount", function(req,res){
-    return res.status(200).sendFile(path.resolve("public/myaccount.html"));
+    return res.render("pages/myaccount");
 });
 
 laundry.get("/myorders", function(req,res){
-    return res.status(200).sendFile(path.resolve("public/myorders.html"));
+    return res.render("pages/myorders");
 });
 
 laundry.use("/configs", configsRouter);

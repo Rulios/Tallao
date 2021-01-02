@@ -14,15 +14,15 @@ user.use("/",async function(req, res, next){
 });
 
 user.get("/panel", function(req, res){
-    return res.status(200).sendFile(path.resolve("public/userPanel.html"));
+    return res.render("pages/userPanel");
 });
 
 user.get("/myaccount", function(req,res){
-    return res.status(200).sendFile(path.resolve("public/myaccount.html"));
+    return res.render("pages/myaccount");
 });
 
 user.get("/myorders", function(req,res){
-    return res.status(200).sendFile(path.resolve("public/myorders.html"));
+    return res.render("pages/myorders");
 });
 
 module.exports = user;

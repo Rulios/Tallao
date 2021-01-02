@@ -1,5 +1,6 @@
 const axios = require("axios");
 
+
 async function get(url, data){
     return await axios.get(url, {params: data});
 }

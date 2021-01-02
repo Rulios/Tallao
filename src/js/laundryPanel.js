@@ -26,11 +26,15 @@ const STRINGS = {
     orderID: "ID de la Orden"
 };
 
+
 window.onload = function(){
     try{
         getUserType().then(({data : userType}) =>{
             RenderNavbar(userType);
         });
+
+        let token = document.head.querySelector('meta[name="csrf-token"]');
+        console.log(token.content);
 
         ReactDOM.render(
             React.createElement(MainApp, {}),
