@@ -1,10 +1,9 @@
 const client = require("../libs/DBConnect");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const {checkIfEmpty, escapeAll, trimAllExceptPassword} = require("../libs/Inputs");
-const LaundryOnce = require("./LaundryOnce");
+const {checkIfEmpty, trimAllExceptPassword} = require("../libs/Inputs");
+const LaundryOnce = require("./_laundryOnce");
 const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
-const laundry = require("../Laundry/Controllers");
 const saltRounds = 10;
 
 module.exports.set = function(app){
@@ -24,7 +23,6 @@ module.exports.set = function(app){
             if(!validator.isEmail(inputs.email)) return res.status(400).json({error: "NOT_EMAIL", field:"email"});
 
             trimAllExceptPassword(inputs);
-            escapeAll(inputs);
 
             //generate uuid to hashcode
             let hashcode = await GenerateUniqueUUID("laundry");

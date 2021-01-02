@@ -10,7 +10,7 @@ const GetPublicID = require("../libs/GetPublicID");
 const GetLastOrderID = require("../libs/GetLastOrderID");
 const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
 const AdvanceToNextOrderID = require("../libs/AdvanceToNextOrderID");
-const UpdateLastOrderID = require("./UpdateLastOrderID");
+const updateLastOrderID = require("./_updateLastOrderID");
 
 const {emitUpdateOrders} = require("../libs/socketio/events");
 
@@ -48,8 +48,6 @@ module.exports = function(orders, io){
 
             //remove whitespace
             order.indications = order.indications.trim();
-            //escape indications 
-            order.indications = validator.escape(order.indications);
             
             //check if the dateTimeAssigned for the order is present or future from today's date time
             if(dayjs(order.dateTimeAssigned).diff(TODAY_DATE_TIME) < 0) throw new Error("Date assigned is past");
@@ -98,7 +96,7 @@ module.exports = function(orders, io){
             //insert order
             await client.query(query, values);
             //update last order id
-            await UpdateLastOrderID(laundryInitials, orderID);
+            await updateLastOrderID(laundryInitials, orderID);
             //END TRANSACTION
             await client.query("COMMIT;");
 

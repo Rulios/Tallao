@@ -6,7 +6,7 @@ const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 
 const GetCustomerIDByOrder = require("../libs/GetCustomerIDByOrder");
 const {emitUpdateOrders} = require("../libs/socketio/events");
-const { emit } = require("nodemon");
+
 
 module.exports = function(orders, io){
 

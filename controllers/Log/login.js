@@ -2,7 +2,6 @@
 
 const validator = require("validator");
 const ValidateSchema = require("./ValidateSchema");
-const inputs = require("../libs/Inputs");
 const userTypeRange = ["laundry", "user"];
 
 module.exports.set = function(app){
@@ -19,9 +18,6 @@ module.exports.set = function(app){
             if(!validator.isIn(userType, userTypeRange)) throw new Error();
             //check if inputEmail is email
             if(!validator.isEmail(Inputs.inputEmail)) return res.status(400).json({error: "NOT_EMAIL", field:"inputEmail"});
-
-            //escape all the inputs
-            inputs.escapeAll(Inputs);
 
             let validate = await ValidateSchema(Inputs.inputEmail, Inputs.inputPassword, userType);
             let {hashcode, validated} = validate;

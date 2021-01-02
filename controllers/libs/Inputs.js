@@ -1,13 +1,6 @@
 const validator = require("validator");
 
-//these functions receives as parameters objects
 
-function escapeAll(obj){
-    //escapes all inputs
-    Object.keys(obj).map(input =>{
-        obj[input] = validator.escape(obj[input]);
-    });
-}
 
 function checkIfEmpty(obj){
     //iterates for all the keys to check if the value is empty
@@ -27,7 +20,6 @@ function trimAllExceptPassword(inputs){
 }
 
 module.exports = {
-    escapeAll: escapeAll,
     checkIfEmpty: checkIfEmpty,
     trimAllExceptPassword:trimAllExceptPassword
 };

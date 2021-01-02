@@ -24,7 +24,7 @@ elementsPrice.get("/fetch", async function(req,res){
         }
 
         let result = (await client.query(query, [laundryInitials])).rows[0];
-        //console.log(result);
+        
         return res.json(result);
     }catch(err){
         res.status(400).end();

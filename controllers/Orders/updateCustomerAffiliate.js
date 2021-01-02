@@ -51,7 +51,3 @@ module.exports = function(orders, io){
     
     });
 }
-
-function emitToUser(io, customerID){
-    io.of("/user").to(customerID).emit("update-orders");
-}

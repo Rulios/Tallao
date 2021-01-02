@@ -5,7 +5,7 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
 const ExistsPublicID = require("../libs/ExistsPublicID");
-const {checkIfEmpty, escapeAll, trimAllExceptPassword} = require("../libs/Inputs");
+const {checkIfEmpty,  trimAllExceptPassword} = require("../libs/Inputs");
 const createAndSaveToken = require("../libs/emailVerification/createAndSaveToken");
 const sendEmailVerification = require("../libs/emailVerification/sendEmailVerification");
 
@@ -31,7 +31,6 @@ module.exports.set = function(app){
             if(!validator.isIn(inputs.targetMarket, TARGET_MARKET_RANGE)) return res.status(400).json({error: "NOT_IN_RANGE", field: "targetMarket"});
 
             trimAllExceptPassword(inputs);
-            escapeAll(inputs);
 
             let hashedPassword = await bcrypt.hash(inputs.password, SALT_ROUNDS); 
 
@@ -61,7 +60,6 @@ module.exports.set = function(app){
             await client.query(query,values); 
             await insertTargetMarket(targetMarket); 
 
-              
             await sendEmailVerification(req.headers.host ,email, await createAndSaveToken(hashcode));
 
             await client.query("COMMIT;");

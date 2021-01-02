@@ -5,6 +5,8 @@ const validator = require("validator");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 const GetPublicID = require("../libs/GetPublicID");
 const dayjs = require("dayjs");
+const {escapeArrayOfObj} = require("../libs/Outputs");
+
 
 const PARAMS_PROPS = [
     "paramSelected", "statusSelected", "elementsToFetch"
@@ -40,11 +42,11 @@ module.exports = function(orders){
             let statusArr = getStatusArr(paramsProps.statusSelected);
             let query = buildQuery(paramsProps.paramSelected, statusArr, userType);
             let values = buildValues(publicID,userType, paramsProps, inputs, statusArr);
-            /* console.log(query);
-            console.log(values); */
+           
             let result = await client.query(query, values);
-       
-            return res.status(200).json(result.rows);
+            let escapedResult = escapeArrayOfObj(result.rows);
+
+            return res.status(200).json(escapedResult);
         }catch(err){
             console.log(err);
             return res.status(400).json({error: "BAD REQUEST"});

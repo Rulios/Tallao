@@ -1,5 +1,7 @@
 const client = require("../../libs/DBConnect");
 const GetPublicID = require("../../libs/GetPublicID");
+const {escapeArrayOfObj} = require("../../libs/Outputs");
+
 
 module.exports = function(customMessages){
     customMessages.get("/fetch", async function(req,res){
@@ -13,8 +15,9 @@ module.exports = function(customMessages){
             `;
 
             let result = await client.query(query, [laundryInitials]);
-            
-            return res.status(200).json(result.rows);
+            let escapedResult = escapeArrayOfObj(result.rows);
+
+            return res.status(200).json(escapedResult);
         }catch(err){
             console.error(err);
             return res.status(500).end();

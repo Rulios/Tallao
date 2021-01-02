@@ -11,7 +11,7 @@ module.exports.set = function(app){
         try{
             let inputEmail = req.query.inputEmail;
             let userType = req.query.userType;
-            let tableName = "";
+            
             //check if exists inputEmail
             if(validator.isEmpty(inputEmail)) return res.status(400).json({error: "MISSING_FIELD", field:"inputEmail"});
             //check if inputEmail is email
@@ -20,10 +20,6 @@ module.exports.set = function(app){
             if(validator.isEmpty(userType)) return res.status(403).end();
             //check if userType falls in the range
             if(!validator.isIn(userType, userTypeRange)) return res.status(403).end();
-
-            //escape characters
-            inputEmail = validator.escape(inputEmail);
-            userType = validator.escape(userType);
 
 
             ExistsEmail(inputEmail, userType).then(result =>{
@@ -46,8 +42,7 @@ module.exports.set = function(app){
             let inputInitials = req.query.inputInitials;
             //check if exists inputInitials
             if(validator.isEmpty(inputInitials)) return res.status(400).json({error: "MISSING_FIELD", field:"laundryInitials"});
-            //escape characters
-            inputInitials = validator.escape(inputInitials);
+        
             //check if all uppercase
             if(!validator.isUppercase(inputInitials)) return res.status(400).json({error: "NOT_UPPERCASE", field: "laundryInitials"});
             //check if falls into the range of 4-6 characters 

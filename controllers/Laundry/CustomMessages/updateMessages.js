@@ -14,9 +14,7 @@ module.exports = function(customMessages){
             Object.values(messages).map(async (messageProps) =>{
                 //check if color_tag is a hex color
                 if(!validator.isHexColor(messageProps.color_tag)) throw new Error("Not hex color");
-                //sanitize tag and message
-                messageProps.tag = validator.escape(messageProps.tag);
-                messageProps.message = validator.escape(messageProps.message);
+     
                 if(await ExistsCustomMessageID(messageProps.id) && messageProps.id.includes(laundryInitials)){
                     //it exists, just update message
                     await updateMessage(messageProps);
