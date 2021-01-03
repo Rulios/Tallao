@@ -64,7 +64,7 @@ module.exports = function(orders, io){
                 indications
             } = order;
             let customerName = await GetCustomerNameByID(customerID);
-            if(!customerName) customerID = ""; //clear the customerID
+            if(!customerName) customerID = "NULL"; //set the customerID to NULL. 
 
             query = `
                 INSERT INTO orders (laundry_initials, customer_id, 
