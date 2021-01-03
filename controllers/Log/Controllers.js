@@ -1,10 +1,8 @@
 "use strict";
 
-const login = require("./login");
-const logout = require("./logout");
+const log = require("express").Router();
 
-module.exports.set = function(app){
+require("./login")(log);
+require("./logout")(log);
 
-    login.set(app);
-    logout.set(app);
-};
+module.exports = log;

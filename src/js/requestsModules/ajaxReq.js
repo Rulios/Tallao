@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+const token = document.querySelector('meta[name="csrf-token"]').content;
+
+axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
 
 async function get(url, data){
     return await axios.get(url, {params: data});

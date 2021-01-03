@@ -6,9 +6,9 @@ const LaundryOnce = require("./_laundryOnce");
 const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
 const saltRounds = 10;
 
-module.exports.set = function(app){
+module.exports = function(register){
 
-    app.post("/register/laundry", async function(req,res){
+    register.post("/laundry", async function(req,res){
         try{
             let inputs = req.body;
           

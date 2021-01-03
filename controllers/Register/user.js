@@ -18,8 +18,8 @@ const TARGET_MARKET_RANGE = [
 ];
 
 
-module.exports.set = function(app){
-    app.post("/register/user", async function(req,res){
+module.exports = function(register){
+    register.post("/user", async function(req,res){
         try{
 
             let inputs = req.body;

@@ -1,15 +1,11 @@
 "use strict";
 
-const laundryRegister = require("./laundry");
-const userRegister = require("./user");
+const register = require("express").Router();
 
-module.exports.set = function(app){
-    //controllers 
+require("./laundry")(register);
+require("./user")(register);
 
-    //laundry register
-    laundryRegister.set(app);
 
-    //userRegister
-    userRegister.set(app);
-};
+
+module.exports = register;
 

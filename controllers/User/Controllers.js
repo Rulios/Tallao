@@ -1,6 +1,5 @@
 const user = require("express").Router();
 const Auth = require("../libs/Auth");
-const path = require("path");
 
 //middleware for authorization
 user.use("/",async function(req, res, next){ 
@@ -14,15 +13,15 @@ user.use("/",async function(req, res, next){
 });
 
 user.get("/panel", function(req, res){
-    return res.render("pages/userPanel");
+    return res.render("pages/userPanel", {csrfToken: req.csrfToken()});
 });
 
 user.get("/myaccount", function(req,res){
-    return res.render("pages/myaccount");
+    return res.render("pages/myaccount", {csrfToken: req.csrfToken()});
 });
 
 user.get("/myorders", function(req,res){
-    return res.render("pages/myorders");
+    return res.render("pages/myorders", {csrfToken: req.csrfToken()});
 });
 
 module.exports = user;

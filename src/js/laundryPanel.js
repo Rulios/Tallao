@@ -33,9 +33,6 @@ window.onload = function(){
             RenderNavbar(userType);
         });
 
-        let token = document.head.querySelector('meta[name="csrf-token"]');
-        console.log(token.content);
-
         ReactDOM.render(
             React.createElement(MainApp, {}),
             document.getElementById("containerServiceSelector")

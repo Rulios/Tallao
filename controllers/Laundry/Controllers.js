@@ -17,21 +17,27 @@ laundry.use("/",async function(req, res, next){
     }
 });
 
+//views 
+
 laundry.get("/panel", function(req, res){
-    return res.render("pages/laundryPanel");
+    return res.render("pages/laundrypanel", {csrfToken: req.csrfToken()});
 });
 
 laundry.get("/myaccount", function(req,res){
-    return res.render("pages/myaccount");
+    return res.render("pages/myaccount", {csrfToken: req.csrfToken()});
 });
 
 laundry.get("/myorders", function(req,res){
-    return res.render("pages/myorders");
+    return res.render("pages/myorders", {csrfToken: req.csrfToken()});
 });
+
+// data banks
 
 laundry.use("/configs", configsRouter);
 
 laundry.use("/customMessages", customMessagesRouter);
+
+//
 
 module.exports = laundry;
 

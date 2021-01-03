@@ -4,9 +4,9 @@ const validator = require("validator");
 const ValidateSchema = require("./ValidateSchema");
 const userTypeRange = ["laundry", "user"];
 
-module.exports.set = function(app){
+module.exports= function(log){
 
-    app.post("/login", async function(req,res){
+    log.post("/login", async function(req,res){
         try{
             let {inputEmail, inputPassword, userType} = req.body;
             let Inputs = {
