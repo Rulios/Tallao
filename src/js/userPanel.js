@@ -9,6 +9,8 @@ const dayjs = require("dayjs");
 
 const OrderBoxHandler = require("./reactComponents/OrderBoxHandler");
 const OrderModalHandler = require("./reactComponents/OrderModalHandler");
+const NotificationBar = require("./reactComponents/NotificationBar");
+
 const {fetchOrders} = require("./requestsModules/ajaxReqOrders");
 const {getDateTimeFromServer} = require("./reactComponents/Time");
 const {fetchAccountCreds, getUserType} = require("./requestsModules/ajaxReqUserCreds");
@@ -34,6 +36,7 @@ window.onload = function(){
             RenderNavbar(userType);
             RenderPublicID();
             RenderOrders();
+            RenderNotificationBar(userSocket);
         });
     }catch{
         alert("Error al cargar datos");
@@ -52,6 +55,13 @@ function RenderOrders(){
     ReactDOM.render(
         <Orders></Orders>,
         document.getElementById("container4Orders")
+    );
+}
+
+function RenderNotificationBar(socket){
+    ReactDOM.render(
+        <NotificationBar socket={socket}></NotificationBar>,
+        document.getElementById("notificationsContainer")
     );
 }
 

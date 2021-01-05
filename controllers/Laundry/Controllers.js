@@ -2,7 +2,6 @@
 
 const laundry = require("express").Router();
 const Auth = require("../libs/Auth");
-const path = require("path");
 const configsRouter = require("./Configs/Controllers");
 const customMessagesRouter = require("./CustomMessages/Controllers");
 

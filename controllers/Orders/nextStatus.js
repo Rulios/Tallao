@@ -5,8 +5,11 @@ const isOrderNotation = require("../libs/isOrderNotation");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 
 const GetCustomerIDByOrder = require("../libs/GetCustomerIDByOrder");
+const GetLaundryNameByInitials = require("../libs/GetLaundryNameByInitials");
 const {emitUpdateOrders} = require("../libs/socketio/events");
+const sendNotification = require("../libs/notifications/send-notification");
 
+const {NEW_ORDER_STATUS_NOTIF_CODE} = require("../../meta/NOTIFICATION_CODES");
 
 module.exports = function(orders, io){
 
@@ -43,7 +46,25 @@ module.exports = function(orders, io){
                 id_char: id_char,
                 id_number: id_number
             });
-            if(ORDER_CUSTOMER_ID) emitUpdateOrders(io, "user", ORDER_CUSTOMER_ID);
+
+            if(ORDER_CUSTOMER_ID){
+                emitUpdateOrders(io, "user", ORDER_CUSTOMER_ID);
+                sendNotification(io, {
+                    emitter: laundryInitials,
+                    emitter_role: "laundry",
+                    getter: ORDER_CUSTOMER_ID,
+                    getter_role: "user",
+                    code: NEW_ORDER_STATUS_NOTIF_CODE,
+                    extras: {
+                        laundryName: await GetLaundryNameByInitials(laundryInitials),
+                        status: nextStatus,
+                        orderID: {
+                            id_char: id_char,
+                            id_number: id_number
+                        }
+                    }
+                })
+            } 
                 
             return res.status(200).end();
 

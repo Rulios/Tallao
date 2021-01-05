@@ -1,4 +1,3 @@
-const { keys } = require("regenerator-runtime")
 
 module.exports = function(arr) { 
     /* Get an array of objects and converts it to pure objects

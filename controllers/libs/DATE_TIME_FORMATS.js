@@ -1,0 +1,4 @@
+module.exports = {
+    DATE_TIME_FORMAT_UNTIL_MINUTES : "YYYY-MM-DD HH:mm",
+    DATE_TIME_FORMAT_UNTIL_SECONDS: "YYYY-MM-DD HH:mm:ss"
+};

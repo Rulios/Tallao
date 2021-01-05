@@ -9,12 +9,17 @@ const ELEMENTS =  require("../libs/ELEMENTS");
 const GetPublicID = require("../libs/GetPublicID");
 const GetLastOrderID = require("../libs/GetLastOrderID");
 const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
+const GetLaundryNameByInitials = require("../libs/GetLaundryNameByInitials");
 const AdvanceToNextOrderID = require("../libs/AdvanceToNextOrderID");
 const updateLastOrderID = require("./_updateLastOrderID");
 
 const {emitUpdateOrders} = require("../libs/socketio/events");
+const sendNotification = require("../libs/notifications/send-notification");
+
 
 const FIRST_STATUS = "wait";
+const {NEW_ORDER_NOTIF_CODE} = require("../../meta/NOTIFICATION_CODES");
+
 
 module.exports = function(orders, io){
     orders.post("/submit", async function(req,res){
@@ -101,8 +106,20 @@ module.exports = function(orders, io){
             await client.query("COMMIT;");
 
             emitUpdateOrders(io, "laundry", laundryInitials);
+
             if(!validator.isEmpty(customerID)){
+
                 emitUpdateOrders(io, "user", customerID);
+                sendNotification(io, {
+                    emitter: laundryInitials,
+                    emitter_role: "laundry",
+                    getter: customerID,
+                    getter_role: "user",
+                    code: NEW_ORDER_NOTIF_CODE,
+                    extras: {
+                        laundryName: await GetLaundryNameByInitials(laundryInitials)
+                    }
+                });
             }
 
             return res.status(200).json(orderID);

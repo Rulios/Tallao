@@ -2,11 +2,12 @@
 
 const validator = require("validator");
 const ValidateSchema = require("./ValidateSchema");
-const userTypeRange = ["laundry", "user"];
+const USER_TYPES = require("../../meta/USER_TYPES");
 
 module.exports= function(log){
 
     log.post("/login", async function(req,res){
+            
         try{
             let {inputEmail, inputPassword, userType} = req.body;
             let Inputs = {
@@ -15,7 +16,7 @@ module.exports= function(log){
                 userType: userType
             };
             //check if the userType falls in the range
-            if(!validator.isIn(userType, userTypeRange)) throw new Error();
+            if(!validator.isIn(userType, USER_TYPES)) throw new Error();
             //check if inputEmail is email
             if(!validator.isEmail(Inputs.inputEmail)) return res.status(400).json({error: "NOT_EMAIL", field:"inputEmail"});
 

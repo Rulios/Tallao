@@ -1,11 +1,11 @@
 const client = require("../DBConnect");
 const crypto = require("crypto");
 const dayjs = require("dayjs");
-const DATE_TIME_FORMAT = require("../DATE_TIME_FORMAT");
+const DATE_TIME_FORMAT_UNTIL_MINUTES = require("../DATE_TIME_FORMATS");
 
 module.exports = async function(hashcode){
-    const TOKEN = crypto.randomBytes(16).toString("hex");
-    const CREATED_AT = dayjs().format(DATE_TIME_FORMAT);
+    const TOKEN = crypto.randomBytes(16).toString("hex")    ;
+    const CREATED_AT = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
     let query = "";
 
     if(await isTokenExistsOnDB(hashcode)){

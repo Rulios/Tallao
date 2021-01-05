@@ -1,1 +1,0 @@
-module.exports = "YYYY-MM-DD HH:mm";

@@ -6,7 +6,7 @@ const GetEmail = require("../libs/GetEmail");
 const createAndSaveToken = require("../libs/emailVerification/createAndSaveToken");
 const sendEmailVerification = require("../libs/emailVerification/sendEmailVerification");
 
-const DATE_TIME_FORMAT = require("../libs/DATE_TIME_FORMAT");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../libs/DATE_TIME_FORMATS");
 
 const MAX_DURATION_HOURS = 48;
 
@@ -18,7 +18,7 @@ module.exports = function(emailVerification){
         try {
             
             let token = req.params.token;
-            let todayDateTime = dayjs().format(DATE_TIME_FORMAT);
+            let todayDateTime = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
             let {hashcode, created_at} = await getHashcodeAndCreatedAt(token);
 
             if(await isUserVerified(hashcode)) return res.sendFile(alreadyVerifiedPage());
