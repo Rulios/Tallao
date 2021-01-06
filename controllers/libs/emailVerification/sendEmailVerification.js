@@ -13,7 +13,6 @@ module.exports = async function(host, email, token){
         text: "Confirma tu correo para disfrutar Talla'o",
         html: `
             <div>
-
                 <h1>Antes de disfrutar Talla'o, debes confirmar tu cuenta</h1>
                 <br>
                 <br>

@@ -21,19 +21,19 @@ module.exports = function(emailVerification){
             let todayDateTime = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
             let {hashcode, created_at} = await getHashcodeAndCreatedAt(token);
 
-            if(await isUserVerified(hashcode)) return res.sendFile(alreadyVerifiedPage());
+            if(await isUserVerified(hashcode)) return res.render(alreadyVerifiedPage());
 
             if(!isTokenOnRange(todayDateTime, created_at)){
                 //resend with new token
                 let email = await GetEmail(hashcode, "user");
 
                 await sendEmailVerification(req.headers.host ,email, await createAndSaveToken(hashcode));
-                return res.sendFile(expiredTokenPage());   
+                return res.render(expiredTokenPage());   
             }
 
             await setUserAsVerified(hashcode);
 
-            return res.sendFile(verifiedPage());
+            return res.render(verifiedPage());
 
         } catch (error) {
             console.log(error);
@@ -56,7 +56,7 @@ async function getHashcodeAndCreatedAt(token){
 }
 
 function alreadyVerifiedPage(){
-    return path.resolve(ROOT + "/public/emailVerification/alreadyVerified.html");
+    return "pages/emailVerification/alreadyVerified";
 }
 
 function isTokenOnRange(todayDateTime, created_at){
@@ -64,7 +64,7 @@ function isTokenOnRange(todayDateTime, created_at){
 }
 
 function expiredTokenPage(){
-    return path.resolve(ROOT + "/public/emailVerification/expiredToken.html");
+    return "pages/emailVerification/expiredToken";
 }
 
 async function setUserAsVerified(hashcode){
@@ -79,5 +79,5 @@ async function setUserAsVerified(hashcode){
 }
 
 function verifiedPage(){
-    return path.resolve(ROOT + "/public/emailVerification/verified.html");
+    return "pages/emailVerification/verified"
 }

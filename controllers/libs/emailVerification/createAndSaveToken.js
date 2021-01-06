@@ -1,7 +1,7 @@
 const client = require("../DBConnect");
 const crypto = require("crypto");
 const dayjs = require("dayjs");
-const DATE_TIME_FORMAT_UNTIL_MINUTES = require("../DATE_TIME_FORMATS");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../DATE_TIME_FORMATS");
 
 module.exports = async function(hashcode){
     const TOKEN = crypto.randomBytes(16).toString("hex")    ;
