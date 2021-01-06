@@ -28,6 +28,7 @@ const searchRouter = require("./controllers/Search/Controllers");
 const ordersRouter = require("./controllers/Orders/Controllers");
 const userRouter = require("./controllers/User/Controllers");
 const notificationRouter = require("./controllers/Notification/Controllers");
+const feedbackRouter = require("./controllers/Feedback/Controllers");
 
 const sessionMiddleware = session({
     secret: "tallao",
@@ -69,6 +70,8 @@ app.get("/laundryRegister", csrfProtectionMiddleware, function(req,res){
     res.render("pages/laundryRegister", {csrfToken: req.csrfToken()});
 });
 
+
+
 //404 - Page not found
 
 
@@ -91,6 +94,7 @@ app.use("/search",csrfProtectionMiddleware, searchRouter);
 app.use("/orders",csrfProtectionMiddleware, ordersRouter(io));
 app.use("/user", csrfProtectionMiddleware, userRouter);
 app.use("/notification", csrfProtectionMiddleware, notificationRouter);
+app.use("/feedback", feedbackRouter);
 
 /* app.use(function(req, res, next){
     res.status(404).end();

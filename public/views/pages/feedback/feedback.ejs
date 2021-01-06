@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include("../../partials/headers")  %> 
+
+    <link rel="stylesheet" href="/css/main.css">
+
+    <title>Talla'o | Retroalimentación</title>
+</head>
+
+<body>
+    <div class="container startTopSeparation">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <a href="/">
+                    <img  style="width: 30%; " src="/imgs/tallao-logo-complete-es.svg" alt="Talla'o">
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container startTopSeparation  montserrat_font" >
+        <div class="text-center karla_font">
+            <h1 class="registrationFormTitleTxt" id="title">Retroalimentación</h1>
+            <h3 class="registrationFormSubTitleTxt" id="subTitle1">
+                Nuestra misión es modernizar el proceso de lavandería que existe actualmente.
+            </h3>
+
+            <h3 class="registrationFormSubTitleTxt" id="subTitle2">
+                ¡Es por eso que estamos encantados de recibir tus comentarios y mejorar!
+            </h3>
+
+            <form action="/feedback/submit" method="POST" class="small-mediumSeparation">
+                <label for="comments" class="bold">Comentarios:</label>
+                <br>
+                <textarea name="comments" id="comments" cols="20" rows="5" style="width: 80%;"></textarea>
+                <input type="submit" class="submitButtonRegister oneEMSeparation" style="width: 80%;">
+            </form>
+
+        </div>
+    </div>    
+</body>
+
+<%- include("../../partials/footer")  %> 
+
+</html>
