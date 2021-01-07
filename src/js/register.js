@@ -5,7 +5,7 @@ require("regenerator-runtime/runtime");
 
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
-const ajaxCheckExists = require("./ajax-requests/check-exists");
+const {email: existsEmail, laundryInitials: existsLaundryInitials} = require("./ajax-requests/check-exists");
 const ajaxRegister = require("./ajax-requests/register");
 const passwordHandler = require("./frontendModules/passwordHandler");
 const isEmail = require("validator/lib/isEmail");
@@ -114,7 +114,7 @@ $(document).ready(function(){
           formVerification.invokeVerify(id, false);
         }else{
 
-            ajaxCheckExists.email({
+            existsEmail({
                 inputEmail: $("#inputEmail").val(),
                 userType: formVerification.getUserType()
             }).then(({data: {exists}}) =>{
@@ -226,12 +226,12 @@ $(document).ready(function(){
         //data validation
         if($("#inputInitials").val()){
 
-            let query = ajaxCheckExists.laundryInitials({
+            existsLaundryInitials({
                 inputInitials: $("#inputInitials").val()
-            });
-            query.then(data =>{
+            })
+            .then(({data : {exists}}) =>{
             
-                if(data.exists){
+                if(exists){
                     formVerification.deleteAppendError(id);
                     formVerification.formAppendError(id, msg.msg1 , "red");
                     formVerification.invokeVerify(id, false);
