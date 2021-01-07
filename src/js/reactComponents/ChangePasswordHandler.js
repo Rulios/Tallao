@@ -4,7 +4,7 @@ const React= require("react");
 const ChangePasswordPhaseInputs= require("./ChangePasswordPhaseInputs");
 const ChangePasswordComp= require("./ChangePasswordComp");
 const passwordLengthHandler= require("../frontendModules/passwordLengthHandler");
-const {verifyPassword, newPassword}= require("../requestsModules/ajaxReqUserCreds");
+const {verifyPassword, newPassword}= require("../ajax-requests/user-creds");
 const {bounceToLogin} = require("../frontendModules/pageRedirection");
 
 function ChangePasswordLink({onClick}){

@@ -1,5 +1,5 @@
 const validator = require("validator");
-const ExistsPublicID = require("../libs/ExistsPublicID");
+const ExistsPublicID = require("../libs/exists/public-id");
 
 module.exports = function(checkExists){
     //validate if exists same laundryInitials on db

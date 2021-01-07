@@ -2,8 +2,9 @@
 
 const React = require("react");
 const OrderParamsSelectorContainers = require("./OrderParamsSelectorContainers");
-const Time = require("./Time");
 const dayjs = require("dayjs");
+const Time = require("./Time");
+
 
 /* This is the high order component, this is where AJAX requests performs
     Controls all the outputs */

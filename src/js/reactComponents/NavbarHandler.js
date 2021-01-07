@@ -2,7 +2,7 @@
 
 const React= require("react");
 const NavbarComp = require("./NavbarComp");
-const ajaxReqLog = require("../requestsModules/ajaxReqLog");
+const {logout} = require("../ajax-requests/log");
 const pageRedirection = require("../frontendModules/pageRedirection");
 const LANGUAGES = require("../../../meta/LANGUAGES");
 
@@ -32,7 +32,7 @@ function Navbar({userType}){
 
     let clickHandler = function(componentID){
         if(componentID === "CloseSession"){
-            ajaxReqLog.logout().then(() =>{ //get back to login
+            logout().then(() =>{ //get back to login
                 window.location = "/loginPage";
             })
         }

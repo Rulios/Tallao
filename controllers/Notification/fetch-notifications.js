@@ -1,5 +1,5 @@
 const getNotifications = require("../libs/notifications/get-notifications");
-const getPublicID = require("../libs/GetPublicID");
+const getPublicID = require("../libs/get/public-id");
 const setNotificationsAsViewed = require("../libs/notifications/set-notifications-as-viewed");
 module.exports = function(notification){
     notification.get("/fetch", async function(req,res){

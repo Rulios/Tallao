@@ -1,6 +1,6 @@
 const {useState, useEffect} = require("react");
 
-const {fetchNotifications} = require("../requestsModules/ajaxReqNotification");
+const {fetchNotifications} = require("../ajax-requests/notifications");
 const convertArrtoObj = require("../frontendModules/convertArrToObj");
 
 const NOTIFICATION_CODES = require("../../../meta/NOTIFICATION_CODES");
@@ -47,23 +47,27 @@ function translateNotificationCodeToText(notifications){
 }
 
 function getNotificationText(code, extras){
+
+    console.log(extras);
+
+
     let {
         laundryName,
         status,
-        orderID: {id_char, id_number}
+        orderID
     } = extras;
+
 
     laundryName = setEmptyStringIfUndefined(laundryName);
     status = setEmptyStringIfUndefined(status);
-    id_char = setEmptyStringIfUndefined(id_char);
-    id_number = setEmptyStringIfUndefined(id_number);
+  
 
     const TRANSLATION_ES = {
         [NOTIFICATION_CODES.NEW_ORDER_NOTIF_CODE]: `¡Tienes una nueva orden de la Lavandería ${laundryName}!`,
         [NOTIFICATION_CODES.NEW_ORDER_STATUS_NOTIF_CODE]: {
-            processing : `¡La ${laundryName} está procesando tu orden ${id_char}${id_number}!`,
-            ready: `¡Ya puedes retirar tu orden ${id_char}${id_number} de la ${laundryName}!`,
-            retired: `Has retirado la orden ${id_char}${id_number} de la ${laundryName}` 
+            processing : `¡La ${laundryName} está procesando tu orden ${orderID.id_char}${orderID.id_number}!`,
+            ready: `¡Ya puedes retirar tu orden ${orderID.orderID.id_char}${orderID.id_number} de la ${laundryName}!`,
+            retired: `Has retirado la orden ${orderID.id_char}${orderID.id_number} de la ${laundryName}` 
         }
     };
 

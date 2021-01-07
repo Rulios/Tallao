@@ -1,8 +1,8 @@
 "use strict";
 
 const customMessages = require("express").Router();
- require("./deleteMessage")(customMessages);
- require("./fetchMessages")(customMessages);
- require("./updateMessages")(customMessages);
+ require("./delete-message")(customMessages);
+ require("./fetch-messages")(customMessages);
+ require("./update-messages")(customMessages);
 
 module.exports = customMessages;

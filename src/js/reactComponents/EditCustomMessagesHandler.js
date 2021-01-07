@@ -1,13 +1,12 @@
 "use strict";
 
 const React = require("react");
-const ReactDOM = require("react-dom");
 const EditCustomMessagesContainers = require("./EditCustomMessagesContainers");
-const ajaxReqCustomMessages = require("../requestsModules/ajaxReqCustomMessages");
+const {fetch, deleteMessage, update} = require("../ajax-requests/custom-messages");
 
 async function getCustomMessages(){
     try {
-        let {data:messages} = await ajaxReqCustomMessages.fetch();
+        let {data:messages} = await fetch();
         return messages;
     }catch(err){console.error(err);}
 }
@@ -110,14 +109,14 @@ class EditCustomMessages extends React.Component{
             }
         });
 
-        ajaxReqCustomMessages.deleteMessage({messageID:id})
+        deleteMessage({messageID:id})
         .then(response => {
             this.setState({messages:newMessages});
         }).catch(err => EditCustomMessagesContainers.ErrorMessage())
     }
 
     updateCustomMessages(){
-        ajaxReqCustomMessages.update({messages: JSON.stringify(this.state.messages)})
+        update({messages: JSON.stringify(this.state.messages)})
         .then(response =>{
             EditCustomMessagesContainers.SuccessMessage();
         }).catch(err =>{

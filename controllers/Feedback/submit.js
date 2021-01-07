@@ -1,6 +1,6 @@
-const client =require("../libs/DBConnect");
+const client =require("../libs/DB_CONNECT");
 const dayjs = require("dayjs");
-const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../libs/DATE_TIME_FORMATS");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 module.exports = function(feedback) {
  

@@ -1,9 +1,9 @@
-const client = require("../DBConnect");
+const client = require("../DB_CONNECT");
 const {v4 : uuidv4} = require("uuid");
 const existsNotification = require("./helpers/exists-notification");
 const {emitNotification} = require("../socketio/events");
 const dayjs = require("dayjs");
-const {DATE_TIME_FORMAT_UNTIL_SECONDS} = require("../DATE_TIME_FORMATS");
+const {DATE_TIME_FORMAT_UNTIL_SECONDS} = require("../../../meta/DATE_TIME_FORMATS");
 
 module.exports = async function(io ,{
     emitter, emitter_role, getter, getter_role, code, extras = {}

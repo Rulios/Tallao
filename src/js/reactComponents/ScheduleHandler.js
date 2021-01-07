@@ -2,7 +2,7 @@
 
 const React = require("react");
 const ScheduleBoxContainer = require("./ScheduleBoxContainers");
-const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
+const {fetchSchedule, updateSchedule} = require("../ajax-requests/laundry-configs");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */
@@ -19,7 +19,7 @@ const daysEs = {
 
 async function getSchedule(){
     try {
-        let {data: {schedule}} = await ajaxReqLaundryConfigs.fetchSchedule();
+        let {data: {schedule}} = await fetchSchedule();
         return schedule;
     }catch(err){console.error(err);}
 }
@@ -51,7 +51,7 @@ class Schedule extends React.Component{
     }
 
     updateSchedule(){
-        ajaxReqLaundryConfigs.updateSchedule(this.state.days)
+        updateSchedule(this.state.days)
         .then(({status}) =>{
             if(status === 200){
                 ScheduleBoxContainer.SuccessMessage();

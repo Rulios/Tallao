@@ -3,7 +3,7 @@
 const React = require("react");
 const $ = require("jquery");
 const WriteOrderContainers = require("./WriteOrderContainers");
-const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
+const {fetchElementsPrice: ajaxFetchElementsPrice} = require("../ajax-requests/laundry-configs");
 
 /* This module serves as a function repository. 
 In which any component that handles related features can and should
@@ -89,7 +89,7 @@ async function fetchElementsPrice(){
     //fetchs the elements price (all)
     //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
     try{
-        let {data: elementsPrice} = await ajaxReqLaundryConfigs.fetchElementsPrice();
+        let {data: elementsPrice} = await ajaxFetchElementsPrice();
         let newElementsPrice = processElementsPrice(elementsPrice);
         return newElementsPrice;
     }catch(err){

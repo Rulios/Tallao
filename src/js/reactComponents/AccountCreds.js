@@ -2,7 +2,7 @@
 
 const React = require("react");
 const AccountFields = require("./AccountFields");
-const {fetchAccountCreds} = require("../requestsModules/ajaxReqUserCreds");
+const {fetchAccountCreds} = require("../ajax-requests/user-creds");
 
 function UserDisplay({name, surname, email}){
     console.log(surname);

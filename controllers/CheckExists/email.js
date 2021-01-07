@@ -1,5 +1,5 @@
 const validator = require("validator");
-const ExistsEmail = require("../libs/ExistsEmail");
+const ExistsEmail = require("../libs/exists/email");
 const USER_TYPES = require("../../meta/USER_TYPES");
 
 module.exports = function(checkExists){

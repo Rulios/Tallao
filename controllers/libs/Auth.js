@@ -1,7 +1,7 @@
 "use strict";
 
 const validator = require("validator");
-const ExistsHashCode = require("./ExistsHashCode");
+const ExistsHashCode = require("./exists/hash-code");
 
 //middlewares to validate if the user w/ its usertype can access the resource
 

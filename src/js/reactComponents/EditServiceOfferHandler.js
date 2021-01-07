@@ -1,11 +1,11 @@
 "use strict";
 const React= require("react");
 const ServiceOfferContainers = require("./EditServiceOfferContainers");
-const ajaxReqLaundryConfigs = require("../requestsModules/ajaxReqLaundryConfigs");
+const {fetchServiceOffer, updateServiceOffer} = require("../ajax-requests/laundry-configs");
 
 async function getServiceOffer(){
     try {
-        let {data:{serviceoffer}} = await ajaxReqLaundryConfigs.fetchServiceOffer();
+        let {data:{serviceoffer}} = await fetchServiceOffer();
         return serviceoffer;
     }catch(err){console.error(err);}
 }
@@ -21,7 +21,7 @@ class ServiceOffer extends React.Component{
     }
 
     updateServiceOffer(){
-        ajaxReqLaundryConfigs.updateServiceOffer({serviceOffer: this.state.availableServices})
+        updateServiceOffer({serviceOffer: this.state.availableServices})
         .then(({status}) =>{
             if(status === 200){
                 ServiceOfferContainers.SuccessMessage();

@@ -5,8 +5,8 @@ require("regenerator-runtime/runtime");
 
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
-const ajaxCheckExists = require("./requestsModules/ajaxReqCheckExists");
-const ajaxRegister = require("./requestsModules/ajaxReqRegister");
+const ajaxCheckExists = require("./ajax-requests/check-exists");
+const ajaxRegister = require("./ajax-requests/register");
 const passwordHandler = require("./frontendModules/passwordHandler");
 const isEmail = require("validator/lib/isEmail");
 

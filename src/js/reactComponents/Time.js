@@ -3,8 +3,9 @@
 
 const React = require("react");
 const inputPrevent = require("../frontendModules/inputPrevent");
-const ajaxReqTime = require("../requestsModules/ajaxReqServerTime");
+const ajaxReqTime = require("../ajax-requests/server-time");
 const dayjs = require("dayjs");
+
 
 function DateInput(props){
     //props: 
@@ -109,8 +110,8 @@ const convert24hTo12h = (time24) => {
 async function getDateTimeFromServer(){
     //format from server: YYYY/MM/DD
     try{
-        let {dateTime} = await ajaxReqTime.fetchDateTimeServer();
-        return dayjs(dateTime);
+        let {data: {dateTime}} = await ajaxReqTime.fetchDateTimeServer();
+        return dateTime;
     }catch(err){console.error(err);}
 }
 
@@ -145,7 +146,6 @@ class Timer extends React.Component{
 
     processDateTime(){
         getDateTimeFromServer().then(dateTime =>{
-        
             let newState = {
                 day: dayjs(dateTime).date(),
                 month: dayjs(dateTime).month(),

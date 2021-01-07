@@ -1,7 +1,7 @@
 "use strict";
 
 const validator = require("validator");
-const ValidateSchema = require("./ValidateSchema");
+const ValidateSchema = require("./validate-schema");
 const USER_TYPES = require("../../meta/USER_TYPES");
 
 module.exports= function(log){

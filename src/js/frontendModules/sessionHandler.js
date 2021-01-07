@@ -2,12 +2,12 @@
 require.config({
     paths:{
         pageRedirection: "./frontendModules/pageRedirection",
-        ajaxReq: "./requestsModules/ajaxReq",
-        ajaxReqLog: "./requestsModules/ajaxReqLog"
+        ajaxReq: "./ajax-requests/ajaxReq",
+        log: "./ajax-requests/log"
     }
 });
 
-define(["pageRedirection", "ajaxReq", "ajaxReqLog"], function(page, ajaxReq, ajaxReqLog){
+define(["pageRedirection", "ajaxReq", "log"], function(page, ajaxReq, log){
 
     function check(){
         let query =  ajaxReq.doAJAX("GET", "./php/DBSession/keepSession.php")
@@ -27,7 +27,7 @@ define(["pageRedirection", "ajaxReq", "ajaxReqLog"], function(page, ajaxReq, aja
 
     function ErrorAction(){
         //destroy every session
-        ajaxReqLog.logout().then(() =>{
+        log.logout().then(() =>{
             ErrMessage();
         }).catch(err =>{
             ErrMessage();

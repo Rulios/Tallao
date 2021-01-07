@@ -2,10 +2,10 @@
 
 const credentials = require("express").Router();
 
-require("./fetchAccountCreds")(credentials);
-require("./getUserType")(credentials);
-require("./verifyPassword")(credentials);
-require("./updatePassword")(credentials);
+require("./fetch-account-creds")(credentials);
+require("./get-user-type")(credentials);
+require("./verify-password")(credentials);
+require("./update-password")(credentials);
 
 
 

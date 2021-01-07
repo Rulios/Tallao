@@ -1,11 +1,11 @@
 "use strict";
 
-const client = require("../libs/DBConnect");
+const client = require("../libs/DB_CONNECT");
 const validator = require("validator");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
-const GetPublicID = require("../libs/GetPublicID");
+const GetPublicID = require("../libs/get/public-id");
 const dayjs = require("dayjs");
-const {escapeArrayOfObj} = require("../libs/Outputs");
+const {escapeArrayOfObj} = require("../libs/outputs");
 
 
 const PARAMS_PROPS = [

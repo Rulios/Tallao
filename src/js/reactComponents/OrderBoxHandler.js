@@ -2,8 +2,10 @@
 
 const React = require("react");
 const OrderBox = require("./OrderBoxContainers");
-const Time = require("./Time");
 const dayjs = require("dayjs");
+const Time = require("./Time");
+
+
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */

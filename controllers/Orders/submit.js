@@ -3,15 +3,15 @@ const AdvancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(AdvancedFormat) // use plugin
 
 const validator = require("validator");
-const client = require("../libs/DBConnect");
-const ELEMENTS =  require("../libs/ELEMENTS");
+const client = require("../libs/DB_CONNECT");
+const {ELEMENTS} =  require("../../meta/ELEMENTS");
 
-const GetPublicID = require("../libs/GetPublicID");
-const GetLastOrderID = require("../libs/GetLastOrderID");
-const GetCustomerNameByID = require("../libs/GetCustomerNameByID");
-const GetLaundryNameByInitials = require("../libs/GetLaundryNameByInitials");
-const AdvanceToNextOrderID = require("../libs/AdvanceToNextOrderID");
-const updateLastOrderID = require("./_updateLastOrderID");
+const GetPublicID = require("../libs/get/public-id");
+const GetLastOrderID = require("../libs/get/last-order-id");
+const GetCustomerNameByID = require("../libs/get/customer-name-by-id");
+const GetLaundryNameByInitials = require("../libs/get/laundry-name-by-initials");
+const AdvanceToNextOrderID = require("./helpers/advance-to-next-order-id");
+const updateLastOrderID = require("./helpers/update-last-order-id");
 
 const {emitUpdateOrders} = require("../libs/socketio/events");
 const sendNotification = require("../libs/notifications/send-notification");

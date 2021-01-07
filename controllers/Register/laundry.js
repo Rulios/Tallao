@@ -1,9 +1,9 @@
-const client = require("../libs/DBConnect");
+const client = require("../libs/DB_CONNECT");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const {checkIfEmpty, trimAllExceptPassword} = require("../libs/Inputs");
-const LaundryOnce = require("./_laundryOnce");
-const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
+const {checkIfEmpty, trimAllExceptPassword} = require("../libs/inputs");
+const LaundryOnce = require("./_laundry-once");
+const GenerateUniqueUUID = require("../libs/generate/unique-uuid");
 const saltRounds = 10;
 
 module.exports = function(register){

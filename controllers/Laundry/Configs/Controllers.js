@@ -2,10 +2,10 @@
 
 const configs = require("express").Router();
 const schedule = require("./schedule");
-const serviceOffer = require("./serviceOffer");
-const elementsPrice = require("./elementsPrice");
+const serviceOffer = require("./service-offer");
+const elementsPrice = require("./elements-price");
 
-require("./currentOrderID")(configs);
+require("./current-order-id")(configs);
 
 configs.use("/schedule", schedule);
 configs.use("/serviceOffer", serviceOffer);

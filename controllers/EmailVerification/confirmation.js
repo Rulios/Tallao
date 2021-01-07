@@ -1,12 +1,12 @@
-const client = require("../libs/DBConnect");
-const isUserVerified = require("./isUserVerified");
+const client = require("../libs/DB_CONNECT");
+const isUserVerified = require("./is-user-verified");
 const dayjs =  require("dayjs");
 const path = require("path");
-const GetEmail = require("../libs/GetEmail");
-const createAndSaveToken = require("../libs/emailVerification/createAndSaveToken");
-const sendEmailVerification = require("../libs/emailVerification/sendEmailVerification");
+const GetEmail = require("../libs/get/email");
+const createAndSaveToken = require("../libs/email-verification/create-and-save-token");
+const sendEmailVerification = require("../libs/email-verification/send-email-verification");
 
-const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../libs/DATE_TIME_FORMATS");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 const MAX_DURATION_HOURS = 48;
 

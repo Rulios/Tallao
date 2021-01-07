@@ -1,7 +1,7 @@
 // main.js
 
 const React = require("react");
-const ajaxReqSearch = require("../requestsModules/ajaxReqSearch");
+const ajaxReqSearch = require("../ajax-requests/search");
 
 
 //This handler acts when it needs to be rendered a input field

@@ -1,11 +1,11 @@
 "use strict";
 
 const schedule = require("express").Router();
-const client = require("../../libs/DBConnect");
-const GetPublicID = require("../../libs/GetPublicID");
+const client = require("../../libs/DB_CONNECT");
+const GetPublicID = require("../../libs/get/public-id");
 const validator = require("validator");
-const {DAYS, NAME_RANGE_HOURS} = require("../../libs/CONSTANTS");
-
+const NAME_OF_RANGE_HOURS = require("../../../meta/NAME_OF_RANGE_HOURS");
+const DAYS = require("../../../meta/DAYS");
 
 schedule.get("/fetch", async function(req,res){
     let {hashcode, userType} = req.session;
@@ -60,7 +60,7 @@ function validateScheduleFormat(scheduleObj){
             //iterate for every range hour (startHour, endHour) in a day
             Object.keys(scheduleObj[days]).map(rangeHours =>{
                 //check if the prop name falls in the range 
-                if(!validator.isIn(rangeHours, NAME_RANGE_HOURS)) throw new Error("name not in range hours");
+                if(!validator.isIn(rangeHours, NAME_OF_RANGE_HOURS)) throw new Error("name not in range hours");
                 //check if the value is in a time format (24h)
                 if(!checkIfTime(scheduleObj[days][rangeHours])) throw new Error("not a time format");
             });

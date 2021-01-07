@@ -2,7 +2,7 @@
 
 const React = require("react");
 const OrderModalContainers = require("./OrderModalContainers");
-const ajaxReqOrders = require("../requestsModules/ajaxReqOrders");
+const orders = require("../ajax-requests/orders");
 
 /* This is the high order component, this is where AJAX requests performs
 Controls all the outputs */
@@ -21,7 +21,7 @@ class OrderModal extends React.Component{
 
     advanceToNextStatus(){
         if(this.props.order.status !== "retired"){
-            ajaxReqOrders.advanceToNextStatus({
+            orders.advanceToNextStatus({
                 id_char: this.props.order.id_char,
                 id_number: this.props.order.id_number
             }).then(({status}) =>{
@@ -39,7 +39,7 @@ class OrderModal extends React.Component{
         let {id, name} = this.state.newCustomer;
 
         if(id && name){
-            ajaxReqOrders.updateCustomerAffiliateOrder({
+            orders.updateCustomerAffiliateOrder({
                 orderID: {
                     id_char: this.props.order.id_char,
                     id_number: this.props.order.id_number

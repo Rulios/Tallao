@@ -1,4 +1,4 @@
-const client = require("../../DBConnect");
+const client = require("../../DB_CONNECT");
 
 module.exports = async function(id, getter_role){
 

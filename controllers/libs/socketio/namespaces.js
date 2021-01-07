@@ -1,7 +1,7 @@
 "use strict";
 
-const GetPublicID = require("../GetPublicID");
-const GetSocketRequestSession = require("../GetSocketRequestSession");
+const GetPublicID = require("../get/public-id");
+const GetSocketRequestSession = require("./helpers/get-socket-request-session");
 
 const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
 

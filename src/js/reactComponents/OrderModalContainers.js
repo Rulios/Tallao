@@ -5,6 +5,7 @@ const OrderModalComp = require("./OrderModalComp");
 const CustomerIDHandler = require("./CustomerIDHandler");
 const dayjs = require("dayjs");
 
+
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
 

@@ -1,4 +1,4 @@
-const client = require("../DBConnect");
+const client = require("../DB_CONNECT");
 
 module.exports = async function (getter, getter_role, shouldFetchViewed = false){
     const QUERY = buildQuery(getter_role, shouldFetchViewed);

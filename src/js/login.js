@@ -6,7 +6,7 @@ require("regenerator-runtime/runtime");
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
 const page = require("./frontendModules/pageRedirection");
-const ajaxReqLog = require("./requestsModules/ajaxReqLog");
+const {login} = require("./ajax-requests/log");
 
 $(document).ready(function(){
     formVerification.invokeVerify("load", false);
@@ -78,7 +78,7 @@ function checkLoginAJAX(userType){
             userType: userType
         };
         
-        let query =  ajaxReqLog.login(obj);
+        let query =  login(obj);
         query.then(({data, status}) =>{
             if(status === 200){
                 page.redirectToPanel(data.userType);

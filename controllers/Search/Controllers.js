@@ -1,6 +1,6 @@
 "use strict";
 
 const search = require("express").Router();
-require("./customerByID")(search);
+require("./customer-by-id")(search);
 
 module.exports = search;

@@ -1,13 +1,13 @@
 "use strict";
 
-const client = require("../libs/DBConnect");
+const client = require("../libs/DB_CONNECT");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const GenerateUniqueUUID = require("../libs/GenerateUniqueUUID");
-const ExistsPublicID = require("../libs/ExistsPublicID");
-const {checkIfEmpty,  trimAllExceptPassword} = require("../libs/Inputs");
-const createAndSaveToken = require("../libs/emailVerification/createAndSaveToken");
-const sendEmailVerification = require("../libs/emailVerification/sendEmailVerification");
+const GenerateUniqueUUID = require("../libs/generate/unique-uuid");
+const ExistsPublicID = require("../libs/exists/public-id");
+const {checkIfEmpty,  trimAllExceptPassword} = require("../libs/inputs");
+const createAndSaveToken = require("../libs/email-verification/create-and-save-token");
+const sendEmailVerification = require("../libs/email-verification/send-email-verification");
 
 const SALT_ROUNDS = require("../libs/SALT_ROUNDS");
 
