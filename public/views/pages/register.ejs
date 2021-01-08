@@ -13,7 +13,7 @@
 
 </head>
 
-<title id="titleRegister">Talla'o | Regístrate para seguir tus órdenes</title>
+<title id="titleRegister"><%- `${tallao} | ${register} ${toFollowYourOrders}` %> </title>
 
 <body>
     
@@ -32,15 +32,15 @@
     <div class="container startTopSeparation  montserrat_font" >
 
         <div class="text-center karla_font">
-            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Regístrate para seguir tus órdenes</h1>
-            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Todas tus órdenes, a la palma de tu mano</h3>
+            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt"><%- `${register} ${toFollowYourOrders}` %> </h1>
+            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt"><%- allYourOrdersAtYourHand %> </h3>
         </div>
         
         <div class="text-center montserrat_font supTxt-TitleTxt-Separation hide" id="congrSection">    
-            <div class="msgCongrats congrTxt"><b>¡REGISTRADO!</b></div>
-            <div class="msgStartEnjoying titleTxt"> Ahora puedes iniciar sesión y disfrutar lo que Talla'o te ofrece</div>
-            <div class="msgStartEnjoying titleTxt">Ahora espera a un correo electrónico de habilitación de la cuenta para poder iniciar sesión</div>
-            <div class="startTopSeparation"><a href="/loginPage" id="hasAccountLink"> Iniciar Sesión </a></div>
+            <div class="msgCongrats congrTxt bold"><%- registerSuccess %> </div>
+            <div class="msgStartEnjoying titleTxt"> <%- nowYouCanLoginAndEnjoy %> </div>
+            <div class="msgStartEnjoying titleTxt"><%- waitForConfirmationEmail %> </div>
+            <div class="startTopSeparation"><a href="/loginPage" id="hasAccountLink"> <%- loginAction %> </a></div>
         </div>
 
         <form method ="POST" class="paddingForm" id="frmUserRegister">
@@ -49,12 +49,12 @@
             <div class="form-row ">
 
                 <div class="col-lg-6 col-xs-6">
-                    <label for="inputName" id="lbl4Name">Nombre (Obligatorio)</label>
+                    <label for="inputName" id="lbl4Name"><%- `${name} (${required})` %> </label>
                     <input type="text" class="form-control" name="inputName" id="inputName" placeholder="Nombre">
                 </div>
 
                 <div class="col-lg-6 col-xs-6 ">
-                    <label for="inputSurname" id="lbl4Lastname">Apellido (Obligatorio)</label>
+                    <label for="inputSurname" id="lbl4Lastname"><%- `${surname} (${required})` %></label>
                     <input type="text" class="form-control" name="inputSurname" id="inputSurname" placeholder="Apellido">
                 </div>
 
@@ -62,46 +62,44 @@
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputEmail" id="lbl4Email">Ingresa tu correo Electrónico (Obligatorio)</label>
+                    <label for="inputEmail" id="lbl4Email"><%- `${email} (${required})` %></label>
                     <input type="text" class="form-control" name="inputEmail" id="inputEmail" placeholder="Correo Electrónico">
                 </div>
             </div>
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputPassword" id="lbl4Password">Ingresa una contraseña (Obligatorio)</label>
+                    <label for="inputPassword" id="lbl4Password"><%- `${password} (${required})` %></label>
                     <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Contraseña">
                 </div>
             </div>
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputRePassword" id="lbl4RePassword">Reingresa la contraseña (Obligatorio)</label>
+                    <label for="inputRePassword" id="lbl4RePassword"><%- `${reenter} ${the} ${password} (${required})` %></label>
                     <input type="password" class="form-control" name="inputRePassword" id="inputRePassword" placeholder="">
                 </div>
             </div>
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputTargetMarket" id="lbl4TargetMarket">¿Cómo nos conociste?</label>
+                    <label for="inputTargetMarket" id="lbl4TargetMarket"><%- howDidYouMeetUsQuestion %> </label>
                     <select name="inputTargetMarket" class="custom-select" name="inputTargetMarket" id="inputTargetMarket">
-                        <option value="none" selected>Escoge una opción</option>
-                        <option value="social-media" id="selectOption-social-media">Por las redes sociales</option>
-                        <option value="internet-advertisement" id="selectOption-internet-advertisement">Por un anuncio web</option>
-                        <option value="real-advertisement" id="selectOption-real-advertisement">Por un anuncio visto en la calle</option>
-                        <option value="people-recommendation" id="selectOption-people-recommendation">Por recomendación de alguien</option>
-                        <option value="hear-someone" id="selectOption-hear-someone">Lo escuché en la calle</option>
+                        <option value="none" selected><%- chooseAnOption %> </option>
+                        <option value="social-media" id="selectOption-social-media"><%- bySocialMedia %> </option>
+                        <option value="internet-advertisement" id="selectOption-internet-advertisement"><%- byInternetAdvertisement %> </option>
+                        <option value="real-advertisement" id="selectOption-real-advertisement"><%- byRealAdvertisement %> </option>
+                        <option value="people-recommendation" id="selectOption-people-recommendation"><%- byPeopleRecommendation %> </option>
+                        <option value="hear-someone" id="selectOption-hear-someone"><%- iHeardSomeone %> </option>
                     </select>
                 </div>
             </div>
 
-            <div class="form-row formRowSeparation" ><a href="/loginPage" id="hasAccountLink">¿Ya tienes una cuenta? Inicia Sesión </a></div>
+            <div class="form-row formRowSeparation" ><a href="/loginPage" id="hasAccountLink"><%- `${haveAnAccountQuestion} ${loginSuggestion}` %>  </a></div>
 
-            <button type="submit" class="submitButtonRegister  formRowSeparation" id="submitRegister">Regístrate</button>
+            <button type="submit" class="submitButtonRegister  formRowSeparation" id="submitRegister"><%- register %> </button>
         
         </form>
-
-        
 
     </div>
 

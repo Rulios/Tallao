@@ -15,7 +15,7 @@
   \***************************/
 /***/ ((module) => {
 
-eval("const LANGUAGES = [\r\n    \"es\",\r\n    \"cn\"\r\n];\r\n\r\nmodule.exports = LANGUAGES;\n\n//# sourceURL=webpack://tallao/./meta/LANGUAGES.js?");
+eval("const LANGUAGES = [\r\n    \"es\", //default\r\n    \"cn\"\r\n];\r\n\r\nmodule.exports = LANGUAGES;\n\n//# sourceURL=webpack://tallao/./meta/LANGUAGES.js?");
 
 /***/ }),
 

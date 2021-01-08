@@ -1,0 +1,1 @@
+module.exports = "SELECTED_LANGUAGE";

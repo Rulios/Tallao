@@ -12,7 +12,7 @@
 
 </head>
 
-<title id="title/loginPage">Talla'o | Inicio de sesión</title>
+<title id="title/loginPage"><%- tallao %>  | <%- loginPage%></title>
 
 <body>
     
@@ -28,8 +28,8 @@
 
     <div class="container startTopSeparation  montserrat_font" >
         <div class="text-center karla_font">
-            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt">Inicia sesión</h1>
-            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt">Tu horario, tu tiempo</h3>
+            <h1 class="registrationFormTitleTxt" id="registrationFormTitleTxt"><%- loginSuggestion %> </h1>
+            <h3 class="registrationFormSubTitleTxt" id="registrationFormSubTitleTxt"><%- yourScheduleYourTime %> </h3>
         </div>
         
         
@@ -40,23 +40,23 @@
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputEmail" id="lbl4Email">Correo Electrónico </label>
+                    <label for="inputEmail" id="lbl4Email"><%- email %> </label>
                     <input type="text" class="form-control" id="inputEmail" placeholder="Correo Electrónico">
                 </div>
             </div>
 
             <div class="form-row formRowSeparation">
                 <div class="col-lg-12">
-                    <label for="inputPassword" id="lbl4Password"> Contraseña</label>
+                    <label for="inputPassword" id="lbl4Password"> <%- password %> </label>
                     <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña">
                 </div>
             </div>
 
-            <div class="form-row formRowSeparation" id="registerLink"><a href="/register">¿No tienes una cuenta? Regístrate </a></div>
+            <div class="form-row formRowSeparation" id="registerLink"><a href="/register"><%- `${dontHaveAAccountQuestion} ${register}` %> </a></div>
 
-            <button class="submitButtonLoginSuperUser formRowSeparation disableButton" type="submit" id="submitLoginLaundry">Iniciar sesión como lavandería</button>
+            <button class="submitButtonLoginSuperUser formRowSeparation disableButton" type="submit" id="submitLoginLaundry"><%- `${loginAction} ${as} ${laundry}` %> </button>
 
-            <button class="submitButtonLogin formRowSeparation disableButton" type="submit" id="submitLoginUser">Iniciar sesión como usuario</button>
+            <button class="submitButtonLogin formRowSeparation disableButton" type="submit" id="submitLoginUser"><%- `${loginAction} ${as} ${user}` %></button>
         
         </form>
 

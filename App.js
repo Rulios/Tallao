@@ -6,7 +6,8 @@ const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+
 
 const port= (process.env.PORT||8080);
 const session = require("express-session");
@@ -16,6 +17,9 @@ const app = express();
 const server = require("http").createServer(app);
 
 const io = require("socket.io")(server);
+
+const languageCookieMiddleware = require("./backend-translation/language-cookie-middleware");
+const getLanguageStrings = require("./backend-translation/get-language-strings");
 
 const registerRouter = require("./controllers/Register/Controllers");
 const logRouter = require("./controllers/Log/Controllers");
@@ -45,6 +49,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public')); //for static files serving
+app.use(languageCookieMiddleware);
 
 app.set("views", path.join(__dirname + "/public/views"));
 app.set("view engine", "ejs");
@@ -55,15 +60,15 @@ app.use(sessionMiddleware);
 //main page serving
 
 app.get("/", function(req,res){
-    res.render("pages/index");
+    res.render("pages/index", getLanguageStrings(req));
 });
 
 app.get("/loginPage", csrfProtectionMiddleware, function(req,res){
-    res.render("pages/login", {csrfToken: req.csrfToken()});
+    res.render("pages/login", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 app.get("/register",csrfProtectionMiddleware, function(req,res){
-    res.render("pages/register", {csrfToken: req.csrfToken()});
+    res.render("pages/register", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 app.get("/laundryRegister", csrfProtectionMiddleware, function(req,res){
@@ -78,10 +83,6 @@ app.get("/laundryRegister", csrfProtectionMiddleware, function(req,res){
 
 //EXPRESS ROUTERS
 
-/* app.get("/log", function(req,res){
-    console.log("Loggi");
-    res.end();
-}); */
 
 app.use("/register", csrfProtectionMiddleware, registerRouter);
 app.use("/CheckExists", csrfProtectionMiddleware, checkExistsRouter);

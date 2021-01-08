@@ -21,23 +21,16 @@
 
                                 <div  class="montserrat_font float-right-footer">
                                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                    <span>Contacto:<a href="rluzheng@gmail.com"> rluzheng@gmail.com</a> </span>
+                                    <span><%- contact %> :<a href="rluzheng@gmail.com"> rluzheng@gmail.com</a> </span>
 
                                     <br>
 
-                                    <i class="fa fa-globe" aria-hidden="true"></i>
-                                    <span>Español</span>
-
-                                    <br>
 
                                     <i class="fa fa-comments-o" aria-hidden="true"></i>
-                                    <span ><a href="/feedback"><b>Retroalimentación</b></a></span>
+                                    <span class="bold"><a href="/feedback"><%- feedback %> </a></span>
                                 </div>
 
-
                             </div>
-
-                           
 
                         </div>
 
@@ -48,13 +41,13 @@
                             <div class="col-lg-4">
 
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span class="montserrat_font">Panamá</span>
+                                <span class="montserrat_font"><%- panama %> </span>
                                 
                             </div>
 
                             <div class="col-lg-4">
 
-                                <span class="montserrat_font">©2020 Talla'o Todos los derechos reservados</span>
+                                <span class="montserrat_font"><%- `©2021 ${allRightsReserved}` %> </span>
 
                             </div>
 

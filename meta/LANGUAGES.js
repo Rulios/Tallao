@@ -1,5 +1,5 @@
 const LANGUAGES = [
-    "es",
+    "es", //default
     "cn"
 ];
 
