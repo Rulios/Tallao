@@ -20,6 +20,9 @@ html {
     scroll-behavior: smooth !important;
     
 }
+li{
+    display:inline;
+}
 .bold{
     font-weight: bold;
 }
@@ -34,6 +37,56 @@ html {
 }
 .floatRight{
     float:right;
+}
+.navbar-logo-image{
+    width:50%;
+}
+
+.navbar {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-links {
+    height: 100%;
+}
+
+.navbar-links ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li {
+    list-style: none;
+}
+
+.navbar-links li a {
+    display: block;
+    text-decoration: none;
+    padding: 1rem;
+}
+.navBarText{
+    padding:10px;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 1.25rem;
+    right: 1rem;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+}
+
+.toggle-button .bar {
+    height: 3px;
+    width: 100%;
+    background-color: black;
+    border-radius: 10px;
 }
 .blackTxt{
     color:black;
@@ -190,7 +243,6 @@ border:1px solid;
 .roundBorderButton{
     text-decoration: none!important;
     border-radius:6px;
-    border: 2px solid black;
     padding:10px;
     color:black;
     transition-duration:0.4s;
@@ -199,13 +251,13 @@ border:1px solid;
     background-color: black;
     color:white !important;
 }
-#login{
+.login-button{
     padding:10px;
     border-radius:6px;
     transition-duration:0.4s;
     color:#801EE8;
 }
-#login:hover{
+.login-button:hover{
     background-color: #801EE8;
     color:white;
 }
@@ -221,10 +273,7 @@ border:1px solid;
     width: 100%;
 }
 
-.navBarText{
-    color:black;
-    padding:10px;
-}
+
 .backGEffect1{
     transition-duration:0.4s;
 }
@@ -746,6 +795,37 @@ input[type='checkbox']{
 
     .float-right-footer{
         float:none;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .toggle-button {
+        display: flex;
+    }
+
+    .navbar-links {
+        display: none;
+        width: 100%;
+    }
+
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .navbar-links ul li {
+        text-align: center;
+    }
+
+    .navbar-links ul li a {
+        padding: .5rem 1rem;
+    }
+
+    .navbar-links.active {
+        display: flex;
     }
 
     .stopPadding{

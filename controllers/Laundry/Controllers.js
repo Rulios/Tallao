@@ -4,6 +4,7 @@ const laundry = require("express").Router();
 const Auth = require("../libs/Auth");
 const configsRouter = require("./Configs/Controllers");
 const customMessagesRouter = require("./CustomMessages/Controllers");
+const getLanguageStrings = require("../../backend-translation/get-language-strings");
 
 //middleware for authorization
 laundry.use("/",async function(req, res, next){ 
@@ -19,15 +20,15 @@ laundry.use("/",async function(req, res, next){
 //views 
 
 laundry.get("/panel", function(req, res){
-    return res.render("pages/laundrypanel", {csrfToken: req.csrfToken()});
+    return res.render("pages/laundrypanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 laundry.get("/myaccount", function(req,res){
-    return res.render("pages/myaccount", {csrfToken: req.csrfToken()});
+    return res.render("pages/myaccount", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 laundry.get("/myorders", function(req,res){
-    return res.render("pages/myorders", {csrfToken: req.csrfToken()});
+    return res.render("pages/myorders", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 // data banks

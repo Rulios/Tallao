@@ -5,13 +5,13 @@ const path = require('path');
 module.exports = {
     mode: "development",
     entry:{
-        design: path.resolve(__dirname, './src/js/design.js'),
         register: path.resolve(__dirname, './src/js/register.js'),
         login: path.resolve(__dirname, './src/js/login.js'),
         laundryPanel: path.resolve(__dirname, "./src/js/laundry-panel.js"),
         myAccount: path.resolve(__dirname, "./src/js/my-account.js"),
         myOrders: path.resolve(__dirname, "./src/js/my-orders.js"),
-        userPanel: path.resolve(__dirname, "./src/js/user-panel.js")
+        userPanel: path.resolve(__dirname, "./src/js/user-panel.js"),
+        nativeNavbarInteraction: path.resolve(__dirname, "./src/js/design-interaction/navbar-interaction/native.js")
     },
     output: {
         filename: "[name].js",

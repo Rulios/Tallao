@@ -1,6 +1,8 @@
 const user = require("express").Router();
 const Auth = require("../libs/Auth");
 
+const getLanguageStrings = require("../../backend-translation/get-language-strings");+
+
 //middleware for authorization
 user.use("/",async function(req, res, next){ 
     let {hashcode, userType} = req.session;
@@ -13,15 +15,15 @@ user.use("/",async function(req, res, next){
 });
 
 user.get("/panel", function(req, res){
-    return res.render("pages/userPanel", {csrfToken: req.csrfToken()});
+    return res.render("pages/userPanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 user.get("/myaccount", function(req,res){
-    return res.render("pages/myaccount", {csrfToken: req.csrfToken()});
+    return res.render("pages/myaccount", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 user.get("/myorders", function(req,res){
-    return res.render("pages/myorders", {csrfToken: req.csrfToken()});
+    return res.render("pages/myorders", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 module.exports = user;

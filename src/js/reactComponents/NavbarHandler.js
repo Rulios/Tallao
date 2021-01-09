@@ -5,26 +5,31 @@ const NavbarComp = require("./NavbarComp");
 const {logout} = require("../ajax-requests/log");
 const pageRedirection = require("../frontendModules/pageRedirection");
 const LANGUAGES = require("../../../meta/LANGUAGES");
+const navbarToggleInteraction = require("../../js/design-interaction/navbar-interaction/interaction");
 
 function Navbar({userType}){
     //componentList = arr (index order should be same as render order)
 
-    const COMPONENTS_LIST = {
+    const DEFAULT_STARTING_COMPONENTS = [
+        "Logo", "ToggleButton"
+    ];
+
+    const DEFAULT_ENDING_COMPONENTS = [
+        "LanguageSelect"
+    ]
+
+    const LINKS = {
         laundry: [
-            "Logo", 
             "WriteOrders",
             "AffiliatedOrders",
             "MyAccount" ,
             "Logout",
-            "LanguageSelect"
         ],
         user: [
-            "Logo",
             "MyMain",
             "MyOrders",
             "MyAccount",
             "Logout",
-            "LanguageSelect"
         ]
     };
 
@@ -43,7 +48,36 @@ function Navbar({userType}){
     };
 
 
+    React.useEffect(() =>{
+        navbarToggleInteraction(); //bind event after mounting
+    }, []);
+
     return (
+        <div className="container">
+            <nav className="navbar">
+                {
+                    DEFAULT_STARTING_COMPONENTS.map(component =>{
+                        return React.createElement(NavbarComp[component], {
+                            key: `${component}-Navbar`,
+                        });
+                    })
+                }
+                <NavbarComp.NavbarLinks links={LINKS[userType]} onClick={(componentID) => clickHandler(componentID)}></NavbarComp.NavbarLinks>
+                {
+                    DEFAULT_ENDING_COMPONENTS.map(component =>{
+                        return React.createElement(NavbarComp[component], {
+                            key: `${component}-Navbar`,
+                            languages: LANGUAGES,
+                            selectedLanguage: selectedLanguage,
+                            onSelect: (componentID, value) => selectHandler(componentID, value)
+                        });
+                    })
+                }
+            </nav>
+        </div>
+    );
+    
+    /* (
         React.createElement("nav" ,{
             className: "navbar navbar-expand-lg navbar-light"
         },
@@ -59,8 +93,9 @@ function Navbar({userType}){
                 })
             )
         )
-    );
+    ); */
 }
+
 
 module.exports = Navbar;
 

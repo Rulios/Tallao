@@ -4,7 +4,6 @@ const {fetchNotifications} = require("../ajax-requests/notifications");
 const convertArrtoObj = require("../frontendModules/convertArrToObj");
 
 const NOTIFICATION_CODES = require("../../../meta/NOTIFICATION_CODES");
-const { NEW_ORDER_STATUS_NOTIF_CODE } = require("../../../meta/NOTIFICATION_CODES");
 
 function useNotifications(socket){
     let [notifications, setNotifications] = useState({}); 

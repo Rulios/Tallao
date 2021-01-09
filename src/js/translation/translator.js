@@ -1,8 +1,6 @@
 const {getLanguage} = require("./language-config");
-const {staticWords: es_staticWords} = require("./languages/es");
 
 const allLanguageWords = {
-    es: {...es_staticWords}
 };
 
 

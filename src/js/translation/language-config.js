@@ -1,4 +1,3 @@
-const { Cookie } = require("express-session");
 const {isIn} = require("validator");
 const LANGUAGES = require("../../../meta/LANGUAGES");
 const LANGUAGE_COOKIE_NAME = require("../../../meta/LANGUAGE_COOKIE_NAME");
@@ -21,7 +20,7 @@ function isLanguageAvailable(language){
 }
 
 function isLanguageSelected(){
-    return typeof Cookies.get(LANGUAGE_COOKIE_NAME) === undefined;
+    return typeof Cookies.get(LANGUAGE_COOKIE_NAME) === "undefined";
 }
 
 function setDefaultLanguage(){

@@ -17,18 +17,47 @@ const textEs = {
     }
 };
 
+const LinksComponent = {
+    WriteOrders: WriteOrders,
+    AffiliatedOrders: AffiliatedOrders,
+    MyMain:MyMain,
+    MyOrders: MyOrders,
+    MyAccount: MyAccount,
+    Logout: Logout,
+};
+
 function Logo(){
+
     return (
-        React.createElement("a", {
-            className: "navbar-brand text-center",
-            href: "/"
-        },
-            React.createElement("img", {
-                style:{width:"60%"},
-                src: "/imgs/tallao-logo-complete-es.svg",
-                alt: "Talla'o"
-            })
-        )
+        <a href="/"> 
+            <img  className="navbar-logo-image"  src="/imgs/tallao-logo-complete-es.svg" alt="Talla'o"></img>
+        </a>
+    );
+
+}
+
+function ToggleButton(){
+    return (
+        <a href="#" className="toggle-button">
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+        </a>
+    );
+}
+
+function NavbarLinks({links, onClick}){
+    return (
+        <div className="navbar-links">
+            <ul>
+                {
+                    links.map(link =>{
+                        const LinkComponent = LinksComponent[link];
+                        return <LinkComponent key={`NavbarLink4${link}`} onClick={(componentID)=> onClick(componentID)}></LinkComponent>;
+                    })
+                }
+            </ul>
+        </div>
     );
 }
 
@@ -37,7 +66,7 @@ function WriteOrders(){
         React.createElement(NavbarTagFormat,{
             id: "MasterPanelTag",
             href: "/laundry/panel",
-            className: "bottomLineLinkAnimation navBarText",
+            className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-pencil-square-o",
             text: textEs.WriteOrders
         })
@@ -49,7 +78,7 @@ function AffiliatedOrders(){
         React.createElement(NavbarTagFormat,{
             id: "AffiliatedOrders",
             href: "/laundry/myorders",
-            className: "bottomLineLinkAnimation navBarText",
+            className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-th-list",
             text: textEs.AffiliatedOrders
         })
@@ -61,7 +90,7 @@ function MyMain(){
         React.createElement(NavbarTagFormat,{
             id: "MyOrders",
             href: "/user/panel",
-            className: "bottomLineLinkAnimation navBarText",
+            className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-home",
             text: textEs.Main
         })
@@ -73,7 +102,7 @@ function MyOrders(){
         React.createElement(NavbarTagFormat,{
             id: "MyOrders",
             href: "/user/myorders",
-            className: "bottomLineLinkAnimation navBarText",
+            className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-th-list",
             text: textEs.MyOrders
         })
@@ -85,7 +114,7 @@ function MyAccount(){
         React.createElement(NavbarTagFormat,{
             id: "MyAccount",
             href: "myaccount",
-            className: "bottomLineLinkAnimation navBarText",
+            className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-user-circle",
             text: textEs.MyAccount
         })
@@ -97,7 +126,7 @@ function Logout({onClick}){
         React.createElement(NavbarTagFormat,{
             id: "CloseSession",
             href: "#",
-            className: "bottomLineLinkAnimation redTxt",
+            className: "bottomLineLinkAnimation navBarText redTxt",
             iconClass: "fa fa-sign-out",
             text: textEs.CloseSession,
             onClick: (e) => onClick("CloseSession")
@@ -108,13 +137,32 @@ function Logout({onClick}){
 
 function LanguageSelect({selectedLanguage, onSelect, languages}){
     return (
+        <div className="centerOnXs">
+            <label htmlFor="language-selector" className="bold">{`${textEs.Language} :`}</label>
+            <select id="language-selector" value={selectedLanguage} onChange={(language) => onSelect("LanguageSelect", language)}>
+                {
+                    languages.map(language =>{
+                        return (
+                            <option key={`LanguageSelect4${language}`} value={language}>
+                                {textEs.Languages[language]}
+                            </option>
+                        );
+                    })
+                }
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="cn">中文</option>
+            </select>
+        </div>
+    );
+    /* return (
         React.createElement("div" ,{
             className: "leftSeparation centerOnXs"
         }, 
             [   
                 React.createElement("label", {
                     key: "LanguageSelectTag",
-                    className: "bold small-rightMargin",
+                    className: "bold ",
                     htmlFor: "LanguageSelectSelect"
                 }, `${textEs.Language}:`),
                 React.createElement("select", {
@@ -132,7 +180,7 @@ function LanguageSelect({selectedLanguage, onSelect, languages}){
                 )
             ]
         )
-    )
+    ) */
 }
 
 
@@ -160,11 +208,7 @@ function NavbarTagFormat({id, href, className, iconClass, text, onClick}){
 
 module.exports =  {
     Logo: Logo,
-    WriteOrders: WriteOrders,
-    AffiliatedOrders: AffiliatedOrders,
-    MyMain:MyMain,
-    MyOrders: MyOrders,
-    MyAccount: MyAccount,
-    Logout: Logout,
+    ToggleButton: ToggleButton,
+    NavbarLinks: NavbarLinks,
     LanguageSelect: LanguageSelect
 };

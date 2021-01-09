@@ -6,58 +6,51 @@
     
     <%- include("../partials/headers") %> 
     <link rel="stylesheet" href="/css/main.css">
+
+    <script defer type="text/javascript" src="../../builds/nativeNavbarInteraction.js"></script>
     
 </head>
 
 <title><%- tallao %> </title>
 
-    <nav class="navbar navbar-expand-lg navbar-light ">
-        <div class="container">
-            <a class="navbar-brand text-center" href="/">
+    <div class="container">
+        <nav class="navbar">
 
-                <img  style="width: 60%;"  src="/imgs/tallao-logo-complete-es.svg" alt="Talla'o">
-
+            <a href="/">
+                <img  class="navbar-logo-image"  src="/imgs/tallao-logo-complete-es.svg" alt="Talla'o">
             </a>
-            
 
-            <a href="/loginPage" id="login" class="bold"><%- loginAction %> </a>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
 
-            <a href="/register"class="roundBorderButton bold"> <%- register %> </a>
+            <div class="navbar-links">
+                <ul>
+                    <li><a href="/loginPage" class="login-button bold"><%- loginAction %> </a></li>
+                    <li><a href="/register"class="roundBorderButton bold"> <%- register %> </a></li>
+                    <li><a href="#about" class=" blackTxt bottomLineLinkAnimation bold"><%- aboutUs  %></a></li>
+                    <li><a href="#contact" class=" blackTxt bottomLineLinkAnimation bold"><%- contact %> </a></li>
+                </ul>
+            </div>
 
-            <div class="leftSeparation  hideOnXs">
-                <b><%- language %> :</b> 
-                <select name="" id="">
+            <div class="centerOnXs">
+                <label for="language-selector" class="bold"><%- language %> :</label>
+                <select id="language-selector">
                     <option value="es">Español</option>
                     <option value="en">English</option>
                     <option value="cn">中文</option>
                 </select>
             </div>
+
             
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a href="#about" class="nav-link blackTxt bottomLineLinkAnimation bold"><%- aboutUs  %> <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="#contact" class="nav-link blackTxt bottomLineLinkAnimation bold"><%- contact %> </a>
-                    </li>
+        </nav>
+    
+    </div>
 
-                    <li class="nav-item dropdown hideOnNormal">
-                        <b><%- language %> </b> 
-                        <select name="" id="">
-                            <option value="es">Español</option>
-                            <option value="en">English</option>
-                            <option value="cn">中文</option>
-                        </select>
-                    </li>
-
-                </ul>
-            </div>
-        </div>    
-      </nav>
+    
+    
 
     <div style="margin:10em;"></div>
 
