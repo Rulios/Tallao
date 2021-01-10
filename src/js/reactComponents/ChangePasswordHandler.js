@@ -2,10 +2,11 @@
 
 const React= require("react");
 const ChangePasswordPhaseInputs= require("./ChangePasswordPhaseInputs");
-const ChangePasswordComp= require("./ChangePasswordComp");
-const passwordLengthHandler= require("../frontendModules/passwordLengthHandler");
+const ChangePasswordComp = require("./ChangePasswordComp");
+const passwordLengthHandler = require("../frontendModules/passwordLengthHandler");
 const {verifyPassword, newPassword}= require("../ajax-requests/user-creds");
 const {bounceToLogin} = require("../frontendModules/pageRedirection");
+const {getStaticText} = require("../translation/translator");
 
 function ChangePasswordLink({onClick}){
     return(
@@ -14,10 +15,8 @@ function ChangePasswordLink({onClick}){
                 className: "col-lg-12"
             },
                 React.createElement(ChangePasswordComp.ChangePasswordLink,{
-                    text: "Cambiar contraseña",
-                    handleClick: () =>{
-                        onClick();
-                    }
+                    text: getStaticText("changePassword_action"),
+                    handleClick: () => onClick()
                 })
             )
         )
@@ -187,12 +186,12 @@ class ChangePassword extends React.Component{
             el2Render.push(
                 React.createElement(ChangePasswordComp.ChangePasswordSubmitButton, {
                     key:"submitChangePassword",
-                    text: "Cambiar contraseña",
-                    eventHandler: () =>{this.updatePassword();}
+                    text: getStaticText("changePassword_action"),
+                    eventHandler: () => this.updatePassword()
                 })
             );  
         }
-        return el2Render.map(component =>{return component;});
+        return el2Render.map(component => {return component;});
     }
 }
 

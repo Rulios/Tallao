@@ -1,19 +1,13 @@
 "use strict";
 
 const React = require("react");
-const $ = require("jquery");
 const WriteOrderContainers = require("./WriteOrderContainers");
 const {fetchElementsPrice: ajaxFetchElementsPrice} = require("../ajax-requests/laundry-configs");
+const {ELEMENTS} = require("../../../meta/ELEMENTS");
 
 /* This module serves as a function repository. 
 In which any component that handles related features can and should
 call the functions from this module. */
-
-const elements = [
-    "custom", "shirt", "pants", "skirt", "coat",
-    "sweater", "pleatedSkirt", "overall", "jumper",
-    "blouse", "largeSuit", "quilt"
-];
 
 function renderHookQInputs({checkStatus, hookQuantity, onCheck, onChange}){
     //props: idContainer, onCheckFullHook, checkStatus, onChangeHookQuantity
@@ -42,7 +36,7 @@ function renderElementsOnOrder({activeElementsOnOrder, onClickDelete,
             return Object.keys(activeElementsOnOrder[elementName]).map(service =>{
                 return React.createElement(WriteOrderContainers.elementOnOrder, {
                     key: `${elementName}-${service}`,
-                    id: elementName,
+                    element: elementName,
                     price: activeElementsOnOrder[elementName][service]["price"],
                     quantity: activeElementsOnOrder[elementName][service]["quantity"],
                     service: service, 
@@ -63,9 +57,8 @@ function renderSelectableElementsOnOrder({
         elementsOnSelectList[serviceOffer].map(elementName =>{
             return React.createElement(WriteOrderContainers.selectableElementToOrder, {
                 key: `${elementName}-${serviceOffer}`,
-                id: elementName,
+                element: elementName,
                 elementPrice: (elementsPrice[serviceOffer] !== null) ? elementsPrice[serviceOffer][elementName] : undefined,
-                elementString: WriteOrderContainers.elementsString[elementName],
                 service: serviceOffer,
                 onClick: (elementID, service) => onClick(elementID, service),
             })
@@ -98,7 +91,7 @@ async function fetchElementsPrice(){
 }
 
 function onElementSelectFromList({id, service}, WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     
     //destructure from deep copy obj 
     //NOT ALL PROPS NEEDED BY THIS FUNCTION ARE DESTRUCTURED
@@ -157,7 +150,7 @@ function addElementIntoElementSelectList({id, service}, elementsOnSelectList){
     //find the initial position of the element to be added on the array on List
     //except when custom
     if(id.indexOf("custom") === -1){
-        let positionOnOriginal = elements.indexOf(id);
+        let positionOnOriginal = ELEMENTS.indexOf(id);
         elementsOnSelectList[service].splice(positionOnOriginal, 0, id);
     }
     //since elementsOnSelectList is a array and passed as a reference, there's no need
@@ -165,7 +158,7 @@ function addElementIntoElementSelectList({id, service}, elementsOnSelectList){
 }
 
 function deleteElementFromOnOrder({id, service}, WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     
     //destructure from deep copy obj 
     //NOT ALL PROPS NEEDED BY THIS FUNCTION ARE DESTRUCTURED
@@ -199,7 +192,7 @@ function deleteElementFromOnOrder({id, service}, WriteOrderDetails){
 }
 
 function updateElementQuantity({id, service, value}, WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     
     //destructure from deep copy obj 
     //NOT ALL PROPS NEEDED BY THIS FUNCTION ARE DESTRUCTURED
@@ -221,7 +214,7 @@ function updateElementQuantity({id, service, value}, WriteOrderDetails){
 }
 
 function updateElementUnitPrice({id, service, value}, WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     
     //destructure from deep copy obj 
     //NOT ALL PROPS NEEDED BY THIS FUNCTION ARE DESTRUCTURED
@@ -239,7 +232,7 @@ function updateElementUnitPrice({id, service, value}, WriteOrderDetails){
 }
 
 function updateCustomElementName({elementID, service, value}, WriteOrderDetails){
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     let {activeElementsOnOrder} = NewWriteOrderDetails.order;
     activeElementsOnOrder[elementID][service]["name"] = value;
     return NewWriteOrderDetails;
@@ -247,7 +240,7 @@ function updateCustomElementName({elementID, service, value}, WriteOrderDetails)
 
 function onCheckedFullHook(isChecked, WriteOrderDetails){
     //Handler for Full Hook Checkbox
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     const {hookPrice} = NewWriteOrderDetails.configs;
     let {activeElementsOnOrder} = NewWriteOrderDetails.order;
     NewWriteOrderDetails.configs.isFullHookChecked = isChecked;
@@ -266,7 +259,7 @@ function onCheckedFullHook(isChecked, WriteOrderDetails){
 
 function onChangeHookQuantity(hookQuantity, WriteOrderDetails){
     //Handler for Hook Input
-    let NewWriteOrderDetails = $.extend({}, WriteOrderDetails);
+    let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
     let {activeElementsOnOrder} = NewWriteOrderDetails.order;
     const hookPrice = NewWriteOrderDetails.configs.hookPrice;
 
@@ -336,7 +329,6 @@ function calcTotalPrice(activeElementsOnOrder,hookPrice, hookQuantity){
 }
 
 module.exports = {
-    elements: elements,
     renderSelectableElementsOnOrder:renderSelectableElementsOnOrder,
     fetchElementsPrice:fetchElementsPrice,
     onElementSelectFromList:onElementSelectFromList,

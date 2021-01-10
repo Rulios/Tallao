@@ -2,6 +2,7 @@
 
 const React = require("react");
 const ChangePasswordComp = require("./ChangePasswordComp");
+const {getStaticText} = require("../translation/translator");
 
 /* This file contains middle level components, and the higher level container
 which handles all the operations and requests to change password */
@@ -16,12 +17,12 @@ function FirstInputChangePassword({value, onChange,onBlur, disabled}){ //renders
                     React.createElement(ChangePasswordComp.PasswordLabel, {
                         key: "LabelActualPassword",
                         idFor: "inputActualPassword",
-                        text: "Ingresa tu contraseña actual"
+                        text: getStaticText("enterYourActualPassword")
                     }),
                     React.createElement(ChangePasswordComp.PasswordInput, {
                         key: "inputActualPassword",
                         id:"inputActualPassword",
-                        placeholder:"Contraseña actual",
+                        placeholder: getStaticText("actualPassword"),
                         value: value,
                         disabled: disabled,
                         onBlur: (e) => onBlur(),
@@ -43,12 +44,12 @@ function SecondInputChangePassword({value, onChange, disabled}){ //renders the i
                     React.createElement(ChangePasswordComp.PasswordLabel, {
                         key: "LabelNewPassword",
                         idFor: "inputNewPassword",
-                        text: "Ingresa una contraseña nueva"
+                        text: getStaticText("enterANewPassword")
                     }),
                     React.createElement(ChangePasswordComp.PasswordInput, {
                         key: "inputNewPassword",
                         id:"inputNewPassword",
-                        placeholder:"Contraseña nueva",
+                        placeholder: getStaticText("newPassword"),
                         value: value,
                         disabled: disabled,
                         onChange: (password) =>{
@@ -69,7 +70,7 @@ function ThirdInputChangePassword({value, onChange, disabled}){ //renders the in
                     React.createElement(ChangePasswordComp.PasswordLabel, {
                         key: "LabelRePassword",
                         idFor: "inputRePassword",
-                        text: "Reingresa la nueva contraseña"
+                        text: getStaticText("reEnterTheNewPassword")
                     }),
                     React.createElement(ChangePasswordComp.PasswordInput, {
                         key: "inputRePassword",

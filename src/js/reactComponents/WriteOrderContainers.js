@@ -1,41 +1,21 @@
 
 const React = require("react");
+const { get } = require("../ajax-requests/ajax-req");
 const inputPrevent = require("../frontendModules/inputPrevent");
+const {getStaticText} = require("../translation/translator");
 
 //Middle component, this doesn't has lower components
 
-const elementsString = {
-    custom : "Elemento personalizable",
-    shirt: "Camisa",
-    pants: "Pantalón",
-    skirt: "Falda",
-    coat: "Saco",
-    sweater: "Suéter",
-    pleatedSkirt: "Falda Plizada",
-    overall: "Overol",
-    jumper: "Jumper",
-    blouse: "Blusa",
-    largeSuit: "Vestido",
-    quilt: "Colcha"
-};
-
-const serviceOfferString = {
-    iron: "Planchado",
-    wash_iron: "Lavado y planchado",
-    wash: "Lavado",
-    dry_clean: "Lavado en seco"
-};
-
 //button that contains info of the order
-function selectableElementToOrder(props){
+function selectableElementToOrder({element, elementPrice, service, onClick}){
     //props: id (id of element), elementPrice(price of element), 
-    //elementString (string of element)
+    //element
     return(
         React.createElement("button", {
-            value: props.id,
+            value: element,
             name: "elementButton",
             className: "buttonElementStyle",
-            onClick: () => {props.onClick(props.id, props.service)}
+            onClick: () => onClick(element, service)
         },
             React.createElement("div", {className:"container"},
                 React.createElement("div", {
@@ -44,15 +24,15 @@ function selectableElementToOrder(props){
                     React.createElement("div", {className:"col-lg-4"},
                         React.createElement("img", {
                             className:"assetStayStatic",
-                            src: `/imgs/assets/${props.id}/${props.id}.svg`
+                            src: `/imgs/assets/${element}/${element}.svg`
                         })
                     ),
                     React.createElement("div", {className:"col-lg-8"},
                         React.createElement("span", {className:"subTxt"},
-                            props.elementString
+                            getStaticText(element)
                         ),
                         React.createElement("br", null),
-                        React.createElement("span", {},(props.elementPrice !== undefined) ? `$${props.elementPrice}`: "")
+                        React.createElement("span", {},(elementPrice !== undefined) ? `$${elementPrice}`: "")
                     )
                 )
             )
@@ -60,30 +40,32 @@ function selectableElementToOrder(props){
     );
 }
 
-function elementOnOrder(props){
+function elementOnOrder({element, price, quantity, service, 
+onClickDelete, onUpdateQuantity, onUpdateUnitPrice, onUpdateElementNameIfCustom}){
     //props: id, price, quantity, service
     //console.log(props);
     let idAsset = "";
     let inputElementChangeOnCustom;
-    if(props.id.includes("custom")){
+    if(element.includes("custom")){
         //custom makes a exception on the rendering of the component
         idAsset = "custom";
         inputElementChangeOnCustom = React.createElement("input",{
             type: "text",
-            placeholder: "Nombre del elemento",
-            onChange: (e) =>{
-                props.onUpdateElementNameIfCustom({
-                    elementID: props.id, 
-                    service: props.service, 
+            placeholder: getStaticText("elementName"),
+            onBlur: (e) =>{
+                onUpdateElementNameIfCustom({
+                    elementID: element, 
+                    service: service, 
                     value: e.target.value
                 });
             }
         });
+
     }else{
-        idAsset = props.id;
+        idAsset = element;
         inputElementChangeOnCustom = React.createElement("span", {
             className: "bold subTxt"
-        }, `${elementsString[props.id]} (${serviceOfferString[props.service]})`);
+        }, `${getStaticText(element)} (${getStaticText(service)})`);
     }
     return(
         React.createElement("div", {
@@ -107,23 +89,23 @@ function elementOnOrder(props){
                     inputElementChangeOnCustom,
                     React.createElement("button", {
                         className: "closeButtonStyle",
-                        onClick: () => {props.onClickDelete(props.id, props.service)}
+                        onClick: () => onClickDelete(element, service)
                     }, "x"),
                     React.createElement("div", {
                         className: "container small-mediumSeparation"
                     },
                         React.createElement("div", {className: "row"},
                             React.createElement("div", {className: "col-lg-4"},
-                                React.createElement("span", null, "Cantidad:"),
+                                React.createElement("span", null, `${getStaticText("quantity")}:`),
                                 React.createElement("br", null, null),
                                 React.createElement("input", {
                                     type: "number",
                                     className :"inputNumberReceiptStyle",
                                     name: "inputQuantity",
-                                    value: props.quantity,
+                                    value: quantity,
                                     onChange: (e) => {
                                         inputPrevent.notNegative(e);
-                                        props.onUpdateQuantity(props.id,props.service, e.target.value);
+                                        onUpdateQuantity(element,service, e.target.value);
                                     },
                                     onKeyPress: (e) =>{
                                         inputPrevent.onlyIntegers(e);
@@ -132,15 +114,15 @@ function elementOnOrder(props){
                             ),
 
                             React.createElement("div", {className: "col-lg-4"},
-                                React.createElement("span", null, "Precio por unidad:"),
+                                React.createElement("span", null, `${getStaticText("pricePerUnit")}`),
                                 React.createElement("span", null, "$"),
                                 React.createElement("input", {
                                     type: "number",
                                     className: "inputNumberReceiptStyle",
-                                    value: props.price,
+                                    value: price,
                                     onChange: (e) => {
                                         inputPrevent.notNegative(e);
-                                        props.onUpdateUnitPrice(props.id,props.service, e.target.value);
+                                        onUpdateUnitPrice(element,service, e.target.value);
                                     },
                                     onKeyPress: (e) =>{
                                         inputPrevent.asteriskAndHyphen(e);
@@ -151,8 +133,8 @@ function elementOnOrder(props){
                             ),
 
                             React.createElement("div", {className: "col-lg-4 bold"},
-                                React.createElement("span", null, "Total:"),
-                                React.createElement("span", null, (props.price * props.quantity).toFixed(2))
+                                React.createElement("span", null, `${getStaticText("total")}:`),
+                                React.createElement("span", null, (price * quantity).toFixed(2))
                             )
                         )
                     )
@@ -162,38 +144,36 @@ function elementOnOrder(props){
     );
 }
 
-function fullHookCheckBox(props){
-    //props: onCheck, checkStatus (component could be able to set check)
- 
+function fullHookCheckBox({checkStatus, onCheck}){
     return(
         React.createElement("div", {},
             React.createElement("input",{
                 type: "checkbox",
                 id:"fullHookCheckBox",
                 className: "small-rightMargin",
-                checked: (props.checkStatus === undefined || !props.checkStatus) ? false: true,
-                onChange: (e) =>{props.onCheck(e.target.checked);}
+                checked: (checkStatus === undefined || !checkStatus) ? false: true,
+                onChange: (e) => onCheck(e.target.checked)
             }),
             React.createElement("label", {
                 htmlFor: "fullHookCheckBox",
                 className : "middleVerticalAlign"
-            }, "Ganchos Completos"),
+            }, getStaticText("completeHooks")),
         )
     );
 }
 
-function inputHookQuantity(props){
+function inputHookQuantity({hookQuantity, onChange}){
     //props: onChange, hookQuantity
     return(
         React.createElement("div", null,
             React.createElement("input",{
                 id:"inputHookQuantity",
                 type: "number",
-                value : props.hookQuantity,
+                value : hookQuantity,
                 className: "inputHookQuantity small-rightMargin",
                 onChange: (e) =>{
                     inputPrevent.minLimitZero(e);
-                    props.onChange(parseInt(e.target.value));},
+                    onChange(parseInt(e.target.value));},
                 onKeyPress : (e) =>{
                     inputPrevent.notExponential(e);
                     inputPrevent.minLimitZero(e);
@@ -204,7 +184,7 @@ function inputHookQuantity(props){
             }),
             React.createElement("label", {
                 htmlFor: "inputHookQuantity"
-            }, ":Ganchos presentes")
+            }, `:${getStaticText("presentHooks")}`)
         )
     );
 }
@@ -214,7 +194,6 @@ module.exports = {
     elementOnOrder:elementOnOrder,
     fullHookCheckBox:fullHookCheckBox,
     inputHookQuantity:inputHookQuantity,
-    elementsString: elementsString
 };
 
 //example of selectableElementToOrder in HTML
@@ -253,7 +232,7 @@ module.exports = {
             <input type="text" placeholder="Nombre del elemento">
 
             //if element isn't rendered as custom
-            <span class="subTxt bold">elementString(props.id) (serviceOfferString(props.service))</span>
+            <span class="subTxt bold">elementString(element) (serviceOfferString(service))</span>
 
             <div class="container">
                 <div class="row">

@@ -3,13 +3,8 @@
 
 const React = require("react");
 const {fetchServiceOffer} = require("../ajax-requests/laundry-configs");
+const {getStaticText} = require("../translation/translator");
 
-const serviceOfferString = {
-    iron: "Planchado",
-    wash_iron: "Lavado y planchado",
-    wash: "Lavado",
-    dry_clean: "Lavado en seco"
-};
 
 class ServiceSelector extends React.Component{
     constructor(props){ 
@@ -62,7 +57,7 @@ class ServiceSelector extends React.Component{
                         return React.createElement("option",{
                             key: service,
                             value: service
-                        }, serviceOfferString[service])
+                        }, getStaticText(service))
                     })
                 )
             );

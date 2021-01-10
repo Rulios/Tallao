@@ -1,6 +1,7 @@
 "use strict";
 
 const formVerification = require("./formVerification");
+const {getStaticText} = require("../translation/translator");
 
 function passwordCategorization(id, text){
     //function to verify, announce passwords criteria on input
@@ -9,33 +10,26 @@ function passwordCategorization(id, text){
     const strongLength = 14;
     const actualLength = text.length;
 
-    const msg = {
-    msg1: "Contraseña muy débil, inserta una contraseña más fuerte",
-    msg2: "Contraseña moderada",
-    msg3: "Contraseña moderadamente fuerte",
-    msg4: "Contraseña fuerte"
-    };
-
     formVerification.deleteAppendError(id);
 
     switch (true) {
         case (actualLength < weakLength):
-            formVerification.formAppendError(id, msg.msg1, "red");
+            formVerification.formAppendError(id, getStaticText("weak_passwordLength"), "red");
             formVerification.invokeVerify(id, false);
         break;
     
         case ((actualLength >= weakLength) && (actualLength <= mediumLength)):
-            formVerification.formAppendError(id, msg.msg2, "yellow");
+            formVerification.formAppendError(id, getStaticText("moderate_passwordLength"), "yellow");
             formVerification.invokeVerify(id, true);
         break;
 
         case ((actualLength > mediumLength) && (actualLength <= strongLength)):
-            formVerification.formAppendError(id, msg.msg3, "yellowGreen");
+            formVerification.formAppendError(id, getStaticText("moderateStrong_passwordLength"), "yellowGreen");
             formVerification.invokeVerify(id, true);
         break;
 
         case (actualLength > strongLength):
-            formVerification.formAppendError(id, msg.msg4, "green");
+            formVerification.formAppendError(id, getStaticText("strong_passwordLength"), "green");
             formVerification.invokeVerify(id, true);
         break;
     }
@@ -43,17 +37,13 @@ function passwordCategorization(id, text){
 
 function rePasswordVerify(id, inputPassword, inputRepassword){
     //function to check if passwords are the same
-    const msg = {
-    msg1: "¡Las contraseñas no coinciden!",
-    msg2: "¡Las contraseñas coinciden!"
-    };
 
     formVerification.deleteAppendError(id);
     if(inputRepassword !== inputPassword){
-        formVerification.formAppendError(id, msg.msg1, "red");
+        formVerification.formAppendError(id, getStaticText("passwordDoesntMatch"), "red");
         formVerification.invokeVerify(id, false);
     }else{
-        formVerification.formAppendError(id, msg.msg2, "green");
+        formVerification.formAppendError(id, getStaticText("passwordMatch"), "green");
         formVerification.invokeVerify(id, true);
     }
 }

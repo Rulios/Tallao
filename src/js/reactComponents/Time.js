@@ -3,9 +3,9 @@
 
 const React = require("react");
 const inputPrevent = require("../frontendModules/inputPrevent");
-const ajaxReqTime = require("../ajax-requests/server-time");
+const {fetchDateTimeServer} = require("../ajax-requests/server-time");
 const dayjs = require("dayjs");
-
+const {getStaticText} = require("../translation/translator");
 
 function DateInput(props){
     //props: 
@@ -82,45 +82,20 @@ function calcTimeDifference(dateFuture, dateNow){
     return objDiff;
 }
 
-function convert12hTo24h(time12h){
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
-    if (hours === '12') {
-        hours = '00';
-    }
-    if (modifier === 'PM') {
-        hours = parseInt(hours, 10) + 12;
-    }
-    return `${hours}:${minutes}`;
-}
-
-const convert24hTo12h = (time24) => {
-    const [sHours, minutes] = time24.match(/([0-9]{1,2}):([0-9]{2})/).slice(1);
-    const period = +sHours < 12 ? 'AM' : 'PM';
-    const hours = +sHours % 12 || 12;
-    
-    return {
-        hours: hours,
-        minutes: minutes,
-        cycle: period
-    };
-}
-
-
 async function getDateTimeFromServer(){
     //format from server: YYYY/MM/DD
     try{
-        let {data: {dateTime}} = await ajaxReqTime.fetchDateTimeServer();
+        let {data: {dateTime}} = await fetchDateTimeServer();
         return dateTime;
     }catch(err){console.error(err);}
 }
 
-function getMonthString(month){
+function getMonthString(monthIndex){
     const months = [
-        "enero", "febrero", "marzo", "abril", "mayo", "junio",
-        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+        "january", "february", "march", "april", "may", "june",
+        "july", "august", "september", "october", "november", "december"
     ];
-    return months[month];
+    return getStaticText(months[monthIndex]);
 }
 
 class Timer extends React.Component{
@@ -175,7 +150,10 @@ class Timer extends React.Component{
     render(){
         if(this.state.ajaxLoaded){
             //return to the main component
-            let stringDate = `${this.state.day} de ${this.state.monthString} de ${this.state.year}`;
+            let stringDate = `
+                ${this.state.day} ${getStaticText("of")} ${this.state.monthString} ${getStaticText("of")} ${this.state.year}
+            `;
+            
             stringDate += " | ";
             stringDate +=  `${this.state.hour}:${(this.state.minutes / 10 < 1) ? `0${this.state.minutes}`:this.state.minutes}${this.state.cycle}`;
             return(
@@ -191,8 +169,6 @@ module.exports = {
     Timer: Timer,
     DateInput: DateInput,
     TimeInput: TimeInput,
-    convert12hTo24h:convert12hTo24h,
-    convert24hTo12h:convert24hTo12h,
     getDateTimeFromServer:getDateTimeFromServer,
     calcTimeDifference:calcTimeDifference,
 };;

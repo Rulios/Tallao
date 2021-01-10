@@ -6,7 +6,6 @@ require("regenerator-runtime/runtime");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
-const formVerification = require("./frontendModules/formVerification");
 const AccountCreds = require("./reactComponents/AccountCreds");
 const ChangePasswordHandler	= require("./reactComponents/ChangePasswordHandler");
 const ScheduleHandler = require("./reactComponents/ScheduleHandler");
@@ -15,6 +14,7 @@ const EditCustomMessagesHandler = require("./reactComponents/EditCustomMessagesH
 const EditElementsPriceBundle = require("./reactComponents/EditElementsPriceBundle");
 const Navbar = require("./reactComponents/NavbarHandler");
 const {getUserType} = require("./ajax-requests/user-creds");
+const {getStaticText} = require("./translation/translator");
 
 
 window.onload = function(){
@@ -24,7 +24,7 @@ window.onload = function(){
             RenderOnPage(userType);
         });
     }catch{
-        alert("Error al cargar datos");
+        alert(getStaticText("ERR_LOADING_DATA"));
     }
 };
 
@@ -66,7 +66,7 @@ function StaticHeader(){
                 React.createElement("div", {key: "TitleHeader",className: "row"},
                     React.createElement("div", {
                         className: "col-lg-12 karla_font text-center titleTxt"
-                    }, "Todo lo que debes saber de tu cuenta. Aquí.")
+                    }, getStaticText("myAccountMainTitle"))
                 ),
                 React.createElement("div", {
                     key: "AccountCredsContainer", className: "supTxt-TitleTxt-Separation"
@@ -100,7 +100,8 @@ function ScheduleContainer(){
                 React.createElement("div", {
                     key: "ScheduleTitleHeader",
                     className: "karla_font text-center titleTxt small-mediumSeparation"
-                }, "Horario de Servicio"),
+                }, getStaticText("scheduleOfService")),
+
                 React.createElement("div", {
                     key: "ScheduleContainer",
                     className: "row supTxt-TitleTxt-Separation"
@@ -117,7 +118,8 @@ function ServiceOfferContainer(){
                 React.createElement("div", {
                     key: "ServiceOfferTitleHeader",
                     className: "karla_font text-center titleTxt small-mediumSeparation"
-                }, "Oferta de Servicios"),
+                }, getStaticText("servicesThatYouOffer")),
+
                 React.createElement("div", {
                     key: "ServiceOfferContainer",
                     className: "row supTxt-TitleTxt-Separation"
@@ -134,11 +136,13 @@ function ElementsPriceContainer(){
                 React.createElement("div", {
                     key: "ServiceOfferTitleHeader",
                     className: "karla_font text-center titleTxt small-mediumSeparation"
-                }, "Precios de los elementos"),
+                }, getStaticText("priceElements")),
+
                 React.createElement("div", {
                     key:"EditElementsPriceSubTitle",
                     className: "karla_font text-center subTxt"
-                }, "(Estos precios son los usuales, cuando se ordena se le puede cambiar el precio a uno deseado)"), 
+                }, `(${getStaticText("myAccountPriceElementsSubtitle")})`), 
+
                 React.createElement(EditElementsPriceBundle, {
                     key: "EditElementsPriceBundle"
                 })
@@ -154,11 +158,13 @@ function CustomMessagesContainer(){
                 React.createElement("div", {
                     key: "EditCustomMessagesTitleHeader",
                     className: "karla_font text-center titleTxt small-mediumSeparation"
-                }, "Mensajes personalizados"),
+                }, getStaticText("customMessages")),
+
                 React.createElement("div", {
                     key:"EditCustomMessagesSubTitleHeader",
                     className: "karla_font text-center subTxt"
-                }, "Texto que puedes introducir rápidamente con un click"), 
+                }, getStaticText("myAccountCustomMessagesSubtitle")), 
+                
                 React.createElement(EditCustomMessagesHandler, {
                     key: "EditCustomMessagesContainer"
                 })

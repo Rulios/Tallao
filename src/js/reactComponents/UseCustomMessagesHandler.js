@@ -1,7 +1,7 @@
 
 const React = require("react");
 const UseCustomMessagesContainers = require("./UseCustomMessagesContainers");
-const ajaxReqCustomMessages = require("../ajax-requests/custom-messages");
+const {fetch: fetchCustomMessages} = require("../ajax-requests/custom-messages");
 
 
 class UseCustomMessages extends React.Component{
@@ -23,11 +23,12 @@ class UseCustomMessages extends React.Component{
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
-            ajaxReqCustomMessages.fetch().then(({data}) =>{
+            fetchCustomMessages().then(({data}) =>{
                 //start parsing JSON string and storing it
                 let messages = {};
                 data.map(value =>{
                     let {id, color_tag, tag, message} = value;
+
                     messages[id] = {};
                     messages[id]["color_tag"] = color_tag;
                     messages[id]["tag"] = tag;

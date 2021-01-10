@@ -1,18 +1,13 @@
 // main.js
 
 const React = require("react");
-const ajaxReqSearch = require("../ajax-requests/search");
-
+const {customerByID: searchCustomerByID} = require("../ajax-requests/search");
+const {getStaticText} = require("../translation/translator");
 
 //This handler acts when it needs to be rendered a input field
 //or text related to the clientID. Also, the main caller will be 
 //able to request information about this.
 
-const textEs = {
-    customerID: "ID del Cliente",
-    notExists: "No existe",
-    customer: "Cliente"
-};
 
 function customerSelector({customerID, customerName, onChangeID}){
     return(
@@ -22,7 +17,7 @@ function customerSelector({customerID, customerName, onChangeID}){
             },
                 React.createElement("label", {
                     className: "bold small-rightMargin", htmlFor:"inputCustomerID"}
-                , `${textEs.customerID}:`),
+                , `${getStaticText("customerID")}:`),
 
                 React.createElement("input", {
                     value: customerID,
@@ -39,10 +34,10 @@ function customerSelector({customerID, customerName, onChangeID}){
                 React.createElement("span", {
                     className:"bold"
                 }
-                , `${textEs.customer}:`),
+                , `${getStaticText("customer")}:`),
                 React.createElement("span", {
                     className: `${(!customerName) ? "redTxt": ""}`
-                }, `${(!customerName) ? textEs.notExists : customerName}`)
+                }, `${(!customerName) ? getStaticText("doesntExists") : customerName}`)
             )
         )
     );  
@@ -65,7 +60,7 @@ class InputCustomerID extends React.Component{
         
         let that = this; //bind the this to this scope, so it can use setState
         customerData.id = id.toUpperCase();
-        ajaxReqSearch.customerByID({inputCustomerID: customerData.id}).then(({data}) =>{
+        searchCustomerByID({inputCustomerID: customerData.id}).then(({data}) =>{
             if(data){
                 customerData.name = `${data.name} ${data.surname}`;
             }else{

@@ -7,8 +7,7 @@ require("regenerator-runtime/runtime");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
-const $ = require("jquery");
-const orders = require("./ajax-requests/orders");
+const {submitOrder} = require("./ajax-requests/orders");
 const LaundryServiceSelector = require("./reactComponents/LaundryServiceSelector");
 const CustomerIDHandler = require("./reactComponents/CustomerIDHandler");
 const WriteOrder = require("./reactComponents/WriteOrder");
@@ -18,26 +17,20 @@ const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
 const {fetchCurrentOrderID} = require("./ajax-requests/laundry-configs");
 const {getUserType, fetchAccountCreds} = require("./ajax-requests/user-creds");
-
-
-const STRINGS = {
-    orderID: "ID de la Orden"
-};
-
+const {getStaticText} = require("./translation/translator");
+const {ELEMENTS} = require("../../meta/ELEMENTS");
 
 window.onload = function(){
-    try{
-        getUserType().then(({data : userType}) =>{
-            RenderNavbar(userType);
-        });
+    getUserType().then(({data : userType}) =>{
+        RenderNavbar(userType);
 
         ReactDOM.render(
             React.createElement(MainApp, {}),
             document.getElementById("containerServiceSelector")
         );
-    }catch{
-        alert("Error al cargar datos");
-    }
+    }).catch(err =>{
+        alert(getStaticText("ERR_LOADING_DATA"));
+    });
 };
 
 function RenderNavbar(userType){
@@ -57,7 +50,7 @@ function MainApp(){
     let [WriteOrderDetails, setWriteOrderDetails] = React.useState({
         configs: {
             elementsPrice: null,
-            elementsOnSelectList: {[serviceSelected]: Array.from(WriteOrder.elements)},
+            elementsOnSelectList: {[serviceSelected]: Array.from(ELEMENTS)},
             hookPrice: null,
             customOrdersIndexes: [], // stores the indexes of created custom elements
             isFullHookChecked: true
@@ -146,7 +139,7 @@ function MainApp(){
         setServiceSelected: (selected) => {
             if(!WriteOrderDetails.configs.elementsOnSelectList.hasOwnProperty(selected)){
                 let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
-                newWriteOrderDetails.configs.elementsOnSelectList[selected] = Array.from(WriteOrder.elements)
+                newWriteOrderDetails.configs.elementsOnSelectList[selected] = Array.from(ELEMENTS)
                 setWriteOrderDetails(newWriteOrderDetails);
             }  
             
@@ -174,11 +167,10 @@ function SubmitOrder(WriteOrderDetails, inputCustomer,
         customerName: customerName
     }
 
-    orders.submitOrder(order)
-    .then(({status, data: {idChar, idNumber}}) =>{
+    submitOrder(order).then(({status, data: {idChar, idNumber}}) =>{
         //trigger the resetOrder
         if(status === 200){
-            alert(`${STRINGS.orderID}: ${idChar} ${idNumber}`);
+            alert(`${getStaticText("orderID")}: ${idChar} ${idNumber}`);
             resetOrder();
         }else{
             throw new Error("Can't submit order");
@@ -296,7 +288,7 @@ function renderSubmitButton(onSubmit){
             className:  "submitButtonOrder",
             type: "submit",
             onClick: (e) => onSubmit()
-        }, "Completar orden"),
+        }, getStaticText("submitOrder_action")),
         document.getElementById("containerSubmit")
     );
 }
@@ -321,7 +313,7 @@ function renderUseCustomMessages(){
 function renderCurrentOrderID(){
     
     fetchCurrentOrderID().then(({data: {idChar, idNumber}}) => {
-        document.getElementById("containerCurrentOrderID").textContent = `${STRINGS.orderID}: ${idChar} ${idNumber}`;
+        document.getElementById("containerCurrentOrderID").textContent = `${getStaticText("orderID")}: ${idChar} ${idNumber}`;
     }).catch(() =>{
         document.getElementById("containerCurrentOrderID").textContent = "Error";
     })
@@ -350,14 +342,11 @@ function renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponent
     );
 }
 
-function renderDateTime(dateTimeHook){
+function renderDateTime(setDateTime){
     ReactDOM.render(
         React.createElement(Time.Timer,{
             getTodayDateTime: (today) =>{
-                //parse date
-                //to prevent updating
-                //update if single digit
-                dateTimeHook(today);
+                setDateTime(today);
             }   
         }),
         document.getElementById("containerDateTime")
@@ -378,7 +367,7 @@ function renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInput
             key: "label4Date",
             htmlFor: "inputDate4Order",
             className: "bold small-rightMargin"
-        }, "Fecha:"),
+        }, `${getStaticText("date")}:`),
         React.createElement(Time.DateInput, {
             key: "inputDate4Order",
             id: "inputDate4Order",
@@ -391,36 +380,42 @@ function renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInput
             key:"label4Time",
             htmlFor: "inputTime4Order", 
             className: "bold small-rightMargin"
-        }, "Hora:"),
+        }, `${getStaticText("hour")}:`),
         React.createElement(Time.TimeInput, {
             id: "inputTime4Order",
             key: "inputTime4Order",
             getTime: (time) =>setInputDateTimeForOrder({date: inputDateTimeForOrder.date, time: time}),
             value: (inputTime) ? inputTime: ""
-            //className: "disableInput"
         })]
         , document.getElementById("containerDateTimeInput")
     );
 }
 
 function animateSuccess(){
-    //Animation
-    if($("#receiptConfigPanel").hasClass("opacityAndDisable") == false){
-        $("#receiptConfigPanel").toggleClass("opacityAndDisable");
 
-        if($("#successAnimation").hasClass("hide") == true){
-        setTimeout(function(){
-            //show it
-            $("#successAnimation").toggleClass("hide");
-            
+    const OPACITY_AND_DISABLE_CLASS = "opacityAndDisable";
+    const HIDE_CLASS = "hide";
+
+    let receiptConfigPanel = document.getElementById("receiptConfigPanel");
+    let successAnimationContainer = document.getElementById("successAnimation");
+
+    if(!receiptConfigPanel.classList.contains(OPACITY_AND_DISABLE_CLASS)){
+        receiptConfigPanel.classList.toggle(OPACITY_AND_DISABLE_CLASS);
+
+        if(successAnimationContainer.classList.contains(HIDE_CLASS)){
             setTimeout(function(){
-            //hide it
-            $("#successAnimation").toggleClass("hide");
-            $("#receiptConfigPanel").toggleClass("opacityAndDisable");
-            },1500)
-        }, 40);
+                //show it
+                successAnimationContainer.classList.toggle(HIDE_CLASS);
+                
+                setTimeout(function(){
+                    //hide it
+                    successAnimationContainer.classList.toggle(HIDE_CLASS);
+                    receiptConfigPanel.classList.toggle(OPACITY_AND_DISABLE_CLASS);
+                },1500)
+            }, 40);
         }
     }
+
     //scroll to top
     window.scrollTo(0,0);
 }

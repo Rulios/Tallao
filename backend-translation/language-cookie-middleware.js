@@ -3,10 +3,14 @@ const LANGUAGES = require("../meta/LANGUAGES");
 const {isIn}  = require("validator");
 
 module.exports = function(req, res, next){
-    
-    const languageSelected = req.cookies[LANGUAGE_COOKIE_NAME];
-    if(typeof languageSelected === "undefined") setLanguageCookie(res);
-    if(!isValidLanguage(languageSelected)) setLanguageCookie(res);
+
+    try{
+        const languageSelected = req.cookies[LANGUAGE_COOKIE_NAME];
+        if(typeof languageSelected === "undefined") setLanguageCookie(res);
+        if(!isValidLanguage(languageSelected)) setLanguageCookie(res);
+    }catch(err){
+        setLanguageCookie(res);
+    }
 
     next();
 };

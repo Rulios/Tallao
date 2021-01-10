@@ -51,5 +51,12 @@
     "byRealAdvertisement": "Por un anuncio visto en la calle",
     "byPeopleRecommendation": "Porque alguien me lo recomendó",
     "iHeardSomeone": "Lo escuché en la calle",
-    "haveAnAccountQuestion": "¿Ya tienes una cuenta?"
+    "haveAnAccountQuestion": "¿Ya tienes una cuenta?",
+    "submitOrderSuccess": "¡ORDEN COMPLETADA!",
+    "orderDetails": "Detalles de la orden",
+    "totalPrice": "Precio Total",
+    "indications": "Indicaciones",
+    "elements": "Elementos",
+    "selectTheService": "Selecciona el servicio",
+    "orderScheduledFor": "Orden programada para"
 }

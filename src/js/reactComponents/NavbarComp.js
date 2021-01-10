@@ -1,21 +1,7 @@
 "use strict";
 
 const React = require("react");
-
-const textEs = {
-    WriteOrders: "Escritura de órdenes",
-    AffiliatedOrders: "Órdenes afiliadas a mi lavandería",
-    MyAccount: "Mi cuenta",
-    MyOrders: "Mis órdenes",
-    CloseSession: "Cerrar sesión",
-    Main: "Principal",
-    Language: "Idioma",
-    Languages: {
-        es: "Español",
-        en: "English",
-        cn: "中文"
-    }
-};
+const {getStaticText} = require("../translation/translator");
 
 const LinksComponent = {
     WriteOrders: WriteOrders,
@@ -68,7 +54,7 @@ function WriteOrders(){
             href: "/laundry/panel",
             className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-pencil-square-o",
-            text: textEs.WriteOrders
+            text: getStaticText("writeOrders")
         })
     );
 }
@@ -80,7 +66,7 @@ function AffiliatedOrders(){
             href: "/laundry/myorders",
             className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-th-list",
-            text: textEs.AffiliatedOrders
+            text: getStaticText("affiliatedOrders")
         })
     );
 }
@@ -92,7 +78,7 @@ function MyMain(){
             href: "/user/panel",
             className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-home",
-            text: textEs.Main
+            text: getStaticText("main")
         })
     );
 }
@@ -104,7 +90,7 @@ function MyOrders(){
             href: "/user/myorders",
             className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-th-list",
-            text: textEs.MyOrders
+            text: getStaticText("myOrders")
         })
     );
 }
@@ -116,7 +102,7 @@ function MyAccount(){
             href: "myaccount",
             className: "bottomLineLinkAnimation navBarText blackTxt",
             iconClass: "fa fa-user-circle",
-            text: textEs.MyAccount
+            text: getStaticText("myAccount")
         })
     );
 }
@@ -128,7 +114,7 @@ function Logout({onClick}){
             href: "#",
             className: "bottomLineLinkAnimation navBarText redTxt",
             iconClass: "fa fa-sign-out",
-            text: textEs.CloseSession,
+            text: getStaticText("closeSession"),
             onClick: (e) => onClick("CloseSession")
             
         })
@@ -138,49 +124,20 @@ function Logout({onClick}){
 function LanguageSelect({selectedLanguage, onSelect, languages}){
     return (
         <div className="centerOnXs">
-            <label htmlFor="language-selector" className="bold">{`${textEs.Language} :`}</label>
-            <select id="language-selector" value={selectedLanguage} onChange={(language) => onSelect("LanguageSelect", language)}>
+            <label htmlFor="language-selector" className="bold">{`${getStaticText("language")} :`}</label>
+            <select id="language-selector" value={selectedLanguage} onChange={({target:{value}}) => onSelect("LanguageSelect", value)}>
                 {
                     languages.map(language =>{
                         return (
                             <option key={`LanguageSelect4${language}`} value={language}>
-                                {textEs.Languages[language]}
+                                {getStaticText(language)}
                             </option>
                         );
                     })
                 }
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="cn">中文</option>
             </select>
         </div>
     );
-    /* return (
-        React.createElement("div" ,{
-            className: "leftSeparation centerOnXs"
-        }, 
-            [   
-                React.createElement("label", {
-                    key: "LanguageSelectTag",
-                    className: "bold ",
-                    htmlFor: "LanguageSelectSelect"
-                }, `${textEs.Language}:`),
-                React.createElement("select", {
-                    key: "LanguageSelect",
-                    id: "LanguageSelectSelect",
-                    value: selectedLanguage,
-                    onChange: (language) => onSelect("LanguageSelect",language)
-                },
-                    languages.map(language =>{
-                        return React.createElement("option", {
-                            key: `LanguageSelect4${language}`,
-                            value: language
-                        }, textEs.Languages[language])
-                    }) 
-                )
-            ]
-        )
-    ) */
 }
 
 

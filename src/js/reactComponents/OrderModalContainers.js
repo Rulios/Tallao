@@ -4,68 +4,18 @@ const React = require("react");
 const OrderModalComp = require("./OrderModalComp");
 const CustomerIDHandler = require("./CustomerIDHandler");
 const dayjs = require("dayjs");
-
+const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
+const {getStaticText} = require("../translation/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
 
-const textEs= {
-    order: "Orden",
-    status: "Estado",
-    elements: "Elementos",
-    date_assign: "Fecha asignada",
-    date_receive: "Fecha recibida",
-    customer_name: "Nombre del cliente",
-    hook_quantity: "Cantidad de ganchos",
-    total_price: "Precio total",
-    iron: "Planchado",
-    wash_iron: "Lavado y planchado",
-    wash: "Lavado",
-    dry_clean: "Lavado en seco",
-    notifsAndChat: "Notificaciones y Chat",
-    indications: "Indicaciones",
-    affiliateCustomer: "Afiliar cliente",
-    strStatus: {
-        all: "Todos los estados", 
-        wait: "En espera",
-        processing: "Procesando",
-        ready: "Listo",
-        retired: "Retirado"
-    },
-    elementsStr: {
-        custom : "Elemento personalizable",
-        shirt: "Camisa",
-        pants: "Pantalón",
-        skirt: "Falda",
-        coat: "Saco",
-        sweater: "Suéter",
-        pleatedSkirt: "Falda Plizada",
-        overall: "Overol",
-        jumper: "Jumper",
-        blouse: "Blusa",
-        largeSuit: "Vestido",
-        quilt: "Colcha"
-    },
-    nextStatus:{
-        wait: "Procesar la orden",
-        processing: "Terminar la orden",
-        ready: "Orden terminada",
-        retired: "Retirado"
-    }
-    
-}
-
-const statusColors = {
-    wait: "#DB4438",
-    processing: "#DBA502",
-    ready: "#00A822",
-    retired: "#999DA3"
-};
-
 function OrderModal({orderDetails, onClickClose, 
     onClickNextStatus, onClickAffiliateNewCustomerName,
      getNewAffiliateCustomer, showNextStatusBtn}){
+
     let idComp = `${orderDetails.id_char}${orderDetails.id_number}`;
+
     return React.createElement("div", {className:"modalCustom"},
         React.createElement("div", {className:"modal-contentCustom"},
             [   
@@ -98,28 +48,19 @@ function OrderModal({orderDetails, onClickClose,
                                     key: `OrderModalStatus4${idComp}`,
                                 },
                                     React.createElement(OrderModalComp.CenterBoldDiv,{
-                                        text: `${textEs.status}: ${textEs.strStatus[orderDetails.status]}`,
-                                        color: statusColors[orderDetails.status],
+                                        text: `${getStaticText("status")}: ${getStaticText(orderDetails.status)}`,
+                                        color: STATUS_COLORS[orderDetails.status],
                                     })
                                 ),
                                 React.createElement("div", {
                                     key: `OrderModalCustomerName4${idComp}`
                                 },
-                                    /* [
-                                        React.createElement(OrderModalComp.FieldValue, {
-                                        key: `ModalCustomerName4${idComp}`,
-                                        id: `ModalCustomerName4${idComp}`,
-                                        fieldTxt: `${textEs.customer_name}:`,
-                                        value: `${orderDetails.customer_name}`
-                                        }),
-                                    ] */
                                     React.createElement(OrderModalCustomerName, {
                                         idComp: idComp, 
                                         customer_name: orderDetails.customer_name,
                                         getNewAffiliateCustomer: (customer) => getNewAffiliateCustomer(customer),
                                         onClickAffiliateNewCustomerName: () => onClickAffiliateNewCustomerName()
                                     })
-                                    //OrderModalCustomerName({idComp: idComp, customer_name: orderDetails.customer_name})
                                 ),
 
                                 React.createElement("div", {
@@ -127,7 +68,7 @@ function OrderModal({orderDetails, onClickClose,
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalReceiveDate4${idComp}`,
-                                        fieldTxt: `${textEs.date_receive}:`,
+                                        fieldTxt: `${getStaticText("date_receive")}:`,
                                         value: `${dayjs(orderDetails.date_receive).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
@@ -136,7 +77,7 @@ function OrderModal({orderDetails, onClickClose,
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalAssignDate4${idComp}`,
-                                        fieldTxt: `${textEs.date_assign}:`,
+                                        fieldTxt: `${getStaticText("date_assign")}:`,
                                         value: `${dayjs(orderDetails.date_assign).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
@@ -153,7 +94,7 @@ function OrderModal({orderDetails, onClickClose,
                                         React.createElement(OrderModalComp.FieldRightValue,{
                                             key: `OrderModalElementsTitle4${idComp}`,
                                             id: `OrderModalElementsTitle4${idComp}`,
-                                            fieldTxt: `${textEs.elements}:`,
+                                            fieldTxt: `${getStaticText("elements")}:`,
                                             value: ""
                                         }),
                                         React.createElement(OrderElements,{
@@ -166,13 +107,13 @@ function OrderModal({orderDetails, onClickClose,
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalHookQuantity4${idComp}`,
                                     id: `OrderModalHookQuantity4${idComp}`,
-                                    fieldTxt: `${textEs.hook_quantity}:`,
+                                    fieldTxt: `${getStaticText("hook_quantity")}:`,
                                     value: `${orderDetails.hook_quantity}`
                                 }),
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalTotalPrice4${idComp}`,
                                     id: `OrderModalTotalPrice4${idComp}`,
-                                    fieldTxt: `${textEs.total_price}`,
+                                    fieldTxt: `${getStaticText("total_price")}`,
                                     value: `${orderDetails.total_price}`
                                 })
                             ]
@@ -194,7 +135,7 @@ function OrderModal({orderDetails, onClickClose,
                 ),
                 showNextStatusBtn ? React.createElement(OrderModalComp.ModalStateButton,{
                     key: `ModalStateButton4${idComp}`,
-                    text: `${textEs.nextStatus[orderDetails.status]}`,
+                    text: `${getStaticText(`${orderDetails.status}_nextStatus`)}`,
                     onClick: () => onClickNextStatus()
                 }) : null
             ]
@@ -203,10 +144,10 @@ function OrderModal({orderDetails, onClickClose,
 }
 
 function OrderModalTitle({orderID}){
-    let strOrderID = `${orderID.id_char}${orderID.id_number}`;
+    let strOrderID = `${orderID.id_char} ${orderID.id_number}`;
     return  React.createElement("div", {className:"modal-headerCustom"},
         React.createElement("span", {key: `SpanShowModalTitle4${strOrderID}`}, 
-        `${textEs.order} ${orderID.id_char} ${orderID.id_number}`)
+        `${getStaticText("order")} ${strOrderID}`)
     );
         
 }
@@ -218,7 +159,7 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
         return  React.createElement(OrderModalComp.FieldValue, {
             key: `ModalCustomerName4${idComp}`,
             id: `ModalCustomerName4${idComp}`,
-            fieldTxt: `${textEs.customer_name}:`,
+            fieldTxt: `${getStaticText("customer_name")}:`,
             value: `${customer_name}`
         });
     }else{
@@ -234,7 +175,7 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
                     key: `BtnAffiliateCustomer4${idComp}`,
                     className: "raisedButton1",
                     onClick :() => onClickAffiliateNewCustomerName()
-                }, "Afiliar cliente")
+                }, `${getStaticText("affiliateCustomer")}`)
             ];
 
         }
@@ -245,7 +186,7 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
         React.createElement("span", {
             key:`ClientName4${idComp}`, 
             className:"bold small-rightMargin"
-        }, `${textEs.customer_name}:`),
+        }, `${getStaticText("customer_name")}:`),
         React.createElement("a", {
                 key: `AToAddCustomerID4${idComp}`,
                 style: {
@@ -253,7 +194,7 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
                     cursor: "pointer"
                 },
                 onClick: () => changeToggleEdit(!isToggleEdit)
-        }, `${textEs.affiliateCustomer}`),
+        }, `${getStaticText("affiliateCustomer")}`),
         toggleElement
     ]);
 }
@@ -266,7 +207,7 @@ function OrderElements({elements_details}){
             React.createElement(OrderModalComp.FieldRightValue,{
                 key: `SpnElementService${service}`,
                 id: `SpnElementService${service}`,
-                fieldTxt:`${textEs[service]}:`,
+                fieldTxt:`${getStaticText(service)}:`,
                 value : "",
                 tabSpaces: 1
             })
@@ -277,12 +218,12 @@ function OrderElements({elements_details}){
             /* Minor display adjustments */
             if(element.includes("custom")){ //the element is custom
                 if(typeof elements_details[service][element]["name"] === "undefined"){
-                    elementName = textEs.elementsStr["custom"];
+                    elementName = getStaticText("custom");
                 }else{
                     elementName = elements_details[service][element]["name"];
                 }
             }else{
-                elementName = textEs.elementsStr[element];
+                elementName = getStaticText(element);
             }
             components.push( React.createElement(OrderModalComp.FieldRightValue,{
                 key: `ElementsOfOrderOnModal${element}-${service}`,
@@ -306,12 +247,12 @@ function NotificationsAndChat({orderID, indications}){
             [
                 React.createElement(OrderModalComp.Legend4Div,{
                     key: `Legend4NotifsAndChat4${idComp}`,
-                    text: `${textEs["notifsAndChat"]}`
+                    text: `${getStaticText("notifsAndChat")}`
                 }),
                 React.createElement(OrderModalComp.FieldValue,{
                     key: `Indications4Order${idComp}`,
                     id: `Indications4Order${idComp}`,
-                    fieldTxt: `${textEs.indications}:`,
+                    fieldTxt: `${getStaticText("indications")}:`,
                     value: `${indications}`
                 })
             ]

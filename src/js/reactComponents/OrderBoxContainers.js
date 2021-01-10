@@ -2,45 +2,12 @@
 
 const React = require("react");
 const OrderBoxComp = require("./OrderBoxComp");
+const {getStaticText} = require("../translation/translator");
+const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
+const DATE_DIFFERENCE_COLORS = require("../../../meta/DATE_DIFFERENCE_COLORS");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
-
-const textEs = {
-    wait: "En espera",
-    processing: "Procesando",
-    ready: "Listo para retirar",
-    retired: "Retirado",
-    status: "Estado",
-    customer: "Cliente",
-    date_assign: "Fecha Asignada",
-    date_receive: "Fecha Recibida",
-    hook_quantity: "Cantidad de Ganchos",
-    touchForDetails: "Toca para más detalles",
-    total_price: "Precio Total",
-    timeLeft: "Faltan",
-    days: "días",
-    hours: "horas",
-    minutes: "minutos",
-    delayed: "Atrasado",
-    ago: "hace",
-    by: "por"
-};
-
-//this contains 3 colors that define the text of status
-//should be in hex
-const statusColors = {
-    wait: "#DB4438",
-    processing: "#DBA502",
-    ready: "#00A822",
-    retired: "#999DA3"
-};
-
-const dateDiffColors = {
-    early: "#00A822",
-    near: "#DBA502",
-    late: "#DB4438"
-};
 
 function OrderBox({showLaundryName, orderID,columnType, status, orderDetails , 
     dateTimeDifference, onClickOrder}){
@@ -63,8 +30,8 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                 }),
                 React.createElement(OrderBoxComp.CenterBoldDiv, {
                     key: `OrderStatusTag${elementID}`,
-                    text: `${textEs.status}: ${textEs[status]}`,
-                    color : statusColors[status]
+                    text: `${getStaticText("status")}: ${getStaticText(status)}`,
+                    color : STATUS_COLORS[status]
                 }),
                 React.createElement(dateTimeDifferenceDiv,{
                     key: `OrderDateTimeDiff${elementID}`,
@@ -80,25 +47,25 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `Ordercustomer_name${elementID}`,
                             id: `Ordercustomer_name${elementID}`,
-                            fieldTxt: `${textEs.customer}:`,
+                            fieldTxt: `${getStaticText("customer")}:`,
                             value: orderDetails.customer_name
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `OrderDateWritten${elementID}`,
                             id: `OrderDateWritten${elementID}`,
-                            fieldTxt: `${textEs.date_receive}:`,
+                            fieldTxt: `${getStaticText("date_receive")}:`,
                             value: orderDetails.date_receive
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `Orderdate_assigned${elementID}`,
                             id: `Orderdate_assigned${elementID}`,
-                            fieldTxt: `${textEs.date_assign}:`,
+                            fieldTxt: `${getStaticText("date_assign")}:`,
                             value: orderDetails.date_assign
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `Orderhook_quantity${elementID}`,
                             id: `Orderhook_quantity${elementID}`,
-                            fieldTxt: `${textEs.hook_quantity}:`,
+                            fieldTxt: `${getStaticText("hook_quantity")}:`,
                             value: orderDetails.hook_quantity
                         })
                     ]                    
@@ -107,11 +74,11 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                     React.createElement(OrderBoxComp.HrGrey, {key:`PriceHR${elementID}`}),
                     React.createElement(OrderBoxComp.CenterBoldDiv,{
                         key: `OrderPriceTag${elementID}`,
-                        text: `${textEs.total_price}: ${orderDetails.total_price}`
+                        text: `${getStaticText("total_price")}: ${orderDetails.total_price}`
                     }),
                     React.createElement(OrderBoxComp.CenterBoldDiv, {
                         key: `Touch4Details${elementID}`,
-                        text: textEs.touchForDetails,
+                        text: getStaticText("touchForDetails"),
                         isDetailsText: true
                     })
                 ]
@@ -135,27 +102,27 @@ function Title({showLaundryName, laundryName = "", idChar, idNumber}){
 
 function dateTimeDifferenceDiv({dateTimeDifference, orderStatus}){
     let color = "";
-    let daysStr = `${dateTimeDifference.days} ${textEs.days}`;
-    let hoursStr = `${dateTimeDifference.hours} ${textEs.hours}`;
-    let minutesStr = `${dateTimeDifference.minutes} ${textEs.minutes}`;
+    let daysStr = `${dateTimeDifference.days} ${getStaticText("days")}`;
+    let hoursStr = `${dateTimeDifference.hours} ${getStaticText("hours")}`;
+    let minutesStr = `${dateTimeDifference.minutes} ${getStaticText("minutes")}`;
     let displayStr = "";
     if(dateTimeDifference.timeStatus === "future"){
-        displayStr = `${textEs.timeLeft} ${daysStr}, ${hoursStr}, ${minutesStr}`;
+        displayStr = `${getStaticText("timeLeft")} ${daysStr}, ${hoursStr}, ${minutesStr}`;
     }else{
-        displayStr= `${textEs.delayed} ${textEs.by} ${daysStr}, ${hoursStr}, ${minutesStr}`;
+        displayStr= `${getStaticText("delayed")} ${getStaticText("by")} ${daysStr}, ${hoursStr}, ${minutesStr}`;
     }
 
     switch(true){
         case (dateTimeDifference.hours > 1 && dateTimeDifference.timeStatus === "future"):
-            color = dateDiffColors.early;
+            color = DATE_DIFFERENCE_COLORS.early;
         break;
 
         case (dateTimeDifference.hours <= 1 && dateTimeDifference.minutes >= 0 && dateTimeDifference.timeStatus === "future"):
-            color = dateDiffColors.near;
+            color = DATE_DIFFERENCE_COLORS.near;
         break;
 
         default:
-            color = dateDiffColors.late;
+            color = DATE_DIFFERENCE_COLORS.late;
         break;  
     }
 

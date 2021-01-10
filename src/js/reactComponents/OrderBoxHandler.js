@@ -4,7 +4,7 @@ const React = require("react");
 const OrderBox = require("./OrderBoxContainers");
 const dayjs = require("dayjs");
 const Time = require("./Time");
-
+const {DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM} = require("../../../meta/DATE_TIME_FORMATS");
 
 
 /* This is the high order component, this is where AJAX requests performs
@@ -38,8 +38,8 @@ class OrderBoxes extends React.Component{
                 orderDetails: {
                     laundry_name: order.laundry_name,
                     customer_name: order.customer_name,
-                    date_assign: dayjs(order.date_assign).format("YYYY-MM-DD hh:mm A"),
-                    date_receive: dayjs(order.date_receive).format("YYYY-MM-DD hh:mm A"),
+                    date_assign: dayjs(order.date_assign).format(DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM),
+                    date_receive: dayjs(order.date_receive).format(DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM),
                     hook_quantity: order.hook_quantity,
                     total_price: order.total_price
                 },

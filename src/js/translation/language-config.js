@@ -1,9 +1,13 @@
 const {isIn} = require("validator");
 const LANGUAGES = require("../../../meta/LANGUAGES");
 const LANGUAGE_COOKIE_NAME = require("../../../meta/LANGUAGE_COOKIE_NAME");
+const Cookies = require("js-cookie");
+
 
 function getLanguage(){
-    if(!isLanguageSelected()) setDefaultLanguage();
+    const selectedLanguage = Cookies.get(LANGUAGE_COOKIE_NAME);
+
+    if(!isLanguageSelected() && !isLanguageAvailable(selectedLanguage)) setDefaultLanguage();
     return Cookies.get(LANGUAGE_COOKIE_NAME);
 }
 
