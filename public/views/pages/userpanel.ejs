@@ -11,7 +11,7 @@
         <script defer src="/builds/userPanel.js"></script>
     </head>
 
-    <title id="pageTitle"></title>
+    <title id="pageTitle"><%- userPanelMainTitleTag %> </title>
 
     <body>
         <div id="NavbarContainer"></div>
@@ -22,7 +22,7 @@
         <div class="  karla_font showIDTxt">
             <div class="row bottomBorder ">
                 <div id="showID" class="text-center col-lg-12">
-                    <span >Tu ID Público es: </span>
+                    <span ><%-`${yourPublicIDIs}:`%> </span>
                     
                 </div>
             </div>
@@ -35,7 +35,7 @@
 
                     <div class="col-lg-8 text-center  ">
 
-                        <div class="titleTxt">Órdenes que no has recogido aún</div>
+                        <div class="titleTxt"><%- `${ordersThatYouHaventRetrieved}:` %> </div>
 
 
                         <div class="small-mediumSeparation"></div>
@@ -50,7 +50,7 @@
 
                     <div class="col-lg-4 text-center ">
 
-                        <div class="titleTxt">Notificaciones</div>
+                        <div class="titleTxt"><%- notifications %> </div>
 
                         <div class="small-mediumSeparation"></div>
 

@@ -17,12 +17,9 @@ const {fetchAccountCreds, getUserType} = require("./ajax-requests/user-creds");
 const Navbar = require("./reactComponents/NavbarHandler");
 const convertArrToObj = require("./frontendModules/convertArrToObj");
 
-const textEs = {
-    yourPublicIDIs: "Tu ID público es"
-}
+const {getStaticText} = require("./translation/translator");
 
 const io = require("socket.io-client");
-
 const userSocket = io.connect("/user");
 
 userSocket.on("connect", () =>{
@@ -39,7 +36,7 @@ window.onload = function(){
             RenderNotificationBar(userSocket);
         });
     }catch{
-        alert("Error al cargar datos");
+        alert(getStaticText("ERR_LOADING_DATA"));
     }
 }
 
@@ -68,23 +65,23 @@ function RenderNotificationBar(socket){
 function RenderPublicID(){
     fetchAccountCreds()
     .then(({data: {public_id}}) =>{
-        document.getElementById("showID").textContent = `${textEs.yourPublicIDIs}: ${public_id}`;
+        document.getElementById("showID").textContent = `${getStaticText("yourPublicIDIs")}: ${public_id}`;
     })
     .catch(err =>{
-        document.getElementById("showID").textContent = `${textEs.yourPublicIDIs}: ERROR`;
+        document.getElementById("showID").textContent = `${getStaticText("yourPublicIDIs")}: ERROR`;
     })    
 }
 
 function Orders(){
     //CONSTANT QUERY, THIS QUERY ISN'T CUSTOMIZABLE BY THE USER
-    const paramSelected = "customerID";
-    const statusSelected = ["wait", "processing", "ready"];
+    const PARAM_SELECTED = "customerID";
+    const STATUS_SELECTED = ["wait", "processing", "ready"];
 
     let [todayDateTime, setTodayDateTime] = React.useState({});
     let [orders, setOrders] = React.useState({});
     let [paramProps, setParamProps] = React.useState({
-        paramSelected: paramSelected,
-        statusSelected: statusSelected,
+        paramSelected: PARAM_SELECTED,
+        statusSelected: STATUS_SELECTED,
         elementsToFetch: 10
     });
     let [isScrollBottomAttached, setScrollBottomAttached] = React.useState(false);

@@ -1,125 +1,149 @@
 {
-    "of": "de",
+    "static": {
+        "of": "de",
 
-    "writeOrders": "Escritura de órdenes",
-    "affiliatedOrders": "Órdenes afiliadas a mi lavandería",
-    "myAccount": "Mi cuenta",
-    "myOrders": "Mis órdenes",
-    "closeSession": "Cerrar sesión",
-    "main": "Principal",
+        "writeOrders": "Escritura de órdenes",
+        "affiliatedOrders": "Órdenes afiliadas a mi lavandería",
+        "myAccount": "Mi cuenta",
+        "myOrders": "Mis órdenes",
+        "closeSession": "Cerrar sesión",
+        "main": "Principal",
 
-    "language": "Idioma",
+        "language": "Idioma",
 
-    "orderID": "ID de la orden",
-    "submitOrder_action": "Completar orden",
+        "orderID": "ID de la orden",
+        "submitOrder_action": "Completar orden",
 
-    "date": "Fecha",
-    "hour": "Hora",
+        "date": "Fecha",
+        "hour": "Hora",
 
-    "iron": "Planchado",
-    "wash_iron": "Lavado y planchado",
-    "wash": "Lavado",
-    "dry_clean": "Lavado en seco",
+        "iron": "Planchado",
+        "wash_iron": "Lavado y planchado",
+        "wash": "Lavado",
+        "dry_clean": "Lavado en seco",
 
-    "custom" : "Elemento personalizable",
-    "shirt": "Camisa",
-    "pants": "Pantalón",
-    "skirt": "Falda",
-    "coat": "Saco",
-    "sweater": "Suéter",
-    "pleatedSkirt": "Falda Plizada",
-    "overall": "Overol",
-    "jumper": "Jumper",
-    "blouse": "Blusa",
-    "largeSuit": "Vestido",
-    "quilt": "Colcha",
+        "custom" : "Elemento personalizable",
+        "shirt": "Camisa",
+        "pants": "Pantalón",
+        "skirt": "Falda",
+        "coat": "Saco",
+        "sweater": "Suéter",
+        "pleatedSkirt": "Falda Plizada",
+        "overall": "Overol",
+        "jumper": "Jumper",
+        "blouse": "Blusa",
+        "largeSuit": "Vestido",
+        "quilt": "Colcha",
+        
+        "elementName": "Nombre del elemento",
+        "quantity": "Cantidad",
+        "pricePerUnit": "Precio por unidad",
+        "total": "Total",
+        "presentHooks": "Ganchos presentes",
+        "completeHooks": "Ganchos completos",
+
+        "customerID": "ID del Cliente",
+        "doesntExists": "No existe",
+
+        "customer": "Cliente",
+
+        "january" :"enero",
+        "february": "febrero",
+        "march": "marzo",
+        "april": "abril",
+        "may": "mayo",
+        "june": "junio",
+        "july": "julio",
+        "august": "agosto",
+        "september": "septiembre",
+        "october": "octubre",
+        "november": "noviembre",
+        "december": "diciembre",
+
+        "all": "Todos los estados",
+        "wait": "En espera",
+        "processing": "Procesando",
+        "ready": "Listo para retirar",
+        "retired": "Retirado",
+
+        "wait_nextStatus": "Procesar la orden",
+        "processing_nextStatus": "Terminar la orden",
+        "ready_nextStatus": "Orden terminada",
+        "retired_nextStatus": "Retirado",
+        "status": "Estado",
+
+        "hookQuantity": "Cantidad de Ganchos",
+        "totalPrice": "Precio Total",
+
+        "touchForDetails": "Toca para más detalles",
+
+        "timeLeft": "Faltan",
+        "days": "días",
+        "hours": "horas",
+        "minutes": "minutos",
+        "delayed": "Atrasado",
+        "ago": "hace",
+        "by": "por",
+
+        "order": "Orden",
+        "elements": "Elementos",
+        "customer_name": "Nombre del cliente",
+        "notifsAndChat": "Notificaciones y Chat",
+        "indications": "Indicaciones",
+        "affiliateCustomer": "Afiliar cliente",
+
+        "myAccountMainTitle": "Todo lo que debes saber de tu cuenta. Aquí.",
+        "scheduleOfService": "Horario de servicio",
+        "servicesThatYouOffer": "Servicios que ofreces",
+        "priceElements": "Precio de los elementos",
+        "myAccountPriceElementsSubtitle": "Estos precios son los usuales, cuando se ordena se le puede cambiar el precio a uno deseado",
+        "customMessages": "Mensajes personalizados",
+        "myAccountCustomMessagesSubtitle": "Texto que puedes introducir rápidamente con un click",
+
+        "changePassword_action": "Cambiar contraseña",
+
+        "enterYourActualPassword": "Ingresa tu contraseña actual",
+        "actualPassword": "Contraseña actual",
+        "enterANewPassword": "Ingresa una contraseña nueva",
+        "newPassword": "Contraseña nueva",
+        "reEnterTheNewPassword": "Reingresa la neuva contraseña",
+
+        "weak_passwordLength": "Contraseña muy débil, inserta una contraseña más fuerte",
+        "moderate_passwordLength": "Contraseña moderada",
+        "moderateStrong_passwordLength": "Contraseña moderadamente fuerte",
+        "strong_passwordLength": "Contraseña fuerte",
+        "needToIntroduceNewPassword": "Debes introducir una nueva contraseña",
+        "passwordMatch": "¡Las contreaseñas coinciden!",
+        "passwordDoesntMatch": "¡Las contreaseñas no coinciden!",
+        "passwordChange_success": "¡La contraseña fue atualizada con éxito!",
+
+        "searchBy": "Buscar por:",
+        "dateAssign": "Fecha asignada",
+        "dateReceive": "Fecha recibida",
+        "dateRange": "Entre dos fechas",
+        "startDate": "Fecha Inicial:",
+        "endDate": "Fecha Final:",
+        "time": "Hora:",
+        "paramForSearch": "Parámetros de la búsqueda",
+
+
+
+        "yourPublicIDIs": "Tu ID público es",
+
+        "ERR_LOADING_DATA": "Error al cargar los datos"
+    },
     
-    "elementName": "Nombre del elemento",
-    "quantity": "Cantidad",
-    "pricePerUnit": "Precio por unidad",
-    "total": "Total",
-    "presentHooks": "Ganchos presentes",
-    "completeHooks": "Ganchos completos",
+    "variable": {
+        "notification":{
+            "new-order": "¡Tienes una nueva orden de la $laundryName!",
+            
+            "new-order-status": {
+                "processing": "¡La $laundryName está procesando tu orden $id_char$id_number!",
+                "ready": "¡Ya puedes retirar tu orden $id_char$id_number de la $laundryName!",
+                "retired": "Has retirado la orden $id_char$id_number de la $laundryName"
+            }
 
-    "customerID": "ID del Cliente",
-    "doesntExists": "No existe",
-
-    "customer": "Cliente",
-
-    "january" :"enero",
-    "february": "febrero",
-    "march": "marzo",
-    "april": "abril",
-    "may": "mayo",
-    "june": "junio",
-    "july": "julio",
-    "august": "agosto",
-    "september": "septiembre",
-    "october": "octubre",
-    "november": "noviembre",
-    "december": "diciembre",
-
-    "all": "Todos los estados",
-    "wait": "En espera",
-    "processing": "Procesando",
-    "ready": "Listo para retirar",
-    "retired": "Retirado",
-
-    "wait_nextStatus": "Procesar la orden",
-    "processing_nextStatus": "Terminar la orden",
-    "ready_nextStatus": "Orden terminada",
-    "retired_nextStatus": "Retirado",
-    "status": "Estado",
-
-    "date_assign": "Fecha Asignada",
-    "date_receive": "Fecha Recibida",
-
-    "hook_quantity": "Cantidad de Ganchos",
-
-    "touchForDetails": "Toca para más detalles",
-
-    "total_price": "Precio Total",
-
-    "timeLeft": "Faltan",
-    "days": "días",
-    "hours": "horas",
-    "minutes": "minutos",
-    "delayed": "Atrasado",
-    "ago": "hace",
-    "by": "por",
-
-    "order": "Orden",
-    "elements": "Elementos",
-    "customer_name": "Nombre del cliente",
-    "notifsAndChat": "Notificaciones y Chat",
-    "indications": "Indicaciones",
-    "affiliateCustomer": "Afiliar cliente",
-
-    "myAccountMainTitle": "Todo lo que debes saber de tu cuenta. Aquí.",
-    "scheduleOfService": "Horario de servicio",
-    "servicesThatYouOffer": "Servicios que ofreces",
-    "priceElements": "Precio de los elementos",
-    "myAccountPriceElementsSubtitle": "Estos precios son los usuales, cuando se ordena se le puede cambiar el precio a uno deseado",
-    "customMessages": "Mensajes personalizados",
-    "myAccountCustomMessagesSubtitle": "Texto que puedes introducir rápidamente con un click",
-
-    "changePassword_action": "Cambiar contraseña",
-
-    "enterYourActualPassword": "Ingresa tu contraseña actual",
-    "actualPassword": "Contraseña actual",
-    "enterANewPassword": "Ingresa una contraseña nueva",
-    "newPassword": "Contraseña nueva",
-    "reEnterTheNewPassword": "Reingresa la neuva contraseña",
-
-    "weak_passwordLength": "Contraseña muy débil, inserta una contraseña más fuerte",
-    "moderate_passwordLength": "Contraseña moderada",
-    "moderateStrong_passwordLength": "Contraseña moderadamente fuerte",
-    "strong_passwordLength": "Contraseña fuerte",
-    "needToIntroduceNewPassword": "Debes introducir una nueva contraseña",
-    "passwordMatch": "¡Las contreaseñas coinciden!",
-    "passwordDoesntMatch": "¡Las contreaseñas no coinciden!",
-    "passwordChange_success": "¡La contraseña fue atualizada con éxito!",
-
-
-    "ERR_LOADING_DATA": "Error al cargar los datos"
+           
+        }
+    }
 }

@@ -9,7 +9,7 @@ const {getStaticText} = require("../translation/translator");
 //able to request information about this.
 
 
-function customerSelector({customerID, customerName, onChangeID}){
+function customerSelector({customerID, customerName, onChangeID, onBlur}){
     return(
         React.createElement("div", {className: "row"},
             React.createElement("div", {
@@ -24,7 +24,8 @@ function customerSelector({customerID, customerName, onChangeID}){
                     type: "text",
                     maxLength: "6",
                     id:"inputCustomerID",
-                    onChange: (e)=>onChangeID(e.target.value),
+                    onChange: (e) => onChangeID(e.target.value),
+                    onBlur: (e)=> onBlur(),
                 })
             ),
 
@@ -55,21 +56,27 @@ class InputCustomerID extends React.Component{
         };
     }
 
-    searchCustomerByID(id){ //handler for attaching a client to a order
-        let customerData = JSON.parse(JSON.stringify(this.state));
-        
+    onChangeIDHandler(id){
+        id = id.toUpperCase();
+        this.setState({id: id});
+    }
+
+    searchCustomerByID(){ //handler for attaching a client to a order
+        let customer = JSON.parse(JSON.stringify(this.state));
+
         let that = this; //bind the this to this scope, so it can use setState
-        customerData.id = id.toUpperCase();
-        searchCustomerByID({inputCustomerID: customerData.id}).then(({data}) =>{
+        searchCustomerByID({inputCustomerID: customer.id}).then(({data}) =>{
             if(data){
-                customerData.name = `${data.name} ${data.surname}`;
+                let {name, surname} = data;
+                customer.name = `${name} ${surname}`;
             }else{
-                customerData.name = null;
+                customer.name = null;
             }
-            that.setState(customerData);
+
+            that.setState(customer);
         }).catch(err => {
-            customerData.name = null;
-            that.setState(customerData);
+            customer.name = null;
+            that.setState(customer);
         });
     }
 
@@ -78,8 +85,15 @@ class InputCustomerID extends React.Component{
     }
 
     shouldComponentUpdate(newProps, newState){
+
+        let hasNameChanged = this.state.name !== newState.name;
+        
+        if(hasNameChanged){
+            this.returnData(newState);
+        }
+
         if(newProps !== this.props) return false;
-        this.returnData(newState);
+
         return true;
     }
 
@@ -96,7 +110,8 @@ class InputCustomerID extends React.Component{
                 React.createElement(customerSelector,{
                     customerID: this.state.id,
                     customerName: this.state.name,
-                    onChangeID: (id) => this.searchCustomerByID(id)
+                    onChangeID: (id) => this.onChangeIDHandler(id),
+                    onBlur: () => this.searchCustomerByID()
                 })
             );
         }

@@ -56,12 +56,11 @@ module.exports = function(orders, io){
                     getter_role: "user",
                     code: NEW_ORDER_STATUS_NOTIF_CODE,
                     extras: {
+                        SUB_PROP: "status",
                         laundryName: await GetLaundryNameByInitials(laundryInitials),
                         status: nextStatus,
-                        orderID: {
-                            id_char: id_char,
-                            id_number: id_number
-                        }
+                        id_char: id_char,
+                        id_number: id_number
                     }
                 })
             } 

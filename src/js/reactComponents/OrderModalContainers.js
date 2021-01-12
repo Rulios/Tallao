@@ -68,7 +68,7 @@ function OrderModal({orderDetails, onClickClose,
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalReceiveDate4${idComp}`,
-                                        fieldTxt: `${getStaticText("date_receive")}:`,
+                                        fieldTxt: `${getStaticText("dateReceive")}:`,
                                         value: `${dayjs(orderDetails.date_receive).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
@@ -77,7 +77,7 @@ function OrderModal({orderDetails, onClickClose,
                                 },
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalAssignDate4${idComp}`,
-                                        fieldTxt: `${getStaticText("date_assign")}:`,
+                                        fieldTxt: `${getStaticText("dateAssign")}:`,
                                         value: `${dayjs(orderDetails.date_assign).format("YYYY-MM-DD hh:mm A")}`
                                     })
                                 ),
@@ -107,13 +107,13 @@ function OrderModal({orderDetails, onClickClose,
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalHookQuantity4${idComp}`,
                                     id: `OrderModalHookQuantity4${idComp}`,
-                                    fieldTxt: `${getStaticText("hook_quantity")}:`,
+                                    fieldTxt: `${getStaticText("hookQuantity")}:`,
                                     value: `${orderDetails.hook_quantity}`
                                 }),
                                 React.createElement(OrderModalComp.FieldRightValue,{
                                     key: `OrderModalTotalPrice4${idComp}`,
                                     id: `OrderModalTotalPrice4${idComp}`,
-                                    fieldTxt: `${getStaticText("total_price")}`,
+                                    fieldTxt: `${getStaticText("totalPrice")}`,
                                     value: `${orderDetails.total_price}`
                                 })
                             ]

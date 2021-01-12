@@ -58,5 +58,12 @@
     "indications": "Indicaciones",
     "elements": "Elementos",
     "selectTheService": "Selecciona el servicio",
-    "orderScheduledFor": "Orden programada para"
+    "orderScheduledFor": "Orden programada para",
+
+    "myAccountMainTitleTag": "Mi cuenta",
+
+    "userPanelMainTitleTag": "Principal",
+    "yourPublicIDIs": "Tu ID Público es:",
+    "ordersThatYouHaventRetrieved": "Órdenes que no has recogido aún",
+    "notifications": "Notificaciones"
 }

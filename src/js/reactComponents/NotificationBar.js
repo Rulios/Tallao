@@ -21,8 +21,6 @@ function NotificationBar({socket}){
     }else{
         return null;
     }
-
-
 }
 
 function NotificationBtn({notification: {text}}){

@@ -24,9 +24,9 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                 React.createElement(Title, {
                     key: `Title4${orderID.id}`,
                     showLaundryName: showLaundryName,
-                    laundryName: orderDetails.laundry_name,
-                    idChar: orderID.id_char,
-                    idNumber: orderID.id_number
+                    laundry_name: orderDetails.laundry_name,
+                    id_char: orderID.id_char,
+                    id_number: orderID.id_number
                 }),
                 React.createElement(OrderBoxComp.CenterBoldDiv, {
                     key: `OrderStatusTag${elementID}`,
@@ -53,19 +53,19 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `OrderDateWritten${elementID}`,
                             id: `OrderDateWritten${elementID}`,
-                            fieldTxt: `${getStaticText("date_receive")}:`,
+                            fieldTxt: `${getStaticText("dateReceive")}:`,
                             value: orderDetails.date_receive
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `Orderdate_assigned${elementID}`,
                             id: `Orderdate_assigned${elementID}`,
-                            fieldTxt: `${getStaticText("date_assign")}:`,
+                            fieldTxt: `${getStaticText("dateAssign")}:`,
                             value: orderDetails.date_assign
                         }),
                         React.createElement(OrderBoxComp.FieldValue,{
                             key: `Orderhook_quantity${elementID}`,
                             id: `Orderhook_quantity${elementID}`,
-                            fieldTxt: `${getStaticText("hook_quantity")}:`,
+                            fieldTxt: `${getStaticText("hookQuantity")}:`,
                             value: orderDetails.hook_quantity
                         })
                     ]                    
@@ -74,7 +74,7 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
                     React.createElement(OrderBoxComp.HrGrey, {key:`PriceHR${elementID}`}),
                     React.createElement(OrderBoxComp.CenterBoldDiv,{
                         key: `OrderPriceTag${elementID}`,
-                        text: `${getStaticText("total_price")}: ${orderDetails.total_price}`
+                        text: `${getStaticText("totalPrice")}: ${orderDetails.total_price}`
                     }),
                     React.createElement(OrderBoxComp.CenterBoldDiv, {
                         key: `Touch4Details${elementID}`,
@@ -87,15 +87,15 @@ function OrderBox({showLaundryName, orderID,columnType, status, orderDetails ,
     )
 }
 
-function Title({showLaundryName, laundryName = "", idChar, idNumber}){
+function Title({showLaundryName, laundry_name = "", id_char, id_number}){
     let components = [];
     if(showLaundryName){
         components.push(
-            <h3 key={`LaundryName4${idChar}${idNumber}`} className="bold">{laundryName}</h3>
+            <h3 key={`LaundryName4${id_char}${id_number}`} className="bold">{laundry_name}</h3>
         );
     }
     components.push(
-        <h3 key={`IDTag4${idChar}${idNumber}`}className="bold">{`${idChar} ${idNumber}`}</h3>
+        <h3 key={`IDTag4${id_char}${id_number}`}className="bold">{`${id_char} ${id_number}`}</h3>
     )
     return components;
 }
@@ -156,7 +156,7 @@ module.exports = OrderBox;
                 <span class="bold">Día Asignado:</span> <span style="float:right">10/10/2020</span>
             </div>
             <div name="date_assignTag">Día asignado:</div>  <div style="float:right">10/10/2020</div>
-            <div name="date_receiveTag">Día recibido: 10/10/2020</div>
+            <div name="dateReceiveTag">Día recibido: 10/10/2020</div>
             <div name="hook_quantityTag">Cantidad de Ganchos: 2</div>
 
             

@@ -1,7 +1,9 @@
 const {isIn} = require("validator");
+const Cookies = require("js-cookie");
+
 const LANGUAGES = require("../../../meta/LANGUAGES");
 const LANGUAGE_COOKIE_NAME = require("../../../meta/LANGUAGE_COOKIE_NAME");
-const Cookies = require("js-cookie");
+const DEFAULT_LANGUAGE = require("../../../meta/DEFAULT_LANGUAGE");
 
 
 function getLanguage(){
@@ -28,12 +30,10 @@ function isLanguageSelected(){
 }
 
 function setDefaultLanguage(){
-    Cookies.set(LANGUAGE_COOKIE_NAME, getDefaultLanguage());
+    Cookies.set(LANGUAGE_COOKIE_NAME, DEFAULT_LANGUAGE);
 }
 
-function getDefaultLanguage(){
-    return LANGUAGES[0];
-}
+
 
 module.exports = {
     getLanguage: getLanguage,

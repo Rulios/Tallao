@@ -42,7 +42,7 @@ const InputTime = ({id, value,onChange}) =>{
     });
 };
 
-const InputText = ({id, isCharInput, value, onChange}) =>{
+const InputText = ({id, isCharInput, value, onChange, onBlur}) =>{
     return React.createElement("input", {
         id: id,
         type: "text",
@@ -53,15 +53,17 @@ const InputText = ({id, isCharInput, value, onChange}) =>{
         },  
         onChange : (e) =>{
             onChange(e.target.value);
-        }
+        },
+        onBlur : () => onBlur()
     });
 }
 
-const InputNumber = ({id, value, onChange}) =>{
+const InputNumber = ({id, value, onChange, onBlur}) =>{
     return React.createElement("input", {
         id: id,
         type: "number",
         value: value,
+        onBlur: () => onBlur(),
         onChange: (e) =>{ 
             onChange(e.target.value);
         }

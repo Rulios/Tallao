@@ -151,7 +151,7 @@ function buildQuery(paramSelected, statusArr, userType){
             preCalculateVariableParams(3);
             query = `
                 ${FIELDS_QUERY}
-                    AND${PUBLIC_ID_FIELD} = $1
+                    AND ${PUBLIC_ID_FIELD} = $1
                     AND (date_receive 
                         BETWEEN $2::timestamptz AND $3::timestamptz)
                     AND status IN (${variableParams.join(",")})

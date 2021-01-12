@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const OrderParamsSelectorContainers = require("./OrderParamsSelectorContainers");
+const OrderParamsSelector = require("./OrderParamsSelectorContainers");
 const dayjs = require("dayjs");
 const Time = require("./Time");
 
@@ -77,6 +77,10 @@ class SearchOrderSection extends React.Component{
         this.setState({txt: value});
     }
 
+    onTxtBlurHandler() {   
+        this.returnData(this.state);
+    }
+
     orderInputHandler(field, value){
         let newOrderParam = JSON.parse(JSON.stringify(this.state.order));
         if(field === "char") value = value.toUpperCase();
@@ -112,16 +116,33 @@ class SearchOrderSection extends React.Component{
 
     shouldComponentUpdate(newProps, newState){
 
-        if(this.state !== newState){
+        let {hour: prevHour, date: prevDate, 
+            paramSelected: prevParamSelected, 
+            statusSelected: prevStatusSelected} = this.state;
+
+        let {hour: newHour, date: newDate, 
+            paramSelected: newParamSelected,
+            statusSelected: newStatusSelected} = newState;
+
+        let hasParamSelectedChanged = prevParamSelected !== newParamSelected;
+        let hasStatusSelectedChanged = prevStatusSelected !== newStatusSelected;
+        let hasHourChanged = prevHour !== newHour;
+        let hasDateChanged = prevDate !== newDate;
+
+        let shouldReturnData = (
+            hasParamSelectedChanged || hasStatusSelectedChanged || hasHourChanged || hasDateChanged
+        );
+        
+        if(shouldReturnData){
             this.returnData(newState);
-            return true;
-        }else{
-            return false;
         }
+
+        if(this.state === newState) return false;
+        return true;
     }
 
     render(){
-        return React.createElement(OrderParamsSelectorContainers.MainContainer,{
+        return React.createElement(OrderParamsSelector,{
             paramsObj: {
                 paramSelected: this.state.paramSelected,
                 paramList: this.state.paramList,
@@ -136,6 +157,7 @@ class SearchOrderSection extends React.Component{
                 onDateChange:(field,value) =>this.dateInputHandler(field, value),
                 onHourChange:(field, value) => this.hourInputHandler(field, value),
                 onTxtChange: (field, value) => this.txtInputHandler(field, value),
+                onTxtBlur: () =>this.onTxtBlurHandler(),
                 onOrderChange: (field, value) => this.orderInputHandler(field, value)
             },
             inputsValues: {

@@ -3,30 +3,10 @@
 const React = require("react");
 const OrderParamsSelectorComp = require("./OrderParamsSelectorComp");
 
+const {getStaticText} = require("../translation/translator");
+
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
-
-const textEs = {
-    searchBy: "Buscar por:",
-    dateAssign: "Fecha asignada",
-    dateReceive: "Fecha recibida",
-    dateRange: "Entre dos fechas",
-    orderID: "Número de Orden (ID)",
-    customerID: "Identificación del cliente",
-    status: "Estado:",
-    date: "Fecha:",
-    startDate: "Fecha Inicial:",
-    endDate: "Fecha Final:",
-    time: "Hora:",
-    param4Search: "Parámetros de la búsqueda",
-    strStatus: {
-        all: "Todos los estados", 
-        wait: "En espera",
-        processing: "Procesando",
-        ready: "Listo",
-        retired: "Retirado"
-    }
-};
 
 function MainContainer({
     paramsObj, statusObj, changeHandler, inputsValues,
@@ -92,10 +72,11 @@ function MainContainer({
                     key:"orderIDInput",
                     id: "orderIDInput",
                     values: inputsValues.order,
+                    onBlur: () => changeHandler.onTxtBlur(),
                     onChange: {
                         orderChar:(value) => changeHandler.onOrderChange("char",value),
                         orderNumber:(value) => changeHandler.onOrderChange("number",value),
-                    }
+                    } 
                 })
             );
         break;
@@ -107,7 +88,8 @@ function MainContainer({
                     id: "customerIDInput",
                     value: inputsValues.txt,
                     txtType: "customerID",
-                    onChange: (value) => changeHandler.onTxtChange("customerID",value)
+                    onChange: (value) => changeHandler.onTxtChange("customerID",value),
+                    onBlur: () => changeHandler.onTxtBlur()
                 })
             );
         break;
@@ -135,7 +117,7 @@ function MainContainer({
                 [
                     React.createElement(OrderParamsSelectorComp.Legend4Div, {
                         key: "Legend4Div",
-                        text: textEs.param4Search
+                        text: getStaticText("paramForSearch")
                     }),
                     React.createElement(SelectStatusInput,{
                         key: "SelectStatusInput",
@@ -159,7 +141,7 @@ function paramListSelect({paramsArr, selected, onChange}){
         React.createElement(OrderParamsSelectorComp.Label4Input, {
             key: "Lbl4ParamList",
             id: "SelectParamList",
-            text: textEs.searchBy
+            text: getStaticText("searchBy")
         }),
         React.createElement("select", {
             key: "SelectParamList",
@@ -171,7 +153,7 @@ function paramListSelect({paramsArr, selected, onChange}){
                 return React.createElement("option", {
                     key: `OptionParamList${parameter}`,
                     value: parameter
-                }, textEs[parameter]);
+                }, getStaticText(parameter));
             })
         )
     ];
@@ -183,7 +165,7 @@ function SelectStatusInput({statusArr, selected, onChange}){
         React.createElement(OrderParamsSelectorComp.Label4Input, {
             key: "Lbl4StatusInput",
             id: "SelectStatusInput",
-            text: textEs.status
+            text: getStaticText("status")
         }),
         React.createElement("select", {
             key: "SelectStatusInput",
@@ -195,7 +177,7 @@ function SelectStatusInput({statusArr, selected, onChange}){
                 return React.createElement("option" ,{
                     key: `OptionStatusInput${status}`,
                     value : status
-                }, textEs.strStatus[status])                    
+                }, getStaticText(status))                    
             })
         )
     ];
@@ -211,7 +193,7 @@ function DateTimeInput({id,rangeType, values, changeHandler, isDateRange}){
                         React.createElement(OrderParamsSelectorComp.Label4Input, {
                             key: `LblDate${id}`,
                             id: id,
-                            text: (typeof isDateRange !== "undefined") ? textEs[rangeType] : textEs.date
+                            text: (typeof isDateRange !== "undefined") ? getStaticText(rangeType) : getStaticText("date")
                         }),
                         React.createElement(OrderParamsSelectorComp.InputDate, {
                             key: `Date4${id}`,
@@ -226,7 +208,7 @@ function DateTimeInput({id,rangeType, values, changeHandler, isDateRange}){
                         React.createElement(OrderParamsSelectorComp.Label4Input, {
                             key: `LblTime${id}`,
                             id: id,
-                            text: textEs.time
+                            text: getStaticText("time")
                         }),
                         React.createElement(OrderParamsSelectorComp.InputTime, {
                             key: `Time4${id}`,
@@ -241,31 +223,32 @@ function DateTimeInput({id,rangeType, values, changeHandler, isDateRange}){
     );
 }
 
-function TextInput ({id,txtType, value , onChange}) {
+function TextInput ({id,txtType, value , onChange, onBlur}) {
     return  React.createElement("div", null, 
             [
                 React.createElement(OrderParamsSelectorComp.Label4Input, {
                     key: `LblText${id}`,
                     id: id,
-                    text: `${textEs[txtType]}:`
+                    text: `${getStaticText(txtType)}:`
                 }),
                 React.createElement(OrderParamsSelectorComp.InputText,{
                     key: `Text${id}`,
                     id: id,
                     value: value,
-                    onChange: (txt) => onChange(txt)
+                    onChange: (txt) => onChange(txt),
+                    onBlur: () => onBlur()
                 })
             ]
     );
 }
 
-function OrderInput ({id, values , onChange}) {
+function OrderInput ({id, values , onChange, onBlur}) {
     return  React.createElement("div", null, 
             [
                 React.createElement(OrderParamsSelectorComp.Label4Input, {
                     key: `LblText${id}`,
                     id: id,
-                    text: `${textEs["orderID"]}:`
+                    text: `${getStaticText("orderID")}:`
                 }),
 
                 React.createElement("div", {
@@ -280,13 +263,15 @@ function OrderInput ({id, values , onChange}) {
                             id: `Char4${id}`,
                             value: values.char,
                             isCharInput: true,
-                            onChange: (value) => onChange.orderChar(value)
+                            onChange: (value) => onChange.orderChar(value),
+                            onBlur: () => onBlur()
                         }),
                         React.createElement(OrderParamsSelectorComp.InputNumber, {
                             key: `Number${id}`,
                             id: id,
                             value: values.number,
-                            onChange: (value) => onChange.orderNumber(value)
+                            onChange: (value) => onChange.orderNumber(value),
+                            onBlur: () => onBlur()
                         })
                     ]
                 )
@@ -295,9 +280,7 @@ function OrderInput ({id, values , onChange}) {
     );
 }
 
-module.exports = {
-    MainContainer:MainContainer
-};
+module.exports = MainContainer;
 //example of MainContainer
 
 /* <div class="col-lg-4">
