@@ -1,7 +1,7 @@
 "use strict";
 
 const detailsMessage = require("./detailsMessageHandler");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 //this function classifies the acceptance and the length
 //of the password inputted. 

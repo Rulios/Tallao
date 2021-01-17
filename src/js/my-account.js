@@ -14,7 +14,7 @@ const EditCustomMessagesHandler = require("./reactComponents/EditCustomMessagesH
 const EditElementsPriceBundle = require("./reactComponents/EditElementsPriceBundle");
 const Navbar = require("./reactComponents/NavbarHandler");
 const {getUserType} = require("./ajax-requests/user-creds");
-const {getStaticText} = require("./translation/translator");
+const {getStaticText} = require("../../translation/frontend/translator");
 
 
 window.onload = function(){

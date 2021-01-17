@@ -22,13 +22,15 @@
         "wash": "Lavado",
         "dry_clean": "Lavado en seco",
 
+        "hook": "Gancho",
+
         "custom" : "Elemento personalizable",
         "shirt": "Camisa",
         "pants": "Pantalón",
         "skirt": "Falda",
         "coat": "Saco",
         "sweater": "Suéter",
-        "pleatedSkirt": "Falda Plizada",
+        "pleatedSkirt": "Falda Plisada",
         "overall": "Overol",
         "jumper": "Jumper",
         "blouse": "Blusa",
@@ -59,6 +61,14 @@
         "october": "octubre",
         "november": "noviembre",
         "december": "diciembre",
+
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo",
 
         "all": "Todos los estados",
         "wait": "En espera",
@@ -100,6 +110,37 @@
         "customMessages": "Mensajes personalizados",
         "myAccountCustomMessagesSubtitle": "Texto que puedes introducir rápidamente con un click",
 
+        "name": "Nombre",
+        "surname": "Apellido",
+        "legalReprName": "Nombre del representante legal",
+        "legalReprSurname": "Apellido del representante legal",
+        "laundryInitials": "Abreviatura de la lavandería",
+        "laundryName": "Nombre de la lavandería",
+
+        "startDay": "Entrada",
+        "endDay": "Salida",
+        "updateSchedule": "Actualizar horario de servicio",
+        "updateScheduleSuccess": "¡Horario actualizado!",
+
+        "email": "Correo electrónico",
+        "location": "Ubicación",
+
+        "selectTheService": "Selecciona el servicio",
+        "updateElementsPrice": "Actualizar precios",
+        "updateElementsPriceSuccess": "¡Precios actualizados!",
+
+        "updateServiceOffer": "Actualizar oferta de servicios",
+        "updateServiceOfferSuccess": "¡Actualizado la oferta de servicios!",
+
+        "customMessageTag": "Etiqueta",
+        "customMessageTagPlaceholder": "algo rápido...",
+        "color": "Color",
+        "text": "Texto",
+        "customMessageTextPlaceholder": "texto...",
+        "addNewCustomMessage": "Añadir un nuevo mensjae personalizado",
+        "updateCustomMessages": "Actualizar mensajes personalizados",
+        "updateCustomMessagesSuccess": "¡Mensajes actualizados!",
+
         "changePassword_action": "Cambiar contraseña",
 
         "enterYourActualPassword": "Ingresa tu contraseña actual",
@@ -125,8 +166,6 @@
         "endDate": "Fecha Final:",
         "time": "Hora:",
         "paramForSearch": "Parámetros de la búsqueda",
-
-
 
         "yourPublicIDIs": "Tu ID público es",
 

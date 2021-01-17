@@ -1,9 +1,12 @@
 const es = require("./languages/es.json");
-const LANGUAGE_COOKIE_NAME = require("../meta/LANGUAGE_COOKIE_NAME");
-const DEFAULT_LANGUAGE = require("../meta/DEFAULT_LANGUAGE");
+const cn = require("./languages/cn.json");
+const LANGUAGE_COOKIE_NAME = require("../../meta/LANGUAGE_COOKIE_NAME");
+const DEFAULT_LANGUAGE = require("../../meta/DEFAULT_LANGUAGE");
+const appendLanguagesToLanguagesStrings = require("../helpers/append-languages-to-languages-strings");
 
 const strings = {
-    es: es
+    es: appendLanguagesToLanguagesStrings(es),
+    cn: appendLanguagesToLanguagesStrings(cn)
 };
 
 /* THIS MODULE WORKS WITH THE REQUEST OBJ
@@ -32,3 +35,4 @@ function setDefaultLanguageIfUndefined(languageSelected){
     }
     return languageSelected;
 }
+

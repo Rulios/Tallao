@@ -3,7 +3,7 @@
 const React = require("react");
 const OrderParamsSelectorComp = require("./OrderParamsSelectorComp");
 
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

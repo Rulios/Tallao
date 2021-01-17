@@ -2,23 +2,10 @@
 
 const React = require("react");
 const ScheduleBoxComp = require("./ScheduleBoxComp");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
-
-const textEs = {
-    start: "Entrada:",
-    end: "Salida:",
-    update: "Actualizar horario de servicio",
-    updateSuccess: "¡Horario actualizado!",
-    monday: "Lunes",
-    tuesday: "Martes",
-    wednesday: "Miércoles",
-    thursday: "Jueves",
-    friday: "Viernes",
-    saturday: "Sábado",
-    sunday: "Domingo"
-}
 
 function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
     return React.createElement("div", {
@@ -27,12 +14,12 @@ function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
         [
             React.createElement(ScheduleBoxComp.DayTitle, {
                 key: `titleDay${idDay}`,
-                dayTxt: textEs[idDay]
+                dayTxt: getStaticText(idDay)
             }),
             React.createElement(ScheduleBoxComp.InputTimeDay,{
                 key: `startDay${idDay}`,
                 id: `startDay${idDay}`,
-                text: textEs.start,
+                text: `${getStaticText("startDay")}:`,
                 value: time.startHour,
                 onChange: (value) =>{
                     onChangeSchedule(idDay, value, "startHour");
@@ -42,7 +29,7 @@ function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
             React.createElement(ScheduleBoxComp.InputTimeDay,{
                 key: `endDay${idDay}`,
                 id: `endDay${idDay}`,
-                text: textEs.end,
+                text: `${getStaticText("endDay")}:`,
                 value: time.endHour,
                 onChange: (value) =>{
                     onChangeSchedule(idDay, value, "endHour");
@@ -55,13 +42,13 @@ function EditScheduleBox({idDay, time, onChangeSchedule}){ //time is a obj
 
 function UpdateScheduleButton ({onClick}){
     return React.createElement(ScheduleBoxComp.submitButton, {
-        text: textEs.update,
+        text: getStaticText("updateSchedule"),
         onClick: () =>{onClick();}
     });
 }
 
 function SuccessMessage(){
-    alert(textEs.updateSuccess);
+    alert(getStaticText("updateScheduleSuccess"));
 }
 
 module.exports = {

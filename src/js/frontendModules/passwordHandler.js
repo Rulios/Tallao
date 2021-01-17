@@ -1,7 +1,7 @@
 "use strict";
 
 const formVerification = require("./formVerification");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 function passwordCategorization(id, text){
     //function to verify, announce passwords criteria on input

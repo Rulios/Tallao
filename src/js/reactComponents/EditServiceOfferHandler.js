@@ -1,6 +1,7 @@
 "use strict";
 const React= require("react");
 const ServiceOfferContainers = require("./EditServiceOfferContainers");
+const SERVICES = require("../../../meta/SERVICES");
 const {fetchServiceOffer, updateServiceOffer} = require("../ajax-requests/laundry-configs");
 
 async function getServiceOffer(){
@@ -15,7 +16,7 @@ class ServiceOffer extends React.Component{
         //props: mode
         super(props);
         this.state = {
-            baseServices: ["iron", "wash_iron", "wash", "dry_clean"],
+            baseServices: SERVICES,
             availableServices: []
         };
     }

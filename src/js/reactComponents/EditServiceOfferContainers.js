@@ -1,18 +1,10 @@
 "use strict";
 const React = require("react");
 const ServiceOfferComp = require("./EditServiceOfferComp");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
-
-const textEs = {
-    iron: "Planchado",
-    wash_iron: "Lavado y Planchado",
-    wash: "Lavado",
-    dry_clean: "Lavado en seco",
-    updateSuccess: "¡Actualizado la oferta de servicios!",
-    update: "Actualizar oferta de servicios"
-}
 
 function EditServiceOfferBox({service,checked, onChecked}){
     return React.createElement("div", {
@@ -28,7 +20,7 @@ function EditServiceOfferBox({service,checked, onChecked}){
             React.createElement(ServiceOfferComp.ServiceLabel,{
                 key: `label4${service}`,
                 service: service,
-                serviceTxt: textEs[service]
+                serviceTxt: getStaticText(service)
             })
         ]
     )
@@ -36,13 +28,13 @@ function EditServiceOfferBox({service,checked, onChecked}){
 
 function UpdateServiceOfferButton ({onClick}){
     return React.createElement(ServiceOfferComp.UpdateButton, {
-        text: textEs.update,
+        text: getStaticText("updateServiceOffer"),
         onClick: () =>{onClick();}
     });
 }
 
 function SuccessMessage(){
-    alert(textEs.updateSuccess);
+    alert(getStaticText("updateServiceOfferSuccess"));
 }
 
 module.exports = {

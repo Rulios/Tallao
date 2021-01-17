@@ -17,7 +17,7 @@ const {fetchAccountCreds, getUserType} = require("./ajax-requests/user-creds");
 const Navbar = require("./reactComponents/NavbarHandler");
 const convertArrToObj = require("./frontendModules/convertArrToObj");
 
-const {getStaticText} = require("./translation/translator");
+const {getStaticText} = require("../../translation/frontend/translator");
 
 const io = require("socket.io-client");
 const userSocket = io.connect("/user");

@@ -18,8 +18,8 @@ const server = require("http").createServer(app);
 
 const io = require("socket.io")(server);
 
-const languageCookieMiddleware = require("./backend-translation/language-cookie-middleware");
-const getLanguageStrings = require("./backend-translation/get-language-strings");
+const languageCookieMiddleware = require("./translation/backend/language-cookie-middleware");
+const getLanguageStrings = require("./translation/backend/get-language-strings");
 
 const registerRouter = require("./controllers/Register/Controllers");
 const logRouter = require("./controllers/Log/Controllers");
@@ -75,14 +75,7 @@ app.get("/laundryRegister", csrfProtectionMiddleware, function(req,res){
     res.render("pages/laundryRegister",Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
-
-
-//404 - Page not found
-
-
-
 //EXPRESS ROUTERS
-
 
 app.use("/register", csrfProtectionMiddleware, registerRouter);
 app.use("/CheckExists", csrfProtectionMiddleware, checkExistsRouter);

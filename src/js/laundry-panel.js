@@ -17,7 +17,7 @@ const Time = require("./reactComponents/Time");
 const Navbar = require("./reactComponents/NavbarHandler");
 const {fetchCurrentOrderID} = require("./ajax-requests/laundry-configs");
 const {getUserType, fetchAccountCreds} = require("./ajax-requests/user-creds");
-const {getStaticText} = require("./translation/translator");
+const {getStaticText} = require("../../translation/frontend/translator");
 const {ELEMENTS} = require("../../meta/ELEMENTS");
 
 window.onload = function(){

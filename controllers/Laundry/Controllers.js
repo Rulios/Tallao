@@ -4,7 +4,7 @@ const laundry = require("express").Router();
 const Auth = require("../libs/Auth");
 const configsRouter = require("./Configs/Controllers");
 const customMessagesRouter = require("./CustomMessages/Controllers");
-const getLanguageStrings = require("../../backend-translation/get-language-strings");
+const getLanguageStrings = require("../../translation/backend/get-language-strings");
 
 //middleware for authorization
 laundry.use("/",async function(req, res, next){ 
@@ -34,7 +34,6 @@ laundry.get("/myorders", function(req,res){
 // data banks
 
 laundry.use("/configs", configsRouter);
-
 laundry.use("/customMessages", customMessagesRouter);
 
 //

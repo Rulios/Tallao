@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 const LinksComponent = {
     WriteOrders: WriteOrders,

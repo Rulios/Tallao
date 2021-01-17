@@ -3,7 +3,7 @@
 
 const React = require("react");
 const {fetchServiceOffer} = require("../ajax-requests/laundry-configs");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 
 class ServiceSelector extends React.Component{

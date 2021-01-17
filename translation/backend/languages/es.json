@@ -8,8 +8,6 @@
     "user": "usuario",
     "register": "Regístrate",
     "language": "Idioma",
-    "spanish" : "Español",
-    "chinese": "中文",
     "aboutUs":  "Sobre Nosotros",
     "keepInTouchWithYourOrder": "Mantente informado con tu orden",
     "dontLetYourLaundryOrderBeAnOdyssey": "Que retirar tu orden de lavandería no sea una odisea",
@@ -65,5 +63,7 @@
     "userPanelMainTitleTag": "Principal",
     "yourPublicIDIs": "Tu ID Público es:",
     "ordersThatYouHaventRetrieved": "Órdenes que no has recogido aún",
-    "notifications": "Notificaciones"
+    "notifications": "Notificaciones",
+
+    "ordersAffiliatedToYourLaundry": "Órdenes afiliadas a tu lavandería"
 }

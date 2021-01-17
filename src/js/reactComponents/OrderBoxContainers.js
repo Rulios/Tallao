@@ -2,7 +2,7 @@
 
 const React = require("react");
 const OrderBoxComp = require("./OrderBoxComp");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
 const DATE_DIFFERENCE_COLORS = require("../../../meta/DATE_DIFFERENCE_COLORS");
 

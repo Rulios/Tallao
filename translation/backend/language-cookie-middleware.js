@@ -1,7 +1,7 @@
 const {isIn}  = require("validator");
-const LANGUAGE_COOKIE_NAME = require("../meta/LANGUAGE_COOKIE_NAME");
-const LANGUAGES = require("../meta/LANGUAGES");
-const DEFAULT_LANGUAGE = require("../meta/DEFAULT_LANGUAGE");
+const LANGUAGE_COOKIE_NAME = require("../../meta/LANGUAGE_COOKIE_NAME");
+const LANGUAGES = require("../../meta/LANGUAGES");
+const DEFAULT_LANGUAGE = require("../../meta/DEFAULT_LANGUAGE");
 
 module.exports = function(req, res, next){
 

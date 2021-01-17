@@ -2,20 +2,11 @@
 
 const React = require("react");
 const EditCustomMessagesComp = require("./EditCustomMessagesComp");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */
-const textEs = {
-    tagTxt: "Etiqueta:",
-    tagPlaceholder: "algo rápido...",
-    colorTxt: "Color:",
-    messageTxt: "Texto:",
-    messageTxtPlaceholder: "texto...",
-    addNewMessage: "+ Añadir un nuevo mensaje personalizado",
-    updateSuccess: "¡Mensajes actualizados!",
-    update: "Actualizar Mensajes Personalizados",
-    updateError: "ERROR AL ACTUALIZAR MENSAJES"
-};
+
 
 function AddNewMessageButton({onClick}) {
     return [
@@ -29,8 +20,8 @@ function AddNewMessageButton({onClick}) {
             }
         },
             React.createElement(EditCustomMessagesComp.AddNewMessageButton, {
-                text: textEs.addNewMessage,
-                onClick: () => {onClick();}
+                text: `+ ${getStaticText("addNewCustomMessage")}`,
+                onClick: () => onClick()
             })
         )
     ];
@@ -86,20 +77,20 @@ function MessageDetailsDiv({messageDetails, inputHandlers}){
             [
                 React.createElement(EditCustomMessagesComp.LabelForInput, {
                     key: `Lbl4InputTag4${messageDetails.id}`,
-                    text: textEs.tagTxt,
+                    text: `${getStaticText("customMessageTag")}:`,
                     inputID: `inputTag4${messageDetails.id}`
                 }),
                 React.createElement(EditCustomMessagesComp.TextInput, {
                     key: `inputTag4${messageDetails.id}`,
                     id: `inputTag4${messageDetails.id}`,
                     value: messageDetails.tag,
-                    placeholder: textEs.tagPlaceholder,
+                    placeholder: `${getStaticText("customMessageTagPlaceholder")}`,
                     onChange: (value)  =>{inputHandlers.onChangeTag(messageDetails.id,value);}
                 }),
                 React.createElement("br", {key: `BrTag${messageDetails.id}`}),
                 React.createElement(EditCustomMessagesComp.LabelForInput, {
                     key: `Lbl4InputColor4${messageDetails.id}`,
-                    text: textEs.colorTxt,
+                    text: `${getStaticText("color")}:`,
                     inputID: `inputColor${messageDetails.id}`
                 }),
                 React.createElement(EditCustomMessagesComp.ColorInput, {
@@ -111,14 +102,14 @@ function MessageDetailsDiv({messageDetails, inputHandlers}){
                 React.createElement("br", {key: `BrColor${messageDetails.id}`}),
                 React.createElement(EditCustomMessagesComp.LabelForInput, {
                     key: `Lbl4InputMsgTxt4${messageDetails.id}`,
-                    text: textEs.messageTxt,
+                    text: `${getStaticText("text")}:`,
                     inputID: `inputMsgTxt4${messageDetails.id}`
                 }),
                 React.createElement(EditCustomMessagesComp.TextArea, {
                     key: `inputMsgTxt4${messageDetails.id}`,
                     id: `inputMsgTxt4${messageDetails.id}`,
                     value: messageDetails.message,
-                    placeholder: textEs.messageTxtPlaceholder,
+                    placeholder: `${getStaticText("customMessageTextPlaceholder")}`,
                     onChange: (value)  =>{inputHandlers.onChangeMessage(messageDetails.id,value);}
                 }),
             ]
@@ -128,17 +119,17 @@ function MessageDetailsDiv({messageDetails, inputHandlers}){
 
 function UpdateElementsPriceButton ({onClick}){
     return React.createElement(EditCustomMessagesComp.submitButton, {
-        text: textEs.update,
+        text: `${getStaticText("updateCustomMessages")}`,
         onClick: () =>{onClick();}
     });
 }
 
 function SuccessMessage(){
-    alert(textEs.updateSuccess);
+    alert(getStaticText("updateCustomMessagesSuccess"));
 }
 
 function ErrorMessage(){
-    alert(textEs.updateError);
+    alert("ERROR");
 }
 
 module.exports = {

@@ -6,7 +6,7 @@ const ChangePasswordComp = require("./ChangePasswordComp");
 const passwordLengthHandler = require("../frontendModules/passwordLengthHandler");
 const {verifyPassword, newPassword}= require("../ajax-requests/user-creds");
 const {bounceToLogin} = require("../frontendModules/pageRedirection");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 function ChangePasswordLink({onClick}){
     return(

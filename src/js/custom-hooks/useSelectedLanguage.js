@@ -1,5 +1,5 @@
 const {useState, useEffect} = require("react");
-const {getLanguage, setLanguage} = require("../translation/language-config");
+const {getLanguage, setLanguage} = require("../../../translation/frontend/language-config");
 
 function useSelectedLanguage(){
     let [selectedLanguage, setSelectedLanguage] = useState(getLanguage());

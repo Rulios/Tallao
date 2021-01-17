@@ -3,6 +3,7 @@
 const React = require("react");
 const EditElementsPriceHandler = require("./EditElementsPriceHandler");
 const LaundryServiceSelector = require("./LaundryServiceSelector");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 //THIS IS A BUNDLE COMPONENT
 //BUNDLE COMPONENTS: WHEN TWO HANDLER COMPONENTS ARE REQUIRED TO EXCHANGE DATA
@@ -16,7 +17,7 @@ function renderServiceSelectorContainer({onChange}){
             React.createElement("div", {
                 key: "LaundryServiceSelectorTag",
                 className: "karla_font"
-            },"Selecciona el servicio"),
+            }, getStaticText("selectTheService")),
             React.createElement(LaundryServiceSelector, {
                 key: "LaundryServiceSelector",
                 getServiceSelected: (selected) => onChange(selected) 

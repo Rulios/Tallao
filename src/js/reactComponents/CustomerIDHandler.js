@@ -2,7 +2,7 @@
 
 const React = require("react");
 const {customerByID: searchCustomerByID} = require("../ajax-requests/search");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 //This handler acts when it needs to be rendered a input field
 //or text related to the clientID. Also, the main caller will be 

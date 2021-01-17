@@ -1,18 +1,18 @@
 const {getLanguage} = require("./language-config");
-const languages = require("./languages/languages.json");
 const es = require("./languages/es.json");
+const cn = require("./languages/cn.json");
+
+const appendLanguagesToLanguagesStrings = require("../helpers/append-languages-to-languages-strings");
+
+const {STATIC_STRINGS_PROP_NAME, VARIABLE_STRINGS_PROP_NAME} = require("../helpers/STRINGS_PROP_NAMES");
 
 //we copy the languages obj because those strings are meant to be used
 //in a language selector which needs to be on the same language that wants to select
 
-const STATIC_STRINGS_PROP_NAME = "static";
-const VARIABLE_STRINGS_PROP_NAME = "variable";
-
 const allLanguageWords = {
-    es: appendLanguagesToTheLanguageStrings(es),
+    es: appendLanguagesToLanguagesStrings(es),
+    cn: appendLanguagesToLanguagesStrings(cn)
 };
-
-    
 
 function getStaticText(string){
 
@@ -55,14 +55,6 @@ function getVariableText(context, string, extras){
         console.log(err);
         return "Error";
     }
-}
-
-function appendLanguagesToTheLanguageStrings(languageStrings){
-    return Object.assign(languageStrings, appendLanguagesToStaticStrings(languageStrings[STATIC_STRINGS_PROP_NAME]));
-}
-
-function appendLanguagesToStaticStrings(staticStrings){
-    return Object.assign(staticStrings, languages);
 }
 
 function containsObjWithSubstrings(selectedString){

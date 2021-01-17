@@ -2,7 +2,7 @@
 const React = require("react");
 const { get } = require("../ajax-requests/ajax-req");
 const inputPrevent = require("../frontendModules/inputPrevent");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 //Middle component, this doesn't has lower components
 

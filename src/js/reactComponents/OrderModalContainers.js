@@ -5,7 +5,7 @@ const OrderModalComp = require("./OrderModalComp");
 const CustomerIDHandler = require("./CustomerIDHandler");
 const dayjs = require("dayjs");
 const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
 and bundling of low order components */

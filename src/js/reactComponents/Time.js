@@ -5,7 +5,7 @@ const React = require("react");
 const inputPrevent = require("../frontendModules/inputPrevent");
 const {fetchDateTimeServer} = require("../ajax-requests/server-time");
 const dayjs = require("dayjs");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 function DateInput(props){
     //props: 

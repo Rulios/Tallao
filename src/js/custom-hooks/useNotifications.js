@@ -3,7 +3,7 @@ const {useState, useEffect} = require("react");
 const {fetchNotifications} = require("../ajax-requests/notifications");
 const convertArrtoObj = require("../frontendModules/convertArrToObj");
 
-const {getVariableText} = require("../translation/translator");
+const {getVariableText} = require("../../../translation/frontend/translator");
 
 function useNotifications(socket){
     let [notifications, setNotifications] = useState({}); 

@@ -5,7 +5,6 @@ const AccountFields = require("./AccountFields");
 const {fetchAccountCreds} = require("../ajax-requests/user-creds");
 
 function UserDisplay({name, surname, email}){
-    console.log(surname);
     return [
         React.createElement(AccountFields.UserNameSurname, {
             key:"UserCredsDisplay",

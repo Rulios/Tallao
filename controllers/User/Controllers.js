@@ -1,7 +1,7 @@
 const user = require("express").Router();
 const Auth = require("../libs/Auth");
 
-const getLanguageStrings = require("../../backend-translation/get-language-strings");+
+const getLanguageStrings = require("../../translation/backend/get-language-strings");+
 
 //middleware for authorization
 user.use("/",async function(req, res, next){ 

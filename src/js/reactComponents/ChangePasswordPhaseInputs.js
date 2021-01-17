@@ -2,7 +2,7 @@
 
 const React = require("react");
 const ChangePasswordComp = require("./ChangePasswordComp");
-const {getStaticText} = require("../translation/translator");
+const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This file contains middle level components, and the higher level container
 which handles all the operations and requests to change password */
