@@ -2,14 +2,13 @@
 
 const React = require("react");
 const WriteOrderContainers = require("./WriteOrderContainers");
-const {fetchElementsPrice: ajaxFetchElementsPrice} = require("../ajax-requests/laundry-configs");
 const {ELEMENTS} = require("../../../meta/ELEMENTS");
 
 /* This module serves as a function repository. 
 In which any component that handles related features can and should
 call the functions from this module. */
 
-function renderHookQInputs({checkStatus, hookQuantity, onCheck, onChange}){
+function HookQuantityInputs({checkStatus, hookQuantity, onCheck, onChange}){
     //props: idContainer, onCheckFullHook, checkStatus, onChangeHookQuantity
     //render: fullHookCheckBox & WriteOrderContainers.inputHookQuantity
     return [
@@ -27,14 +26,14 @@ function renderHookQInputs({checkStatus, hookQuantity, onCheck, onChange}){
     ];
 }
 
-function renderElementsOnOrder({activeElementsOnOrder, onClickDelete, 
+function ElementsOnOrder({activeElementsOnOrder, onClickDelete, 
     onUpdateQuantity, onUpdateUnitPrice, onUpdateElementNameIfCustom}){
     return(
         //traverse the elements on order
         Object.keys(activeElementsOnOrder).map((elementName) =>{
             //traverse the services of the element on order
             return Object.keys(activeElementsOnOrder[elementName]).map(service =>{
-                return React.createElement(WriteOrderContainers.elementOnOrder, {
+                return React.createElement(WriteOrderContainers.ElementOnOrder, {
                     key: `${elementName}-${service}`,
                     element: elementName,
                     price: activeElementsOnOrder[elementName][service]["price"],
@@ -50,45 +49,22 @@ function renderElementsOnOrder({activeElementsOnOrder, onClickDelete,
     );
 }
 
-function renderSelectableElementsOnOrder({
-    elementsOnSelectList, serviceOffer, elementsPrice, onClick
+function DropdownOfElementsToOrder({
+    elementsOnSelectList, serviceSelected, elementsPrice, onClick
 }){
     return React.createElement("div", null, 
-        elementsOnSelectList[serviceOffer].map(elementName =>{
-            return React.createElement(WriteOrderContainers.selectableElementToOrder, {
-                key: `${elementName}-${serviceOffer}`,
+        elementsOnSelectList[serviceSelected].map(elementName =>{
+            return React.createElement(WriteOrderContainers.SelectableElementToOrder, {
+                key: `${elementName}-${serviceSelected}`,
                 element: elementName,
-                elementPrice: (elementsPrice[serviceOffer] !== null) ? elementsPrice[serviceOffer][elementName] : undefined,
-                service: serviceOffer,
+                elementPrice: (elementsPrice[serviceSelected] !== null) ? elementsPrice[serviceSelected][elementName] : undefined,
+                service: serviceSelected,
                 onClick: (elementID, service) => onClick(elementID, service),
             })
         })
     );
 }
 
-function processElementsPrice(elementsPrice){ 
-    let parsedElementsPrice = {};
-    //parse every value to decimal
-    Object.keys(elementsPrice).map(service =>{
-        parsedElementsPrice[service] = {};
-        Object.keys(elementsPrice[service]).map(element =>{
-            parsedElementsPrice[service][element] = Number(parseFloat(elementsPrice[service][element]).toFixed(2));
-        });
-    });
-    return parsedElementsPrice;
-}
-
-async function fetchElementsPrice(){
-    //fetchs the elements price (all)
-    //returns a obj with 2 props (elementsPrice(includes elements and hook(price)))
-    try{
-        let {data: elementsPrice} = await ajaxFetchElementsPrice();
-        let newElementsPrice = processElementsPrice(elementsPrice);
-        return newElementsPrice;
-    }catch(err){
-        console.log(err);
-    }
-}
 
 function onElementSelectFromList({id, service}, WriteOrderDetails){
     let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
@@ -329,8 +305,7 @@ function calcTotalPrice(activeElementsOnOrder,hookPrice, hookQuantity){
 }
 
 module.exports = {
-    renderSelectableElementsOnOrder:renderSelectableElementsOnOrder,
-    fetchElementsPrice:fetchElementsPrice,
+    DropdownOfElementsToOrder:DropdownOfElementsToOrder,
     onElementSelectFromList:onElementSelectFromList,
     deleteElementFromOnOrder:deleteElementFromOnOrder,
     updateElementQuantity:updateElementQuantity,
@@ -339,8 +314,8 @@ module.exports = {
     addElementIntoElementSelectList:addElementIntoElementSelectList,
     onCheckedFullHook:onCheckedFullHook,
     onChangeHookQuantity:onChangeHookQuantity,
-    renderElementsOnOrder: renderElementsOnOrder,
-    renderHookQInputs:renderHookQInputs
+    ElementsOnOrder: ElementsOnOrder,
+    HookQuantityInputs:HookQuantityInputs
 };
 
 

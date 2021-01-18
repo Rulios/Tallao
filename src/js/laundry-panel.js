@@ -20,6 +20,8 @@ const {getUserType, fetchAccountCreds} = require("./ajax-requests/user-creds");
 const {getStaticText} = require("../../translation/frontend/translator");
 const {ELEMENTS} = require("../../meta/ELEMENTS");
 
+const useElementsPrice = require("./custom-hooks/useElementsPrice");
+
 window.onload = function(){
     getUserType().then(({data : userType}) =>{
         RenderNavbar(userType);
@@ -45,13 +47,11 @@ function MainApp(){
     let [todayDateTime, setTodayDateTime] = React.useState(null);
     let [inputDateTimeForOrder, setInputDateTimeForOrder] = React.useState({date: null, time: null});
     let [inputCustomer, setCustomer] = React.useState({id: null, name: null});
-    let [serviceSelected, setServiceSelected] = React.useState("iron");
-    let [isServiceSelectorLoaded, setServiceSelectorLoaded] = React.useState(false);
+    let [serviceSelected, setServiceSelected] = React.useState("");
+    let {extras: extrasPrice, ...elementsPrice} = useElementsPrice();
     let [WriteOrderDetails, setWriteOrderDetails] = React.useState({
         configs: {
-            elementsPrice: null,
             elementsOnSelectList: {[serviceSelected]: Array.from(ELEMENTS)},
-            hookPrice: null,
             customOrdersIndexes: [], // stores the indexes of created custom elements
             isFullHookChecked: true
         },
@@ -63,12 +63,15 @@ function MainApp(){
         }
     });
 
+
+
     //Every component that has setComponentReset as a parameter
     //is a reseteable component. It means that it has its own state
     //and data flow is bidirectional.
     let [shouldComponentReset, setComponentReset] = React.useState({
         CustomerIDHandler : false,
     });
+
     const onSubmitOrder = () => {
         SubmitOrder(WriteOrderDetails, inputCustomer, inputDateTimeForOrder, resetOrder);
     };
@@ -86,67 +89,61 @@ function MainApp(){
         animateSuccess();
     };
 
-    React.useEffect(() =>{
-        try{
-            renderDateTime(setTodayDateTime);
-            renderLaundryName();
-            renderCurrentOrderID();
-            renderUseCustomMessages();
-            renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponentReset);
-            renderSubmitButton(onSubmitOrder);
-            if(todayDateTime) renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder);
-            if(isServiceSelectorLoaded &&  WriteOrderDetails.configs.elementsPrice !== null){
-                renderSelectableElementsOnOrder({
-                    elementsOnSelectList: WriteOrderDetails.configs.elementsOnSelectList, 
-                    serviceOffer: serviceSelected, 
-                    elementsPrice: WriteOrderDetails.configs.elementsPrice
-                }, (elementID, service) => {
-                    setWriteOrderDetails(WriteOrder.onElementSelectFromList({id: elementID, service:service}, WriteOrderDetails));
-                });
-                renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails);
-                renderHookQInputs(WriteOrderDetails, setWriteOrderDetails);
-       
-                //render totalPrice tag
-                document.getElementById("totalPriceSpanValue").textContent = WriteOrderDetails.order.totalPrice;
-            }
-        }catch(err){
-            console.error(err);
+    React.useEffect(() => { //on mount
+        renderLaundryName();
+        renderUseCustomMessages();
+        renderCustomerIDHandler(setCustomer, shouldComponentReset, setComponentReset);
+        renderSubmitButton(onSubmitOrder);
+        renderDateTime(setTodayDateTime);
+        renderCurrentOrderID();
+    }, []);
+
+    React.useEffect(() => {
+        if(todayDateTime) renderDateTimeInputOrder(todayDateTime, inputDateTimeForOrder, setInputDateTimeForOrder);
+    }, [todayDateTime]);
+
+    React.useEffect(() => {
+        if(Object.entries(elementsPrice).length && serviceSelected !== ""){
+            renderDropdownOfElementsToOrder({
+                elementsOnSelectList: WriteOrderDetails.configs.elementsOnSelectList, 
+                serviceSelected: serviceSelected, 
+                elementsPrice: elementsPrice
+            }, (elementID, service) => {
+                setWriteOrderDetails(WriteOrder.onElementSelectFromList({id: elementID, service:service}, WriteOrderDetails));
+            });
         }
-    });
+    }, [serviceSelected]);
 
-
-    //AJAX loads (first time)
-    if(!isServiceSelectorLoaded){
-        setServiceSelectorLoaded(true);
-            //load the elements price and change the state
-            WriteOrder.fetchElementsPrice()
-                .then(priceChart =>{
-                    let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
-                    //assign hookPrice from elementsPrice
-                    newWriteOrderDetails.configs.hookPrice = priceChart.hook;
-                    //delete prop of hookPrice from elementsPrice
-                    delete priceChart.hook;
-                    //assign clean obj with only services from elementsPrice
-                    newWriteOrderDetails.configs.elementsPrice = priceChart;
-                    setWriteOrderDetails(newWriteOrderDetails);
-                });
-    }
-
+    React.useEffect(() => {
+        renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails);
+        renderHookQuantityInputs(WriteOrderDetails, setWriteOrderDetails);
+        //render totalPrice tag
+        document.getElementById("totalPriceSpanValue").textContent = WriteOrderDetails.order.totalPrice;
+    }, [WriteOrderDetails]);
 
     //the priority for loading is as follows:
-    // LaundryServiceSelector, SelectableElementsOnOrder, ElementsOnOrder
-    return (isServiceSelectorLoaded) ? React.createElement(renderServiceSelector,{
-        setServiceSelected: (selected) => {
-            if(!WriteOrderDetails.configs.elementsOnSelectList.hasOwnProperty(selected)){
-                let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
-                newWriteOrderDetails.configs.elementsOnSelectList[selected] = Array.from(ELEMENTS)
-                setWriteOrderDetails(newWriteOrderDetails);
-            }  
-            
-            setServiceSelected(selected)
-        }
-    }) : null;
-    
+    // ServiceSelector, SelectableElementsOnOrder, ElementsOnOrder
+
+    if(Object.entries(elementsPrice).length){
+        return (
+            <ServiceSelector
+                setServiceSelected={
+                    (selected) => {
+                        /* console.log(selected); */
+                        if(!WriteOrderDetails.configs.elementsOnSelectList.hasOwnProperty(selected)){
+                            let newWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
+                            newWriteOrderDetails.configs.elementsOnSelectList[selected] = Array.from(ELEMENTS)
+                            setWriteOrderDetails(newWriteOrderDetails);
+                        }  
+                        
+                        setServiceSelected(selected)
+                    }
+                }
+            ></ServiceSelector>
+        );
+    }else{
+        return null;
+    }
 }
 
 function SubmitOrder(WriteOrderDetails, inputCustomer, 
@@ -218,17 +215,18 @@ function resetInputDateTimeForOrder(inputDateTimeForOrder){
 }
 
 
-function renderServiceSelector({setServiceSelected}){
+function ServiceSelector({setServiceSelected}){
     return React.createElement(LaundryServiceSelector, {
         getServiceSelected : (selected) => setServiceSelected(selected)
     });
 }
 
-function renderSelectableElementsOnOrder({elementsOnSelectList, serviceOffer, elementsPrice}, onClick){
+function renderDropdownOfElementsToOrder({elementsOnSelectList, 
+    serviceSelected, elementsPrice}, onClick){
     ReactDOM.render(
-        React.createElement(WriteOrder.renderSelectableElementsOnOrder, {
+        React.createElement(WriteOrder.DropdownOfElementsToOrder, {
             elementsOnSelectList: elementsOnSelectList,
-            serviceOffer: serviceOffer,
+            serviceSelected: serviceSelected,
             elementsPrice: elementsPrice,
             onClick: (elementID, service) => onClick(elementID, service)
         }), document.getElementById("containerSelectableElements")
@@ -237,7 +235,7 @@ function renderSelectableElementsOnOrder({elementsOnSelectList, serviceOffer, el
 
 function renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails){
     ReactDOM.render(
-        React.createElement(WriteOrder.renderElementsOnOrder, {
+        React.createElement(WriteOrder.ElementsOnOrder, {
             activeElementsOnOrder: WriteOrderDetails.order.activeElementsOnOrder,
             onClickDelete: (elementID, service) => {
                 setWriteOrderDetails(
@@ -263,9 +261,9 @@ function renderElementsOnOrder(WriteOrderDetails, setWriteOrderDetails){
     );
 }
 
-function renderHookQInputs(WriteOrderDetails, setWriteOrderDetails){
+function renderHookQuantityInputs(WriteOrderDetails, setWriteOrderDetails){
     ReactDOM.render(
-        React.createElement(WriteOrder.renderHookQInputs,{  
+        React.createElement(WriteOrder.HookQuantityInputs,{  
             checkStatus: WriteOrderDetails.configs.isFullHookChecked,
             hookQuantity: WriteOrderDetails.order.hookQuantity,
             onCheck: (isChecked) => {
@@ -311,7 +309,6 @@ function renderUseCustomMessages(){
 }
 
 function renderCurrentOrderID(){
-    
     fetchCurrentOrderID().then(({data: {idChar, idNumber}}) => {
         document.getElementById("containerCurrentOrderID").textContent = `${getStaticText("orderID")}: ${idChar} ${idNumber}`;
     }).catch(() =>{

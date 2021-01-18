@@ -7,7 +7,7 @@ const {getStaticText} = require("../../../translation/frontend/translator");
 //Middle component, this doesn't has lower components
 
 //button that contains info of the order
-function selectableElementToOrder({element, elementPrice, service, onClick}){
+function SelectableElementToOrder({element, elementPrice, service, onClick}){
     //props: id (id of element), elementPrice(price of element), 
     //element
     return(
@@ -40,7 +40,7 @@ function selectableElementToOrder({element, elementPrice, service, onClick}){
     );
 }
 
-function elementOnOrder({element, price, quantity, service, 
+function ElementOnOrder({element, price, quantity, service, 
 onClickDelete, onUpdateQuantity, onUpdateUnitPrice, onUpdateElementNameIfCustom}){
     //props: id, price, quantity, service
     //console.log(props);
@@ -190,13 +190,13 @@ function inputHookQuantity({hookQuantity, onChange}){
 }
 
 module.exports = {
-    selectableElementToOrder:selectableElementToOrder,
-    elementOnOrder:elementOnOrder,
+    SelectableElementToOrder:SelectableElementToOrder,
+    ElementOnOrder:ElementOnOrder,
     fullHookCheckBox:fullHookCheckBox,
     inputHookQuantity:inputHookQuantity,
 };
 
-//example of selectableElementToOrder in HTML
+//example of SelectableElementToOrder in HTML
 
 /* <button value="custom" name="elementButton" class="buttonElementStyle">
     <div class="container ">
@@ -216,7 +216,7 @@ module.exports = {
 </button> */
 
 
-//example of elementOnOrder in HTML
+//example of ElementOnOrder in HTML
 /* <div class="container small-mediumSeparation"> 
 
     <div class="row bottomBorder customElementReceiptStyle">
