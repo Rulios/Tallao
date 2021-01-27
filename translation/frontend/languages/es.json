@@ -167,6 +167,11 @@
         "time": "Hora:",
         "paramForSearch": "Parámetros de la búsqueda",
 
+        "submitOrderSuccess": "¡ORDEN COMPLETADA!",
+        "orderDetails": "Detalles de la orden",
+        "orderScheduledFor": "Orden programada para",
+
+
         "yourPublicIDIs": "Tu ID público es",
 
         "ERR_LOADING_DATA": "Error al cargar los datos"

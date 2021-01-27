@@ -4,8 +4,9 @@ const time = require("express").Router();
 
 time.get("/fetch", function(req,res){
 
-    let dateTime = dayjs().format(/* "YYYY-MM-DD HH:MM A" */);
-    res.status(200).json({dateTime: dateTime});
+    let dateTime = dayjs();
+    
+    return res.status(200).json({dateTime: dateTime});
  
 });
 

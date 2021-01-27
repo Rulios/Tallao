@@ -1,7 +1,7 @@
 const {useState, useEffect} = require("react");
 const {fetchElementsPrice} = require("../ajax-requests/laundry-configs");
 
-module.exports = function useElementsPrice(){
+module.exports =  function useElementsPrice(){
     let [elementsPrice, setElementsPrice] = useState({});
 
     useEffect(() => {

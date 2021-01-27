@@ -15,11 +15,6 @@ class UseCustomMessages extends React.Component{
         }
     }
 
-    appendMessageToText(messageID){
-        let currentTxt = document.getElementById(this.props.targetID).value;
-        document.getElementById(this.props.targetID).value = `${currentTxt} ${this.state.messages[messageID]["message"]}`;
-    }
-
     componentDidMount(){
         let that = this;
         if(!this.state.ajaxLoaded){
@@ -54,7 +49,8 @@ class UseCustomMessages extends React.Component{
                         id: messageID,
                         color_tag: color_tag,
                         text: tag,
-                        onClick: (messageID) => this.appendMessageToText(messageID)
+                        onClick: () => this.props.getClickedText(tag)
+                        
                     });
                 })
             );

@@ -49,22 +49,6 @@ function ElementsOnOrder({activeElementsOnOrder, onClickDelete,
     );
 }
 
-function DropdownOfElementsToOrder({
-    elementsOnSelectList, serviceSelected, elementsPrice, onClick
-}){
-    return React.createElement("div", null, 
-        elementsOnSelectList[serviceSelected].map(elementName =>{
-            return React.createElement(WriteOrderContainers.SelectableElementToOrder, {
-                key: `${elementName}-${serviceSelected}`,
-                element: elementName,
-                elementPrice: (elementsPrice[serviceSelected] !== null) ? elementsPrice[serviceSelected][elementName] : undefined,
-                service: serviceSelected,
-                onClick: (elementID, service) => onClick(elementID, service),
-            })
-        })
-    );
-}
-
 
 function onElementSelectFromList({id, service}, WriteOrderDetails){
     let NewWriteOrderDetails = JSON.parse(JSON.stringify(WriteOrderDetails));
@@ -305,7 +289,6 @@ function calcTotalPrice(activeElementsOnOrder,hookPrice, hookQuantity){
 }
 
 module.exports = {
-    DropdownOfElementsToOrder:DropdownOfElementsToOrder,
     onElementSelectFromList:onElementSelectFromList,
     deleteElementFromOnOrder:deleteElementFromOnOrder,
     updateElementQuantity:updateElementQuantity,

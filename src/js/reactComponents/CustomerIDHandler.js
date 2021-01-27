@@ -9,7 +9,7 @@ const {getStaticText} = require("../../../translation/frontend/translator");
 //able to request information about this.
 
 
-function customerSelector({customerID, customerName, onChangeID, onBlur}){
+function CustomerSelector({customerID, customerName, onChangeID, onBlur}){
     return(
         React.createElement("div", {className: "row"},
             React.createElement("div", {
@@ -105,16 +105,14 @@ class InputCustomerID extends React.Component{
     }
 
     render(){
-        if(this.props.mode === "search"){
-            return(
-                React.createElement(customerSelector,{
-                    customerID: this.state.id,
-                    customerName: this.state.name,
-                    onChangeID: (id) => this.onChangeIDHandler(id),
-                    onBlur: () => this.searchCustomerByID()
-                })
-            );
-        }
+        return(
+            React.createElement(CustomerSelector,{
+                customerID: this.state.id,
+                customerName: this.state.name,
+                onChangeID: (id) => this.onChangeIDHandler(id),
+                onBlur: () => this.searchCustomerByID()
+            })
+        );
     }
         
 }

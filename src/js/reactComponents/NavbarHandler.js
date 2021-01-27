@@ -7,7 +7,7 @@ const LANGUAGES = require("../../../meta/LANGUAGES");
 const navbarToggleInteraction = require("../../js/design-interaction/navbar-interaction/interaction");
 const useSelectedLanguage = require("../custom-hooks/useSelectedLanguage");
 
-function Navbar({userType}){
+module.exports = function Navbar({userType}){
     //componentList = arr (index order should be same as render order)
 
     const DEFAULT_STARTING_COMPONENTS = [
@@ -84,5 +84,4 @@ function Navbar({userType}){
 }
 
 
-module.exports = Navbar;
 

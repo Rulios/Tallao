@@ -2,7 +2,6 @@
 // main.js
 
 const React = require("react");
-const {fetchServiceOffer} = require("../ajax-requests/laundry-configs");
 const {getStaticText} = require("../../../translation/frontend/translator");
 
 
@@ -10,9 +9,12 @@ class ServiceSelector extends React.Component{
     constructor(props){ 
         //props: getServiceSeleted (will return the value everytime it changes)
         super(props);
+
+        const DEFAULT_SERVICE = this.props.services[0];
+
         this.state = {
-            ajaxLoaded: false
-        }
+            selected: DEFAULT_SERVICE
+        };
     }
 
     selectorHandler(value){
@@ -21,49 +23,42 @@ class ServiceSelector extends React.Component{
         });
     }
 
-    returnData(value){
+    returnServiceSelected(newServiceSelected){
         //activates the function passed as a prop to the component
         //to return the value needed
-        this.props.getServiceSelected(value);
+        this.props.getServiceSelected(newServiceSelected);
     }
 
     componentDidMount(){
-        let that = this;
-        if(!this.state.ajaxLoaded){
-            fetchServiceOffer().then(({data:{serviceoffer}}) =>{
-                this.returnData(serviceoffer[0]);
-                that.setState({
-                    selected: serviceoffer[0],
-                    services: serviceoffer,
-                    ajaxLoaded: true
-                });
-            });
-        }
+        //return the default one on mount
+        this.returnServiceSelected(this.state.selected);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+
+        if(this.state.selected !== nextState.selected){
+            this.returnServiceSelected(nextState.selected);
+        }
+        return true;
+    }
 
     render(){
-        if(this.state.ajaxLoaded){
-            return(
-                React.createElement("select", {
-                    className: "styleSelectServiceType",
-                    value: this.state.selected,
-                    onChange: (e) => {
-                        this.selectorHandler(e.target.value);
-                        this.returnData(e.target.value);
-                    }
-                },
-                    this.state.services.map(service =>{
-                        return React.createElement("option",{
-                            key: service,
-                            value: service
-                        }, getStaticText(service))
-                    })
-                )
-            );
-        }else{
-            return(null);
-        }
+        return(
+            React.createElement("select", {
+                className: "styleSelectServiceType",
+                value: this.state.selected,
+                onChange: (e) => {
+                    this.selectorHandler(e.target.value);
+                }
+            },
+                this.props.services.map(service =>{
+                    return React.createElement("option",{
+                        key: service,
+                        value: service
+                    }, getStaticText(service))
+                })
+            )
+        );
     }
 }
 

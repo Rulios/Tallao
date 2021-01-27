@@ -1,44 +1,9 @@
 
 const React = require("react");
-const { get } = require("../ajax-requests/ajax-req");
 const inputPrevent = require("../frontendModules/inputPrevent");
 const {getStaticText} = require("../../../translation/frontend/translator");
 
 //Middle component, this doesn't has lower components
-
-//button that contains info of the order
-function SelectableElementToOrder({element, elementPrice, service, onClick}){
-    //props: id (id of element), elementPrice(price of element), 
-    //element
-    return(
-        React.createElement("button", {
-            value: element,
-            name: "elementButton",
-            className: "buttonElementStyle",
-            onClick: () => onClick(element, service)
-        },
-            React.createElement("div", {className:"container"},
-                React.createElement("div", {
-                    className:"row bottomBorder elementSelectStyle"
-                },
-                    React.createElement("div", {className:"col-lg-4"},
-                        React.createElement("img", {
-                            className:"assetStayStatic",
-                            src: `/imgs/assets/${element}/${element}.svg`
-                        })
-                    ),
-                    React.createElement("div", {className:"col-lg-8"},
-                        React.createElement("span", {className:"subTxt"},
-                            getStaticText(element)
-                        ),
-                        React.createElement("br", null),
-                        React.createElement("span", {},(elementPrice !== undefined) ? `$${elementPrice}`: "")
-                    )
-                )
-            )
-        )
-    );
-}
 
 function ElementOnOrder({element, price, quantity, service, 
 onClickDelete, onUpdateQuantity, onUpdateUnitPrice, onUpdateElementNameIfCustom}){
@@ -190,7 +155,6 @@ function inputHookQuantity({hookQuantity, onChange}){
 }
 
 module.exports = {
-    SelectableElementToOrder:SelectableElementToOrder,
     ElementOnOrder:ElementOnOrder,
     fullHookCheckBox:fullHookCheckBox,
     inputHookQuantity:inputHookQuantity,
