@@ -2,6 +2,8 @@ const React = require("react");
 const {useContext} = React; 
 const cloneDeep = require("lodash.clonedeep");
 
+const inputPrevent = require("../frontendModules/inputPrevent");
+const isElementACustomElement = require("../frontendModules/isElementACustomElement");
 const {ELEMENTS} = require("../../../meta/ELEMENTS");
 const {getStaticText} = require("../../../translation/frontend/translator");
 
@@ -10,8 +12,58 @@ const {OrderContext} = require("../reactContexts/OrderContext");
 
 module.exports = function ElementOnOrder({element, service}){
 
-    const [Order] = useContext(OrderContext);
+    const [WriteOrder, setWriteOrder] = useContext(WriteOrderContext);
+    const [Order, setOrder] = useContext(OrderContext);
     const {quantity, price} = Order.elementsOnOrder[element][service];
+
+
+    const updateCustomElementName = (element, service, name) =>{
+        const newOrder = cloneDeep(Order);
+    
+        newOrder.elementsOnOrder[element][service]["name"] = name;
+    
+        setOrder(newOrder);
+    };
+    
+    const updateElementQuantity = (element, service, quantity) => {
+        const newOrder = cloneDeep(Order);
+    
+        newOrder.elementsOnOrder[element][service]["quantity"] = parseInt(quantity);
+    
+        setOrder(newOrder);
+    };
+    
+    const updateElementUnitPrice = (element, service, unitPrice) => {
+        const newOrder = cloneDeep(Order);
+    
+        newOrder.elementsOnOrder[element][service]["price"] = parseFloat(unitPrice);
+    
+        setOrder(newOrder);
+    };
+
+    const deleteElementFromOrder = (element, service) => {
+        const newOrder = cloneDeep(Order);
+        const newWriteOrder = cloneDeep(WriteOrder);
+    
+        //add element into the list of available elements if it isn't custom element
+        if(!isElementACustomElement(element)){
+            let defaultElementPositionOnList = ELEMENTS.indexOf(element);
+            //append on correspondent position
+            newWriteOrder.availableElements[service].splice(defaultElementPositionOnList, 0, element);
+        }
+    
+        if(elementHasMoreThaOneServiceOnOrder(element, newOrder.elementsOnOrder)){
+            //delete the service from the element
+            delete newOrder.elementsOnOrder[element][service];
+        }else{
+            //delete the whole element from the order
+            delete newOrder.elementsOnOrder[element];
+        }
+
+        setOrder(newOrder);
+        setWriteOrder(newWriteOrder);
+    };
+
     
     let idAsset = ""; //to get the svg illustrations
     let inputElementChangeOnCustom;
@@ -107,63 +159,6 @@ module.exports = function ElementOnOrder({element, service}){
             )    
         )
     );
-}
-
-function updateCustomElementName(element, service, name){
-    const [Order, setOrder] = useContext(OrderContext);
-    const newOrder = cloneDeep(Order);
-
-    newOrder.elementsOnOrder[element][service]["name"] = name;
-
-    setOrder(newOrder);
-}
-
-function deleteElementFromOrder(element, service){
-    const [Order, setOrder] = useContext(OrderContext);
-    const [WriteOrder, setWriteOrder] = useContext(WriteOrderContext);
-    const newOrder = cloneDeep(Order);
-    const newWriteOrder = cloneDeep(WriteOrder);
-
-    //add element into the list of available elements if it isn't custom element
-    if(isCustomElement(element)){
-        let defaultElementPositionOnList = ELEMENTS.indexOf(element);
-        //append on correspondent position
-        newWriteOrder.availableElements[service].splice(defaultElementPositionOnList, 0, element);
-    }
-
-    if(elementHasMoreThaOneServiceOnOrder(element, newOrder.elementsOnOrder)){
-        //delete the service from the element
-        delete newOrder.elementsOnOrder[element][service];
-    }else{
-        //delete the whole element from the order
-        delete newOrder.elementsOnOrder[element];
-    }
-
-    setOrder(newOrder);
-    setWriteOrder(newWriteOrder);
-}
-
-function updateElementQuantity(element, service, quantity){
-    const [Order, setOrder] = useContext(OrderContext);
-    const newOrder = cloneDeep(Order);
-
-    newOrder.elementsOnOrder[element][service]["quantity"] = parseInt(quantity);
-
-    setOrder(newOrder);
-}
-
-function updateElementUnitPrice(element, service, unitPrice){
-    const [Order, setOrder] = useContext(OrderContext);
-    const newOrder = cloneDeep(Order);
-
-    newOrder.elementsOnOrder[element][service]["price"] = parseFloat(unitPrice);
-
-    setOrder(newOrder);
-}
-
-
-function isCustomElement(element){
-    return element.indexOf("custom") !== -1;
 }
 
 function elementHasMoreThaOneServiceOnOrder(element, elementsOnOrder){

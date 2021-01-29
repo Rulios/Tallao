@@ -21,6 +21,7 @@ const ElementOnOrder = require("./reactComponents/ElementOnOrder");
 const UseCustomMessages = require("./reactComponents/UseCustomMessagesHandler");
 const LaundryServiceSelector = require("./reactComponents/LaundryServiceSelector");
 const DropdownElement = require("./reactComponents/DropdownElement");
+const HookQuantityInputs = require("./reactComponents/HookQuantityInputs");
 
 //contexts
 const {WriteOrderContext, WriteOrderProvider} = require("./reactContexts/WriteOrderContext");
@@ -156,6 +157,7 @@ function WriteOrderPanel(){
         setWriteOrder(newWriteOrder);
     }, [laundryPrices]);
 
+
     return (
         <div className="row" style={{maxHeight: "100%"}}>
             <div className="col-lg-8">
@@ -177,6 +179,7 @@ function WriteOrderPanel(){
                 </div>
 
                 <div className="smallSeparation">
+                    <HookQuantityInputs/>
                     <TotalPriceSpan/>
                 </div>
                 
@@ -193,6 +196,7 @@ function WriteOrderPanel(){
                         {getStaticText("selectTheService")}
                     </div>
                 </div>
+
 
                 <div className="row smallSeparation">
                     <div className="col-lg-12 text-center">
@@ -216,6 +220,23 @@ function WriteOrderPanel(){
                         <DropdownOfAvailableElements/>}
                 </div>
 
+            </div>
+
+            <div className="row small-mediumSeparation">
+                <div className="col-lg-l2">
+                    <div className="container text-center">
+
+                        <div className="row small-mediumSeparation">
+                            <div className="col-lg-12 formRowSeparation">
+                                <span className="subTxt bold">{getStaticText("orderScheduledFor")}</span>
+                            </div>
+                        </div>
+
+                        <div className="row smallSeparation">
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -290,30 +311,6 @@ function DropdownOfAvailableElements(){
     const {serviceSelected, laundryPrices} = WriteOrder;
     const elementsPriceByService = laundryPrices[serviceSelected];
     
-    /* const ElementsToRender = [];
-
-    //add the custom element 
-    ElementsToRender.push(
-        <DropdownElement 
-            key={`AvailableElementCustomElement-${serviceSelected}`} 
-            element="custom" service={serviceSelected} 
-            elementPrice={null}/>
-        );
-
-    Object.keys(elementsPriceByService).map(element => {
-        const elementPrice = elementsPriceByService[element];
-
-        ElementsToRender.push(
-            <DropdownElement 
-                key={`AvailableElement${element}-${serviceSelected}`}
-                element={element} 
-                service={serviceSelected} 
-                elementPrice={elementPrice}/>
-        );
-    });
-
-    return ElementsToRender; */
-
     return WriteOrder.availableElements[serviceSelected].map(element =>{
         const elementPrice = elementsPriceByService[element];
         return (

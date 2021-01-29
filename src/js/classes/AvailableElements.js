@@ -1,5 +1,5 @@
 const cloneDeep = require("lodash.clonedeep");
-const isElementACustomElement = require("./helpers/isElementACustomElement");
+const isElementACustomElement = require("../frontendModules/isElementACustomElement");
 const {ELEMENTS} = require("../../../meta/ELEMENTS");
 
 module.exports = class AvailableElements{
