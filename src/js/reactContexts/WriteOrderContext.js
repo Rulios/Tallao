@@ -12,7 +12,7 @@ function WriteOrderProvider(props){
         laundryPrices: {},
         availableElements: {},
         customElementIndexes: [],
-        isFullHookChecked: true
+        isFullHookChecked: false
     });
 
     return (

@@ -5,6 +5,8 @@ dayjs.extend(AdvancedFormat) // use plugin
 const validator = require("validator");
 const client = require("../libs/DB_CONNECT");
 const {ELEMENTS} =  require("../../meta/ELEMENTS");
+const {NEW_ORDER_NOTIF_CODE} = require("../../meta/NOTIFICATION_CODES");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 const GetPublicID = require("../libs/get/public-id");
 const GetLastOrderID = require("../libs/get/last-order-id");
@@ -18,7 +20,6 @@ const sendNotification = require("../libs/notifications/send-notification");
 
 
 const FIRST_STATUS = "wait";
-const {NEW_ORDER_NOTIF_CODE} = require("../../meta/NOTIFICATION_CODES");
 
 
 module.exports = function(orders, io){
@@ -30,7 +31,7 @@ module.exports = function(orders, io){
             let laundryInitials = await GetPublicID(userType, hashcode);
             let {id_char : lastIDChar, id_number: lastIDNumber} = await GetLastOrderID(laundryInitials);
             
-            let  TODAY_DATE_TIME = dayjs().format("YYYY-MM-DD HH:mm"); //get server date time
+            let  TODAY_DATE_TIME = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES); //get server date time
             
             let order = req.body;
             let query = "";
@@ -43,10 +44,10 @@ module.exports = function(orders, io){
             //check if hookQuantity is positive 
             if(order.hookQuantity < 0) throw new Error("hook quantity is not positive");
             //check if dateTimeAssigned complies with the format 
-            if(!dayjs(order.dateTimeAssigned, "YYYY-MM-DD HH:MM").isValid()) throw new Error("not valid date time format");
+            if(!dayjs(order.dateTimeAssigned, DATE_TIME_FORMAT_UNTIL_MINUTES).isValid()) throw new Error("not valid date time format");
             //check if customerID is not empty
-            if(order.customerID){
-                if(!validator.isEmpty(order.customerID) && !validator.isLength(order.customerID,5,6)){
+            if(order.customer.id){
+                if(!validator.isEmpty(order.customer.id) && !validator.isLength(order.customer.id,5,6)){
                     throw new Error("customerID not in range");
                 }
             }
@@ -65,7 +66,7 @@ module.exports = function(orders, io){
                 hookQuantity,
                 totalPrice,
                 dateTimeAssigned,
-                customerID,
+                customer: {id: customerID},
                 indications
             } = order;
             let customerName = await GetCustomerNameByID(customerID);

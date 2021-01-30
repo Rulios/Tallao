@@ -19,6 +19,7 @@ module.exports = function DropdownElement({element, service, elementPrice}){
         const newOrder = cloneDeep(Order);
 
         addElementToOrder(newWriteOrder, newOrder);
+        newOrder.hookQuantity++; //add unitary hook
         deleteAvailableElement(newWriteOrder);
 
         setWriteOrder(newWriteOrder);
@@ -30,21 +31,21 @@ module.exports = function DropdownElement({element, service, elementPrice}){
         if(isElementACustomElement(element)){
             let customElementIndexes = newWriteOrder.customElementIndexes;
             let nextCustomElementIndex = getNextCustomElementIndex(customElementIndexes);
-
+    
             element = `${element}${nextCustomElementIndex}`;
             customElementIndexes.push(nextCustomElementIndex);
         }
-
+    
         if(!isElementOnOrder(element, newOrder.elementsOnOrder)) newOrder.elementsOnOrder[element] = {};
         newOrder.elementsOnOrder[element][service] = {};
-
+    
         let elementOnOrder = newOrder.elementsOnOrder[element][service];
-
+    
         //initialize values
         elementOnOrder["quantity"] = 1;
         elementOnOrder["price"] = getElementUnitPrice(element, service, newWriteOrder.laundryPrices);
     };
-
+    
     const deleteAvailableElement = (newWriteOrder) =>{
         if(!isElementACustomElement(element)){
             let availableElementsOnActualService = newWriteOrder.availableElements[service];
@@ -52,7 +53,7 @@ module.exports = function DropdownElement({element, service, elementPrice}){
             availableElementsOnActualService.splice(positionOfElement, 1);
         }
     }
-
+    
     return(
         React.createElement("button", {
             value: element,
@@ -82,6 +83,9 @@ module.exports = function DropdownElement({element, service, elementPrice}){
         )
     );
 }
+
+
+
 
 function getNextCustomElementIndex(customElementsIndexes){
     let lastValue = 0, nextValue = 0;

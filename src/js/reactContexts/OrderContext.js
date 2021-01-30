@@ -1,6 +1,8 @@
 const cloneDeep = require("lodash.clonedeep");
 const React = require("react");
 const {useState, useRef, useContext, useEffect} = React;
+const dayjs = require("dayjs");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../../meta/DATE_TIME_FORMATS");
 
 const getSumOfElementsQuantities = require("../frontendModules/getSumOfElementsQuantities");
 const {WriteOrderContext} = require("../reactContexts/WriteOrderContext");
@@ -14,7 +16,7 @@ function OrderProvider(props){
         hookQuantity: 0,
         totalPrice: 0,
         indications: "",
-        dateTimeAssigned: ""
+        dateTimeAssigned: dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES)
     });
 
     const [WriteOrder] = useContext(WriteOrderContext);

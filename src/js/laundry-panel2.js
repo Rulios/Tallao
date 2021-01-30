@@ -6,7 +6,7 @@ require("regenerator-runtime/runtime");
 
 const React = require("react");
 const ReactDOM = require("react-dom");
-
+const dayjs = require("dayjs");
 const cloneDeep = require("lodash.clonedeep");
 
 const {getStaticText} = require("../../translation/frontend/translator");
@@ -30,11 +30,14 @@ const {OrderContext, OrderProvider} = require("./reactContexts/OrderContext");
 //custom hooks
 const useLaundryServices = require("./custom-hooks/useLaundryServices");
 const useLaundryPrices = require("./custom-hooks/useLaundryPrices");
+const useServerDateTime = require("./custom-hooks/useServerDateTime");
 
-const {ELEMENTS} = require("../../meta/ELEMENTS") ;
+const {ELEMENTS} = require("../../meta/ELEMENTS");
+const {HTML_DATE_FORMAT, HTML_TIME_FORMAT_UNTIL_MINUTES, DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 //ajax requests
 const {getUserType} = require("./ajax-requests/user-creds");
+const {submitOrder} = require("./ajax-requests/orders");
 
 const io = require("socket.io-client");
 const Order = require("./classes/Order");
@@ -233,9 +236,17 @@ function WriteOrderPanel(){
                         </div>
 
                         <div className="row smallSeparation">
-
+                            <div className="col-lg-12 formRowSeparation">
+                                <DateTimeInput/>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div className="row supTxt-TitleTxt-Separation">
+                <div className="col-lg-12 formRowSeparation">
+                    <SubmitOrderButton/>
                 </div>
             </div>
 
@@ -321,7 +332,100 @@ function DropdownOfAvailableElements(){
                 elementPrice={elementPrice ?? null}/>
         );
     });
-        
+}
+
+function DateTimeInput(){
+    const [Order, setOrder] = React.useContext(OrderContext);
+    const {dateTimeAssigned} = Order;
+    let dateAssigned = "", timeAssigned = "";
+    let todayDateTime = useServerDateTime();
+    let todayDateTimeString = dayjs(todayDateTime).format(HTML_DATE_FORMAT) ?? "";
+
+    if(dayjs(dateTimeAssigned).isValid() ){
+        dateAssigned = dayjs(dateTimeAssigned).format(HTML_DATE_FORMAT) ?? "";
+        timeAssigned = dayjs(dateTimeAssigned).format(HTML_TIME_FORMAT_UNTIL_MINUTES) ?? "";
+    }
+
+
+    const onDateChangeHandler = (date) => {
+
+        let newOrder = cloneDeep(Order);
+        let year = dayjs(date).year();
+        let month = dayjs(date).month();
+        let day = dayjs(date).day();
+
+        let newDateTimeAssigned = dayjs(dateTimeAssigned);
+        newDateTimeAssigned = newDateTimeAssigned.set("year", year);
+        newDateTimeAssigned = newDateTimeAssigned.set("month", month);
+        newDateTimeAssigned = newDateTimeAssigned.set("day", day);
+
+        newOrder.dateTimeAssigned = newDateTimeAssigned.format(DATE_TIME_FORMAT_UNTIL_MINUTES);
+        setOrder(newOrder);
+    };
+
+    const onTimeChangeHandler = (time) => {
+        let newOrder = cloneDeep(Order);
+        let [hours24, minutes] = time.split(":");
+
+        let newDateTimeAssigned = dayjs(dateTimeAssigned);
+        newDateTimeAssigned = newDateTimeAssigned.set("hour", hours24);
+        newDateTimeAssigned = newDateTimeAssigned.set("minute", minutes);
+
+        newOrder.dateTimeAssigned = newDateTimeAssigned.format(DATE_TIME_FORMAT_UNTIL_MINUTES);
+
+        setOrder(newOrder);
+    };
+
+    if(todayDateTime){
+        return (
+            <span>
+                <label htmlFor="dateAssignedForOrder" className="bold small-rightMargin">   
+                    {`${getStaticText("date")}:`}
+                </label>
+                <input type="date" id="dateAssignedForOrder"
+                     min={todayDateTimeString} value={dateAssigned} 
+                     onChange={(e) => onDateChangeHandler(e.target.value)}
+                />
+
+                <label htmlFor="timeAssignedForOrder" className="bold small-rightMargin">
+                    {`${getStaticText("hour")}:`}
+                </label>
+                <input type="time" id="timeAssignedForOrder" 
+                    value={timeAssigned} onChange={(e) => onTimeChangeHandler(e.target.value)}
+                />
+            </span>
+            
+        );        
+    }else{
+        return null;
+    }
+}   
+
+function SubmitOrderButton(){
+    const [Order] = React.useContext(OrderContext);
+
+    const onClickHandler = async () => {
+        try{
+
+            let {status, data:{idChar, idNumber}} = await submitOrder(Order);
+
+            if(status === 200){
+                alert(`${getStaticText("orderID")}: ${idChar} ${idNumber}`);
+            }
+
+        }catch(err){
+            console.log(err);
+            console.log("can't submit order");
+        }
+    };
+
+    return (
+        <button type="submit" className="submitButtonOrder"
+            onClick={() => onClickHandler()}
+        >
+            {getStaticText("submitOrder_action")}
+        </button>
+    );
 }
 
 function fillAvailableElementsWithServices(services){

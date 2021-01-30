@@ -25,7 +25,7 @@ eval("module.exports = {\r\n    early: \"#00A822\",\r\n    near: \"#DBA502\",\r\
   \***********************************/
 /***/ ((module) => {
 
-eval("module.exports = {\r\n    DATE_TIME_FORMAT_UNTIL_MINUTES : \"YYYY-MM-DD HH:mm\",\r\n    DATE_TIME_FORMAT_UNTIL_SECONDS: \"YYYY-MM-DD HH:mm:ss\",\r\n    DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM: \"YYYY-MM-DD hh:mm A\"\r\n};\n\n//# sourceURL=webpack://tallao/./meta/DATE_TIME_FORMATS.js?");
+eval("module.exports = {\r\n    HTML_DATE_FORMAT: \"YYYY-MM-DD\",\r\n    HTML_TIME_FORMAT_UNTIL_MINUTES: \"HH:mm\",\r\n    DATE_TIME_FORMAT_UNTIL_MINUTES : \"YYYY-MM-DD HH:mm\",\r\n    DATE_TIME_FORMAT_UNTIL_SECONDS: \"YYYY-MM-DD HH:mm:ss\",\r\n    DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM: \"YYYY-MM-DD hh:mm A\"\r\n};\n\n//# sourceURL=webpack://tallao/./meta/DATE_TIME_FORMATS.js?");
 
 /***/ }),
 
