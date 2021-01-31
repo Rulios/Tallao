@@ -596,6 +596,17 @@ input[type='checkbox']{
     top: 50% ;
     transition: 0.4s ;
 }
+
+.successBackground{
+    position: fixed;
+    background-color: transparent;
+    top:20%;
+    left: 0;
+    width: 100%;
+    height:60%;
+    backdrop-filter: blur(5px);
+}
+
 .checkAnim {
     border: solid 30px #D074E8;
     width: 200px;
@@ -610,13 +621,14 @@ input[type='checkbox']{
   
 .checkAnim{
     animation: start 1s ease  both;
-    /* Override default play state paused of codepen iframe */
     animation-play-state: running!important;
 }
 .successMessageAnim{
-    margin: -10px 0 0 -100px;
+    margin: -10px 0 0 -100%;
     transition: 0.2s;
-}  
+    text-align: center;
+}
+
 .hoverShadow{
     transition-duration: 0.3s;
     padding:1em;

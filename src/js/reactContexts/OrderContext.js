@@ -9,22 +9,29 @@ const {WriteOrderContext} = require("../reactContexts/WriteOrderContext");
 
 const OrderContext = React.createContext();
 
+const ORDER_STRUCTURE = {
+    customer: {id: "", name: ""},
+    elementsOnOrder: {},
+    hookQuantity: 0,
+    totalPrice: 0,
+    indications: "",
+    dateTimeAssigned: dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES)
+};
+
 function OrderProvider(props){
-    const [Order, setOrder] = useState({
-        customer: {id: "", name: ""},
-        elementsOnOrder: {},
-        hookQuantity: 0,
-        totalPrice: 0,
-        indications: "",
-        dateTimeAssigned: dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES)
-    });
+    const [Order, setOrder] = useState(ORDER_STRUCTURE);
 
     const [WriteOrder] = useContext(WriteOrderContext);
     const {laundryPrices: {extras}} = WriteOrder;
     const prevOrder = useRef(Order);
-    
+
+    const _resetOrder = () => {
+        setOrder(ORDER_STRUCTURE);
+    };
+
     useEffect(() => {
-        if(hasElementsOnOrderChanged(prevOrder.current, Order)){
+
+        if(hasElementsOnOrderChanged(prevOrder.current.elementsOnOrder, Order.elementsOnOrder)){
             const {elementsOnOrder, hookQuantity} = Order;
             const newOrder = cloneDeep(Order);
     
@@ -45,18 +52,16 @@ function OrderProvider(props){
 
 
     return (
-        <OrderContext.Provider value={[Order, setOrder]}>
+        <OrderContext.Provider value={[Order, setOrder, _resetOrder]}>
             {props.children}
         </OrderContext.Provider>
     );
 
 }
 
-function hasElementsOnOrderChanged(prevOrder, nextOrder){
-    const {elementsOnOrder: prevElementsOnOrder}  = prevOrder;
-    const {elementsOnOrder: nextElementsOnOrder}  = nextOrder;
+function hasElementsOnOrderChanged(prevElementsOnOrder, nextElementsOnOrder){
 
-    return prevElementsOnOrder !== nextElementsOnOrder;
+    return JSON.stringify(prevElementsOnOrder) !== JSON.stringify(nextElementsOnOrder);
 }
 
 function getTotalPrice(elementsOnOrder, hookQuantity, extras){

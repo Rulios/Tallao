@@ -9,6 +9,8 @@ const ReactDOM = require("react-dom");
 const dayjs = require("dayjs");
 const cloneDeep = require("lodash.clonedeep");
 
+const fillAvailableElementsWithServices = require("./frontendModules/fillAvailableElementsWithServices");
+
 const {getStaticText} = require("../../translation/frontend/translator");
 
 //components
@@ -22,6 +24,7 @@ const UseCustomMessages = require("./reactComponents/UseCustomMessagesHandler");
 const LaundryServiceSelector = require("./reactComponents/LaundryServiceSelector");
 const DropdownElement = require("./reactComponents/DropdownElement");
 const HookQuantityInputs = require("./reactComponents/HookQuantityInputs");
+const SuccessAnimation = require("./reactComponents/SuccessAnimation");
 
 //contexts
 const {WriteOrderContext, WriteOrderProvider} = require("./reactContexts/WriteOrderContext");
@@ -40,11 +43,7 @@ const {getUserType} = require("./ajax-requests/user-creds");
 const {submitOrder} = require("./ajax-requests/orders");
 
 const io = require("socket.io-client");
-const Order = require("./classes/Order");
-const WriteOrderContainers = require("./reactComponents/WriteOrderContainers");
-const laundryConfigs = require("./ajax-requests/laundry-configs");
 const socket = io.connect("/laundry");
-
 
 
 window.onload = function(){
@@ -141,6 +140,9 @@ function WriteOrderPanel(){
     const laundryServices = useLaundryServices();
     const laundryPrices = useLaundryPrices();
 
+    const initialOrder = React.useRef(Order);
+    const initialWriteOrder = React.useRef(WriteOrder);
+
     React.useEffect(() =>{
         const newWriteOrder = cloneDeep(WriteOrder);
         //set default service
@@ -151,107 +153,128 @@ function WriteOrderPanel(){
             newWriteOrder.availableElements = fillAvailableElementsWithServices(laundryServices);
         }
 
+        initialWriteOrder.current = newWriteOrder;
         setWriteOrder(newWriteOrder);
     }, [laundryServices]);
 
     React.useEffect(() =>{
         const newWriteOrder = cloneDeep(WriteOrder);
         newWriteOrder.laundryPrices = laundryPrices;
+
+        initialWriteOrder.current = newWriteOrder;
         setWriteOrder(newWriteOrder);
     }, [laundryPrices]);
 
 
     return (
-        <div className="row" style={{maxHeight: "100%"}}>
-            <div className="col-lg-8">
 
-                <OrderDetailsTitle/>
+        <div>
+            <div className="row" style={{maxHeight: "100%"}}>
+                <div className="col-lg-8">
 
-                <div className="container text-center">
-                    <CustomerIDHandler getCustomerData={(customer) => {
-                        let newOrder = cloneDeep(Order);
-                        newOrder.customer = customer;
-                        setOrder(newOrder);
-                    }}/>
-                </div>
+                    <OrderDetailsTitle/>
 
-                <br className="small-mediumSeparation"/>
-                
-                <div className="eightyPercentMaxHeight bottomBorder rightBorder scrollY text-center">
-                    <ListOfElementsOnOrder/>
-                </div>
+                    <div className="container text-center">
+                        <CustomerIDHandler getCustomerData={(customer) => {
+                            let newOrder = cloneDeep(Order);
+                            newOrder.customer = customer;
+                            setOrder(newOrder);
+                        }}/>
+                    </div>
 
-                <div className="smallSeparation">
-                    <HookQuantityInputs/>
-                    <TotalPriceSpan/>
-                </div>
-                
-                <div className="supTxt-TitleTxt-Separation">
-                    <IndicationsSection/>
-                </div>
-            </div>
+                    <br className="small-mediumSeparation"/>
+                    
+                    <div className="eightyPercentMaxHeight bottomBorder rightBorder scrollY text-center">
+                        <ListOfElementsOnOrder/>
+                    </div>
 
-            <div className="col-lg-4 text-center">
-                <div className="titleTxt">{getStaticText("elements")}</div>
-
-                <div className="row">
-                    <div className="col-lg-12 text-center karla_font">
-                        {getStaticText("selectTheService")}
+                    <div className="smallSeparation">
+                        <HookQuantityInputs/>
+                        <TotalPriceSpan/>
+                    </div>
+                    
+                    <div className="supTxt-TitleTxt-Separation">
+                        <IndicationsSection 
+                            indications={Order.indications} 
+                            onChange={(indications) => {
+                                let newOrder = cloneDeep(Order);
+                                newOrder.indications = indications;
+                                setOrder(newOrder);
+                            }}
+                        />
                     </div>
                 </div>
 
+                <div className="col-lg-4 text-center">
+                    <div className="titleTxt">{getStaticText("elements")}</div>
+
+                    <div className="row">
+                        <div className="col-lg-12 text-center karla_font">
+                            {getStaticText("selectTheService")}
+                        </div>
+                    </div>
+
+
+                    <div className="row smallSeparation">
+                        <div className="col-lg-12 text-center">
+
+                            {laundryServices.length && 
+                                <LaundryServiceSelector services={laundryServices}
+                                    getServiceSelected={(serviceSelected) =>{
+                                        const newWriteOrder = cloneDeep(WriteOrder);
+                                        newWriteOrder.serviceSelected = serviceSelected;
+                                        setWriteOrder(newWriteOrder);
+                                    }}
+                                />
+                            }
+
+                        </div>
+                    </div>
+
+                    <div className="eightyPercentMaxHeight doubleScrollable scrollY">
+                        {   
+                            (Object.keys(WriteOrder.laundryPrices).length && WriteOrder.availableElements[WriteOrder.serviceSelected]) &&
+                            <DropdownOfAvailableElements/>
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div className="container text-center small-mediumSeparation">
+
+                <div className="row small-mediumSeparation">
+                    <div className="col-lg-12 formRowSeparation">
+                        <span className="subTxt bold">{getStaticText("orderScheduledFor")}</span>
+                    </div>
+                </div>
 
                 <div className="row smallSeparation">
-                    <div className="col-lg-12 text-center">
-
-                        {laundryServices.length && 
-                            <LaundryServiceSelector services={laundryServices}
-                                getServiceSelected={(serviceSelected) =>{
-                                    const newWriteOrder = cloneDeep(WriteOrder);
-                                    newWriteOrder.serviceSelected = serviceSelected;
-                                    setWriteOrder(newWriteOrder);
-                                }}
-                            />
-                        }
-
+                    <div className="col-lg-12 formRowSeparation">
+                        <DateTimeInput/>
                     </div>
                 </div>
 
-                <div className="eightyPercentMaxHeight doubleScrollable scrollY">
-                    {   
-                        (Object.keys(WriteOrder.laundryPrices).length && WriteOrder.availableElements[WriteOrder.serviceSelected]) &&
-                        <DropdownOfAvailableElements/>}
-                </div>
 
-            </div>
-
-            <div className="row small-mediumSeparation">
-                <div className="col-lg-l2">
-                    <div className="container text-center">
-
-                        <div className="row small-mediumSeparation">
-                            <div className="col-lg-12 formRowSeparation">
-                                <span className="subTxt bold">{getStaticText("orderScheduledFor")}</span>
-                            </div>
-                        </div>
-
-                        <div className="row smallSeparation">
-                            <div className="col-lg-12 formRowSeparation">
-                                <DateTimeInput/>
-                            </div>
-                        </div>
+                <div className="row supTxt-TitleTxt-Separation">
+                    <div className="col-lg-12 formRowSeparation">
+                        <SubmitOrderButton initialOrder={initialOrder.current} initialWriteOrder={initialWriteOrder.current}/>
                     </div>
                 </div>
+
             </div>
 
-            <div className="row supTxt-TitleTxt-Separation">
-                <div className="col-lg-12 formRowSeparation">
-                    <SubmitOrderButton/>
-                </div>
-            </div>
+            <SuccessAnimation shouldShow={WriteOrder.shouldShowSuccessMessage} 
+                message="submitOrderSuccess" 
+                onFinish={() => {
+                    const newWriteOrder = cloneDeep(WriteOrder);
+                    newWriteOrder.shouldShowSuccessMessage = false;
+                    setWriteOrder(newWriteOrder);
+                }}
+            />
 
         </div>
-        
     );
 }
 
@@ -285,29 +308,30 @@ function TotalPriceSpan(){
     );
 }
 
-function IndicationsSection(){
-    const [Order, setOrder] = React.useContext(OrderContext);
-    const {indications} = Order;
+function IndicationsSection({indications, onChange}){
+
+    const [innerIndications, setInnerIndications] = React.useState(indications);
+
+    React.useEffect(() => {
+        setInnerIndications(indications);
+    }, [indications]);
 
     return (
         <span>
             <label htmlFor="inputIndications" className="bold">{getStaticText("indications")}</label>
             <br/>
             <textarea name="inputIndications" style={{width:"100%"}}
-                value={indications}
-                onChange={(e) =>{
-                    const newOrder = cloneDeep(Order);
-                    newOrder.indications = e.target.value;
-                    setOrder(newOrder);
-                }}></textarea>
+                value={innerIndications}
+                onChange={(e) => setInnerIndications(e.target.value)}
+                onBlur={(e) => onChange(innerIndications)}
+                ></textarea>
 
             <div>
                 <UseCustomMessages targetID="inputIndications" 
                     getClickedText={(text) =>{
-                        const newOrder = cloneDeep(Order);
-                        //append to indications
-                        newOrder.indications = `${newOrder.indications} ${text}`;
-                        setOrder(newOrder);
+                        const string = `${innerIndications} ${text}`;
+                        setInnerIndications(string);
+                        onChange(string);
                     }
                 }/>
             </div>
@@ -402,7 +426,8 @@ function DateTimeInput(){
 }   
 
 function SubmitOrderButton(){
-    const [Order] = React.useContext(OrderContext);
+    const [Order, setOrder, _resetOrder] = React.useContext(OrderContext);
+    const [WriteOrder, setWriteOrder, _resetWriteOrder] = React.useContext(WriteOrderContext);
 
     const onClickHandler = async () => {
         try{
@@ -410,13 +435,28 @@ function SubmitOrderButton(){
             let {status, data:{idChar, idNumber}} = await submitOrder(Order);
 
             if(status === 200){
+                let newWriteOrder = cloneDeep(WriteOrder);
                 alert(`${getStaticText("orderID")}: ${idChar} ${idNumber}`);
+
+                newWriteOrder.shouldShowSuccessMessage = true;
+                setWriteOrder(newWriteOrder);
+
+                resetWriteOrderPanel();
+
+                //scroll to top
+                window.scrollTo(0,0);
+
             }
 
         }catch(err){
             console.log(err);
             console.log("can't submit order");
         }
+    };
+
+    const resetWriteOrderPanel = () => {
+        _resetOrder();
+        _resetWriteOrder();
     };
 
     return (
@@ -428,11 +468,3 @@ function SubmitOrderButton(){
     );
 }
 
-function fillAvailableElementsWithServices(services){
-    let newAvailableElements = {};
-    //push the custom element at the top
-    services.map(service =>{
-        newAvailableElements[service] = Array.of(...ELEMENTS);
-    });
-    return newAvailableElements;
-}
