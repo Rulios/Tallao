@@ -8,10 +8,10 @@ module.exports = {
         index: path.resolve(__dirname, "./src/js/index.js"),
         register: path.resolve(__dirname, './src/js/register.js'),
         login: path.resolve(__dirname, './src/js/login.js'),
-        /* laundryPanel: path.resolve(__dirname, "./src/js/laundry-panel.js"), */ //real
-        laundryPanel: path.resolve(__dirname, "./src/js/laundry-panel2.js"), //for testing
+        laundryPanel: path.resolve(__dirname, "./src/js/laundry-panel.js"), 
         myAccount: path.resolve(__dirname, "./src/js/my-account.js"),
-        myOrders: path.resolve(__dirname, "./src/js/my-orders.js"),
+        /* myOrders: path.resolve(__dirname, "./src/js/my-orders.js"), */
+        myOrders: path.resolve(__dirname, "./src/js/my-orders2.js"),
         userPanel: path.resolve(__dirname, "./src/js/user-panel.js")
     },
     output: {

@@ -2,7 +2,7 @@
 
 const React = require("react");
 const OrderModalComp = require("./OrderModalComp");
-const CustomerIDHandler = require("./CustomerIDHandler");
+const CustomerIDSearcher = require("./CustomerIDSearcher");
 const dayjs = require("dayjs");
 const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
 const {getStaticText} = require("../../../translation/frontend/translator");
@@ -166,8 +166,8 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
         if(isToggleEdit){
 
             toggleElement = [
-                React.createElement(CustomerIDHandler, {
-                    key: `CustomerIDHandler4${idComp}`,
+                React.createElement(CustomerIDSearcher, {
+                    key: `CustomerIDSearcher4${idComp}`,
                     mode: "search",
                     getCustomerData :(customer) => getNewAffiliateCustomer(customer)
                 }),

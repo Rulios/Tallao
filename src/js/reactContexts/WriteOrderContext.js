@@ -27,7 +27,7 @@ function WriteOrderProvider(props){
             availableElements: cloneDeep(fillAvailableElementsWithServices(WriteOrder.laundryServices)),
             customElementIndexes: [],
             isFullHookChecked: false,
-            shouldShowSuccessMessage: false
+            shouldShowSuccessMessage: true
         });
 
         console.log(fillAvailableElementsWithServices(WriteOrder.laundryServices));
