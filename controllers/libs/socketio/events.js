@@ -5,6 +5,7 @@
 module.exports = {
 
     emitUpdateOrders: (io, namespace, publicID) =>{
+        console.log("updating");
         emitNewCurrentOrderIDIfLaundry(io, namespace, publicID);
         io.of(`/${namespace}`).to(publicID).emit("update-orders");
     },

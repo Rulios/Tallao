@@ -4,7 +4,7 @@ const dayjs = require("dayjs");
 
 module.exports = function useServerDateTime(){
 
-    let [serverDateTime, setServerDateTime] = useState({});
+    let [serverDateTime, setServerDateTime] = useState(dayjs());
 
     useEffect(() =>{
         const ONE_MINUTE_IN_MS = 60000;

@@ -5,6 +5,8 @@ const OrderModalComp = require("./OrderModalComp");
 const CustomerIDSearcher = require("./CustomerIDSearcher");
 const dayjs = require("dayjs");
 const STATUS_COLORS = require("../../../meta/STATUS_COLORS");
+const {DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM} = require("../../../meta/DATE_TIME_FORMATS");
+
 const {getStaticText} = require("../../../translation/frontend/translator");
 
 /* This is a middle order component, responsible for translation
@@ -69,7 +71,7 @@ function OrderModal({orderDetails, onClickClose,
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalReceiveDate4${idComp}`,
                                         fieldTxt: `${getStaticText("dateReceive")}:`,
-                                        value: `${dayjs(orderDetails.date_receive).format("YYYY-MM-DD hh:mm A")}`
+                                        value: `${dayjs(orderDetails.date_receive).format(DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM)}`
                                     })
                                 ),
                                 React.createElement("div", {
@@ -78,7 +80,7 @@ function OrderModal({orderDetails, onClickClose,
                                     React.createElement(OrderModalComp.FieldValue,{
                                         id: `ModalAssignDate4${idComp}`,
                                         fieldTxt: `${getStaticText("dateAssign")}:`,
-                                        value: `${dayjs(orderDetails.date_assign).format("YYYY-MM-DD hh:mm A")}`
+                                        value: `${dayjs(orderDetails.date_assign).format(DATE_TIME_FORMAT_UNTIL_MINUTES_WITH_MERIDIEM)}`
                                     })
                                 ),
                                 React.createElement(OrderModalComp.CenterBoldDiv,{
@@ -169,7 +171,7 @@ function OrderModalCustomerName({idComp, customer_name, getNewAffiliateCustomer,
                 React.createElement(CustomerIDSearcher, {
                     key: `CustomerIDSearcher4${idComp}`,
                     mode: "search",
-                    getCustomerData :(customer) => getNewAffiliateCustomer(customer)
+                    getCustomer :(customer) => getNewAffiliateCustomer(customer)
                 }),
                 React.createElement("button", {
                     key: `BtnAffiliateCustomer4${idComp}`,

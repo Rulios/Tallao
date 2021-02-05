@@ -10,8 +10,7 @@ module.exports = {
         login: path.resolve(__dirname, './src/js/login.js'),
         laundryPanel: path.resolve(__dirname, "./src/js/laundry-panel.js"), 
         myAccount: path.resolve(__dirname, "./src/js/my-account.js"),
-        /* myOrders: path.resolve(__dirname, "./src/js/my-orders.js"), */
-        myOrders: path.resolve(__dirname, "./src/js/my-orders2.js"),
+        myOrders: path.resolve(__dirname, "./src/js/my-orders.js"),
         userPanel: path.resolve(__dirname, "./src/js/user-panel.js")
     },
     output: {

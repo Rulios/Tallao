@@ -41,6 +41,7 @@ module.exports = function(orders, io){
 
             if(!result.rowCount) return res.status(500).end();
 
+            emitUpdateOrders(io, "laundry", laundryInitials);
             emitUpdateOrders(io, "user", customerID);
 
             return res.status(200).json("OK");

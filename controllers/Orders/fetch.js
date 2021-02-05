@@ -5,6 +5,7 @@ const validator = require("validator");
 const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 const GetPublicID = require("../libs/get/public-id");
 const dayjs = require("dayjs");
+const cloneDeep = require("lodash.clonedeep");
 const {escapeArrayOfObj} = require("../libs/outputs");
 
 
@@ -18,7 +19,7 @@ const SEARCH_PARAMS  =[
 ];
 
 const AVAILABLE_INPUTS = [ //determines available inputs
-    "date", "hour", "order", "txt"
+    "date", "time", "order", "txt"
 ];
 
 
@@ -28,20 +29,20 @@ module.exports = function(orders){
 
         try{
             const {userType, hashcode} = req.session;
-            let {paramsProps, inputs} = req.query;
+            let {paramProps, inputs} = req.query;
 
             //parse the input to obj
-            paramsProps = JSON.parse(paramsProps);
+            paramProps = JSON.parse(paramProps);
             inputs = JSON.parse(inputs);
 
             let publicID = await GetPublicID(userType, hashcode);
             //validate input
-            validateInput(paramsProps, inputs, userType);
+            validateInput(paramProps, inputs, userType);
 
             /////QUERY
-            let statusArr = getStatusArr(paramsProps.statusSelected);
-            let query = buildQuery(paramsProps.paramSelected, statusArr, userType);
-            let values = buildValues(publicID,userType, paramsProps, inputs, statusArr);
+            let statusArr = getStatusArr(paramProps.statusSelected);
+            let query = buildQuery(paramProps.paramSelected, statusArr, userType);
+            let values = buildValues(publicID,userType, paramProps, inputs, statusArr);
            
             let result = await client.query(query, values);
             let escapedResult = escapeArrayOfObj(result.rows);
@@ -56,26 +57,26 @@ module.exports = function(orders){
     });
 }
 
-function validateInput(paramsProps, inputs, userType){
-    //check if every paramsProps matches whitelist
-    Object.keys(paramsProps).map(prop =>{
+function validateInput(paramProps, inputs, userType){
+    //check if every paramProps matches whitelist
+    Object.keys(paramProps).map(prop =>{
         if(!validator.isIn(prop, PARAMS_PROPS)) throw new Error(`Missing Params prop : ${prop}`);
     });
 
     /* //prevent the user to search another user
-    if(userType === "user" && paramsProps.paramSelected === "customerID") throw new Error("Customer shouldn't search for another customer"); */
+    if(userType === "user" && paramProps.paramSelected === "customerID") throw new Error("Customer shouldn't search for another customer"); */
     //check if the paramSelected matches available search params
-    if(!validator.isIn(paramsProps.paramSelected, SEARCH_PARAMS)) throw new Error(`Search param selecteed not in whitelist`);
+    if(!validator.isIn(paramProps.paramSelected, SEARCH_PARAMS)) throw new Error(`Search param selecteed not in whitelist`);
 
     //check if statusSelected is an array.
     //if it's an array, iterate for every status contained
-    if(Array.isArray(paramsProps.statusSelected)){
-        paramsProps.statusSelected.map(status =>{
+    if(Array.isArray(paramProps.statusSelected)){
+        paramProps.statusSelected.map(status =>{
             if(!validator.isIn(status, ORDER_STATUS)) throw new Error (`${status} not in order status`);
         });
     }else{
         //check if statusSelected is in ORDER_STATUS and is not "all"
-        if(!validator.isIn(paramsProps.statusSelected, ORDER_STATUS) && paramsProps.statusSelected !== "all") throw new Error(`${paramsProps.statusSelected} not in order status`);
+        if(!validator.isIn(paramProps.statusSelected, ORDER_STATUS) && paramProps.statusSelected !== "all") throw new Error(`${paramProps.statusSelected} not in order status`);
     }
 
     
@@ -210,15 +211,15 @@ function buildQuery(paramSelected, statusArr, userType){
     return query;
 }
 
-function buildValues(publicID, userType,paramsProps, inputs, statusArr){
-    let {paramSelected, elementsToFetch} = paramsProps;
+function buildValues(publicID, userType,paramProps, inputs, statusArr){
+    let {paramSelected, elementsToFetch} = paramProps;
     let values = [];
 
     const DATE_CASES = ["dateAssign", "dateReceive", "dateRange"];
 
     switch(true){
         case (validator.isIn(paramSelected, DATE_CASES)): //DATE CASES
-            let {date, hour} = inputs;
+            let {date, time} = inputs;
             //this is a reference to the start day of the selected one
             //CASES: 
 
@@ -229,8 +230,8 @@ function buildValues(publicID, userType,paramsProps, inputs, statusArr){
                     set startDateTime to what the user inputted 
             */
 
-            let startDateTime = (paramSelected === "dateRange") ? `${date.start} ${hour.start}` : `${date.end} 00:00`; 
-            let endDateTime = `${date.end} ${hour.end}`; //the one that the user supplies
+            let startDateTime = (paramSelected === "dateRange") ? `${date.start} ${time.start}` : `${date.end} 00:00`; 
+            let endDateTime = `${date.end} ${time.end}`; //the one that the user supplies
             //check if valid date time format
             if(!dayjs(endDateTime).isValid()) throw new Error("Not valid date time format");
 

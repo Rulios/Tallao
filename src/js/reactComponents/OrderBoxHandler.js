@@ -19,7 +19,7 @@ class OrderBoxes extends React.Component{
         }
     }
 
-    returnDataOnClick(orderID){
+    onClickOrder(orderID){
         this.props.onClick(orderID);
     }
 
@@ -44,7 +44,7 @@ class OrderBoxes extends React.Component{
                     total_price: order.total_price
                 },
                 dateTimeDifference: Time.calcTimeDifference(order.date_assign, this.props.todayDateTime),
-                onClickOrder: () => this.returnDataOnClick(order.id)
+                onClickOrder: () => this.onClickOrder(order.id)
             })
         });
     }

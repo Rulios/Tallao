@@ -29,8 +29,6 @@ function WriteOrderProvider(props){
             isFullHookChecked: false,
             shouldShowSuccessMessage: true
         });
-
-        console.log(fillAvailableElementsWithServices(WriteOrder.laundryServices));
     };
 
     return (
