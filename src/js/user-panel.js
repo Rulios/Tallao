@@ -4,18 +4,20 @@ require( "core-js/stable");
 require("regenerator-runtime/runtime");
 
 const React = require("react");
+const {useState, useEffect} = React;
 const ReactDOM = require("react-dom");
 const dayjs = require("dayjs");
+const cloneDeep = require("lodash.clonedeep");
+
+const useServerDateTime = require("./custom-hooks/useServerDateTime");
+const useOrders = require("./custom-hooks/useOrders");
 
 const OrderBoxHandler = require("./reactComponents/OrderBoxHandler");
 const OrderModalHandler = require("./reactComponents/OrderModalHandler");
 const NotificationBar = require("./reactComponents/NotificationBar");
-
-const {fetchOrders} = require("./ajax-requests/orders");
-const {getDateTimeFromServer} = require("./reactComponents/Time");
-const {fetchAccountCreds, getUserType} = require("./ajax-requests/user-creds");
 const Navbar = require("./reactComponents/NavbarHandler");
-const convertArrToObj = require("./frontendModules/convertArrToObj");
+
+const {fetchAccountCreds, getUserType} = require("./ajax-requests/user-creds");
 
 const {getStaticText} = require("../../translation/frontend/translator");
 
@@ -24,8 +26,7 @@ const userSocket = io.connect("/user");
 
 userSocket.on("connect", () =>{
     console.log("socket connected");
-}) 
-
+}); 
 
 window.onload = function(){
     try{
@@ -77,70 +78,46 @@ function Orders(){
     const PARAM_SELECTED = "customerID";
     const STATUS_SELECTED = ["wait", "processing", "ready"];
 
-    let [todayDateTime, setTodayDateTime] = React.useState({});
-    let [orders, setOrders] = React.useState({});
-    let [paramProps, setParamProps] = React.useState({
-        paramSelected: PARAM_SELECTED,
-        statusSelected: STATUS_SELECTED,
-        elementsToFetch: 10
-    });
-    let [isScrollBottomAttached, setScrollBottomAttached] = React.useState(false);
-    let [ModalStates, setModalStates] = React.useState({
-        isModalPoppedOut : false,
-        orderInModal: ""
-    });
+    const todayDateTime = useServerDateTime();
+    const {
+        orders, 
+        paramProps,setParamProps,
+    } = useOrders(userSocket);
 
-    const onClickOrderHandler = () =>{ //Render order modal
-        RenderOrderModal({
-            order: orders[ModalStates.orderInModal],
-            onClickClose: () => setModalStates({isModalPoppedOut: false, orderInModal: ""}),
-            isShowing: ModalStates.isModalPoppedOut
-        });
-    }
+    const [isModalPoppedOut, setIsModalPoppedOut] = useState(false);
+    const [orderInModal, setOrderInModal] = useState("");
 
-    const processOrders = () =>{ //fetch orders and insert at the React state
-        fetchOrders({
-            paramsProps: paramProps,
-            inputs: {}
-        }).then(({data: fetchedOrders}) =>{
-            let newOrders = JSON.parse(JSON.stringify(orders));
-            newOrders = Object.assign(newOrders, convertArrToObj(fetchedOrders));
-            setOrders(newOrders);
-        }).catch(err =>{
-            console.error(err);
-        });
-    }
+    const setConstantParamSelected = () => {
+        const newParamProps = cloneDeep(paramProps);
+        newParamProps.paramSelected = PARAM_SELECTED;
+        newParamProps.statusSelected = STATUS_SELECTED;
+        setParamProps(newParamProps);
+    };
 
-    React.useEffect(() =>{
-        processOrders();
-        userSocket.on("update-orders", () =>{
-            processOrders();
-        });
+    useEffect(() => {
+        setConstantParamSelected();
     }, []);
 
-    React.useEffect(() =>{
-        if(!isScrollBottomAttached){
-            window.addEventListener("scroll", function(){
-                if(document.documentElement.clientHeight + window.pageYOffset >= getDocHeight() ){
-                    let newParamProps = JSON.parse(JSON.stringify(paramProps));
-                    newParamProps["elementsToFetch"] += 10;
-                    setParamProps(newParamProps);
-                }
-            });
-            setScrollBottomAttached(true);
-        }
+    useEffect(() => {
+        /*Wrong implementation. SHOULD REFACTOR LATER
+            This is explicitly incorrect. Since it's not react rendered
+            by the root div. So the only way to unmount OrderModal HERE
+            is just set isShowing as the same state that handles here.
 
-        getDateTimeFromServer().then(dateTime =>{
-            //fetch from server time
-            setTodayDateTime(dateTime);
-        }).catch(err =>{
-            //fetch from local system
-            console.log("Error in fetching date time from server");
-            setTodayDateTime(dayjs());
+            //FOR LATER
+            - Should conditional render this component
+            - Should render all components appending to the root div element
+        */
+
+        RenderOrderModal({
+            order: orders[orderInModal],
+            onClickClose: () =>{
+                setOrderInModal("");
+                setIsModalPoppedOut(false);
+            },
+            isShowing: isModalPoppedOut
         });
-
-        onClickOrderHandler();
-    }, [paramProps, ModalStates]);
+    }, [orderInModal, isModalPoppedOut]);
 
     if(dayjs(todayDateTime).isValid()){
         return (
@@ -150,10 +127,8 @@ function Orders(){
                 columnType="col-lg-12" 
                 showLaundryName = {true}
                 onClick={(orderID =>{
-                    setModalStates({
-                        isModalPoppedOut: true,
-                        orderInModal: orderID
-                    });
+                    setOrderInModal(orderID);
+                    setIsModalPoppedOut(true);
                 })}
             ></OrderBoxHandler>
         );
@@ -177,11 +152,3 @@ function RenderOrderModal({order, onClickClose,onUpdateOrders, isShowing}){
     )
 }
 
-function getDocHeight() {
-    var D = document;
-    return Math.max(
-        D.body.scrollHeight, D.documentElement.scrollHeight,
-        D.body.offsetHeight, D.documentElement.offsetHeight,
-        D.body.clientHeight, D.documentElement.clientHeight
-    );
-}

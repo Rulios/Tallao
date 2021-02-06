@@ -92,7 +92,7 @@ function App({userType}){
                 <OrderBox
                     orders={orders}
                     columnType="col-lg-4"
-                    showLaundryName={(userType === "laundry") ? false: true}
+                    showLaundryName={userType !== "laundry"}
                     onClick={(orderID) => {
                         setOrderInModal(orderID);
                         setIsModalPoppedOut(true);

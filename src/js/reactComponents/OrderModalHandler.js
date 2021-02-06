@@ -48,6 +48,7 @@ class OrderModal extends React.Component{
 
 
     render(){
+        console.log(this.props.isShowing);
         if(this.props.isShowing && typeof this.props.order !== "undefined"){
             return React.createElement(OrderModalContainers, {
                 orderDetails: this.props.order,
