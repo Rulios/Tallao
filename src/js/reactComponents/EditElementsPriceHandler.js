@@ -1,8 +1,11 @@
 "use strict";
 
 const React = require("react");
+const cloneDeep = require("lodash.clonedeep");
+
 const EditElementsPriceContainers = require( "./EditElementsPriceContainers");
 const {fetchElementsPrice, updateElementsPrice} = require("../ajax-requests/laundry-configs");
+
 
 async function getElementsPrice(){
     try {
@@ -28,7 +31,8 @@ class EditElementsPrice extends React.Component{
 
     changePriceHandler(idElement,newPrice){
   
-        let prevPrices = JSON.parse(JSON.stringify(this.state));
+        let prevPrices = cloneDeep(this.state);
+
         if(prevPrices[this.props.serviceSelected].hasOwnProperty(idElement)){ //search in elements
             prevPrices[this.props.serviceSelected][idElement] = newPrice
             this.setState(prevPrices);
@@ -65,6 +69,7 @@ class EditElementsPrice extends React.Component{
                 parsedElementsPrice[service][element] = Number(parseFloat(elementsPrice[service][element]).toFixed(2));
             });
         });
+
         this.setState(parsedElementsPrice);
     }
 
@@ -87,6 +92,7 @@ class EditElementsPrice extends React.Component{
             })
         );      
         //append the edit elements price
+
         if(this.state.hasOwnProperty(this.props.serviceSelected)){
             el2Render.push(
                 Object.keys(this.state[this.props.serviceSelected]).map(element =>{ 

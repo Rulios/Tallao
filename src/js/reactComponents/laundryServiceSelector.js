@@ -11,7 +11,7 @@ class ServiceSelector extends React.Component{
         super(props);
 
         const DEFAULT_SERVICE = this.props.services[0];
-
+        
         this.state = {
             selected: DEFAULT_SERVICE
         };

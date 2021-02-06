@@ -5,25 +5,38 @@ const EditElementsPriceHandler = require("./EditElementsPriceHandler");
 const LaundryServiceSelector = require("./LaundryServiceSelector");
 const {getStaticText} = require("../../../translation/frontend/translator");
 
+const useLaundryServices = require("../custom-hooks/useLaundryServices");
+
 //THIS IS A BUNDLE COMPONENT
 //BUNDLE COMPONENTS: WHEN TWO HANDLER COMPONENTS ARE REQUIRED TO EXCHANGE DATA
 
 
 function renderServiceSelectorContainer({onChange}){
-    return React.createElement("div", {
-        className: "text-center supTxt-TitleTxt-Separation"
-    },
-        [
-            React.createElement("div", {
-                key: "LaundryServiceSelectorTag",
-                className: "karla_font"
-            }, getStaticText("selectTheService")),
-            React.createElement(LaundryServiceSelector, {
-                key: "LaundryServiceSelector",
-                getServiceSelected: (selected) => onChange(selected) 
-            })
-        ]
-    );
+
+    const laundryServices = useLaundryServices();
+
+
+    if(laundryServices.length){
+        return React.createElement("div", {
+            className: "text-center supTxt-TitleTxt-Separation"
+        },
+            [
+                React.createElement("div", {
+                    key: "LaundryServiceSelectorTag",
+                    className: "karla_font"
+                }, getStaticText("selectTheService")),
+                React.createElement(LaundryServiceSelector, {
+                    key: "LaundryServiceSelector",
+                    services: laundryServices,
+                    getServiceSelected: (selected) => onChange(selected) 
+                })
+            ]
+        );
+    }else{
+        return null;
+    }
+
+    
 }
 
 function renderEditElementsPrice({serviceSelected}){
