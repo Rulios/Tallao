@@ -2,7 +2,7 @@
   "name": "tallao",
   "version": "1.0.0",
   "description": "Talla'o is a app that connects orders of laundry customers with laundries. It simplifies the process of doing it.",
-  "main": "index.js",
+  "main": "App.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node App.js",
