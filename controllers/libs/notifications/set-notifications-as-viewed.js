@@ -1,4 +1,3 @@
-const { ModuleGraphConnection } = require("webpack");
 const client = require("../DB_CONNECT");
 
 module.exports = async function(getter, getter_role){
