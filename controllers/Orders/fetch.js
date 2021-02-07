@@ -6,7 +6,7 @@ const ORDER_STATUS = require("../../meta/ORDER_STATUS");
 const GetPublicID = require("../libs/get/public-id");
 const dayjs = require("dayjs");
 const cloneDeep = require("lodash.clonedeep");
-const {escapeArrayOfObj} = require("../libs/outputs");
+const {escapeArrayOfObj} = require("../libs/outputHelpers");
 
 
 const PARAMS_PROPS = [

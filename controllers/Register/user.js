@@ -5,28 +5,11 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const GenerateUniqueUUID = require("../libs/generate/unique-uuid");
 const ExistsPublicID = require("../libs/exists/public-id");
-/* const {checkIfEmpty,  trimAllExceptPassword} = require("../libs/inputs"); */
+const {checkIfEmpty,  trimAllExceptPassword} = require("../libs/inputHelpers");
 const createAndSaveToken = require("../libs/email-verification/create-and-save-token");
 const sendEmailVerification = require("../libs/email-verification/send-email-verification");
 
 const SALT_ROUNDS = require("../libs/SALT_ROUNDS");
-
-function checkIfEmpty(obj){
-    //iterates for all the keys to check if the value is empty
-    //If it's empty, it should return a false statement with a field value
-    //ONLY FOR STRING VALUES
-    Object.keys(obj).map(input =>{
-        if(validator.isEmpty(obj[input]))
-            return {exists: false, field: input};
-    })
-    return {exists: true};
-}
-
-function trimAllExceptPassword(inputs){
-    Object.keys(inputs).map(input =>{
-        if(input !== "password") inputs[input] = inputs[input].trim();
-    });
-}
 
 const TARGET_MARKET_RANGE = [
     "none","social-media", "internet-advertisement",

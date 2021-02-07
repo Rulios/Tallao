@@ -1,6 +1,6 @@
 const client = require("../../libs/DB_CONNECT");
 const GetPublicID = require("../../libs/get/public-id");
-const {escapeArrayOfObj} = require("../../libs/outputs");
+const {escapeArrayOfObj} = require("../../libs/outputHelpers");
 
 
 module.exports = function(customMessages){
