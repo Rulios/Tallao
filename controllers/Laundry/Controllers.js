@@ -20,7 +20,7 @@ laundry.use("/",async function(req, res, next){
 //views 
 
 laundry.get("/panel", function(req, res){
-    return res.render("./pages/laundrypanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    return res.render("./pages/laundryPanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 laundry.get("/myaccount", function(req,res){
