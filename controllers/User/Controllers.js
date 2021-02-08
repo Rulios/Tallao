@@ -15,7 +15,7 @@ user.use("/",async function(req, res, next){
 });
 
 user.get("/panel", function(req, res){
-    return res.render("pages/userPanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    return res.render("pages/user-panel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 user.get("/myaccount", function(req,res){
