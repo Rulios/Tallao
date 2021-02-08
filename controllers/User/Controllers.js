@@ -15,15 +15,15 @@ user.use("/",async function(req, res, next){
 });
 
 user.get("/panel", function(req, res){
-    return res.render("./pages/userPanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    return res.render("pages/userpanel", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 user.get("/myaccount", function(req,res){
-    return res.render("./pages/myaccount", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    return res.render("pages/myaccount", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 user.get("/myorders", function(req,res){
-    return res.render("./pages/myorders", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    return res.render("pages/myorders", Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 module.exports = user;

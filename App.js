@@ -72,7 +72,7 @@ app.get("/register",csrfProtectionMiddleware, function(req,res){
 });
 
 app.get("/laundryRegister", csrfProtectionMiddleware, function(req,res){
-    res.render("pages/laundryRegister",Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
+    res.render("pages/laundryregister",Object.assign(getLanguageStrings(req), {csrfToken: req.csrfToken()}));
 });
 
 //EXPRESS ROUTERS
