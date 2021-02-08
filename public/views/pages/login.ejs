@@ -34,7 +34,7 @@
         
         
 
-        <form action="php/userLoginProcess.php" method="POST" class="paddingForm" id="frmUserLogin">
+        <div  class="paddingForm" id="frmUserLogin">
             
             
 
@@ -54,11 +54,11 @@
 
             <div class="form-row formRowSeparation" id="registerLink"><a href="/register"><%- `${dontHaveAAccountQuestion} ${register}` %> </a></div>
 
-            <button class="submitButtonLoginSuperUser formRowSeparation disableButton" type="submit" id="submitLoginLaundry"><%- `${loginAction} ${as} ${laundry}` %> </button>
+            <button class="submitButtonLoginSuperUser formRowSeparation" id="submitLoginLaundry"><%- `${loginAction} ${as} ${laundry}` %> </button>
 
-            <button class="submitButtonLogin formRowSeparation disableButton" type="submit" id="submitLoginUser"><%- `${loginAction} ${as} ${user}` %></button>
+            <button class="submitButtonLogin formRowSeparation" id="submitLoginUser"><%- `${loginAction} ${as} ${user}` %></button>
         
-        </form>
+        </div>
 
         
 

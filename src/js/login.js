@@ -3,94 +3,85 @@
 require( "core-js/stable");
 require("regenerator-runtime/runtime");
 
-const $ = require("jquery");
-const formVerification = require("./frontendModules/formVerification");
+const {appendError, deleteError} = require("./frontendModules/appendError");
+
 const page = require("./frontendModules/pageRedirection");
 const {login} = require("./ajax-requests/log");
+const {isEmail, isEmpty} = require("validator");
 
-$(document).ready(function(){
-    formVerification.invokeVerify("load", false);
+const {getStaticText} =require("../../translation/frontend/translator");
 
-    $("#inputEmail").change(function(e){
-        let id = "inputEmail";
-        if($("#inputEmail").val() === ""){
-            formVerification.invokeVerify(id, false);
-        }else{
-            formVerification.invokeVerify(id, true);
-        }
-    });
+window.onload = function(){
 
-    $("#inputPassword").change(function(e){
-        let id = "inputPassword";
-        if($("#inputPassword").val() === ""){
-            formVerification.invokeVerify(id, false);
-        }else{
-            formVerification.invokeVerify(id, true);
-        }
-    });
+    const laundryLoginButton = document.getElementById("submitLoginLaundry");
+    const userLoginButton = document.getElementById("submitLoginUser");
 
-    $("#frmUserLogin").submit(function(e){
-        e.preventDefault();
-    });
+    const emailTextbox = document.getElementById("inputEmail");
+    const passwordTextbox = document.getElementById("inputPassword");
 
-    $("#submitLoginLaundry").click(function(e){
+    laundryLoginButton.addEventListener("click", function(e){
         checkLoginAJAX("laundry");
     });
 
-    $("#submitLoginUser").click(function(e){
+    userLoginButton.addEventListener("click", function(e){
         checkLoginAJAX("user");
     });
 
-    $('#inputEmail').change(function(e){
-
-        let email = $("#inputEmail").val();
+    emailTextbox.addEventListener("change", function(e){
+        let email = emailTextbox.value;
         let id = "inputEmail";
-        let verSame = false;
     
-        if(validateEmail(email) == false){
-            formVerification.deleteAppendError(id);
-            formVerification.formAppendError(id, "¡Escribe un correo válido!" ,"red");
-            
-            formVerification.invokeVerify(id, false);
+        if(!isEmail(email)){
+            deleteError(id);
+            appendError(id, getStaticText("WriteACorrectEmail") ,"red");
         }else{
-            formVerification.deleteAppendError(id);
+            deleteError(id);
         }
-    });  
-});
+    }); 
+
+    
+    function checkLoginAJAX(userType){
+        let inputEmail = emailTextbox.value;
+        let inputPassword = passwordTextbox.value;
 
 
+        if(!isEmpty(inputEmail) && !isEmpty(inputPassword)){
+            let obj = {
+                inputEmail: inputEmail,
+                inputPassword: inputPassword,
+                userType: userType
+            };
 
-
-function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-}
-
-
-function checkLoginAJAX(userType){
-    let inputEmail = $("#inputEmail").val();
-    let inputPassword = $("#inputPassword").val();
-    console.log("Login");
-    if(formVerification.invokeVerify("submit")){
-        let obj = {
-            inputEmail: inputEmail,
-            inputPassword: inputPassword,
-            userType: userType
-        };
         
-        let query =  login(obj);
-        query.then(({data, status}) =>{
-            if(status === 200){
-                page.redirectToPanel(data.userType);
-            }else{
-                throw new Error("Can't login");
-            }
-            
-        }).catch(err => {
-            console.log(err);
-            const id = "inputPassword";
-            formVerification.deleteAppendError(id);
-            formVerification.formAppendError(id, "El usuario o la contraseña no coinciden", "red");
-        });
+            login(obj).then(({data, status}) =>{
+                if(status === 200){
+                    page.redirectToPanel(data.userType);
+                }else{
+                    throw new Error("Can't login");
+                }
+                
+            }).catch(err => {
+                console.log(err);
+                wrongCredentialsError();
+            });
+        }else{
+            emptyCredentialsError();
+        }
+
+        
     }
+
+};
+
+function wrongCredentialsError(){
+    const id = "inputPassword";
+    deleteError(id);
+    appendError(id, getStaticText("ERR_WRONG_CREDENTIALS"), "red");
 }
+
+function emptyCredentialsError(){
+    const id = "inputPassword";
+    deleteError(id);
+    appendError(id, getStaticText("emptyLoginCredentials"), "red");
+}
+

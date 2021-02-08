@@ -171,7 +171,11 @@
 
         "ordersAffiliatedToYourLaundry": "与您的洗衣店相关的订单",
 
-        "ERR_LOADING_DATA": "加载数据时出错"
+        "WriteACorrectEmail": "写一个有效的电子邮件！",
+        "emptyLoginCredentials": "空的电子邮件或密码！",
+
+        "ERR_LOADING_DATA": "加载数据时出错",
+        "ERR_WRONG_CREDENTIALS": "用户名或密码不匹配"
     },
     
     "variable": {
