@@ -5,10 +5,17 @@ require("regenerator-runtime/runtime");
 
 const $ = require("jquery");
 const formVerification = require("./frontendModules/formVerification");
+const {appendError, deleteError} = require("./frontendModules/appendError");
+
+
 const {email: existsEmail, laundryInitials: existsLaundryInitials} = require("./ajax-requests/check-exists");
-const ajaxRegister = require("./ajax-requests/register");
+const {registerLaundry, registerUser} = require("./ajax-requests/register");
 const passwordHandler = require("./frontendModules/passwordHandler");
 const isEmail = require("validator/lib/isEmail");
+const isEmpty = require("validator/lib/isEmpty");
+
+
+let userType = "";
 
 
 $(document).ready(function(){
@@ -16,42 +23,49 @@ $(document).ready(function(){
     let pathLocation = window.location.pathname;
     if(pathLocation === "/laundryRegister"){
         //needs authentication & authorization mechanism
-        formVerification.setUserType("laundry");
+        userType = "laundry";
     }else if(pathLocation === "/register"){
-        formVerification.setUserType("user");
+        userType = "user";
     }    
 
-    formVerification.invokeVerify("load", false);
 
 
-    $("#frmUserRegister").submit(function(e){
-        e.preventDefault();
-        formVerification.invokeVerify("submit", false);
-        
-        if(!$("#submitRegister").hasClass("disableButton")){
-            let obj = {
-                name : capitalizeFirstLetter($("#inputName").val()),
-                surname : capitalizeFirstLetter($("#inputSurname").val()),
-                email : $("#inputEmail").val(),
-                password : $("#inputPassword").val(),
-                targetMarket : $("#inputTargetMarket").val()
-            };
-            
-            let query =  ajaxRegister.registerUser(obj);
-            query.then((data) => {
+    $("#submitUserRegister").click(async function(e){
+
+        let name = capitalizeFirstLetter($("#inputName").val());
+        let surname = capitalizeFirstLetter($("#inputSurname").val());
+        let email = $("#inputEmail").val();
+        let password = $("#inputPassword").val();
+        let targetMarket = $("#inputTargetMarket").val();
+
+        let user = {
+            name: name,
+            surname: surname,
+            email: email,
+            password: password,
+            targetMarket: targetMarket
+        };
+
+        try{
+            let {data, status} = await registerUser(user);
+
+            if(status === 200){
                 $("#frmUserRegister").toggleClass("hide");
                 $("#congrSection").toggleClass("hide");
-            }).catch(err => console.error(err));
+            }
+        }catch(err){
+            console.error(err);
+            alert("¡DEBES ASEGURARTE QUE TODOS LOS CAMPOS ESTÉN LLENOS!");
         }
+
+
     });
 
 
-    $("#frmMasterUserRegister").submit(function(e){
-        e.preventDefault();
-        formVerification.invokeVerify("submit", false);
+    $("#submitLaundryRegister").click(async function(e){
 
-        if(!$("#submitRegister").hasClass("disableButton")){
-            let obj = {
+        try{
+            let laundry = {
                 initials : $("#inputInitials").val(),
                 laundryName : $("#inputLaundryName").val(),
                 location : $("#inputLocation").val(),
@@ -61,13 +75,14 @@ $(document).ready(function(){
                 password : $("#inputPassword").val()
             };
             
-            let query =  ajaxRegister.registerLaundry(obj);
-            query.then(({status}) =>{
-                if(status == 200)
-                    $("#frmMasterUserRegister").toggleClass("hide");
-                    $("#congrSection").toggleClass("hide");
-            })
-            .catch(err => console.error(err));
+            let {status} = await registerLaundry(laundry);
+            if(status == 200){
+                $("#frmMasterUserRegister").toggleClass("hide");
+                $("#congrSection").toggleClass("hide");
+            }
+        }catch(err){
+            console.error(err);
+            alert("¡DEBES ASEGURARTE QUE TODOS LOS CAMPOS ESTÉN LLENOS!");
         }
     });
 
@@ -77,13 +92,11 @@ $(document).ready(function(){
         let name = $('#inputName').val();
         let msg = "Escribe un nombre correcto";
     
-        formVerification.deleteAppendError(id);
+        deleteError(id);
         if((name === "") || (name.length < 3)){
-          formVerification.formAppendError(id, msg, "red");
-          formVerification.invokeVerify(id, false);
+          appendError(id, msg, "red");
         }else{
-          formVerification.deleteAppendError(id);
-          formVerification.invokeVerify(id, true);
+          deleteError(id);
         }
     });
 
@@ -93,13 +106,11 @@ $(document).ready(function(){
         let surName = $('#inputSurname').val();
         let msg = "Escribe un apellido correcto";
     
-        formVerification.deleteAppendError(id);
+        deleteError(id);
         if((surName === "") || (surName.length < 2)){
-          formVerification.formAppendError(id, msg, "red");
-          formVerification.invokeVerify(id, false);
+          appendError(id, msg, "red");
         }else{
-          formVerification.deleteAppendError(id);
-          formVerification.invokeVerify(id, true);
+          deleteError(id);
         }
     });
 
@@ -109,23 +120,20 @@ $(document).ready(function(){
         let id = "inputEmail";
 
         if(!isEmail(email)){
-          formVerification.deleteAppendError(id);
-          formVerification.formAppendError(id, "¡Escribe un correo válido!" ,"red");
-          formVerification.invokeVerify(id, false);
+          deleteError(id);
+          appendError(id, "¡Escribe un correo válido!" ,"red");
         }else{
 
             existsEmail({
                 inputEmail: $("#inputEmail").val(),
-                userType: formVerification.getUserType()
+                userType: userType
             }).then(({data: {exists}}) =>{
                 if(exists){
-                    formVerification.deleteAppendError(id);
-                    formVerification.formAppendError(id, "¡El correo existe!" , "red");
-                    formVerification.invokeVerify(id, false);
+                    deleteError(id);
+                    appendError(id, "¡El correo existe!" , "red");
                 }else{
-                    formVerification.deleteAppendError(id);
-                    formVerification.formAppendError(id, "¡Correo válido!", "green");
-                    formVerification.invokeVerify(id, true);
+                    deleteError(id);
+                    appendError(id, "¡Correo válido!", "green");
 
                 }
             }).catch(err => console.error(err));
@@ -160,12 +168,10 @@ $(document).ready(function(){
         const msg = "Escoge una opción";
     
         if(inputTargetMarket == "none"){
-          formVerification.deleteAppendError(id);
-          formVerification.formAppendError(id, msg, "red");
-          formVerification.invokeVerify(id, false);
+          deleteError(id);
+          appendError(id, msg, "red");
         }else{
-          formVerification.deleteAppendError(id);
-          formVerification.invokeVerify(id,true);
+          deleteError(id);
         }
     });
     
@@ -187,11 +193,9 @@ $(document).ready(function(){
         }
     
         if($("#inputLaundryName").val().length < minLength){
-            formVerification.formAppendError(id, msg, "red");
-            formVerification.invokeVerify(id, false);
+            appendError(id, msg, "red");
         }else{
-            formVerification.deleteAppendError(id);
-            formVerification.invokeVerify(id, true);
+            deleteError(id);
         }
     });
 
@@ -201,11 +205,9 @@ $(document).ready(function(){
         let msg = "Escribe una ubicación válida";
     
         if($("#inputLocation").val().length < 50){
-            formVerification.formAppendError(id, msg, "red");
-            formVerification.invokeVerify(id, false);
+            appendError(id, msg, "red");
         }else{
-            formVerification.deleteAppendError(id);
-            formVerification.invokeVerify(id, true);
+            deleteError(id);
         }
     });
 
@@ -232,38 +234,40 @@ $(document).ready(function(){
             .then(({data : {exists}}) =>{
             
                 if(exists){
-                    formVerification.deleteAppendError(id);
-                    formVerification.formAppendError(id, msg.msg1 , "red");
-                    formVerification.invokeVerify(id, false);
+                    deleteError(id);
+                    appendError(id, msg.msg1 , "red");
                 }else{
-                    formVerification.deleteAppendError(id);
-                    formVerification.formAppendError(id, msg.msg2 , "green");
-                    formVerification.invokeVerify(id, true);
+                    deleteError(id);
+                    appendError(id, msg.msg2 , "green");
                 }
             }).catch(err => {
                 
             });
 
         }else{ //when it doesn't has any input value
-            formVerification.deleteAppendError(id);
-            formVerification.formAppendError(id, msg.msg3 , "red");
-            formVerification.invokeVerify(id, false);
+            deleteError(id);
+            appendError(id, msg.msg3 , "red");
         }
     });
 });
 
 
 function capitalizeFirstLetter(string) { 
-    //set all string to lowCase
-    let arr = [];
-    let result = "";
-    string = string.toLowerCase().trim();
-    arr = string.split(" ");
-  
-    arr.map(function(value, i){
-        result += arr[i][0].toUpperCase() + value.slice(1) + " ";
-    });
-    return result;
+
+    if(!isEmpty(string)){
+        //set all string to lowCase
+        let arr = [];
+        let result = "";
+        string = string.toLowerCase().trim();
+        arr = string.split(" ");
+    
+
+        arr.map(function(value, i){
+            result += arr[i][0].toUpperCase() + value.slice(1) + " ";
+        });
+        return result;
+    }
+    
 }
 
 

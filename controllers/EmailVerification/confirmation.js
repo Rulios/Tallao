@@ -1,16 +1,15 @@
 const client = require("../libs/DB_CONNECT");
 const isUserVerified = require("./is-user-verified");
 const dayjs =  require("dayjs");
-const path = require("path");
 const GetEmail = require("../libs/get/email");
 const createAndSaveToken = require("../libs/email-verification/create-and-save-token");
 const sendEmailVerification = require("../libs/email-verification/send-email-verification");
 
+const getLanguageStrings = require("../../translation/backend/get-language-strings");
+
 const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 const MAX_DURATION_HOURS = 48;
-
-const ROOT = path.dirname(require.main.filename);
 
 module.exports = function(emailVerification){
     emailVerification.get("/:token", async function(req,res){
@@ -21,19 +20,19 @@ module.exports = function(emailVerification){
             let todayDateTime = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
             let {hashcode, created_at} = await getHashcodeAndCreatedAt(token);
 
-            if(await isUserVerified(hashcode)) return res.render(alreadyVerifiedPage());
+            if(await isUserVerified(hashcode)) return res.render(alreadyVerifiedPage(), getLanguageStrings(req));
 
             if(!isTokenOnRange(todayDateTime, created_at)){
                 //resend with new token
                 let email = await GetEmail(hashcode, "user");
 
                 await sendEmailVerification(req.headers.host ,email, await createAndSaveToken(hashcode));
-                return res.render(expiredTokenPage());   
+                return res.render(expiredTokenPage(), getLanguageStrings(req));   
             }
 
             await setUserAsVerified(hashcode);
 
-            return res.render(verifiedPage());
+            return res.render(verifiedPage(), getLanguageStrings(req));
 
         } catch (error) {
             console.log(error);
