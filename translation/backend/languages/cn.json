@@ -63,7 +63,10 @@
     "userPanelMainTitleTag": "主要",
     "yourPublicIDIs": "您的公开ID是：",
     "ordersThatYouHaventRetrieved": "您尚未领取的订单",
-    "notifications": "通知"
+    "notifications": "通知",
 
+    "feedbackTitle": "我们的任务是使当今存在的洗衣过程现代化。",
+    "feedbackSubtitle": "因此，我们很高兴收到您的反馈并进行改进！",
+    "comments": "评论"
     
 }

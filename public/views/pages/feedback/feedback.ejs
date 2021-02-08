@@ -5,7 +5,7 @@
 
     <link rel="stylesheet" href="/css/main.css">
 
-    <title>Talla'o | Retroalimentación</title>
+    <title>Talla'o | <%- feedback  %> </title>
 </head>
 
 <body>
@@ -22,17 +22,17 @@
 
     <div class="container startTopSeparation  montserrat_font" >
         <div class="text-center karla_font">
-            <h1 class="registrationFormTitleTxt" id="title">Retroalimentación</h1>
+            <h1 class="registrationFormTitleTxt" id="title"><%-feedback%> </h1>
             <h3 class="registrationFormSubTitleTxt" id="subTitle1">
-                Nuestra misión es modernizar el proceso de lavandería que existe actualmente.
+                <%-feedbackTitle %> 
             </h3>
 
             <h3 class="registrationFormSubTitleTxt" id="subTitle2">
-                ¡Es por eso que estamos encantados de recibir tus comentarios y mejorar!
+                <%-feedbackSubtitle %> 
             </h3>
 
             <form action="/feedback/submit" method="POST" class="small-mediumSeparation">
-                <label for="comments" class="bold">Comentarios:</label>
+                <label for="comments" class="bold"><%-`${comments}:` %> </label>
                 <br>
                 <textarea name="comments" id="comments" cols="20" rows="5" style="width: 80%;"></textarea>
                 <input type="submit" class="submitButtonRegister oneEMSeparation" style="width: 80%;">

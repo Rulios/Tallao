@@ -63,6 +63,9 @@
     "userPanelMainTitleTag": "Principal",
     "yourPublicIDIs": "Tu ID Público es:",
     "ordersThatYouHaventRetrieved": "Órdenes que no has recogido aún",
-    "notifications": "Notificaciones"
+    "notifications": "Notificaciones",
 
+    "feedbackTitle": "Nuestra misión es modernizar el proceso de lavandería que existe actualmente.",
+    "feedbackSubtitle": "¡Es por eso que estamos encantados de recibir tus comentarios y mejorar!",
+    "comments": "Comentarios"
 }
