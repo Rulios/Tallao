@@ -16,8 +16,6 @@ const OrderModal = require("./reactComponents/OrderModalHandler");
 
 //custom hooks
 const useOrders = require("./custom-hooks/useOrders");
-const useServerDateTime = require("./custom-hooks/useServerDateTime");
-
 
 const {getUserType} = require("./ajax-requests/user-creds");
 

@@ -1,4 +1,4 @@
-const {isIn} = require("validator");
+const isIn = require("validator/lib/isIn");
 const Cookies = require("js-cookie");
 
 const LANGUAGES = require("../../meta/LANGUAGES");

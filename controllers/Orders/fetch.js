@@ -19,7 +19,7 @@ const SEARCH_PARAMS  =[
 ];
 
 const AVAILABLE_INPUTS = [ //determines available inputs
-    "date", "time", "order", "txt"
+    "dateTime", "order", "txt"
 ];
 
 
@@ -43,8 +43,13 @@ module.exports = function(orders){
             let statusArr = getStatusArr(paramProps.statusSelected);
             let query = buildQuery(paramProps.paramSelected, statusArr, userType);
             let values = buildValues(publicID,userType, paramProps, inputs, statusArr);
+
+            console.log(values);
            
             let result = await client.query(query, values);
+
+            //console.log(result.rows);
+
             let escapedResult = escapeArrayOfObj(result.rows);
 
             return res.status(200).json(escapedResult);
@@ -219,7 +224,7 @@ function buildValues(publicID, userType,paramProps, inputs, statusArr){
 
     switch(true){
         case (validator.isIn(paramSelected, DATE_CASES)): //DATE CASES
-            let {date, time} = inputs;
+            let {dateTime: {start: startDateTime, end: endDateTime}} = inputs;
             //this is a reference to the start day of the selected one
             //CASES: 
 
@@ -230,10 +235,14 @@ function buildValues(publicID, userType,paramProps, inputs, statusArr){
                     set startDateTime to what the user inputted 
             */
 
-            let startDateTime = (paramSelected === "dateRange") ? `${date.start} ${time.start}` : `${date.end} 00:00`; 
-            let endDateTime = `${date.end} ${time.end}`; //the one that the user supplies
             //check if valid date time format
-            if(!dayjs(endDateTime).isValid()) throw new Error("Not valid date time format");
+            if(!dayjs(startDateTime).isValid()) throw new Error("Not valid start date time format");
+            if(!dayjs(endDateTime).isValid()) throw new Error("Not valid end date time format");
+
+            //set startDateTime as the start day relative to endDateTime
+            if(validator.isIn(paramSelected, ["dateAssign", "dateReceive"])){
+                startDateTime = dayjs(endDateTime).startOf("day").format();
+            }
 
             values = [
                 publicID,

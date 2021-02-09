@@ -5,36 +5,27 @@ const dayjs = require("dayjs");
 const useServerDateTime = require("./useServerDateTime");
 const usePrevious = require("./usePrevious");
 
-const {HTML_DATE_FORMAT, HTML_TIME_FORMAT_UNTIL_MINUTES} = require("../../../meta/DATE_TIME_FORMATS");
-
 const {fetchOrders} = require("../ajax-requests/orders");
 const convertArrToObj = require("../frontendModules/convertArrToObj");
 const getWindowHeight = require("../frontendModules/getWindowHeight");
 
 module.exports = function useOrders(socket){
-    //to fetch all the orders of that day
-    const FIRST_HOUR_OF_THE_DAY = "00:00";
-    const LAST_HOUR_OF_THE_DAY = "23:59"; 
-
+    
     const todayDateTime = useServerDateTime();
-
+    
     const [orders, setOrders] = useState({});
-
+    
     //search parameters
     const [paramProps, setParamProps] = useState({
         paramSelected: "dateAssign",
         statusSelected: "all",
         elementsToFetch: 10
     });
-
+    
     const [inputs , setInputs] = useState({
-        date: {
-            start: dayjs(todayDateTime).format(HTML_DATE_FORMAT),
-            end: dayjs(todayDateTime).format(HTML_DATE_FORMAT)
-        },
-        time:{
-            start: FIRST_HOUR_OF_THE_DAY,
-            end: LAST_HOUR_OF_THE_DAY
+        dateTime: {
+            start: dayjs(todayDateTime).startOf("day"),
+            end: dayjs(todayDateTime).endOf("day")
         },
         order: {
             char: "A",

@@ -8,6 +8,7 @@ const cloneDeep = require("lodash.clonedeep");
 const SEARCH_ORDER_PARAMS = require("../../../meta/SEARCH_ORDER_PARAMS");
 const ORDER_STATUS = require("../../../meta/ORDER_STATUS");
 
+const {HTML_DATE_FORMAT, HTML_TIME_FORMAT_UNTIL_MINUTES} = require("../../../meta/DATE_TIME_FORMATS");
 
 const {getStaticText} = require("../../../translation/frontend/translator");
 
@@ -89,13 +90,10 @@ function SearchInputFields({paramSelected, inputs, setInputs}){
             InputComponents.push(
                 <DateTimeInput rangeType={paramSelected} key={`${paramSelected}SingleDateTimeInput`}
                     customDateText={paramSelected}
-                    values={{
-                        date: inputs.date.end,
-                        time: inputs.time.end
-                    }}
-                    onChange={(inputType, value) => {
+                    dateTime={inputs.dateTime.end}
+                    onChange={(dateTime) => {
                         const newInputs = cloneDeep(inputs);
-                        newInputs[inputType]["end"] = value;
+                        newInputs.dateTime["end"] = dateTime;
                         setInputs(newInputs);
                     }}
                 />
@@ -106,26 +104,20 @@ function SearchInputFields({paramSelected, inputs, setInputs}){
             InputComponents.push(
                 <DateTimeInput rangeType="startDate" key="DateRangeStartDateTimeInput"
                     customDateText="startDate"
-                    values={{
-                        date: inputs.date.start,
-                        time: inputs.time.start
-                    }}
-                    onChange={(inputType, value) => {
+                    dateTime={inputs.dateTime.start}
+                    onChange={(dateTime) => {
                         const newInputs = cloneDeep(inputs);
-                        newInputs[inputType]["start"] = value;
+                        newInputs.dateTime["start"] = dateTime;
                         setInputs(newInputs);
                     }}
                 />,
 
                 <DateTimeInput rangeType="endDate" key="DateRangeEndDateTimeInput"
                     customDateText="endDate"
-                    values={{
-                        date: inputs.date.end,
-                        time: inputs.time.end
-                    }}
-                    onChange={(inputType, value) => {
+                    dateTime={inputs.dateTime.end}
+                    onChange={(dateTime) => {
                         const newInputs = cloneDeep(inputs);
-                        newInputs[inputType]["end"] = value;
+                        newInputs.dateTime["end"] = dateTime;
                         setInputs(newInputs);
                     }}
                 />
@@ -163,7 +155,7 @@ function SearchInputFields({paramSelected, inputs, setInputs}){
     return InputComponents;
 }
 
-function DateTimeInput({customDateText, rangeType, values: {date, time}, 
+function DateTimeInput({customDateText, rangeType, dateTime, 
         onChange}){
 
     return (
@@ -175,9 +167,17 @@ function DateTimeInput({customDateText, rangeType, values: {date, time},
                         {getStaticText(customDateText) ?? getStaticText("date")}
                     </label>
 
-                    <input type="date" value={date} 
+                    <input type="date" 
+                        value={dayjs(dateTime).format(HTML_DATE_FORMAT)} 
                         onChange={(e) => {
-                            onChange("date", e.target.value);
+                            let newDateTime = dayjs(dateTime);
+                            let selectedDate = dayjs(e.target.value);
+
+                            newDateTime = newDateTime.set("year", selectedDate.year());
+                            newDateTime = newDateTime.set("month", selectedDate.month());
+                            newDateTime = newDateTime.set("day", selectedDate.day());
+
+                            onChange(newDateTime.format());
                         }}/>
                 </div>
 
@@ -186,9 +186,16 @@ function DateTimeInput({customDateText, rangeType, values: {date, time},
                         {getStaticText("time")}
                     </label>
 
-                    <input type="time" value={time} 
+                    <input type="time" 
+                        value={dayjs(dateTime).format(HTML_TIME_FORMAT_UNTIL_MINUTES)} 
                         onChange={(e) => {
-                            onChange("time", e.target.value)
+                            let newDateTime = dayjs(dateTime);
+                            const [hour, minute] = e.target.value.split(":");
+
+                            newDateTime = newDateTime.set("hour", hour);
+                            newDateTime = newDateTime.set("minute", minute);
+                            
+                            onChange(newDateTime.format());
                         }}
                     />
                 </div>
