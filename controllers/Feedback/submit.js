@@ -1,6 +1,10 @@
 const client =require("../libs/DB_CONNECT");
+
 const dayjs = require("dayjs");
-const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
+
+const getLanguageStrings = require("../../translation/backend/get-language-strings");
 
 module.exports = function(feedback) {
  
@@ -11,7 +15,7 @@ module.exports = function(feedback) {
 
             await insertFeedback(comments);
 
-            return res.render("pages/feedback/success");
+            return res.render("pages/feedback/success", getLanguageStrings(req));
 
         }catch(err){
             return res.redirect("/");
@@ -19,13 +23,12 @@ module.exports = function(feedback) {
     });
 }
 
-async  function insertFeedback(comments){
-
-
+async function insertFeedback(comments){
     const QUERY = buildQuery();
-    const CREATED_AT = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
+    const CREATED_AT = dayjs.utc().format();
 
-     await client.query(QUERY, [comments, CREATED_AT]);
+    await client.query(QUERY, [comments, CREATED_AT]);
+
 }
 
 function buildQuery(){

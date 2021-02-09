@@ -1,11 +1,12 @@
 const client = require("../DB_CONNECT");
 const crypto = require("crypto");
 const dayjs = require("dayjs");
-const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../../meta/DATE_TIME_FORMATS");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 module.exports = async function(hashcode){
-    const TOKEN = crypto.randomBytes(16).toString("hex")    ;
-    const CREATED_AT = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES);
+    const TOKEN = crypto.randomBytes(16).toString("hex");
+    const CREATED_AT = dayjs.utc().format();
     let query = "";
 
     if(await isTokenExistsOnDB(hashcode)){

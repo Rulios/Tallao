@@ -1,12 +1,13 @@
 const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
 const AdvancedFormat = require('dayjs/plugin/advancedFormat');
+dayjs.extend(utc);
 dayjs.extend(AdvancedFormat) // use plugin
 
 const validator = require("validator");
 const client = require("../libs/DB_CONNECT");
 const {ELEMENTS} =  require("../../meta/ELEMENTS");
 const {NEW_ORDER_NOTIF_CODE} = require("../../meta/NOTIFICATION_CODES");
-const {DATE_TIME_FORMAT_UNTIL_MINUTES} = require("../../meta/DATE_TIME_FORMATS");
 
 const GetPublicID = require("../libs/get/public-id");
 const GetLastOrderID = require("../libs/get/last-order-id");
@@ -18,9 +19,7 @@ const updateLastOrderID = require("./helpers/update-last-order-id");
 const {emitUpdateOrders} = require("../libs/socketio/events");
 const sendNotification = require("../libs/notifications/send-notification");
 
-
 const FIRST_STATUS = "wait";
-
 
 module.exports = function(orders, io){
     orders.post("/submit", async function(req,res){
@@ -31,12 +30,12 @@ module.exports = function(orders, io){
             let laundryInitials = await GetPublicID(userType, hashcode);
             let {id_char : lastIDChar, id_number: lastIDNumber} = await GetLastOrderID(laundryInitials);
             
-            let  TODAY_DATE_TIME = dayjs().format(DATE_TIME_FORMAT_UNTIL_MINUTES); //get server date time
+            const TODAY_DATE_TIME = dayjs.utc().format();
             
             let order = req.body;
             let query = "";
             let values = [];
-    
+
             //check if elementsOnOrder obj meets the conditions
             if(!isValidElementsOnOrder(order.elementsOnOrder)) throw new Error("Not valid elements on order");
             //check if totalPrice is not mepty and if positive and not zero
@@ -44,7 +43,7 @@ module.exports = function(orders, io){
             //check if hookQuantity is positive 
             if(order.hookQuantity < 0) throw new Error("hook quantity is not positive");
             //check if dateTimeAssigned complies with the format 
-            if(!dayjs(order.dateTimeAssigned, DATE_TIME_FORMAT_UNTIL_MINUTES).isValid()) throw new Error("not valid date time format");
+            if(!dayjs(order.dateTimeAssigned).isValid()) throw new Error("not valid date time format");
             //check if customerID is not empty
             if(order.customer.id){
                 if(!validator.isEmpty(order.customer.id) && !validator.isLength(order.customer.id,5,6)){
@@ -54,7 +53,7 @@ module.exports = function(orders, io){
 
             //remove whitespace
             order.indications = order.indications.trim();
-            
+
             //check if the dateTimeAssigned for the order is present or future from today's date time
             if(dayjs(order.dateTimeAssigned).diff(TODAY_DATE_TIME) < 0) throw new Error("Date assigned is past");
 
@@ -131,9 +130,6 @@ module.exports = function(orders, io){
             return res.status(400).end();
         }
         
-
-    
-
     });
 };
 

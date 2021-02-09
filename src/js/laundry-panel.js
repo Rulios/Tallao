@@ -361,15 +361,7 @@ function DropdownOfAvailableElements(){
 function DateTimeInput(){
     const [Order, setOrder] = React.useContext(OrderContext);
     const {dateTimeAssigned} = Order;
-    let dateAssigned = "", timeAssigned = "";
     let todayDateTime = useServerDateTime();
-    let todayDateTimeString = dayjs(todayDateTime).format(HTML_DATE_FORMAT) ?? "";
-
-    if(dayjs(dateTimeAssigned).isValid() ){
-        dateAssigned = dayjs(dateTimeAssigned).format(HTML_DATE_FORMAT) ?? "";
-        timeAssigned = dayjs(dateTimeAssigned).format(HTML_TIME_FORMAT_UNTIL_MINUTES) ?? "";
-    }
-
 
     const onDateChangeHandler = (date) => {
 
@@ -383,7 +375,7 @@ function DateTimeInput(){
         newDateTimeAssigned = newDateTimeAssigned.set("month", month);
         newDateTimeAssigned = newDateTimeAssigned.set("day", day);
 
-        newOrder.dateTimeAssigned = newDateTimeAssigned.format(DATE_TIME_FORMAT_UNTIL_MINUTES);
+        newOrder.dateTimeAssigned = newDateTimeAssigned.format();
         setOrder(newOrder);
     };
 
@@ -395,8 +387,7 @@ function DateTimeInput(){
         newDateTimeAssigned = newDateTimeAssigned.set("hour", hours24);
         newDateTimeAssigned = newDateTimeAssigned.set("minute", minutes);
 
-        newOrder.dateTimeAssigned = newDateTimeAssigned.format(DATE_TIME_FORMAT_UNTIL_MINUTES);
-
+        newOrder.dateTimeAssigned = newDateTimeAssigned.format();
         setOrder(newOrder);
     };
 
@@ -407,7 +398,8 @@ function DateTimeInput(){
                     {`${getStaticText("date")}:`}
                 </label>
                 <input type="date" id="dateAssignedForOrder"
-                     min={todayDateTimeString} value={dateAssigned} 
+                     min={dayjs(todayDateTime).format(HTML_DATE_FORMAT) ?? ""} 
+                     value={dayjs(dateTimeAssigned).format(HTML_DATE_FORMAT) ?? ""} 
                      onChange={(e) => onDateChangeHandler(e.target.value)}
                 />
 
@@ -415,7 +407,8 @@ function DateTimeInput(){
                     {`${getStaticText("hour")}:`}
                 </label>
                 <input type="time" id="timeAssignedForOrder" 
-                    value={timeAssigned} onChange={(e) => onTimeChangeHandler(e.target.value)}
+                    value={dayjs(dateTimeAssigned).format(HTML_TIME_FORMAT_UNTIL_MINUTES) ?? ""} 
+                    onChange={(e) => onTimeChangeHandler(e.target.value)}
                 />
             </span>
             

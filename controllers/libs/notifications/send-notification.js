@@ -3,14 +3,15 @@ const {v4 : uuidv4} = require("uuid");
 const existsNotification = require("./helpers/exists-notification");
 const {emitNotification} = require("../socketio/events");
 const dayjs = require("dayjs");
-const {DATE_TIME_FORMAT_UNTIL_SECONDS} = require("../../../meta/DATE_TIME_FORMATS");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 module.exports = async function(io ,{
     emitter, emitter_role, getter, getter_role, code, extras = {}
 }){
     const QUERY = buildQuery(emitter_role);
     const NOTIF_ID = await buildNotificationID(emitter, getter, getter_role);
-    const CREATED_AT = dayjs().format(DATE_TIME_FORMAT_UNTIL_SECONDS);
+    const CREATED_AT = dayjs.utc().format();
     const VALUES = [
         NOTIF_ID,
         emitter, 
