@@ -7,7 +7,8 @@ const {appendError, deleteError} = require("./frontendModules/appendError");
 
 const page = require("./frontendModules/pageRedirection");
 const {login} = require("./ajax-requests/log");
-const {isEmail, isEmpty} = require("validator");
+const isEmail = require("validator/lib/isEmail");
+const isEmpty = require("validator/lib/isEmpty");
 
 const {getStaticText} =require("../../translation/frontend/translator");
 
@@ -30,12 +31,12 @@ window.onload = function(){
     emailTextbox.addEventListener("change", function(e){
         let email = emailTextbox.value;
         let id = "inputEmail";
-    
-        if(!isEmail(email)){
+
+        if(isEmail(email)){
             deleteError(id);
-            appendError(id, getStaticText("WriteACorrectEmail") ,"red");
         }else{
             deleteError(id);
+            appendError(id, getStaticText("WriteACorrectEmail") ,"red");
         }
     }); 
 
