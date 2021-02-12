@@ -9,22 +9,26 @@ dayjs.extend(utc);
 module.exports = async function(io ,{
     emitter, emitter_role, getter, getter_role, code, extras = {}
 }){
-    const QUERY = buildQuery(emitter_role);
-    const NOTIF_ID = await buildNotificationID(emitter, getter, getter_role);
-    const CREATED_AT = dayjs.utc().format();
-    const VALUES = [
-        NOTIF_ID,
-        emitter, 
-        getter,
-        code,
-        JSON.stringify(extras),
-        CREATED_AT
-    ];
-
-    let result = await client.query(QUERY, VALUES);
 
 
-    emitNotification(io, getter_role, getter);
+    if(shouldNotificationBeSet(emitter_role, getter)){
+        const QUERY = buildQuery(emitter_role);
+        const NOTIF_ID = await buildNotificationID(emitter, getter, getter_role);
+        const CREATED_AT = dayjs.utc().format();
+        const VALUES = [
+            NOTIF_ID,
+            emitter, 
+            getter,
+            code,
+            JSON.stringify(extras),
+            CREATED_AT
+        ];
+
+        let result = await client.query(QUERY, VALUES);
+
+        emitNotification(io, getter_role, getter);
+    }
+    
 }
 
 function buildQuery(emitter_role){
@@ -45,4 +49,10 @@ async function buildNotificationID(emitter, getter, getter_role){
         id = `${emitter}-${uuidv4()}-${getter}`;
     }while(await existsNotification(id, getter_role));
     return id;
+}
+
+function shouldNotificationBeSet(emitter_role, getter){
+    let isNullUserGetter = emitter_role === "laundry" && getter === "" || getter === "NULL";
+
+    return !isNullUserGetter;
 }
